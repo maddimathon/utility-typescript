@@ -2,13 +2,13 @@
 /**
  * An example function used on the command line.
  *
- * @package @maddimathon/template-npm-library@tmpl-1.1.0
+ * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @since tmpl-0.1.1
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/template-npm-library@tmpl-1.1.0
+ * @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @license MIT
  */
 /**

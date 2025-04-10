@@ -3,7 +3,7 @@
 /**
  * Some utility functions to use while building the project.
  * 
- * @package @maddimathon/template-npm-library
+ * @package @maddimathon/utility-typescript
  * @since ___PKG_VERSION___
  */
 
@@ -729,7 +729,7 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
 
     public get pkgVersion(): string {
         const suffix: string = ( this.opts.dryrun || ( !this.opts.packaging && !this.opts.releasing ) ) ? '-draft' : '';
-        return `${ this.pkg.name === '@maddimathon/template-npm-library' ? 'tmpl-' : '' }${ this.pkg.version }${ suffix }`;
+        return `${ this.pkg.name === '@maddimathon/utility-typescript' ? 'tmpl-' : '' }${ this.pkg.version }${ suffix }`;
     }
 
     #releasePath: string | undefined = undefined;

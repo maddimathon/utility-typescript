@@ -1,5 +1,5 @@
 /**
- * @snapshot @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @snapshot @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage ___CURRENT_URL___
  * 

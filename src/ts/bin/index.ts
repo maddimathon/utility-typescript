@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * NPM Library Template (Node CLI)
+ * Utility Typescript (Node CLI)
  * 
- * @package @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage ___CURRENT_URL___
  * 
@@ -13,7 +13,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 

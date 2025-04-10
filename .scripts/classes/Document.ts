@@ -1,5 +1,5 @@
 /**
- * @package @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage ___CURRENT_URL___
  * 
@@ -144,6 +144,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
                 '@homepage',
                 '@package',
+                '@source',
             ],
 
             // categorizeByGroup: true,
@@ -205,7 +206,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             out: './docs',
             plugin: [
-                'typedoc-github-theme',
+                'typedoc-plugin-inline-sources',
                 // 'typedoc-plugin-markdown',
             ],
 
@@ -227,7 +228,6 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             // },
 
             sortEntryPoints: false,
-            theme: 'typedoc-github-theme',
             useFirstParagraphOfCommentAsSummary: true,
 
             visibilityFilters: {

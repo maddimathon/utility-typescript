@@ -10,18 +10,18 @@
  * 
  * @example
  * ```ts
- * import { ... } from 'template-npm-library';
+ * import { ... } from 'utility-typescript';
  * ```
  */
 /**
- * @package @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
 /*!
- * @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 

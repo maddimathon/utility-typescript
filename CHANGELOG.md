@@ -1,4 +1,4 @@
-# NPM Library Template Changelog
+# Utility Typescript Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -11,12 +11,6 @@ and this project adheres to
 > - `PATCH` version when you make backwards-compatible bug fixes
 
 
-## [tmpl-1.0.0] - 2025-04-08
+## [___PKG_VERSION___] - ___PKG_DATE___
 
-Initial release; everything is new:
-- Build scripts (basic, to update later)
-- File header code snippets
-- GitHub workflow for privately publishing the npm package to github (about to
-  be tested)
-- ReadMe template
-- Unit testing and documentation (typescript)
+Initial release; everything is new!

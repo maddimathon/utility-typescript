@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/index.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/modules.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/index.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/hierarchy.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/classes.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/modules/classes.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/functions.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/modules/functions.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/modules/types.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/types/ExampleType.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/types/ExampleType.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/interfaces/ExampleObjectType.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/interfaces/ExampleObjectType.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/interfaces/ExampleInterface.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/interfaces/ExampleInterface.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/classes/ExampleClass.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/classes/ExampleClass.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
-	</url>
-	<url>
-		<loc>https://maddimathon.github.io/template-npm-library/functions/exampleFunction.html</loc>
-		<lastmod>2025-04-10T07:16:48.435Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/functions/exampleFunction.html</loc>
+		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
 	</url>
 </urlset>

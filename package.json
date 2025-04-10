@@ -1,20 +1,20 @@
 {
-    "name": "@maddimathon/template-npm-library",
+    "name": "@maddimathon/utility-typescript",
     "version": "1.1.0",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "A template for building npm packages published on GitHub with typescript, versioning, basic compile scripts, and template setup script.",
     "keywords": [ "npm-package-template", "npm-package-typescript", "npm-template", "npm-template-typescript" ],
 
-    "homepage": "https://maddimathon.github.io/template-npm-library",
+    "homepage": "https://maddimathon.github.io/utility-typescript",
     "license": "MIT",
     "repository": {
       "type": "git",
-      "url": "https://github.com/maddimathon/template-npm-library.git"
+      "url": "https://github.com/maddimathon/utility-typescript.git"
     },
 
     "config": {
-        "title": "NPM Library Template",
+        "title": "Utility Typescript",
         "paths": {
             "releases": "@releases",
             "snapshots": ".snapshots"
@@ -34,7 +34,7 @@
     "types": "./dist/js/index.d.ts",
 
     "bin": {
-        "template-npm-library": "./dist/js/bin/index.js"
+        "utility-typescript": "./dist/js/bin/index.js"
     },
     "exports": {
         ".": "./dist/js/index.js",
@@ -109,6 +109,7 @@
 
     },
     "dependencies": {
+        "@maddimathon/utility-typescript": "file:../utility-typescript",
         "minimist": "1.2.8"
     },
     "devDependencies": {
@@ -126,9 +127,9 @@
         "prettier": "3.5.3",
         "replace-in-files-cli": "3.0.0",
         "tsx": "4.19.3",
-        "typedoc": "0.28.2",
-        "typedoc-github-theme": "0.3.0",
-        "typedoc-plugin-markdown": "4.6.1",
+        "typedoc": "0.27.9",
+        "typedoc-plugin-inline-sources": "1.2.1",
+        "typedoc-plugin-markdown": "4.4.2",
         "typescript": "5.8.3",
         "watch-cli": "0.2.3"
     },

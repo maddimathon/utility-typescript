@@ -1,11 +1,11 @@
 /**
- * @package @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @since tmpl-0.1.1
  * 
  * @packageDocumentation
  */
 /*!
- * @maddimathon/template-npm-library@___CURRENT_VERSION___
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 

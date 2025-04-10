@@ -8,18 +8,18 @@
  *
  * @example
  * ```ts
- * import { ... } from 'template-npm-library/functions';
+ * import { ... } from 'utility-typescript/functions';
  * ```
  */
 /**
- * @package @maddimathon/template-npm-library@tmpl-1.1.0
+ * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage https://maddimathon.github.io/template-npm-library
+ * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/template-npm-library@tmpl-1.1.0
+ * @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @license MIT
  */
 export * from './exampleFunction.js';

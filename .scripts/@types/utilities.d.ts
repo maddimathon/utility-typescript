@@ -1,7 +1,7 @@
 /**
  * Utility types for build process scripts.
  * 
- * @package @maddimathon/template-npm-library
+ * @package @maddimathon/utility-typescript
  * @since ___PKG_VERSION___
  */
 
