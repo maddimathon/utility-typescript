@@ -1,8 +1,10 @@
 /**
- * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @since tmpl-0.1.1
  *
  * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
  */
 /*!
  * @maddimathon/utility-typescript@tmpl-1.1.0-draft
@@ -14,6 +16,8 @@
  * @category Category A
  *
  * @return  Always says "hello".
+ *
+ * @source
  */
 export declare function exampleFunction(): "hello";
 //# sourceMappingURL=exampleFunction.d.ts.map

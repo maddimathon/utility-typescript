@@ -1,14 +1,15 @@
 /**
- * Exports only the included functions.
+ * Exports all the package's functions.
  * 
  * @module functions
- * @category Partial Exports
+ * @category Entry Points
  * 
  * @since tmpl-0.1.1
  * 
  * @example
  * ```ts
- * import { ... } from 'utility-typescript/functions';
+ * import { functions } from '@maddimathon/utility-typescript';
+ * import { ... } from '@maddimathon/utility-typescript/functions';
  * ```
  */
 /**

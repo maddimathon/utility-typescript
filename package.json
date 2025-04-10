@@ -3,8 +3,8 @@
     "version": "1.1.0",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
-    "description": "A template for building npm packages published on GitHub with typescript, versioning, basic compile scripts, and template setup script.",
-    "keywords": [ "npm-package-template", "npm-package-typescript", "npm-template", "npm-template-typescript" ],
+    "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
+    "keywords": [],
 
     "homepage": "https://maddimathon.github.io/utility-typescript",
     "license": "MIT",
@@ -14,7 +14,7 @@
     },
 
     "config": {
-        "title": "Utility Typescript",
+        "title": "Utility TypeScript",
         "paths": {
             "releases": "@releases",
             "snapshots": ".snapshots"
@@ -33,9 +33,6 @@
     "main": "./dist/js/index.js",
     "types": "./dist/js/index.d.ts",
 
-    "bin": {
-        "utility-typescript": "./dist/js/bin/index.js"
-    },
     "exports": {
         ".": "./dist/js/index.js",
         "./*": "./dist/js/*/index.js",
@@ -71,17 +68,18 @@
 
         "compile": "tsx --tsconfig .scripts/tsconfig.json .scripts/compile.ts",
 
-        "build": "tsx --tsconfig .scripts/tsconfig.json .scripts/build.ts",
+        "build":       "tsx --tsconfig .scripts/tsconfig.json .scripts/build.ts",
+        "quick-build": "tsx --tsconfig .scripts/tsconfig.json .scripts/build.ts --without minimize,prettify",
 
         "doc": "tsx --tsconfig .scripts/tsconfig.json .scripts/doc.ts",
         "test": "tsx --tsconfig .scripts/tsconfig.json .scripts/test.ts",
         
 
         
-        "prewatch": "npm run --silent compile -- --starting",
+        "prewatch": "npm run --silent build -- --starting --without minimize,prettify,test",
         
         "watch": "run-p --silent watch:*",
-            "watch:js":   "watch -p 'src/ts/**/*' -c 'tsx --tsconfig .scripts/tsconfig.json .scripts/compile.ts --only js --watchedWatcher \"watch:js\" --watchedChange --watchedFilename \"$FILENAME\" --watchedEvent \"$EVENT\"'",
+            "watch:js": "watch -p 'src/ts/**/*' -c 'npm run --silent quick-build -- --compile-only js --watchedWatcher \"watch:js\" --watchedChange --watchedFilename \"$FILENAME\" --watchedEvent \"$EVENT\"'",
         
 
         

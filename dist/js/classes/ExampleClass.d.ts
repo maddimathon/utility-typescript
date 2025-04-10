@@ -1,8 +1,10 @@
 /**
- * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @since tmpl-0.1.1
  *
  * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
  */
 /*!
  * @maddimathon/utility-typescript@tmpl-1.1.0-draft
@@ -15,6 +17,8 @@ export declare class ExampleClass {
     /**
      * Outputs a string.
      * @return  Always says "hello".
+     *
+     * @source
      */
     test(): "hello";
 }

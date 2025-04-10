@@ -228,6 +228,9 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
 
     public async zip(): Promise<void> {
+        // returns
+        if ( this.opts.dryrun ) { return; }
+
         this.progressLog( 'zipping release packages...', 1 );
 
         const zipPath: string = this.releasePath.replace( /\/*$/g, '' ) + '.zip';

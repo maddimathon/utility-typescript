@@ -1,1 +1,1 @@
-export * from './classes/index.js';export * from './functions/index.js';
+export * as classes from './classes/index.js';export * as functions from './functions/index.js';

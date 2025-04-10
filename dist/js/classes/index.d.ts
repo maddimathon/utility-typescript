@@ -1,14 +1,15 @@
 /**
- * Exports only the included classes.
+ * Exports all the package's classes.
  *
  * @module classes
- * @category Partial Exports
+ * @category Entry Points
  *
  * @since tmpl-0.1.1
  *
  * @example
  * ```ts
- * import { ... } from 'utility-typescript/classes';
+ * import { classes } from '@maddimathon/utility-typescript';
+ * import { ... } from '@maddimathon/utility-typescript/classes';
  * ```
  */
 /**

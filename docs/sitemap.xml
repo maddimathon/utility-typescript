@@ -2,42 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://maddimathon.github.io/utility-typescript/modules.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
 		<loc>https://maddimathon.github.io/utility-typescript/index.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
 		<loc>https://maddimathon.github.io/utility-typescript/modules/classes.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/classes/classes.ExampleClass.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
 		<loc>https://maddimathon.github.io/utility-typescript/modules/functions.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/functions/functions.exampleFunction.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
 		<loc>https://maddimathon.github.io/utility-typescript/modules/types.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/utility-typescript/types/ExampleType.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.Arrays.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/utility-typescript/interfaces/ExampleObjectType.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Arrays.ArrayItem.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/utility-typescript/interfaces/ExampleInterface.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.Functions.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/utility-typescript/classes/ExampleClass.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Functions.AnyClass.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 	<url>
-		<loc>https://maddimathon.github.io/utility-typescript/functions/exampleFunction.html</loc>
-		<lastmod>2025-04-10T16:40:39.336Z</lastmod>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.Meta.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Meta.TypeDump.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Meta.TypeDumpRecursive.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.Node.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.Objects.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Objects.RecursivePartial.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.StringLiterals.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.StringLiterals.CountryCode.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.StringLiterals.LangCode.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.StringLiterals.LangLocaleCode.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/modules/types.Test.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Test.Equivalent.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Test.Exactly.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Test.Expect.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Test.ExpectNot.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Test.IsArray.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
+	</url>
+	<url>
+		<loc>https://maddimathon.github.io/utility-typescript/types/types.Test.Satisfies.html</loc>
+		<lastmod>2025-04-10T23:10:21.158Z</lastmod>
 	</url>
 </urlset>

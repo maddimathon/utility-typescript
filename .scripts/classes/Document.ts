@@ -151,15 +151,16 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             categoryOrder: [
                 '*',
-                'Misc.',
-                'Exports',
-                'Partial Exports',
+                '',
+                'Namespaces',
+                'Modules',
+                'Entry Points',
             ],
 
             customFooterHtml: `<p>Copyright <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025. MIT license.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
             customFooterHtmlDisableWrapper: true,
 
-            defaultCategory: 'Misc.',
+            defaultCategory: '',
 
             entryPoints: [
                 './src/ts/index.ts',
@@ -183,7 +184,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             hideGenerator: true,
             hostedBaseUrl: this.pkg.homepage,
 
-            // includeHierarchySummary: true,
+            includeHierarchySummary: true,
             includeVersion: false,
 
             json: './dist/docs/javascript.TypeDoc.json',

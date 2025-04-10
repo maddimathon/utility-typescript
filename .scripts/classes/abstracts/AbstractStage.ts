@@ -13,7 +13,7 @@
 import type { ChildProcess } from 'node:child_process';
 
 import type {
-    RecursivePartial,
+    TS,
 } from '../../@utilities.js';
 
 
@@ -156,7 +156,7 @@ export abstract class AbstractStage<
      * ====================================================================== */
 
     constructor ( args: Args ) {
-        super( args as RecursivePartial<Args> & Args );
+        super( args as TS.Objects.RecursivePartial<Args> & Args );
     }
 
 

@@ -1,8 +1,8 @@
 /**
- * Exports all javascript content, including types.
+ * Modules all javascript content, including types.
  *
  * @module .
- * @category Exports
+ * @category Modules
  *
  * @mergeModuleWith <project>
  *
@@ -10,7 +10,7 @@
  *
  * @example
  * ```ts
- * import { ... } from 'utility-typescript';
+ * import { ... } from '@maddimathon/utility-typescript';
  * ```
  */
 /**
@@ -24,7 +24,10 @@
  * @maddimathon/utility-typescript@tmpl-1.1.0-draft
  * @license MIT
  */
-export type * from './types/index.js';
-export * from './classes/index.js';
-export * from './functions/index.js';
+/** @category Modules */
+export type * as TS from './types/index.js';
+/** @category Modules */
+export * as classes from './classes/index.js';
+/** @category Modules */
+export * as functions from './functions/index.js';
 //# sourceMappingURL=index.d.ts.map

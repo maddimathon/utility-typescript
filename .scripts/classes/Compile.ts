@@ -115,6 +115,8 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
         this.deleteFiles( [
             'dist/js/types/**/*.js',
             'dist/js/types/**/*.js.map',
+            'dist/js/types/**/*.test.d.ts',
+            'dist/js/types/**/*.test.d.ts.map',
         ] );
     }
 }

@@ -33,7 +33,7 @@ export namespace Functions {
 
         /** Colour codes that I like for each colour. */
         ansiColours: {
-            [ C in U.ColourSlug ]: string;
+            [ C in U.TS.ColourSlug ]: string;
         };
 
         copyFilesOpts: Functions.CopyFilesOpts,
@@ -48,7 +48,7 @@ export namespace Functions {
         globOpts: GlobOptions,
 
         /** Language code to use for content */
-        lang: U.LangCode | U.LangLocaleCode;
+        lang: U.TS.StringLiterals.LangCode | U.TS.StringLiterals.LangLocaleCode;
 
         /**
          * Paths to important files/dirs used by this class.
@@ -64,7 +64,7 @@ export namespace Functions {
         /**
          * Function that returns the string to use for folders/zips while packaging.
          */
-        pkgName: ( pkg: U.PackageJson ) => string;
+        pkgName: ( pkg: U.TS.PackageJson ) => string;
 
         readDirOpts: Functions.ReadDirOpts,
         readFileOpts: Functions.ReadFileOpts,
@@ -81,7 +81,13 @@ export namespace Functions {
         };
 
         writeFileOpts: Functions.WriteFileOpts,
-    } & U.ArgsObject;
+    } & U.TS.ArgsObject;
+
+    type OptsPartialKeys = "copyFilesOpts" | "globOpts" | "readDirOpts" | "readFileOpts" | "typeOfOpts" | "writeFileOpts";
+
+    export type Opts_Partial = Partial<Omit<Opts, OptsPartialKeys>> & {
+        [ K in OptsPartialKeys ]?: Partial<Opts[ K ]>;
+    };
 
     /** For notices */
     export type BuildStage =
@@ -129,11 +135,14 @@ export namespace Functions {
 
 import { ChildProcess } from 'node:child_process';
 
-export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts ) = Functions.Opts> {
+export class Functions<
+    Opts extends ( { [ key: string ]: any; } & Functions.Opts ) = Functions.Opts,
+    Opts_Partial extends ( Partial<Functions.Opts> | Functions.Opts_Partial ) = Functions.Opts_Partial,
+> {
 
     protected _opts?: Opts = undefined;
 
-    protected set opts( input: U.RecursivePartial<Opts> ) {
+    protected set opts( input: U.TS.Objects.RecursivePartial<Opts> ) {
         if (
             typeof this._opts !== 'undefined'
             && this._opts !== undefined
@@ -242,7 +251,9 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
     /** CONSTRUCTOR
      ** ==================================================================== **/
 
-    constructor ( opts: U.RecursivePartial<Opts> = {} ) {
+    // @ts-expect-error
+    constructor ( opts: Opts_Partial = {} ) {
+        // @ts-expect-error
         this.opts = opts;
     }
 
@@ -306,8 +317,8 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
     ): string[] {
 
         const globResult = globSync( globs, this.mergeArgs(
-            this.opts.globOpts as U.ArgsObject,
-            opts as U.ArgsObject,
+            this.opts.globOpts as U.TS.ArgsObject,
+            opts as U.TS.ArgsObject,
             false
         ) ) as string | string[];
 
@@ -421,8 +432,8 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
             : _content;
 
         const opts: Functions.WriteFileOpts = this.parseArgs(
-            this.opts.writeFileOpts as U.ArgsObject,
-            _opts as U.ArgsObject,
+            this.opts.writeFileOpts as U.TS.ArgsObject,
+            _opts as U.TS.ArgsObject,
             true
         ) as Functions.WriteFileOpts;
 
@@ -511,10 +522,12 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
         // I prefer them as constants
         const [ glob, destination, source ] = [ _glob, _destination, _source ];
 
-        const opts: Functions.CopyFilesOpts = this.parseArgs(
-            this.opts.copyFilesOpts,
-            _opts
-        );
+        // @ts-expect-error
+        const opts: Functions.CopyFilesOpts
+            = this.parseArgs(
+                this.opts.copyFilesOpts,
+                _opts
+            );
 
         /** 
          * Resolved versions of the directory paths with trailing slashes.
@@ -679,15 +692,15 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
     /** 
      * An object of the project’s pacakge.json file.
      */
-    #pkg: U.PackageJson | undefined = undefined;
+    #pkg: U.TS.PackageJson | undefined = undefined;
 
     /** 
      * An object of the project’s pacakge.json file.
      */
-    public get pkg(): U.PackageJson {
+    public get pkg(): U.TS.PackageJson {
 
         if ( this.#pkg === undefined ) {
-            this.#pkg = JSON.parse( this.readFile( this.opts.paths.packageJson ) ) as U.PackageJson;
+            this.#pkg = JSON.parse( this.readFile( this.opts.paths.packageJson ) ) as U.TS.PackageJson;
         }
 
         return this.#pkg;
@@ -883,7 +896,7 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
      * object.
      *
      * @override  Default value in `Object.prototype`.
-     * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | MDN documentation}
      */
     public toString(): string { return JSON.stringify( this, null, 4 ); }
 
@@ -1032,22 +1045,22 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
      * @return  Resulting object with all the `defaults` and `inputs` keys with 
      *          either default values or input values, as appropriate.
      */
-    public mergeArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>>(
+    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
         defaults: D,
         inputs: undefined,
         recursive?: boolean,
     ): D;
-    public mergeArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>, I extends U.RecursivePartial<D>>(
+    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>, I extends U.TS.Objects.RecursivePartial<D>>(
         defaults: D,
         inputs: I,
         recursive?: true,
     ): D & I;
-    public mergeArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>, I extends Partial<D>>(
+    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>, I extends Partial<D>>(
         defaults: D,
         inputs: I,
         recursive?: false,
     ): D & I;
-    public mergeArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>, I extends U.ArgsObject<V>>(
+    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>, I extends U.TS.ArgsObject<V>>(
         defaults: D,
         inputs?: I,
         recursive: boolean = false,
@@ -1084,8 +1097,9 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
             ) {
 
                 // get deep
+                // @ts-expect-error
                 result[ key ] = this.mergeArgs(
-                    { ...defaultValue } as ( D & I )[ keyof I ] & U.ArgsObject,
+                    { ...defaultValue } as ( D & I )[ keyof I ] & U.TS.ArgsObject,
                     { ...inputValue },
                     recursive,
                 ) as ( D & I )[ keyof I ];
@@ -1113,17 +1127,17 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
      * @return  Resulting object with all the `defaults` keys with either
      *          default values or input values, as appropriate.
      */
-    public parseArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>>(
+    public parseArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
         defaults: D,
-        inputs?: U.RecursivePartial<D>,
+        inputs?: U.TS.Objects.RecursivePartial<D>,
         recursive?: true,
     ): D;
-    public parseArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>>(
+    public parseArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
         defaults: D,
         inputs?: Partial<D>,
         recursive?: false,
     ): D;
-    public parseArgs<V extends U.ArgsSingleValue, D extends U.ArgsObject<V>>(
+    public parseArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
         defaults: D,
         inputs?: Partial<D>,
         recursive: boolean = false,
@@ -1151,8 +1165,9 @@ export class Functions<Opts extends ( { [ key: string ]: any; } & Functions.Opts
             ) {
 
                 // get deep
+                // @ts-expect-error
                 result[ key ] = this.parseArgs(
-                    { ...defaultValue } as D[ keyof D ] & U.ArgsObject,
+                    { ...defaultValue } as D[ keyof D ] & U.TS.ArgsObject,
                     { ...inputValue },
                     recursive,
                 ) as D[ keyof D ];
