@@ -1,0 +1,1 @@
+function a(){return'hello'}export{a as exampleFunction};
