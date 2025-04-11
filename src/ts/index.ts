@@ -2,7 +2,6 @@
  * Modules all javascript content, including types.
  * 
  * @module .
- * @category Modules
  * 
  * @mergeModuleWith <project>
  * 
@@ -25,11 +24,11 @@
  * @license MIT
  */
 
-/** @category Modules */
+/** @category Globals */
 export type * as TS from './types/index.js';
 
-/** @category Modules */
+/** @category Globals */
 export * as classes from './classes/index.js';
 
-/** @category Modules */
+/** @category Globals */
 export * as functions from './functions/index.js';

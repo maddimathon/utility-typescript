@@ -2,7 +2,6 @@
  * @since ___PKG_VERSION___
  * 
  * @packageDocumentation
- * @category String Literals - HTML
  */
 /**
  * @package @maddimathon/utility-typescript@___CURRENT_VERSION___

@@ -742,7 +742,7 @@ export class Functions<
 
     public get pkgVersion(): string {
         const suffix: string = ( this.opts.dryrun || ( !this.opts.packaging && !this.opts.releasing ) ) ? '-draft' : '';
-        return `${ this.pkg.name === '@maddimathon/utility-typescript' ? 'tmpl-' : '' }${ this.pkg.version }${ suffix }`;
+        return `${ this.pkg.version }${ suffix }`;
     }
 
     #releasePath: string | undefined = undefined;
@@ -997,7 +997,7 @@ export class Functions<
                     .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
                     .join( '\n' );
 
-        console.log( 'Console error:' + output, );
+        // console.log( 'Console error:' + output, );
         process.exit( 1 );
     }
 

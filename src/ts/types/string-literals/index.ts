@@ -2,7 +2,6 @@
  * String literal utility types.
  * 
  * @module StringLiterals
- * @category Namespaces
  * 
  * @since ___PKG_VERSION___
  * 

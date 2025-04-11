@@ -2,7 +2,6 @@
  * Utility types either of or for arrays.
  * 
  * @module Arrays
- * @category Namespaces
  * 
  * @since ___PKG_VERSION___
  * 

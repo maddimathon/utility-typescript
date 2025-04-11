@@ -3,7 +3,6 @@
  * internally.
  *
  * @module Meta
- * @category Namespaces
  *
  * @since ___PKG_VERSION___
  *

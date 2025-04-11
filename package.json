@@ -1,6 +1,6 @@
 {
     "name": "@maddimathon/utility-typescript",
-    "version": "1.1.0",
+    "version": "1.0.0",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
@@ -48,10 +48,7 @@
         
         "./types": "./dist/types/index.d.ts",
         "./types/*": "./dist/types/*.d.ts",
-        "./types/*.d.ts": "./dist/types/*.d.ts",
-        
-        "./scss": "./dist/scss/index.scss",
-        "./scss/*.js": "./dist/scss/*.scss"
+        "./types/*.d.ts": "./dist/types/*.d.ts"
     },
 
     "publishConfig": {

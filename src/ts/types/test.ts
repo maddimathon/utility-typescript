@@ -5,7 +5,6 @@
  * and {@link https://frontendmasters.com/blog/testing-types-in-typescript/#getting-serious | *Testing Types in TypeScript* by Adam Rackis}.
  * 
  * @module Test
- * @category Namespaces
  * 
  * @since ___PKG_VERSION___
  * 

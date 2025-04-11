@@ -1,5 +1,5 @@
 <!--README_HEADER-->
-# Utility TypeScript @ tmpl-1.1.0-draft
+# Utility TypeScript @ 1.0.0-draft
 <!--/README_HEADER-->
 
 <!--CURRENT_DESC-->
@@ -9,7 +9,7 @@ TypeScript utilities (types, functions, classes) to use in various node/npm proj
 Probably not best to use in production/client-side without a bundler (and
 including only the required exports) to avoid bulk and inefficiency.
 
-<a href="___CURRENT_URL___/modules.html" class="button">See the exports</a>
+<a href="https://maddimathon.github.io/utility-typescript/modules.html" class="button" target="_blank">See the exports</a>
 
 
 

@@ -1,1 +1,1 @@
-export * from './exampleFunction.js';
+export * from './arrays/index.js';export * from './objects/index.js';export * from './typeOf.js';

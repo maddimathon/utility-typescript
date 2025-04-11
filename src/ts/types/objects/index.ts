@@ -2,7 +2,6 @@
  * Utility types either of or for objects.
  * 
  * @module Objects
- * @category Namespaces
  * 
  * @since ___PKG_VERSION___
  * 

@@ -147,11 +147,13 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 '@source',
             ],
 
-            // categorizeByGroup: true,
+            categorizeByGroup: true,
 
             categoryOrder: [
                 '*',
                 '',
+                'Functions',
+                'Classes',
                 'Namespaces',
                 'Modules',
                 'Entry Points',
@@ -233,7 +235,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             visibilityFilters: {
                 '@alpha': false,
-                '@beta': false,
+                '@beta': true,
                 external: true,
                 inherited: true,
                 private: false,

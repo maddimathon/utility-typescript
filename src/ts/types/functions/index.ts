@@ -2,7 +2,6 @@
  * Utility types either of or for functions.
  * 
  * @module Functions
- * @category Namespaces
  * 
  * @since ___PKG_VERSION___
  * 

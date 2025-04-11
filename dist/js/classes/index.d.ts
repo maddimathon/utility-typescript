@@ -13,14 +13,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@tmpl-1.1.0-draft
+ * @package @maddimathon/utility-typescript@1.0.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@tmpl-1.1.0-draft
+ * @maddimathon/utility-typescript@1.0.0-draft
  * @license MIT
  */
 export * from './ExampleClass.js';

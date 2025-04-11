@@ -2,7 +2,6 @@
  * Node and NPM-related utility types.
  * 
  * @module Node
- * @category Namespaces
  * 
  * @since ___PKG_VERSION___
  * 
