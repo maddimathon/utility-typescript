@@ -1,0 +1,1 @@
+function a(A){return A.replace(/\$/g,'$$$$')}export{a as escRegExpReplace};

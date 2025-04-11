@@ -25,5 +25,6 @@
  */
 export * from './arrays/index.js';
 export * from './objects/index.js';
+export * from './regex/index.js';
 export * from './typeOf.js';
 //# sourceMappingURL=index.d.ts.map

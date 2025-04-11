@@ -4,7 +4,14 @@
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
-    "keywords": [],
+    "keywords": [
+        "javascript-utilities",
+        "javascript-utility",
+        "npm-package-typescript",
+        "npm-package",
+        "typescript-library",
+        "typescript-utilities"
+    ],
 
     "homepage": "https://maddimathon.github.io/utility-typescript",
     "license": "MIT",

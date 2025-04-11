@@ -16,6 +16,8 @@
  *
  * Filters out any item that is not the first instance of that item in the
  * array
+ * 
+ * @source
  *
  * @template I  Array item type.
  *
