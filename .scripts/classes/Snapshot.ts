@@ -4,8 +4,6 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 

@@ -4,8 +4,6 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 
@@ -145,7 +143,8 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
                 '.npmrc',
                 '.nvmrc',
                 'package.json',
-                'LICENSE',
+                'package-lock.json',
+                'LICENSE.md',
                 'README.md',
             ],
             this.releasePath,

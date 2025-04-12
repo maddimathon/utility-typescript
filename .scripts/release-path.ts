@@ -6,8 +6,6 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 import { F } from './@utilities.js';

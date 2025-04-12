@@ -1,5 +1,5 @@
 /**
- * @since tmpl-0.1.1
+ * @since 1.0.0-draft
  *
  * @packageDocumentation
  */

@@ -5,7 +5,7 @@
  *
  * @mergeModuleWith <project>
  *
- * @since tmpl-0.1.1
+ * @since 1.0.0-draft
  *
  * @example
  * ```ts
@@ -24,7 +24,7 @@
  * @license MIT
  */
 /** @category Globals */
-export type * as TS from './types/index.js';
+export type * as Types from './types/index.js';
 /** @category Globals */
 export * as classes from './classes/index.js';
 /** @category Globals */

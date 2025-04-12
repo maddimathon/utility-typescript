@@ -39,21 +39,11 @@ test( 'arrayUnique()', () => {
 
     const result = arrayUnique( arrNotUnique );
 
-    // arrUnique.sort();
-    // result.sort();
-
-    // console.log( 'arrUnique = ', arrUnique );
-    // console.log( 'result = ', result );
-
     type tests = [
         Test.Expect<Test.Exactly<typeof result, typeof arrUnique>>,
     ];
 
-    result.forEach( ( item, index ) => {
-        expect( item ).toBe( arrUnique[ index ] );
-        expect( result[ index ] ).toBe( arrUnique[ index ] );
-        expect( result[ index ] ).toBe( item );
-    } );
+    expect( result ).toEqual( arrUnique );
 
     // as tests[0] only so that type is used
     true as tests[ 0 ];

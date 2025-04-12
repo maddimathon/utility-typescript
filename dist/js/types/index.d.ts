@@ -1,14 +1,14 @@
 /**
  * Exports all global types (no JavaScript).
  *
- * @module types
+ * @module Types
  * @category Entry Points
  *
- * @since tmpl-0.1.1
+ * @since 1.0.0-draft
  *
  * @example
  * ```ts
- * import type { TS } from '@maddimathon/utility-typescript';
+ * import type { Types } from '@maddimathon/utility-typescript';
  * import type { ... } from '@maddimathon/utility-typescript/types';
  * ```
  */
@@ -24,6 +24,7 @@
  * @license MIT
  */
 export type * as Arrays from './arrays/index.ts';
+export type * as Classes from './classes/index.ts';
 export type * as Functions from './functions/index.ts';
 export type * as Meta from './meta.ts';
 export type * as Node from './node/index.ts';

@@ -4,7 +4,7 @@
  * @module classes
  * @category Entry Points
  *
- * @since tmpl-0.1.1
+ * @since 1.0.0-draft
  *
  * @example
  * ```ts
@@ -23,5 +23,6 @@
  * @maddimathon/utility-typescript@1.0.0-draft
  * @license MIT
  */
+export * as abstracts from './abstracts/index.js';
 export * from './ExampleClass.js';
 //# sourceMappingURL=index.d.ts.map

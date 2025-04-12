@@ -18,4 +18,6 @@ import { escRegExp } from './escRegExp.js';
 
 test( 'escRegExp()', () => {
     expect( new RegExp( escRegExp( '.*+?^${}()|[]\\/' ), 'g' ).toString() ).toBe( /\.\*\+\?\^\$\{\}\(\)\|\[\]\\\//g.toString() );
+    expect( new RegExp( escRegExp( 'example/file/path?' ), 'g' ).toString() ).toBe( /example\/file\/path\?/g.toString() );
+    expect( 'contains/example/file/path? - and more' ).toMatch( new RegExp( escRegExp( 'example/file/path?' ), 'g' ) );
 } );

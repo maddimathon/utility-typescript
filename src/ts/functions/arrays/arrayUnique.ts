@@ -17,6 +17,8 @@
  * Filters out any item that is not the first instance of that item in the
  * array
  * 
+ * @category Array Helpers
+ * 
  * @source
  *
  * @template I  Array item type.
@@ -25,7 +27,8 @@
  * @return  Unique array.
  */
 export function arrayUnique<I>( arr: I[] ): I[] {
-    // console.log( 'arrayUnique() arr = ', arr );
+    // returns
+    if ( !Array.isArray( arr ) ) { return arr; }
 
     return [ ...arr ].filter( ( v, i, a ) => a.indexOf( v ) === i );
 }

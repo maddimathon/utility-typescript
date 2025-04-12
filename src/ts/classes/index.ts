@@ -4,7 +4,7 @@
  * @module classes
  * @category Entry Points
  * 
- * @since tmpl-0.1.1
+ * @since ___PKG_VERSION___
  * 
  * @example
  * ```ts
@@ -23,5 +23,7 @@
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
+
+export * as abstracts from './abstracts/index.js';
 
 export * from './ExampleClass.js';

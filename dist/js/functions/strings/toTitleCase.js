@@ -1,0 +1,1 @@
+function a(A){return A.replace(/\w\S*/g,s=>s.charAt(0).toUpperCase()+s.slice(1).toLowerCase())}export{a as toTitleCase};

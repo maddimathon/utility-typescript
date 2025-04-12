@@ -6,6 +6,7 @@
 # SCRIPTS
 # ======= #
 .scripts/classes/doc
+.scripts/logs
 .scripts/typedoc-plugins
 
 

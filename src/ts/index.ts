@@ -5,7 +5,7 @@
  * 
  * @mergeModuleWith <project>
  * 
- * @since tmpl-0.1.1
+ * @since ___PKG_VERSION___
  * 
  * @example
  * ```ts
@@ -25,7 +25,7 @@
  */
 
 /** @category Globals */
-export type * as TS from './types/index.js';
+export type * as Types from './types/index.js';
 
 /** @category Globals */
 export * as classes from './classes/index.js';

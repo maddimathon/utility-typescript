@@ -4,8 +4,6 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 
@@ -97,12 +95,22 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        this.startEndNoticeMaker(
-            which,
-            `BUILD ${ which.toUpperCase() }ING`,
-            `BUILD FINISHED`,
-            `${ which.toUpperCase() }ING BUILD`,
-        );
+        if (
+            this.opts.watchedWatcher
+            || this.opts.watchedFilename
+            || this.opts.watchedEvent
+        ) {
+            const emoji = which == 'end' ? '✅' : '🚨';
+            this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.opts.watchedEvent }: ${ this.opts.watchedFilename }`, 0 );
+        } else {
+
+            this.startEndNoticeMaker(
+                which,
+                `BUILD ${ which.toUpperCase() }ING`,
+                `BUILD FINISHED`,
+                `${ which.toUpperCase() }ING BUILD`,
+            );
+        }
     }
 
 
@@ -119,6 +127,8 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
             only: this.opts[ 'only-compile' ],
             without: this.opts[ 'without-compile' ],
+
+            building: true,
         } );
 
         await cmpl.run();
@@ -133,6 +143,8 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
             only: this.opts[ 'only-document' ],
             without: this.opts[ 'without-document' ],
+
+            building: true,
         } );
 
         await doc.run();
@@ -164,17 +176,19 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async replace() {
         this.progressLog( 'replacing placeholders...', 1 );
 
+        if ( !this.opts.watchedEvent ) {
 
-        this.verboseLog( 'replacing in dist...', 2 );
-        for ( const o of currentReplacements( this as Functions ).concat( pkgReplacements( this as Functions ) ) ) {
-            this.replaceInFiles(
-                [
-                    './dist/**/*',
-                ],
-                o.find,
-                o.replace,
-                this.opts.verbose ? 3 : 2,
-            );
+            this.verboseLog( 'replacing in dist...', 2 );
+            for ( const o of currentReplacements( this as Functions ).concat( pkgReplacements( this as Functions ) ) ) {
+                this.replaceInFiles(
+                    [
+                        './dist/**/*',
+                    ],
+                    o.find,
+                    o.replace,
+                    this.opts.verbose ? 3 : 2,
+                );
+            }
         }
 
 
@@ -182,12 +196,15 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         const headerRegex = /(<!--README_HEADER-->).*?(<!--\/README_HEADER-->)/gs;
 
-        const descRegex = /(<!--CURRENT_DESC-->).*?(<!--\/CURRENT_DESC-->)/gs;
+        const descRegex = /(<!--README_DESC-->).*?(<!--\/README_DESC-->)/gs;
+
+        const ctaRegex = /(<!--README_DOCS_CTA-->).*?(<!--\/README_DOCS_CTA-->)/gs;
 
         this.writeFile( 'README.md', (
             this.readFile( 'README.md' )
                 .replace( headerRegex, '$1\n' + this.escRegExpReplace( `# ${ this.pkgTitle } @ ${ this.pkgVersion }` ) + '\n$2' )
                 .replace( descRegex, '$1\n' + this.escRegExpReplace( this.pkg.description ) + '\n$2' )
+                .replace( ctaRegex, '$1\n' + this.escRegExpReplace( `<a href="${ this.pkg.homepage }" class="button" target="_blank">Read Documentation</a>` ) + '\n$2' )
         ), { force: true } );
     }
 
@@ -200,6 +217,8 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
             only: this.opts[ 'only-test' ],
             without: this.opts[ 'without-test' ],
+
+            building: true,
         } );
 
         await t.run();

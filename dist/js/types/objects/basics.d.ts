@@ -15,8 +15,6 @@ import { AnyClass } from '../functions/basics.js';
  * Similar to the default Partial, but this also makes any child objects
  * Partial.
  *
- * @expand
- *
  * @param T  Type to Partial-ize. Can be a non-object without error.
  */
 type RecursivePartial_Inner<U> = U extends number | null | string | undefined | AnyClass | Function ? U : U extends Record<number | string, any> ? RecursivePartial<U> : U;
@@ -25,6 +23,8 @@ type RecursivePartial_Inner<U> = U extends number | null | string | undefined | 
  * Partial.
  *
  * @param T  Type to Partial-ize.
+ *
+ * @expandType RecursivePartial_Inner
  */
 export type RecursivePartial<T extends Record<number | string, any>> = T extends AnyClass | Function ? T : {
     [P in keyof T]?: T[P] extends (infer U)[] ? RecursivePartial_Inner<U>[] : RecursivePartial_Inner<T[P]>;

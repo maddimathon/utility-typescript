@@ -4,20 +4,16 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 
 /* IMPORT TYPES */
-// import type { TypeDump } from '../@utilities.js';
 import type { AbstractArgs } from './abstracts/AbstractStage.js';
 import type { Functions } from './Functions.js';
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
 import * as typeDoc from "typedoc";
-import * as typeDocPlugin_MD from "typedoc-plugin-markdown";
 
 
 /* IMPORT LOCAL DEPENDENCIES */
@@ -38,13 +34,6 @@ export interface DocumentArgs extends AbstractArgs<DocumentStages> {
 }
 
 export type DocumentStages = typeof docStages[ number ];
-
-type LocalTypeDocOptions =
-    Pick<
-        Required<typeDoc.TypeDocOptions & typeDocPlugin_MD.PluginOptions>,
-        "json"
-    >
-    & Partial<typeDoc.TypeDocOptions & typeDocPlugin_MD.PluginOptions>;
 
 
 
@@ -131,13 +120,8 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     protected async ts() {
         this.progressLog( 'documenting typescript...', 1 );
 
-        const siteTitle = [
-            this.pkgTitle,
-            this.pkgVersion,
-        ].filter( v => v ).join( ' @ ' );
-
         // TODO - generate entryPoints from pkg.main and pkg.exports
-        const config: LocalTypeDocOptions = {
+        const config: Partial<typeDoc.TypeDocOptions> = {
 
             blockTags: [
                 ...typeDoc.OptionDefaults.blockTags,
@@ -178,6 +162,14 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             excludeReferences: false,
 
             githubPages: true,
+
+            groupOrder: [
+                '*',
+                'Functions',
+                'Classes',
+                'Namespaces',
+                'Modules',
+            ],
             groupReferencesByType: true,
 
             headings: {
@@ -186,18 +178,16 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             hideGenerator: true,
             hostedBaseUrl: this.pkg.homepage,
 
-            includeHierarchySummary: true,
             includeVersion: false,
 
-            json: './dist/docs/javascript.TypeDoc.json',
+            // json: './dist/docs/javascript.TypeDoc.json',
 
             markdownLinkExternal: true,
 
-            // name: [
-            //     this.pkgName.replace( /^@maddimathon\//gi, '' ),
-            //     this.pkgVersion,
-            // ].filter( v => v ).join( ' @ ' ),
-            name: siteTitle,
+            name: [
+                this.pkgTitle,
+                this.pkgVersion,
+            ].filter( v => v ).join( ' @ ' ),
 
             // navigation: {
             // },
@@ -210,24 +200,21 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             out: './docs',
             plugin: [
                 'typedoc-plugin-inline-sources',
-                // 'typedoc-plugin-markdown',
             ],
 
-            // projectDocuments: [
-            //     'README.md',
-            // ],
+            projectDocuments: [
+                'README.md',
+                'CHANGELOG.md',
+                'LICENSE.md',
+            ],
 
-            // readme: 'none',
-            // router: 'kind',
-            // router: 'member',
-            // router: 'structure',
+            readme: 'none',
+            router: 'structure',
 
             searchInComments: true,
             searchInDocuments: true,
 
             // sidebarLinks: {
-            //     // [ siteTitle ]: '/index.html',
-            //     // 'Hierarchy': '/hierarchy.html',
             // },
 
             sortEntryPoints: false,
@@ -241,15 +228,6 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 private: false,
                 protected: true,
             },
-
-
-            // typedoc-plugin-markdown options
-            // entryFileName: 'index',
-            // expandParameters: true,
-            // hideBreadcrumbs: true,
-            // hidePageHeader: true,
-            // modulesFileName: 'entry-points',
-            // sanitizeComments: true,
         };
 
         if ( config.out ) {
@@ -270,7 +248,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             this.deleteFiles( config.json );
         }
 
-        this.verboseLog( 'running tsdoc...', 2 );
+        this.verboseLog( 'running typedoc...', 2 );
         const app: typeDoc.Application = await typeDoc.Application.bootstrapWithPlugins( config );
 
         // May be undefined if errors are encountered.
@@ -278,25 +256,10 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
         // returns
         if ( !project ) {
-            this.verboseLog( 'tsdoc failed', 3 );
+            this.verboseLog( 'typedoc failed', 3 );
             return;
         }
 
         await app.generateOutputs( project );
-
-        // const typeDocJson = JSON.parse( this.readFile( config.json ) ) as ( '' | null | undefined | typeDoc.JSONOutput.ProjectReflection );
-
-        // // returns
-        // if ( !typeDocJson ) {
-        //     this.verboseLog( 'tsdoc json export empty', 3 );
-        //     return;
-        // }
-
-        // const docsProject = new Doc_Project( typeDocJson, {
-        //     'log-level-base': ( this.opts.verbose ? 3 : 2 ) + ( this.opts[ 'log-base-level' ] ?? 0 ),
-        // } );
-
-        // this.deleteFiles( 'src/docs/content/js.json' );
-        // this.writeFile( 'src/docs/content/js.json', JSON.stringify( docsProject, null, 4 ) );
     }
 }

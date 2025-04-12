@@ -1,0 +1,21 @@
+/**
+ * @since ___PKG_VERSION___
+ * 
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ */
+/*!
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @license MIT
+ */
+
+// import type { Test } from '../../types/index.js';
+import { expect, test } from '@jest/globals';
+
+import { toTitleCase } from './toTitleCase.js';
+
+test( 'toTitleCase()', () => {
+    expect( toTitleCase( 'hello thEre dEar-o-miNe' ) ).toBe( 'Hello There Dear-o-mine' );
+} );

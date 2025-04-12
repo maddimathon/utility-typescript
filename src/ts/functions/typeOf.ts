@@ -16,12 +16,12 @@ import { AnyClass } from '../types/functions/index.js';
 import { mergeArgs } from './objects/mergeArgs.js';
 
 /**
- * Used only for the {@link typeOf | `typeOf` function}.
+ * Used only for {@link typeOf | typeOf()}.
  */
 export namespace typeOf {
 
     /**
-     * Optional configuation for {@link typeOf | `typeOf` function}.
+     * Optional configuation for {@link typeOf | typeOf()}.
      * @interface
      * @expand
      */
@@ -49,9 +49,11 @@ export namespace typeOf {
     ) ? never : "object";
 
     /**
-     * Return options for the {@link typeOf | `typeOf` function}.
+     * Return options for the {@link typeOf | typeOf()}.
      * 
      * @param Type  Type of variable being testing.
+     * 
+     * @expand
      */
     export type Return<Type extends TestType> =
         | ( Type extends any[] ? "array" : never )
@@ -67,7 +69,7 @@ export namespace typeOf {
         | ( Type extends undefined ? "undefined" : never );
 
     /**
-     * Input variable types for the {@link typeOf | `typeOf` function}.
+     * Input variable types for the {@link typeOf | typeOf()}.
      */
     export type TestType =
         | ( () => any )

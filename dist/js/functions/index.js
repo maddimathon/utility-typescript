@@ -1,1 +1,1 @@
-export * from './arrays/index.js';export * from './objects/index.js';export * from './regex/index.js';export * from './typeOf.js';
+export * from './arrays/index.js';export * from './html/index.js';export * from './objects/index.js';export * from './strings/index.js';export * from './regex/index.js';export * from './typeOf.js';

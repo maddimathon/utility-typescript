@@ -17,9 +17,6 @@ import { expect, test } from '@jest/globals';
 import { escRegExpReplace } from './escRegExpReplace.js';
 
 test( 'escRegExpReplace()', () => {
-
-    const str = '(hello)';
-    const repl = '$$$ dollar-dollar bills';
-
-    expect( str.replace( /hello/g, escRegExpReplace( repl ) ) ).toBe( `(${ repl })` );
+    expect( '(hello)'.replace( /hello/g, escRegExpReplace( 'goodbye' ) ) ).toBe( `(goodbye)` );
+    expect( 'cash money'.replace( /(dollars?|money)/gi, escRegExpReplace( '$$$' ) ) ).toBe( 'cash $$$' );
 } );

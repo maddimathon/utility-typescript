@@ -4,8 +4,6 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 
@@ -13,7 +11,7 @@
 import type { ChildProcess } from 'node:child_process';
 
 import type {
-    TS,
+    Types,
 } from '../../@utilities.js';
 
 
@@ -88,6 +86,11 @@ export interface AbstractArgs<Stages extends string | never> extends Partial<Fun
     /* these are values used to indicate that another build script is being run */
 
     /**
+     * Indicates that this is being done as part of the building script.
+     */
+    building?: boolean;
+
+    /**
      * Indicates a package/release dry-run - i.e., make no irreversable changes.
      */
     dryrun?: boolean;
@@ -156,7 +159,7 @@ export abstract class AbstractStage<
      * ====================================================================== */
 
     constructor ( args: Args ) {
-        super( args as TS.Objects.RecursivePartial<Args> & Args );
+        super( args as Types.Objects.RecursivePartial<Args> & Args );
     }
 
 
@@ -392,7 +395,7 @@ export abstract class AbstractStage<
         }> = JSON.parse( this.readFile( tsconfigPath ) );
 
         // deleting current files
-        if ( tsconfig.compilerOptions?.noEmit !== true ) {
+        if ( !this.opts.watchedEvent && tsconfig.compilerOptions?.noEmit !== true ) {
 
             const outDir = tsconfig.compilerOptions?.outDir;
 

@@ -4,8 +4,6 @@
  * @homepage ___CURRENT_URL___
  * 
  * @license MIT
- * 
- * @since ___PKG_VERSION___
  */
 
 
@@ -72,13 +70,12 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        const emoji = which == 'end' ? '✅' : '🚨';
-
-        if (
+        if ( !this.opts.building && (
             this.opts.watchedWatcher
             || this.opts.watchedFilename
             || this.opts.watchedEvent
-        ) {
+        ) ) {
+            const emoji = which == 'end' ? '✅' : '🚨';
             this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.opts.watchedEvent }: ${ this.opts.watchedFilename }`, 0 );
         } else {
 
@@ -111,12 +108,15 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
             await this.compileTypescript( path, 2 );
         }
 
-        this.verboseLog( 'deleting type-only javascript files...', 2 );
-        this.deleteFiles( [
-            'dist/js/types/**/*.js',
-            'dist/js/types/**/*.js.map',
-            'dist/js/types/**/*.test.d.ts',
-            'dist/js/types/**/*.test.d.ts.map',
-        ] );
+        if ( !this.opts.watchedEvent ) {
+
+            this.verboseLog( 'deleting type-only javascript files...', 2 );
+            this.deleteFiles( [
+                'dist/js/types/**/*.js',
+                'dist/js/types/**/*.js.map',
+                'dist/js/types/**/*.test.d.ts',
+                'dist/js/types/**/*.test.d.ts.map',
+            ] );
+        }
     }
 }

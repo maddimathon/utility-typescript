@@ -1,15 +1,20 @@
+---
+title: ReadMe
+---
+
 <!--README_HEADER-->
 # Utility TypeScript @ 1.0.0-draft
 <!--/README_HEADER-->
 
-<!--CURRENT_DESC-->
+<!--README_DESC-->
 TypeScript utilities (types, functions, classes) to use in various node/npm projects.
-<!--/CURRENT_DESC-->
+<!--/README_DESC-->
 
 Probably not best to use in production/client-side without a bundler (and
 including only the required exports) to avoid bulk and inefficiency.
 
-<a href="https://maddimathon.github.io/utility-typescript/modules.html" class="button" target="_blank">See the exports</a>
+The library aims to be pretty configurable, but it's definitely targeted towards
+my personal needs/preferences rather than developers in general.
 
 
 
@@ -20,9 +25,40 @@ npm i -D github:maddimathon/utility-typescript
 ```
 
 
+## Use
+
+For an overview of all exported items, including types, see the documentation below.
+
+<!--README_DOCS_CTA-->
+<a href="https://maddimathon.github.io/utility-typescript" class="button" target="_blank">Read Documentation</a>
+<!--/README_DOCS_CTA-->
+
+
+### Exports & Entry Points
+
+There are four defined entry points, including the root, though it should be
+possible to target individual files (carefully and at your own risk, paths may
+change without being considered a breaking change). The root entry point exports
+the other entry points as modules.
+
+```ts
+import {
+    type Types,
+    classes,
+    functions,
+} from '@maddimathon/utility-typescript';
+
+import type { ... } from '@maddimathon/utility-typescript/types';
+
+import { ... } from '@maddimathon/utility-typescript/classes';
+import { ... } from '@maddimathon/utility-typescript/functions';
+```
+
+
 ## Development
 
-This library is maintained by [Maddi Mathon](https://www.maddimathon.com).
+This library is maintained by [Maddi Mathon](https://www.maddimathon.com) and is
+currently unlikely to accept other contributions.
 
 
 ### Coding Practices
@@ -44,7 +80,8 @@ Documentation for the included JavaScript is generated from the TypeScript types
 and block comments in the source.  Every new addition should be thoroughly
 documented from the start.
 
-To include the source code in documentation, add the `@source` block tag.
+To include the source code in documentation, add the `@source` block tag (uses
+[typedoc-plugin-inline-sources](https://www.npmjs.com/package/typedoc-plugin-inline-sources)).
 
 #### Unit Testing
 
@@ -57,3 +94,10 @@ but with `.test` added before the extension — e.g., `myFunction.ts` is tested 
 
 Every subdirectory should have its own `index.ts` that re-exports the contents
 of its files.
+
+
+
+## License
+
+This mini-library uses the [MIT license](LICENSE.md).  Please read and understand
+the license — I promise it’s short!

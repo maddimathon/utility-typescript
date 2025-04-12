@@ -3,8 +3,9 @@
 /**
  * Some utility functions to use while building the project.
  * 
- * @package @maddimathon/utility-typescript
- * @since ___PKG_VERSION___
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @author Maddi Mathon (www.maddimathon.com)
+ * @homepage ___CURRENT_URL___
  */
 
 import {
@@ -24,6 +25,15 @@ import { DateTime } from 'luxon';
 
 import type * as U from '../@utilities.js';
 
+import {
+    escRegExp,
+    escRegExpReplace,
+    mergeArgs,
+    slugify,
+    toTitleCase,
+    typeOf,
+} from '../../src/ts/functions/index.js';
+
 
 export namespace Functions {
 
@@ -33,7 +43,7 @@ export namespace Functions {
 
         /** Colour codes that I like for each colour. */
         ansiColours: {
-            [ C in U.TS.ColourSlug ]: string;
+            [ C in U.Types.ColourSlug ]: string;
         };
 
         copyFilesOpts: Functions.CopyFilesOpts,
@@ -48,7 +58,7 @@ export namespace Functions {
         globOpts: GlobOptions,
 
         /** Language code to use for content */
-        lang: U.TS.StringLiterals.LangCode | U.TS.StringLiterals.LangLocaleCode;
+        lang: U.Types.StringLiterals.LangCode | U.Types.StringLiterals.LangLocaleCode;
 
         /**
          * Paths to important files/dirs used by this class.
@@ -64,7 +74,7 @@ export namespace Functions {
         /**
          * Function that returns the string to use for folders/zips while packaging.
          */
-        pkgName: ( pkg: U.TS.PackageJson ) => string;
+        pkgName: ( pkg: U.Types.PackageJson ) => string;
 
         readDirOpts: Functions.ReadDirOpts,
         readFileOpts: Functions.ReadFileOpts,
@@ -81,7 +91,7 @@ export namespace Functions {
         };
 
         writeFileOpts: Functions.WriteFileOpts,
-    } & U.TS.ArgsObject;
+    } & U.Types.ArgsObject;
 
     type OptsPartialKeys = "copyFilesOpts" | "globOpts" | "readDirOpts" | "readFileOpts" | "typeOfOpts" | "writeFileOpts";
 
@@ -116,7 +126,7 @@ export namespace Functions {
 
     export type ReadFileOpts = {
         encoding: BufferEncoding;
-        flag: string | undefined;
+        flag?: string | undefined;
     };
 
     /** Default options for `writeFile()`. */
@@ -134,6 +144,7 @@ export namespace Functions {
 }
 
 import { ChildProcess } from 'node:child_process';
+import { RecursivePartial } from 'src/ts/types/objects/basics.js';
 
 export class Functions<
     Opts extends ( { [ key: string ]: any; } & Functions.Opts ) = Functions.Opts,
@@ -142,7 +153,7 @@ export class Functions<
 
     protected _opts?: Opts = undefined;
 
-    protected set opts( input: U.TS.Objects.RecursivePartial<Opts> ) {
+    protected set opts( input: U.Types.Objects.RecursivePartial<Opts> ) {
         if (
             typeof this._opts !== 'undefined'
             && this._opts !== undefined
@@ -266,40 +277,11 @@ export class Functions<
     /**
      * Alias for `typeof` keyword, but with added options: "class", "NaN", "null".
      */
-    protected typeOf(
-        variable: any,
-        _opts: Partial<Opts[ 'typeOfOpts' ]> = {}
-    ): "array" | "bigint" | "boolean" | "class" | "function" | "null" | "number" | "object" | "string" | "symbol" | "NaN" | "undefined" {
-
-        const opts: Opts[ 'typeOfOpts' ] = this.parseArgs( this.opts.typeOfOpts, _opts );
-
-        /**
-         * BY VALUE
-         */
-        if ( variable === null ) { return 'null'; }
-        if ( variable === undefined ) { return 'undefined'; }
-
-        const typeOf = typeof variable;
-
-        /**
-         * BY TYPE
-         */
-        switch ( typeOf ) {
-
-            case 'function':
-                return typeof variable.prototype === 'undefined'
-                    ? 'function'
-                    : 'class';
-
-            case 'number':
-                if ( isNaN( variable ) ) { return 'NaN'; }
-                return 'number';
-
-            case 'object':
-                if ( opts.distinguishArrays && Array.isArray( variable ) ) { return 'array'; }
-                return 'object';
-        }
-        return typeOf;
+    protected typeOf<T extends typeOf.TestType>(
+        variable: T,
+        _opts: Partial<typeOf.Args> = {},
+    ): string & typeOf.Return<T> {
+        return typeOf( variable );
     }
 
 
@@ -317,8 +299,8 @@ export class Functions<
     ): string[] {
 
         const globResult = globSync( globs, this.mergeArgs(
-            this.opts.globOpts as U.TS.ArgsObject,
-            opts as U.TS.ArgsObject,
+            this.opts.globOpts as U.Types.ArgsObject,
+            opts as U.Types.ArgsObject,
             false
         ) ) as string | string[];
 
@@ -395,15 +377,12 @@ export class Functions<
     ): string {
         const path = this.pathResolve( _path );
 
-        const opts: Partial<Functions.ReadFileOpts> & {
-            encoding: 'utf-8';
-        } = this.mergeArgs(
+        const opts: Functions.ReadFileOpts = this.mergeArgs(
             this.opts.readFileOpts,
             {
                 ..._opts,
                 encoding: 'utf-8',
-            },
-            true
+            } as Partial<Functions.ReadFileOpts> & { encoding: 'utf-8'; },
         );
 
         /**
@@ -432,8 +411,8 @@ export class Functions<
             : _content;
 
         const opts: Functions.WriteFileOpts = this.parseArgs(
-            this.opts.writeFileOpts as U.TS.ArgsObject,
-            _opts as U.TS.ArgsObject,
+            this.opts.writeFileOpts as U.Types.ArgsObject,
+            _opts as U.Types.ArgsObject,
             true
         ) as Functions.WriteFileOpts;
 
@@ -692,15 +671,15 @@ export class Functions<
     /** 
      * An object of the project’s pacakge.json file.
      */
-    #pkg: U.TS.PackageJson | undefined = undefined;
+    #pkg: U.Types.PackageJson | undefined = undefined;
 
     /** 
      * An object of the project’s pacakge.json file.
      */
-    public get pkg(): U.TS.PackageJson {
+    public get pkg(): U.Types.PackageJson {
 
         if ( this.#pkg === undefined ) {
-            this.#pkg = JSON.parse( this.readFile( this.opts.paths.packageJson ) ) as U.TS.PackageJson;
+            this.#pkg = JSON.parse( this.readFile( this.opts.paths.packageJson ) ) as U.Types.PackageJson;
         }
 
         return this.#pkg;
@@ -843,47 +822,18 @@ export class Functions<
     }
 
     /**
-     * Turns the given slug into a string with only a-z, 0-9, 
-     * and hyphens (`-`).
-     * 
+     * Turns the given slug into a string with only a-z, 0-9, and hyphens.
+     *
      * @param convertMe  String to convert.
-     * 
+     *
      * @return  Slug version of the input string.
      */
     public slugify( convertMe: string ): string {
-
-        let slug: string = convertMe.toLowerCase();
-
-        // replace accented letters
-        slug = slug.replace( /(À|Á|Â|Ä|Ã|Æ|Å|Ā|à|á|â|ä|ã|æ|å|ā)/gi, 'a' );
-        slug = slug.replace( /(È|É|Ê|Ë|Ē|Ė|Ę|è|é|ê|ë|ē|ė|ę)/gi, 'e' );
-        slug = slug.replace( /(Î|Ï|Í|Ī|Į|Ì|î|ï|í|ī|į|ì)/gi, 'i' );
-        slug = slug.replace( /(Ô|Ö|Ò|Ó|Œ|Ø|Ō|Õ|ô|ö|ò|ó|œ|ø|ō|õ)/gi, 'o' );
-        slug = slug.replace( /(Û|Ü|Ù|Ú|Ū|û|ü|ù|ú|ū)/gi, 'u' );
-        slug = slug.replace( /(Ñ|Ń|ñ|ń)/gi, 'n' );
-
-        // change ampersands to 'and'
-        slug = slug.replace( /(\s)&+(\s)/gi, '$1and$2' );
-        // remove non-letters & non-digits (except spaces & some punctuation, 
-        // which will become dashes)
-        slug = slug.replace( /[^\s|a-z|\d|\n|\-|–|—|_|\:|\;|\/]+/gi, '' );
-        // and now everything else is a dash!
-        slug = slug.replace( /[^\d|a-z]+/gi, '-' );
-        // remove leading/trailing "whitespace"
-        slug = slug.replace( /(^[\n|\s|\-]+|[\n|\s|\-]+$)/gi, '' );
-
-        // remove multi-dashes
-        slug = slug.replace( /-+/gi, '-' );
-
-        return slug;
+        return slugify( convertMe );
     }
 
     public toTitleCase( convertMe: string ): string {
-
-        return convertMe.replace(
-            /\w\S*/g,
-            ( s ) => s.charAt( 0 ).toUpperCase() + s.slice( 1 ).toLowerCase()
-        );
+        return toTitleCase( convertMe );
     }
 
 
@@ -963,14 +913,14 @@ export class Functions<
      * Escapes a string for use in a regular expression.
      */
     protected escRegExp( convertMe: string ): string {
-        return convertMe.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+        return escRegExp( convertMe );
     }
 
     /**
      * Escapes a string for use as a replacement for a regular expression.
      */
     protected escRegExpReplace( convertMe: string ): string {
-        return convertMe.replace( /\$/g, '$$$$' );
+        return escRegExpReplace( convertMe );
     }
 
 
@@ -1037,80 +987,37 @@ export class Functions<
      * `inputs`.  Useful for parsing objects passed to functions with extra,
      * optional options.
      *
-     * @param defaults             Default values (if notspecified in inputs).
-     * @param inputs               Overriding values (changes to make).
-     * @param recursive            Optional. Whether to merge the object
-     *                             recursively. Default false.
-     *
-     * @return  Resulting object with all the `defaults` and `inputs` keys with 
-     *          either default values or input values, as appropriate.
+     * @see {@link mergeArgs}
      */
-    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends Partial<D>,
+    >(
         defaults: D,
-        inputs: undefined,
-        recursive?: boolean,
-    ): D;
-    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>, I extends U.TS.Objects.RecursivePartial<D>>(
-        defaults: D,
-        inputs: I,
-        recursive?: true,
+        inputs?: I | undefined,
+        recursive?: false | undefined,
     ): D & I;
-    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>, I extends Partial<D>>(
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends RecursivePartial<D>,
+    >(
         defaults: D,
-        inputs: I,
-        recursive?: false,
+        inputs: I | undefined,
+        recursive: true,
     ): D & I;
-    public mergeArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>, I extends U.TS.ArgsObject<V>>(
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends Partial<D> | RecursivePartial<D>,
+    >(
         defaults: D,
-        inputs?: I,
+        inputs?: I | undefined,
         recursive: boolean = false,
-    ): D | D & I {
-        if ( typeof inputs !== 'object' || !inputs ) { return { ...defaults }; }
-        if ( typeof defaults !== 'object' || !defaults ) { defaults = {} as D; }
-
-        const result: D & I = {
-            ...defaults,
-            ...inputs,
-        };
-
-        if ( !recursive ) { return result; }
-
-        const inputKeys: ( keyof I )[] = Object.keys( inputs ) as ( keyof I )[];
-
-        for ( const key of inputKeys ) {
-
-            const defaultValue: D[ keyof D ] | undefined = defaults[ key as keyof D ];
-            const inputValue: I[ keyof I ] = inputs[ key ];
-
-            if ( typeof defaultValue === 'undefined' || defaultValue === undefined ) {
-                continue;
-            }
-
-            if (
-                recursive
-                && typeof defaultValue === 'object'
-                && typeof inputValue === 'object'
-                && defaultValue !== null
-                && inputValue !== null
-                && !Array.isArray( defaultValue )
-                && !Array.isArray( inputValue )
-            ) {
-
-                // get deep
-                // @ts-expect-error
-                result[ key ] = this.mergeArgs(
-                    { ...defaultValue } as ( D & I )[ keyof I ] & U.TS.ArgsObject,
-                    { ...inputValue },
-                    recursive,
-                ) as ( D & I )[ keyof I ];
-
-            } else {
-
-                // single-level
-                result[ key ] = inputValue as ( D & I )[ keyof I ];
-            }
-        }
-        return result;
+    ): D & I {
+        // @ts-expect-error
+        return mergeArgs( defaults, inputs, recursive );
     }
 
 
@@ -1127,17 +1034,17 @@ export class Functions<
      * @return  Resulting object with all the `defaults` keys with either
      *          default values or input values, as appropriate.
      */
-    public parseArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
+    public parseArgs<V extends U.Types.ArgsSingleValue, D extends U.Types.ArgsObject<V>>(
         defaults: D,
-        inputs?: U.TS.Objects.RecursivePartial<D>,
+        inputs?: U.Types.Objects.RecursivePartial<D>,
         recursive?: true,
     ): D;
-    public parseArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
+    public parseArgs<V extends U.Types.ArgsSingleValue, D extends U.Types.ArgsObject<V>>(
         defaults: D,
         inputs?: Partial<D>,
         recursive?: false,
     ): D;
-    public parseArgs<V extends U.TS.ArgsSingleValue, D extends U.TS.ArgsObject<V>>(
+    public parseArgs<V extends U.Types.ArgsSingleValue, D extends U.Types.ArgsObject<V>>(
         defaults: D,
         inputs?: Partial<D>,
         recursive: boolean = false,
@@ -1167,7 +1074,7 @@ export class Functions<
                 // get deep
                 // @ts-expect-error
                 result[ key ] = this.parseArgs(
-                    { ...defaultValue } as D[ keyof D ] & U.TS.ArgsObject,
+                    { ...defaultValue } as D[ keyof D ] & U.Types.ArgsObject,
                     { ...inputValue },
                     recursive,
                 ) as D[ keyof D ];

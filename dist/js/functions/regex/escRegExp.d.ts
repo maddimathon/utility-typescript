@@ -13,11 +13,13 @@
 /**
  * Escapes a string for use in a regular expression.
  *
+ * @category  Escapers
+ *
  * @source
  *
  * @example
  * ```ts
- * new RegExp( `^${ escRegExp( filePath ) }\/.+`, 'g' );
+ * new RegExp( `^${ escRegExp( filePath ) }\\/.+`, 'g' );
  * ```
  *
  * @param str To convert.

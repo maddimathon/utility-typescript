@@ -3,13 +3,14 @@
 /**
  * Exports some utilities to use in scripts.
  * 
- * @package @maddimathon/utility-typescript
- * @since ___PKG_VERSION___
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @author Maddi Mathon (www.maddimathon.com)
+ * @homepage ___CURRENT_URL___
  */
 
 import minimist from 'minimist';
 
-export type * as TS from './@types/utilities.d.ts';
+export type * as Types from './@types/utilities.d.ts';
 export * from './classes/Functions.js';
 
 import { Functions } from './classes/Functions.js';

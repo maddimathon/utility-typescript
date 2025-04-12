@@ -1,1 +1,1 @@
-function A(_){return [..._].filter((v,i,a)=>a.indexOf(v)===i)}export{A as arrayUnique};
+const{isArray:A}=Array;function b(_){if(!A(_))return _;return [..._].filter((v,i,a)=>a.indexOf(v)===i)}export{b as arrayUnique};

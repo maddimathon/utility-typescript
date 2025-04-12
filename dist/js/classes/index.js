@@ -1,1 +1,1 @@
-export * from './ExampleClass.js';
+export * as abstracts from './abstracts/index.js';export * from './ExampleClass.js';
