@@ -49,6 +49,13 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
 
     public stages = snapshotStages;
 
+    public get ARGS_DEFAULT(): SnapshotArgs {
+        // @ts-expect-error
+        return {
+            ...AbstractStage.ARGS_ABSTRACT,
+        };
+    }
+
 
 
     /* CONSTRUCTOR
@@ -85,13 +92,13 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
     protected async snapshot() {
         // this.progressLog( 'making snapshot...', 1 );
 
-        const snapdir = this.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
+        const snapdir = this.fns.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
 
-        const exportPath: string = this.uniquePath( `${ snapdir }/${ this.pkgName.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.pkgVersion }_${ this.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
+        const exportPath: string = this.fns.uniquePath( `${ snapdir }/${ this.fns.pkgName.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.fns.pkgVersion }_${ this.fns.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
         const exportName: string = exportPath.replace( /^\/?([^\/]+\/)*/gi, '' );
 
 
-        const includePaths: string[] = this.glob(
+        const includePaths: string[] = this.fns.glob(
             [ '**/*', ],
             {
                 ignore: [
@@ -107,9 +114,9 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
                 ],
             },
             true
-        ).map( path => path.replace( new RegExp( `^${ this.escRegExp( `${ snapdir }/` ) }`, 'gi' ), '' ) );
+        ).map( path => path.replace( new RegExp( `^${ this.fns.fns.escRegExp( `${ snapdir }/` ) }`, 'gi' ), '' ) );
 
-        this.copyFiles( includePaths, exportPath );
+        this.fns.copyFiles( includePaths, exportPath );
 
 
         this.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );

@@ -52,6 +52,13 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
 
     public stages = testStages;
 
+    public get ARGS_DEFAULT(): TestArgs {
+        // @ts-expect-error
+        return {
+            ...AbstractStage.ARGS_ABSTRACT,
+        };
+    }
+
 
 
     /* CONSTRUCTOR
@@ -90,10 +97,10 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
 
         this.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
 
-        if ( this.opts.packaging && !this.opts.dryrun ) {
+        if ( this.args.packaging && !this.args.dryrun ) {
 
             this.verboseLog( 'removing test files from dist...', 2 );
-            this.deleteFiles( [
+            this.fns.deleteFiles( [
                 'dist/**/*.test.d.ts',
                 'dist/**/*.test.d.ts.map',
                 'dist/**/*.test.js',

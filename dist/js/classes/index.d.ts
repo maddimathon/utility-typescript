@@ -2,9 +2,8 @@
  * Exports all the package's classes.
  *
  * @module classes
- * @category Entry Points
  *
- * @since 1.0.0-draft
+ * @since 0.9.0-draft
  *
  * @example
  * ```ts
@@ -13,16 +12,17 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0-draft
+ * @package @maddimathon/utility-typescript@0.9.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0-draft
+ * @maddimathon/utility-typescript@0.9.0-draft
  * @license MIT
  */
 export * as abstracts from './abstracts/index.js';
-export * from './ExampleClass.js';
+export * as node from './node/index.js';
+export * from './Functions.js';
 //# sourceMappingURL=index.d.ts.map

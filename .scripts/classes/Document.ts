@@ -9,7 +9,6 @@
 
 /* IMPORT TYPES */
 import type { AbstractArgs } from './abstracts/AbstractStage.js';
-import type { Functions } from './Functions.js';
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
@@ -61,6 +60,13 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
     public stages = docStages;
 
+    public get ARGS_DEFAULT(): DocumentArgs {
+        // @ts-expect-error
+        return {
+            ...AbstractStage.ARGS_ABSTRACT,
+        };
+    }
+
 
 
     /* CONSTRUCTOR
@@ -101,7 +107,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     protected async replace() {
         this.progressLog( 'replacing placeholders...', 1 );
 
-        for ( const o of currentReplacements( this as Functions ).concat( pkgReplacements( this as Functions ) ) ) {
+        for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
             this.replaceInFiles(
                 [
                     './docs/**/*',
@@ -148,14 +154,17 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             defaultCategory: 'Misc.',
 
+            disableGit: false,
+            disableSources: false,
+
             entryPoints: [
-                './src/ts/index.ts',
+                // './src/ts/index.ts',
                 './src/ts/classes/index.ts',
                 './src/ts/functions/index.ts',
                 './src/ts/types/index.ts',
             ],
 
-            excludeInternal: false,
+            excludeInternal: true,
             excludeNotDocumented: false,
             excludePrivate: false,
             excludeProtected: false,
@@ -176,7 +185,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 readme: false,
             },
             hideGenerator: true,
-            hostedBaseUrl: this.pkg.homepage,
+            hostedBaseUrl: this.fns.pkg.homepage,
 
             includeVersion: false,
 
@@ -185,15 +194,15 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             markdownLinkExternal: true,
 
             name: [
-                this.pkgTitle,
-                this.pkgVersion,
+                this.fns.pkgTitle,
+                this.fns.pkgVersion,
             ].filter( v => v ).join( ' @ ' ),
 
             // navigation: {
             // },
 
             navigationLinks: {
-                'GitHub': this.pkg.repository.url,
+                'GitHub': this.fns.pkg.repository.url,
                 'by Maddi Mathon': 'https://www.maddimathon.com',
             },
 
@@ -217,7 +226,9 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             // sidebarLinks: {
             // },
 
+            sourceLinkTemplate: `https://github.com/maddimathon/utility-typescript/blob/main/${ this.args.packaging ? this.fns.pkg.version + '/' : '' }{path}#L{line}`,
             sortEntryPoints: false,
+
             useFirstParagraphOfCommentAsSummary: true,
 
             visibilityFilters: {
@@ -235,7 +246,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             const outDir = config.out.replace( /\/+$/gi, '' );
 
-            this.deleteFiles( [
+            this.fns.deleteFiles( [
                 outDir + '/*',
                 outDir + '/.*',
             ] );
@@ -245,7 +256,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             if ( !config.out ) {
                 this.verboseLog( 'deleting existing files...', 2 );
             }
-            this.deleteFiles( config.json );
+            this.fns.deleteFiles( config.json );
         }
 
         this.verboseLog( 'running typedoc...', 2 );

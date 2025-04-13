@@ -13,11 +13,11 @@ import minimist from 'minimist';
 export type * as Types from './@types/utilities.d.ts';
 export * from './classes/Functions.js';
 
-import { Functions } from './classes/Functions.js';
+import { BuildFunctions } from './classes/Functions.js';
 
 
-const args: Functions.Opts =
+const args: BuildFunctions.Args =
     // @ts-expect-error
-    minimist( process.argv.slice( 2 ) ) as Functions.Opts;
+    minimist( process.argv.slice( 2 ) ) as BuildFunctions.Args;
 
-export const F = new Functions( args );
+export const F = new BuildFunctions( args );

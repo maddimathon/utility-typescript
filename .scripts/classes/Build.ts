@@ -11,7 +11,6 @@
 import type { AbstractArgs } from './abstracts/AbstractStage.js';
 import type { CompileArgs, CompileStages } from './Compile.js';
 import type { DocumentArgs, DocumentStages } from './Document.js';
-import type { Functions } from './Functions.js';
 import type { TestArgs, TestStages } from './Test.js';
 
 
@@ -75,6 +74,13 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
     public stages = buildStages;
 
+    public get ARGS_DEFAULT(): BuildArgs {
+        // @ts-expect-error
+        return {
+            ...AbstractStage.ARGS_ABSTRACT,
+        };
+    }
+
 
 
     /* CONSTRUCTOR
@@ -96,12 +102,12 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     public startEndNotice( which: "start" | "end" | string ): void {
 
         if (
-            this.opts.watchedWatcher
-            || this.opts.watchedFilename
-            || this.opts.watchedEvent
+            this.args.watchedWatcher
+            || this.args.watchedFilename
+            || this.args.watchedEvent
         ) {
             const emoji = which == 'end' ? '✅' : '🚨';
-            this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.opts.watchedEvent }: ${ this.opts.watchedFilename }`, 0 );
+            this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.args.watchedEvent }: ${ this.args.watchedFilename }`, 0 );
         } else {
 
             this.startEndNoticeMaker(
@@ -121,12 +127,12 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async compile() {
 
         const cmpl = new Compile( {
-            ...this.opts as CompileArgs & BuildArgs,
+            ...this.args as CompileArgs & BuildArgs,
 
-            'log-base-level': 1 + ( this.opts[ 'log-base-level' ] ?? 0 ),
+            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
-            only: this.opts[ 'only-compile' ],
-            without: this.opts[ 'without-compile' ],
+            only: this.args[ 'only-compile' ],
+            without: this.args[ 'without-compile' ],
 
             building: true,
         } );
@@ -137,12 +143,12 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async document() {
 
         const doc = new Document( {
-            ...this.opts as DocumentArgs & BuildArgs,
+            ...this.args as DocumentArgs & BuildArgs,
 
-            'log-base-level': 1 + ( this.opts[ 'log-base-level' ] ?? 0 ),
+            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
-            only: this.opts[ 'only-document' ],
-            without: this.opts[ 'without-document' ],
+            only: this.args[ 'only-document' ],
+            without: this.args[ 'without-document' ],
 
             building: true,
         } );
@@ -155,15 +161,15 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         this.verboseLog( 'minifying javascript...', 2 );
 
-        const jsPaths = this.glob( 'dist/js/**/*.js', {
+        const jsPaths = this.fns.glob( 'dist/js/**/*.js', {
             ignore: [
                 '**/*.test.d.ts',
                 '**/*.test.js',
-            ].concat( ( this.opts.globOpts?.ignore ?? [] ) as string[] ),
+            ].concat( ( this.fns.args.globOpts?.ignore ?? [] ) as string[] ),
         } );
 
         for ( const path of jsPaths ) {
-            this.minify( path, 'js', ( this.opts.verbose ? 3 : 2 ) );
+            this.minify( path, 'js', ( this.args.verbose ? 3 : 2 ) );
         }
 
         this.verboseLog( '(NOT IMPLEMENTED) minifying css...', 2 );
@@ -176,17 +182,17 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async replace() {
         this.progressLog( 'replacing placeholders...', 1 );
 
-        if ( !this.opts.watchedEvent ) {
+        if ( !this.args.watchedEvent ) {
 
             this.verboseLog( 'replacing in dist...', 2 );
-            for ( const o of currentReplacements( this as Functions ).concat( pkgReplacements( this as Functions ) ) ) {
+            for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
                 this.replaceInFiles(
                     [
                         './dist/**/*',
                     ],
                     o.find,
                     o.replace,
-                    this.opts.verbose ? 3 : 2,
+                    this.args.verbose ? 3 : 2,
                 );
             }
         }
@@ -200,23 +206,23 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         const ctaRegex = /(<!--README_DOCS_CTA-->).*?(<!--\/README_DOCS_CTA-->)/gs;
 
-        this.writeFile( 'README.md', (
-            this.readFile( 'README.md' )
-                .replace( headerRegex, '$1\n' + this.escRegExpReplace( `# ${ this.pkgTitle } @ ${ this.pkgVersion }` ) + '\n$2' )
-                .replace( descRegex, '$1\n' + this.escRegExpReplace( this.pkg.description ) + '\n$2' )
-                .replace( ctaRegex, '$1\n' + this.escRegExpReplace( `<a href="${ this.pkg.homepage }" class="button" target="_blank">Read Documentation</a>` ) + '\n$2' )
+        this.fns.writeFile( 'README.md', (
+            this.fns.readFile( 'README.md' )
+                .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.fns.pkgTitle } @ ${ this.fns.pkgVersion }` ) + '\n$2' )
+                .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( this.fns.pkg.description ) + '\n$2' )
+                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.fns.pkg.homepage }" class="button" target="_blank">Read Documentation</a>` ) + '\n$2' )
         ), { force: true } );
     }
 
     protected async test() {
 
         const t = new Test( {
-            ...this.opts as TestArgs & BuildArgs,
+            ...this.args as TestArgs & BuildArgs,
 
-            'log-base-level': 1 + ( this.opts[ 'log-base-level' ] ?? 0 ),
+            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
-            only: this.opts[ 'only-test' ],
-            without: this.opts[ 'without-test' ],
+            only: this.args[ 'only-test' ],
+            without: this.args[ 'without-test' ],
 
             building: true,
         } );

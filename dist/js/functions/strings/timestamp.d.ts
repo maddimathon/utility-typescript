@@ -1,13 +1,13 @@
 /**
- * @since 1.0.0-draft
+ * @since 0.9.0-draft
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0-draft
+ * @package @maddimathon/utility-typescript@0.9.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0-draft
+ * @maddimathon/utility-typescript@0.9.0-draft
  * @license MIT
  */
 /**
@@ -86,6 +86,7 @@ export declare namespace timestamp {
      * @expand
      *
      * @expandType timestamp.Args
+     * @expandType Partial
      */
     type Args_Input = Partial<Omit<Args, "format">> & {
         format?: Partial<Args['format']>;

@@ -101,6 +101,7 @@ export namespace timestamp {
      * @expand
      * 
      * @expandType timestamp.Args
+     * @expandType Partial
      */
     export type Args_Input = Partial<Omit<Args, "format">> & {
         format?: Partial<Args[ 'format' ]>;

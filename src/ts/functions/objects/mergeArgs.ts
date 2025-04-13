@@ -14,18 +14,25 @@
 import type { AnyClass } from '../../types/functions/index.js';
 import type { RecursivePartial } from '../../types/objects/index.js';
 
+
 /**
- * Used only for the {@link mergeArgs | mergeArgs()}.
+ * Used only for {@link mergeArgs | mergeArgs()}.
+ * 
+ * @namespace
  */
 export namespace mergeArgs {
 
     /**
      * Default allowed values for argument objects.
+     * 
+     * @source
      */
-    type ArgsSingleValue = AnyClass | boolean | number | null | string;
+    export type ArgsSingleValue = AnyClass | boolean | number | null | string;
 
     /**
      * Default allowed values for {@link Obj | mergeArgs.Obj} properties.
+     * 
+     * @source
      */
     export type ObjProp<Value extends any = null> =
         | ArgsSingleValue
@@ -34,11 +41,11 @@ export namespace mergeArgs {
 
     /**
      * Argument objects compatible with {@link mergeArgs | mergeArgs()}.
-     * @interface
-     * @expand
+     * 
+     * @source
      */
     export type Obj<
-        Values extends any = unknown,
+        Values extends any = any,
         Keys extends string = string,
     > = {
             [ K in Keys ]:
@@ -46,40 +53,55 @@ export namespace mergeArgs {
             | ObjProp<ArgsSingleValue | Values>[]
             | Obj<ArgsSingleValue | Values>;
         };
+
+    /**
+     * Interface defining the overloads for {@link mergeArgs | mergeArgs()}.
+     */
+    export interface Function {
+
+        /**
+         * Passing `recursive` as false means that the input type must be a
+         * `Partial`.
+         */
+        <
+            V extends any,
+            D extends Obj<V>,
+            I extends Partial<D>,
+        >(
+            defaults: D,
+            inputs?: I | undefined,
+            recursive?: false | undefined,
+        ): D & I;
+
+        /**
+         * Passing `recursive` as true means that the input type must actually be a 
+         * {@link RecursivePartial}.
+         */
+        <
+            V extends any,
+            D extends Obj<V>,
+            I extends RecursivePartial<D>,
+        >(
+            defaults: D,
+            inputs?: I | undefined,
+            recursive?: true,
+        ): D & I;
+
+        /**
+         * Catch-all.
+         */
+        <
+            V extends any,
+            D extends Obj<V>,
+            I extends RecursivePartial<D>,
+        >(
+            defaults: D,
+            inputs?: I | undefined,
+            recursive?: boolean | undefined,
+        ): D & I;
+    }
 }
 
-
-
-/**
- * Passing `recursive` as false means that the input type must be a `Partial`.
- * 
- * @overload
- */
-export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
-    I extends Partial<D>,
->(
-    defaults: D,
-    inputs?: I | undefined,
-    recursive?: false | undefined,
-): D & I;
-
-/**
- * Passing `recursive` as true means that the input type must actually be a 
- * {@link RecursivePartial}.
- * 
- * @overload
- */
-export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
-    I extends RecursivePartial<D>,
->(
-    defaults: D,
-    inputs: I | undefined,
-    recursive: true,
-): D & I;
 
 /**
  * Returns an updated version of `defaults` merged with the contents of
@@ -92,27 +114,29 @@ export function mergeArgs<
  * 
  * @category Arg Objects
  * 
- * @template V  Args object values.
- * @template D  Default object type.
- * @template I  Input object type.
+ * @function
+ * 
+ * @typeParam V  Args object values.
+ * @typeParam D  Default object type.
+ * @typeParam I  Input object type.
  *
- * @param defaults   Default values (if notspecified in inputs).
+ * @param defaults   Default values (if not specified in inputs).
  * @param inputs     Overriding values (changes to make).
- * @param recursive  Optional. Whether to merge the object recursively. Default
- *                   false.
+ * @param recursive  Optional. Whether to merge the object recursively. 
+ *                   Default false.
  *
- * @return  Resulting object with all the `defaults` and `inputs` keys with
+ * @return  Resulting object with all the `defaults` and `inputs` keys with 
  *          either default values or input values, as appropriate.
  */
-export function mergeArgs<
-    V extends unknown,
+export const mergeArgs: mergeArgs.Function = <
+    V extends any,
     D extends mergeArgs.Obj<V>,
-    I extends Partial<D> | RecursivePartial<D>,
+    I extends RecursivePartial<D>,
 >(
     defaults: D,
     inputs?: I | undefined,
     recursive: boolean = false,
-): D & I {
+): D & I => {
     // invalid default object becomes an empty object
     if ( typeof defaults !== 'object' || !defaults ) { defaults = {} as D; }
 
@@ -184,4 +208,4 @@ export function mergeArgs<
             );
     }
     return result;
-}
+};

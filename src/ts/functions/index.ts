@@ -2,7 +2,6 @@
  * Exports all the package's functions.
  * 
  * @module functions
- * @category Entry Points
  * 
  * @since ___PKG_VERSION___
  * 
@@ -23,6 +22,8 @@
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
+
+export * as node from './node/index.js';
 
 export * from './arrays/index.js';
 export * from './html/index.js';

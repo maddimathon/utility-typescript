@@ -1,13 +1,13 @@
 /**
- * @since 1.0.0-draft
+ * @since 0.9.0-draft
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0-draft
+ * @package @maddimathon/utility-typescript@0.9.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0-draft
+ * @maddimathon/utility-typescript@0.9.0-draft
  * @license MIT
  */
 import { AnyClass } from '../types/functions/index.js';
@@ -23,6 +23,8 @@ export declare namespace typeOf {
     export interface Args {
         /**
          * If true, arrays will return `'array'` instead of `'object'`.
+         *
+         * @default true
          */
         distinguishArrays: boolean;
     }
@@ -48,7 +50,7 @@ export declare namespace typeOf {
  * @see {@link typeOf.TestType}
  * @see {@link typeOf.Return}
  *
- * @template T  Type of the variable being checked.
+ * @typeParam T  Type of the variable being checked.
  *
  * @param variable  To test for value type.
  * @param _opts     Optional configuration. See {@link typeOf.Args}.

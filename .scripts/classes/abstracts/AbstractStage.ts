@@ -22,14 +22,20 @@ import * as prettier from "prettier";
 
 /* IMPORT LOCAL DEPENDENCIES */
 import { currentReplacements, pkgReplacements } from '../../vars/replacements.js';
-import { F, Functions } from '../../@utilities.js';
+import { F, BuildFunctions } from '../../@utilities.js';
+
+import {
+    classes as cls,
+    // functions as fns,
+} from '../../../src/ts/index.js';
+import { AbstractConfigurableClass } from 'src/ts/classes/abstracts/AbstractConfigurableClass.js';
 
 
 
 /* # TYPES
  * ========================================================================== */
 
-export interface AbstractArgs<Stages extends string | never> extends Partial<Functions.Opts> {
+export type AbstractArgs<Stages extends string | never> = cls.abstracts.AbstractConfigurableClass.Args & {
 
     _: string[];
 
@@ -143,8 +149,15 @@ export type ReplaceInFilesArgs = CmdArgs & {
 export abstract class AbstractStage<
     Stages extends string | never,
     Args extends AbstractArgs<Stages>,
-//@ts-expect-error
-> extends Functions<Args> {
+> extends cls.abstracts.AbstractConfigurableClass<Args> {
+
+    public static get ARGS_ABSTRACT(): AbstractArgs<string> {
+
+        return {
+            _: [],
+            optsRecursive: false,
+        };
+    }
 
 
 
@@ -153,6 +166,15 @@ export abstract class AbstractStage<
 
     public abstract stages: readonly Stages[];
 
+    protected readonly fns: BuildFunctions;
+
+    /**
+     * Build a complete args object.
+     */
+    public buildArgs( args?: Partial<Args> ): Args {
+        return AbstractConfigurableClass.abstractArgs( args ) as Args;
+    }
+
 
 
     /* CONSTRUCTOR
@@ -160,6 +182,8 @@ export abstract class AbstractStage<
 
     constructor ( args: Args ) {
         super( args as Types.Objects.RecursivePartial<Args> & Args );
+
+        this.fns = new BuildFunctions( args );
     }
 
 
@@ -170,15 +194,15 @@ export abstract class AbstractStage<
 
     /* MESSAGES ===================================== */
 
-    public override progressLog(
+    public progressLog(
         msg: string,
         level: number,
     ): void {
-        if ( this.opts[ 'progress' ] === false ) { return; }
+        if ( this.args[ 'progress' ] === false ) { return; }
 
-        super.progressLog(
+        this.fns.progressLog(
             msg,
-            level + Number( this.opts[ 'log-base-level' ] ?? 0 ),
+            level + Number( this.args[ 'log-base-level' ] ?? 0 ),
         );
     }
 
@@ -188,7 +212,7 @@ export abstract class AbstractStage<
         msg: string,
         level: number,
     ): void {
-        if ( this.opts[ 'verbose' ] !== true ) { return; }
+        if ( this.args[ 'verbose' ] !== true ) { return; }
 
         this.progressLog( msg, level );
     }
@@ -199,12 +223,12 @@ export abstract class AbstractStage<
         endMsg: string,
         defaultMsg: string,
     ) {
-        if ( this.opts[ 'notice' ] === false ) { return; }
+        if ( this.args[ 'notice' ] === false ) { return; }
 
         switch ( which ) {
 
             case 'start':
-                if ( ( this.opts[ 'log-base-level' ] ?? 0 ) > 0 ) {
+                if ( ( this.args[ 'log-base-level' ] ?? 0 ) > 0 ) {
                     console.log( '' );
                 }
                 this.progressLog( startMsg, 0 );
@@ -230,7 +254,7 @@ export abstract class AbstractStage<
 
     public async run( args: Partial<Args> = {} ) {
         args = {
-            ...this.opts,
+            ...this.args,
             ...args,
         };
 
@@ -253,7 +277,7 @@ export abstract class AbstractStage<
 
             if ( include && !exclude && this[ method as keyof typeof this ] ) {
                 await this.runStage( method );
-                ( this.opts.verbose || this.opts.debug ) && this.subStageSeparator();
+                ( this.args.verbose || this.args.debug ) && this.subStageSeparator();
             }
         }
 
@@ -269,12 +293,12 @@ export abstract class AbstractStage<
 
     /* UTILITIES ===================================== */
 
-    public override async acmd( ...params: Parameters<Functions[ 'acmd' ]> ): Promise<ChildProcess | void> {
-        return super.acmd( ...params );
+    public async acmd( ...params: Parameters<BuildFunctions[ 'acmd' ]> ): Promise<ChildProcess | void> {
+        return this.fns.acmd( ...params );
     }
 
-    public override cmd( ...params: Parameters<Functions[ 'cmd' ]> ): void {
-        super.cmd( ...params );
+    public cmd( ...params: Parameters<BuildFunctions[ 'cmd' ]> ): void {
+        this.fns.cmd( ...params );
     }
 
     protected cmdArgs(
@@ -340,22 +364,22 @@ export abstract class AbstractStage<
         params: CmdArgs = {},
     ): Promise<void> {
 
-        if ( !this.opts[ 'css-update' ] ) {
-            this.deleteFiles( output );
+        if ( !this.args[ 'css-update' ] ) {
+            this.fns.deleteFiles( output );
         }
 
-        const packaging: boolean | null = this.opts.packaging || null;
+        const packaging: boolean | null = this.args.packaging || null;
 
         const update: boolean = Boolean( (
-            this.opts[ 'css-update' ]
-            || this.opts.watchedWatcher
-            || this.opts.watchedFilename
-            || this.opts.watchedEvent
+            this.args[ 'css-update' ]
+            || this.args.watchedWatcher
+            || this.args.watchedFilename
+            || this.args.watchedEvent
         ) && !packaging );
 
         const args = {
             update: update ? true : null,
-            quiet: this.opts[ 'sass-quiet' ] ? true : null,
+            quiet: this.args[ 'sass-quiet' ] ? true : null,
             'no-source-map': packaging ? true : null,
             'embed-sources': packaging ? null : true,
             trace: true,
@@ -392,22 +416,22 @@ export abstract class AbstractStage<
                 noEmit: boolean;
                 outDir: string;
             }>;
-        }> = JSON.parse( this.readFile( tsconfigPath ) );
+        }> = JSON.parse( this.fns.readFile( tsconfigPath ) );
 
         // deleting current files
-        if ( !this.opts.watchedEvent && tsconfig.compilerOptions?.noEmit !== true ) {
+        if ( !this.args.watchedEvent && tsconfig.compilerOptions?.noEmit !== true ) {
 
             const outDir = tsconfig.compilerOptions?.outDir;
 
             if ( outDir ) {
 
                 const tsconfigDir = tsconfigPath.replace( /\/[^\/]+\.json$/, '/' ).replace( /^[^\/]+\.json$/, './' );
-                this.opts.debug && this.progressLog( `tsconfigDir = ${ tsconfigDir }`, ( this.opts.verbose ? 1 : 0 ) + logLevelBase );
+                this.args.debug && this.progressLog( `tsconfigDir = ${ tsconfigDir }`, ( this.args.verbose ? 1 : 0 ) + logLevelBase );
 
-                const outDirGlobs = this.pathRelative( this.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
+                const outDirGlobs = this.fns.pathRelative( this.fns.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
 
                 this.verboseLog( `deleting current contents (${ outDirGlobs })...`, 1 + logLevelBase );
-                this.deleteFiles( outDirGlobs );
+                this.fns.deleteFiles( outDirGlobs );
             }
         }
 
@@ -422,7 +446,7 @@ export abstract class AbstractStage<
         parser: "css" | "html" | "js",
         logLevelBase: number,
     ) {
-        this.verboseLog( `minifying ${ this.pathRelative( path ) } (${ parser })...`, 0 + logLevelBase );
+        this.verboseLog( `minifying ${ this.fns.pathRelative( path ) } (${ parser })...`, 0 + logLevelBase );
 
         let options = {};
 
@@ -471,11 +495,11 @@ export abstract class AbstractStage<
 
         await this.catchErrCLI( async () => {
 
-            const content = this.readFile( path );
+            const content = this.fns.readFile( path );
 
             if ( content ) {
-                const min = await minify[ parser ]( this.readFile( path ), options );
-                this.writeFile( path, min, { force: true } );
+                const min = await minify[ parser ]( this.fns.readFile( path ), options );
+                this.fns.writeFile( path, min, { force: true } );
             }
         }, 1 + logLevelBase );
     }
@@ -528,7 +552,7 @@ export abstract class AbstractStage<
         }
 
         const pretty = await prettier.format(
-            this.readFile( target ),
+            this.fns.readFile( target ),
             {
                 ...defaultParams,
                 ...params,
@@ -538,7 +562,7 @@ export abstract class AbstractStage<
             }
         );
 
-        this.writeFile( target, pretty, { force: true } );
+        this.fns.writeFile( target, pretty, { force: true } );
     }
 
     protected replaceInFiles(
@@ -570,9 +594,9 @@ export abstract class AbstractStage<
         } ).join( ' ' );
 
         const cmd: string = `replace-in-files ${ findArgs } ${ this.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
-        this.opts.debug && this.progressLog(
+        this.args.debug && this.progressLog(
             JSON.stringify( { cmd } ),
-            ( this.opts.verbose ? 1 : 0 ) + logLevelBase,
+            ( this.args.verbose ? 1 : 0 ) + logLevelBase,
         );
 
         this.cmd( cmd );

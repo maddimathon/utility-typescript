@@ -29,6 +29,8 @@ export namespace typeOf {
 
         /**
          * If true, arrays will return `'array'` instead of `'object'`.
+         * 
+         * @default true
          */
         distinguishArrays: boolean;
     }
@@ -95,7 +97,7 @@ export namespace typeOf {
  * @see {@link typeOf.TestType}
  * @see {@link typeOf.Return}
  * 
- * @template T  Type of the variable being checked.
+ * @typeParam T  Type of the variable being checked.
  * 
  * @param variable  To test for value type.
  * @param _opts     Optional configuration. See {@link typeOf.Args}.

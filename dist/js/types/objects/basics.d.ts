@@ -1,13 +1,13 @@
 /**
- * @since 1.0.0-draft
+ * @since 0.9.0-draft
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0-draft
+ * @package @maddimathon/utility-typescript@0.9.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0-draft
+ * @maddimathon/utility-typescript@0.9.0-draft
  * @license MIT
  */
 import { AnyClass } from '../functions/basics.js';
@@ -17,17 +17,17 @@ import { AnyClass } from '../functions/basics.js';
  *
  * @param T  Type to Partial-ize. Can be a non-object without error.
  */
-type RecursivePartial_Inner<U> = U extends number | null | string | undefined | AnyClass | Function ? U : U extends Record<number | string, any> ? RecursivePartial<U> : U;
+type RecursivePartial_Inner<T> = T extends number | null | string | undefined | AnyClass | Function ? T : T extends Record<number | string, any> ? RecursivePartial<T> : T;
 /**
  * Similar to the default Partial, but this also makes any child objects
  * Partial.
  *
- * @param T  Type to Partial-ize.
+ * @interface
  *
- * @expandType RecursivePartial_Inner
+ * @param T  Type to Partial-ize.
  */
-export type RecursivePartial<T extends Record<number | string, any>> = T extends AnyClass | Function ? T : {
-    [P in keyof T]?: T[P] extends (infer U)[] ? RecursivePartial_Inner<U>[] : RecursivePartial_Inner<T[P]>;
+export type RecursivePartial<T extends Record<number | string, any>> = {
+    [K in keyof T]?: T[K] extends (infer V)[] ? RecursivePartial_Inner<V>[] : RecursivePartial_Inner<T[K]>;
 };
 export {};
 //# sourceMappingURL=basics.d.ts.map

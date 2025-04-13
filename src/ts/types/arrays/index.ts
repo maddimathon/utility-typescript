@@ -23,4 +23,4 @@
  * @license MIT
  */
 
-export * from './basics.js';
+export type * from './basics.js';

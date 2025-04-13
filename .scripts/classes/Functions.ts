@@ -18,6 +18,8 @@ import NodeFS from 'node:fs';
 
 import NodePath from 'node:path';
 
+import { ChildProcess } from 'node:child_process';
+
 import type { GlobOptions } from 'glob';
 import { globSync } from 'glob';
 
@@ -26,18 +28,17 @@ import { DateTime } from 'luxon';
 import type * as U from '../@utilities.js';
 
 import {
-    escRegExp,
-    escRegExpReplace,
-    mergeArgs,
-    slugify,
-    toTitleCase,
-    typeOf,
-} from '../../src/ts/functions/index.js';
+    classes as cls,
+    // functions as fns,
+} from '../../src/ts/index.js';
 
 
-export namespace Functions {
+export namespace BuildFunctions {
 
-    export type Opts = {
+    export type Args = cls.node.NodeFunctions.Args & {
+        dryrun: boolean;
+        packaging: boolean;
+        releasing: boolean;
 
         ansiEscape: string;
 
@@ -46,7 +47,7 @@ export namespace Functions {
             [ C in U.Types.ColourSlug ]: string;
         };
 
-        copyFilesOpts: Functions.CopyFilesOpts,
+        copyFilesOpts: CopyFilesOpts,
 
         /** For printing Date objects */
         formats: {
@@ -76,8 +77,8 @@ export namespace Functions {
          */
         pkgName: ( pkg: U.Types.PackageJson ) => string;
 
-        readDirOpts: Functions.ReadDirOpts,
-        readFileOpts: Functions.ReadFileOpts,
+        readDirOpts: ReadDirOpts,
+        readFileOpts: ReadFileOpts,
 
         root: string,
 
@@ -90,13 +91,13 @@ export namespace Functions {
             distinguishArrays: boolean;
         };
 
-        writeFileOpts: Functions.WriteFileOpts,
-    } & U.Types.ArgsObject;
+        writeFileOpts: WriteFileOpts,
+    };
 
     type OptsPartialKeys = "copyFilesOpts" | "globOpts" | "readDirOpts" | "readFileOpts" | "typeOfOpts" | "writeFileOpts";
 
-    export type Opts_Partial = Partial<Omit<Opts, OptsPartialKeys>> & {
-        [ K in OptsPartialKeys ]?: Partial<Opts[ K ]>;
+    export type Opts_Partial = Partial<Omit<Args, OptsPartialKeys>> & {
+        [ K in OptsPartialKeys ]?: Partial<Args[ K ]>;
     };
 
     /** For notices */
@@ -143,33 +144,22 @@ export namespace Functions {
     };
 }
 
-import { ChildProcess } from 'node:child_process';
-import { RecursivePartial } from 'src/ts/types/objects/basics.js';
+export class BuildFunctions extends cls.node.NodeFunctions {
 
-export class Functions<
-    Opts extends ( { [ key: string ]: any; } & Functions.Opts ) = Functions.Opts,
-    Opts_Partial extends ( Partial<Functions.Opts> | Functions.Opts_Partial ) = Functions.Opts_Partial,
-> {
 
-    protected _opts?: Opts = undefined;
 
-    protected set opts( input: U.Types.Objects.RecursivePartial<Opts> ) {
-        if (
-            typeof this._opts !== 'undefined'
-            && this._opts !== undefined
-        ) { return; }
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
 
-        this._opts = this.mergeArgs( this.opts, input, true );
-    }
+    public override get ARGS_DEFAULT(): BuildFunctions.Args {
 
-    public get opts(): Opts {
-        if (
-            typeof this._opts !== 'undefined'
-            && this._opts !== undefined
-        ) { return this._opts; }
-
-        //@ts-expect-error
         return {
+
+            optsRecursive: true,
+
+            dryrun: false,
+            packaging: false,
+            releasing: false,
 
             ansiColours: {
                 red: "2;165;44;50",
@@ -257,15 +247,16 @@ export class Functions<
         };
     }
 
+    public override readonly args: BuildFunctions.Args;
+
 
 
     /** CONSTRUCTOR
      ** ==================================================================== **/
 
-    // @ts-expect-error
-    constructor ( opts: Opts_Partial = {} ) {
-        // @ts-expect-error
-        this.opts = opts;
+    constructor ( args?: Partial<BuildFunctions.Args> ) {
+        super( args );
+        this.args = this.mergeArgs( this.ARGS_DEFAULT, args, this.ARGS_DEFAULT.optsRecursive );
     }
 
 
@@ -273,16 +264,6 @@ export class Functions<
     /** ALIASES
      ** Aliases for built-in functions/expressions.
      ** ==================================================================== **/
-
-    /**
-     * Alias for `typeof` keyword, but with added options: "class", "NaN", "null".
-     */
-    protected typeOf<T extends typeOf.TestType>(
-        variable: T,
-        _opts: Partial<typeOf.Args> = {},
-    ): string & typeOf.Return<T> {
-        return typeOf( variable );
-    }
 
 
     /** Glob ==================================== **/
@@ -299,7 +280,7 @@ export class Functions<
     ): string[] {
 
         const globResult = globSync( globs, this.mergeArgs(
-            this.opts.globOpts as U.Types.ArgsObject,
+            this.args.globOpts as U.Types.ArgsObject,
             opts as U.Types.ArgsObject,
             false
         ) ) as string | string[];
@@ -373,17 +354,18 @@ export class Functions<
      */
     public readFile(
         _path: string,
-        _opts: Partial<Functions.ReadFileOpts> = {},
+        _opts: Partial<BuildFunctions.ReadFileOpts> = {},
     ): string {
         const path = this.pathResolve( _path );
 
-        const opts: Functions.ReadFileOpts = this.mergeArgs(
-            this.opts.readFileOpts,
-            {
-                ..._opts,
-                encoding: 'utf-8',
-            } as Partial<Functions.ReadFileOpts> & { encoding: 'utf-8'; },
-        );
+        const opts: BuildFunctions.ReadFileOpts
+            = this.mergeArgs(
+                this.args.readFileOpts,
+                {
+                    ..._opts,
+                    encoding: 'utf-8',
+                } as Partial<BuildFunctions.ReadFileOpts> & { encoding: 'utf-8'; },
+            );
 
         /**
          * RETURN
@@ -403,18 +385,18 @@ export class Functions<
     public writeFile(
         _path: string,
         _content: string | string[],
-        _opts: Partial<Functions.WriteFileOpts> = {},
+        _opts: Partial<BuildFunctions.WriteFileOpts> = {},
     ): string | false {
 
         const content: string = Array.isArray( _content )
             ? _content.join( '\n' )
             : _content;
 
-        const opts: Functions.WriteFileOpts = this.parseArgs(
-            this.opts.writeFileOpts as U.Types.ArgsObject,
+        const opts: BuildFunctions.WriteFileOpts = this.mergeArgs(
+            this.args.writeFileOpts as U.Types.ArgsObject,
             _opts as U.Types.ArgsObject,
             true
-        ) as Functions.WriteFileOpts;
+        ) as BuildFunctions.WriteFileOpts;
 
         const path = !opts.force && opts.rename
             ? this.uniquePath( this.pathResolve( _path ) )
@@ -455,7 +437,7 @@ export class Functions<
      * Resolves relative to the root defined the the opts.
      */
     public pathResolve( ...paths: string[] ): string {
-        return NodePath.resolve( this.opts.root, ...paths );
+        return NodePath.resolve( this.args.root, ...paths );
     }
 
 
@@ -493,18 +475,17 @@ export class Functions<
     public copyFiles(
         _glob: string | string[],
         _destination: string,
-        _source: string = this.opts.root,
-        _opts: Partial<Functions.CopyFilesOpts> = {}
+        _source: string = this.args.root,
+        _opts: Partial<BuildFunctions.CopyFilesOpts> = {}
     ): void {
         if ( !Array.isArray( _glob ) ) { _glob = [ _glob ]; }
 
         // I prefer them as constants
         const [ glob, destination, source ] = [ _glob, _destination, _source ];
 
-        // @ts-expect-error
-        const opts: Functions.CopyFilesOpts
-            = this.parseArgs(
-                this.opts.copyFilesOpts,
+        const opts: BuildFunctions.CopyFilesOpts
+            = this.mergeArgs(
+                this.args.copyFilesOpts,
                 _opts
             );
 
@@ -539,8 +520,8 @@ export class Functions<
 
             const destFile = file
                 .replace(
-                    new RegExp( '^' + this.escRegExp( resolved.source ), 'gi' ),
-                    this.escRegExpReplace( resolved.destination )
+                    new RegExp( '^' + this.fns.escRegExp( resolved.source ), 'gi' ),
+                    this.fns.escRegExpReplace( resolved.destination )
                 )
                 .replace( /\/+$/gi, '' );
 
@@ -595,10 +576,10 @@ export class Functions<
 
             uniqueFileName = uniqueFileName.replace(
                 new RegExp(
-                    `-${ copyIndex }${ this.escRegExp( pathExtension ) }$`,
+                    `-${ copyIndex }${ this.fns.escRegExp( pathExtension ) }$`,
                     'gi'
                 ),
-                `-${ copyIndex + 1 }${ this.escRegExpReplace( pathExtension ) }`
+                `-${ copyIndex + 1 }${ this.fns.escRegExpReplace( pathExtension ) }`
             );
             copyIndex++;
         }
@@ -620,7 +601,7 @@ export class Functions<
      * @return  Absolute path.
      */
     protected _cachePath( subPath: string ): string {
-        return this.pathResolve( this.opts.paths.cacheDir, subPath );
+        return this.pathResolve( this.args.paths.cacheDir, subPath );
     }
 
     /**
@@ -679,7 +660,7 @@ export class Functions<
     public get pkg(): U.Types.PackageJson {
 
         if ( this.#pkg === undefined ) {
-            this.#pkg = JSON.parse( this.readFile( this.opts.paths.packageJson ) ) as U.Types.PackageJson;
+            this.#pkg = JSON.parse( this.readFile( this.args.paths.packageJson ) ) as U.Types.PackageJson;
         }
 
         return this.#pkg;
@@ -720,7 +701,7 @@ export class Functions<
     }
 
     public get pkgVersion(): string {
-        const suffix: string = ( this.opts.dryrun || ( !this.opts.packaging && !this.opts.releasing ) ) ? '-draft' : '';
+        const suffix: string = ( this.args.dryrun || ( !this.args.packaging && !this.args.releasing ) ) ? '-draft' : '';
         return `${ this.pkg.version }${ suffix }`;
     }
 
@@ -804,7 +785,7 @@ export class Functions<
 
         return lines.map( ( line ) => {
 
-            switch ( this.typeOf( line, { distinguishArrays: true, } ) ) {
+            switch ( this.fns.typeOf( line, { distinguishArrays: true, } ) ) {
 
                 case 'array':
                     return this.implodeWithIndent(
@@ -821,45 +802,16 @@ export class Functions<
         } ).flat().join( `\n` );
     }
 
-    /**
-     * Turns the given slug into a string with only a-z, 0-9, and hyphens.
-     *
-     * @param convertMe  String to convert.
-     *
-     * @return  Slug version of the input string.
-     */
-    public slugify( convertMe: string ): string {
-        return slugify( convertMe );
-    }
-
-    public toTitleCase( convertMe: string ): string {
-        return toTitleCase( convertMe );
-    }
-
-
-
-    /** OVERRIDING BUILT-IN METHODS
-     ** ==================================================================== **/
-
-    /**
-     * Overwrites the default function to return a string representation of this
-     * object.
-     *
-     * @override  Default value in `Object.prototype`.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | MDN documentation}
-     */
-    public toString(): string { return JSON.stringify( this, null, 4 ); }
-
 
 
     /** PRE-FORMATTED STRINGS
      ** ==================================================================== **/
 
     /** 
-     * To use for tabs/indents based on this.opts values.
+     * To use for tabs/indents based on this.args values.
      */
     protected get tab(): string {
-        return this.opts.tabCharacter.repeat( this.opts.tabWidth );
+        return this.args.tabCharacter.repeat( this.args.tabWidth );
     }
 
     /**
@@ -906,25 +858,6 @@ export class Functions<
 
 
 
-    /** REGULAR EXPRESSIONS
-     ** ==================================================================== **/
-
-    /**
-     * Escapes a string for use in a regular expression.
-     */
-    protected escRegExp( convertMe: string ): string {
-        return escRegExp( convertMe );
-    }
-
-    /**
-     * Escapes a string for use as a replacement for a regular expression.
-     */
-    protected escRegExpReplace( convertMe: string ): string {
-        return escRegExpReplace( convertMe );
-    }
-
-
-
     /** # SHELL COMMANDS
      ** ==================================================================== **/
 
@@ -940,12 +873,12 @@ export class Functions<
         stderr: string,
     } ) {
 
-        const output: string =
-            err.output
-                ? this.implodeWithIndent( err.output.filter( ( l ) => l !== null ) )
-                : Object.keys( err )
-                    .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
-                    .join( '\n' );
+        // const output: string =
+        //     err.output
+        //         ? this.implodeWithIndent( err.output.filter( ( l ) => l !== null ) )
+        //         : Object.keys( err )
+        //             .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
+        //             .join( '\n' );
 
         // console.log( 'Console error:' + output, );
         process.exit( 1 );
@@ -975,116 +908,5 @@ export class Functions<
         } catch ( err ) {
             this._cmdErr( err as Parameters<typeof this._cmdErr>[ 0 ] );
         }
-    }
-
-
-
-    /** WORKING WITH OPTION OBJECTS
-     ** ==================================================================== **/
-
-    /**
-     * Returns an updated version of `defaults` mereged with the contents of
-     * `inputs`.  Useful for parsing objects passed to functions with extra,
-     * optional options.
-     *
-     * @see {@link mergeArgs}
-     */
-    public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
-        I extends Partial<D>,
-    >(
-        defaults: D,
-        inputs?: I | undefined,
-        recursive?: false | undefined,
-    ): D & I;
-    public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
-        I extends RecursivePartial<D>,
-    >(
-        defaults: D,
-        inputs: I | undefined,
-        recursive: true,
-    ): D & I;
-    public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
-        I extends Partial<D> | RecursivePartial<D>,
-    >(
-        defaults: D,
-        inputs?: I | undefined,
-        recursive: boolean = false,
-    ): D & I {
-        // @ts-expect-error
-        return mergeArgs( defaults, inputs, recursive );
-    }
-
-
-    /**
-     * Returns an updated version of `defaults` based on the parsed contents of
-     * `inputs`.  Useful for parsing objects passed to functions with extra,
-     * optional options.
-     *
-     * @param defaults             Default values (if notspecified in inputs).
-     * @param inputs               Overriding values (changes to make).
-     * @param recursive            Optional. Whether to parse the object
-     *                             recursively. Default false.
-     *
-     * @return  Resulting object with all the `defaults` keys with either
-     *          default values or input values, as appropriate.
-     */
-    public parseArgs<V extends U.Types.ArgsSingleValue, D extends U.Types.ArgsObject<V>>(
-        defaults: D,
-        inputs?: U.Types.Objects.RecursivePartial<D>,
-        recursive?: true,
-    ): D;
-    public parseArgs<V extends U.Types.ArgsSingleValue, D extends U.Types.ArgsObject<V>>(
-        defaults: D,
-        inputs?: Partial<D>,
-        recursive?: false,
-    ): D;
-    public parseArgs<V extends U.Types.ArgsSingleValue, D extends U.Types.ArgsObject<V>>(
-        defaults: D,
-        inputs?: Partial<D>,
-        recursive: boolean = false,
-    ): D {
-        if ( typeof inputs !== 'object' || !inputs ) { return { ...defaults }; }
-        if ( typeof defaults !== 'object' || !defaults ) { return {} as D; }
-
-        const result: D = { ...defaults };
-
-        const defaultKeys: ( keyof D )[] = Object.keys( defaults ) as ( keyof D )[];
-
-        for ( const key of defaultKeys ) {
-
-            const defaultValue: D[ keyof D ] = defaults[ key ];
-            const inputValue: D[ keyof D ] | undefined = inputs[ key ];
-
-            if (
-                recursive
-                && typeof defaultValue === 'object'
-                && typeof inputValue === 'object'
-                && defaultValue !== null
-                && inputValue !== null
-                && !Array.isArray( defaultValue )
-                && !Array.isArray( inputValue )
-            ) {
-
-                // get deep
-                // @ts-expect-error
-                result[ key ] = this.parseArgs(
-                    { ...defaultValue } as D[ keyof D ] & U.Types.ArgsObject,
-                    { ...inputValue },
-                    recursive,
-                ) as D[ keyof D ];
-
-            } else {
-
-                // single-level
-                result[ key ] = ( inputValue ?? defaultValue );
-            }
-        }
-        return result;
     }
 }

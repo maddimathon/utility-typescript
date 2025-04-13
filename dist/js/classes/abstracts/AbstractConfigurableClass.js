@@ -1,0 +1,1 @@
+import {mergeArgs as a} from'../../functions/index.js';export class AbstractConfigurableClass{static abstractArgs(A={}){var b,c={optsRecursive:!1};return a(c,A,(b=A.optsRecursive)!==null&&b!==void 0?b:c.optsRecursive)}constructor(_={}){this.mergeArgs=(...B)=>a(...B);this.args=this.buildArgs(_)}toJSON(){return this}toString(){return JSON.stringify(this,null,4)}}

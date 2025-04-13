@@ -2,7 +2,6 @@
  * Exports all the package's classes.
  * 
  * @module classes
- * @category Entry Points
  * 
  * @since ___PKG_VERSION___
  * 
@@ -25,5 +24,6 @@
  */
 
 export * as abstracts from './abstracts/index.js';
+export * as node from './node/index.js';
 
-export * from './ExampleClass.js';
+export * from './Functions.js';

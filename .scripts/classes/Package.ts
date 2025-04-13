@@ -10,7 +10,6 @@
 /* IMPORT TYPES */
 import type { AbstractArgs } from './abstracts/AbstractStage.js';
 import type { BuildArgs, BuildStages } from './Build.js';
-import type { Functions } from './Functions.js';
 import type { SnapshotArgs, SnapshotStages } from './Snapshot.js';
 
 
@@ -70,6 +69,13 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
     public stages = packageStages;
 
+    public get ARGS_DEFAULT(): PackageArgs {
+        // @ts-expect-error
+        return {
+            ...AbstractStage.ARGS_ABSTRACT,
+        };
+    }
+
 
 
     /* CONSTRUCTOR
@@ -105,24 +111,24 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
     protected async snapshot() {
         const snap = new Snapshot( {
-            ...this.opts as SnapshotArgs,
+            ...this.args as SnapshotArgs,
 
-            'log-base-level': 1 + ( this.opts[ 'log-base-level' ] ?? 0 ),
+            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
-            only: this.opts[ 'only-snap' ],
-            without: this.opts[ 'without-snap' ],
+            only: this.args[ 'only-snap' ],
+            without: this.args[ 'without-snap' ],
         } );
         await snap.run();
     }
 
     protected async build() {
         const build = new Build( {
-            ...this.opts as BuildArgs,
+            ...this.args as BuildArgs,
 
-            'log-base-level': 1 + ( this.opts[ 'log-base-level' ] ?? 0 ),
+            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
-            only: this.opts[ 'only-build' ],
-            without: this.opts[ 'without-build' ],
+            only: this.args[ 'only-build' ],
+            without: this.args[ 'without-build' ],
         } );
         await build.run();
     }
@@ -138,7 +144,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         this.verboseLog( 'copying files to package...', 2 );
         this._copyToPkg(
             [
-                ...this.pkg.files,
+                ...this.fns.pkg.files,
 
                 '.npmrc',
                 '.nvmrc',
@@ -147,7 +153,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
                 'LICENSE.md',
                 'README.md',
             ],
-            this.releasePath,
+            this.fns.releasePath,
             './',
             [
                 '**/*.css.map',
@@ -161,30 +167,30 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
 
         this.verboseLog( 'replacing placeholders in package...', 3 );
-        for ( const o of currentReplacements( this as Functions ).concat( pkgReplacements( this as Functions ) ) ) {
+        for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
             this.replaceInFiles(
                 [
-                    this.releasePath.replace( /\/*$/g, '/**' ),
-                    // this.releasePath.replace( /\/*$/g, '/*' ),
-                    // this.releasePath.replace( /\/*$/g, '/**/*' ),
-                    '!' + this.releasePath.replace( /\/*$/g, '/.vscode/*.code-snippets' ),
+                    this.fns.releasePath.replace( /\/*$/g, '/**' ),
+                    // this.fns.releasePath.replace( /\/*$/g, '/*' ),
+                    // this.fns.releasePath.replace( /\/*$/g, '/**/*' ),
+                    '!' + this.fns.releasePath.replace( /\/*$/g, '/.vscode/*.code-snippets' ),
                 ],
                 o.find,
                 o.replace,
-                this.opts.verbose ? 4 : 3,
+                this.args.verbose ? 4 : 3,
             );
         }
 
 
         this.verboseLog( 'replacing placeholders in source...', 3 );
-        if ( !this.opts.dryrun ) {
+        if ( !this.args.dryrun ) {
 
-            for ( const o of pkgReplacements( this as Functions ) ) {
+            for ( const o of pkgReplacements( this.fns ) ) {
                 this.replaceInFiles(
                     '**/*',
                     o.find,
                     o.replace,
-                    this.opts.verbose ? 4 : 3,
+                    this.args.verbose ? 4 : 3,
                 );
             }
         }
@@ -197,19 +203,19 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         ignoreGlobs: string[] = [],
     ) {
 
-        if ( NodeFS.existsSync( this.pathResolve( outDir, '../' ) ) ) {
+        if ( NodeFS.existsSync( this.fns.pathResolve( outDir, '../' ) ) ) {
             this.verboseLog( 'deleting current contents...', 3 );
 
             try {
-                this.deleteFiles( outDir );
+                this.fns.deleteFiles( outDir );
             } catch ( err ) {
-                // nodeErrorCLI( err as NodeError, ( this.opts.verbose ? 4 : 3 ) );
+                // nodeErrorCLI( err as NodeError, ( this.args.verbose ? 4 : 3 ) );
             }
         }
 
 
         this.verboseLog( 'copying files...', 3 );
-        this.copyFiles(
+        this.fns.copyFiles(
             sourceGlobs,
             outDir,
             sourceDir,
@@ -228,20 +234,20 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
     public async zip(): Promise<void> {
         // returns
-        if ( this.opts.dryrun ) { return; }
+        if ( this.args.dryrun ) { return; }
 
         this.progressLog( 'zipping release packages...', 1 );
 
-        const zipPath: string = this.releasePath.replace( /\/*$/g, '' ) + '.zip';
+        const zipPath: string = this.fns.releasePath.replace( /\/*$/g, '' ) + '.zip';
 
-        if ( !this.opts.packaging ) {
+        if ( !this.args.packaging ) {
             this.verboseLog( 'skipping the real zipping...', 2 );
             return;
         }
 
         this.verboseLog( 'zipping package...', 2 );
         this._zip(
-            this.releasePath,
+            this.fns.releasePath,
             zipPath,
             [],
             false,
@@ -267,27 +273,27 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
          * Directory to use as working dir when zipping the project.
          * With a trailing slash.
          */
-        const zippingPWD: string = this.pathResolve( sourceDir, '..' ).replace( /\/*$/g, '' ) + '/';
+        const zippingPWD: string = this.fns.pathResolve( sourceDir, '..' ).replace( /\/*$/g, '' ) + '/';
 
         /**
          * Regex that matches the path to the working directory to zip from.
          */
-        const zippingPWD_regex: RegExp = new RegExp( '^' + this.escRegExp( zippingPWD ), 'g' );
+        const zippingPWD_regex: RegExp = new RegExp( '^' + this.fns.fns.escRegExp( zippingPWD ), 'g' );
 
         /*
          * Correcting and formatting the output zip path. 
          */
-        zipPath = this.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
+        zipPath = this.fns.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
 
         while ( NodeFS.existsSync( zipPath ) ) {
-            zipPath = zipPath.replace( /(\/*|\.zip)?$/g, '' ) + `-${ this.timestamp( null, 'yyyy_MM_dd-HH_mm' ).replace( /_/g, '' ) }.zip`;
+            zipPath = zipPath.replace( /(\/*|\.zip)?$/g, '' ) + `-${ this.fns.timestamp( null, 'yyyy_MM_dd-HH_mm' ).replace( /_/g, '' ) }.zip`;
         }
 
 
         /**
          * All files to include in the zip file.
          */
-        const files: string[] = this.glob(
+        const files: string[] = this.fns.glob(
             sourceDir.replace( /\/*$/g, '/**' ),
             {
                 filesOnly,
@@ -305,7 +311,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         /*
          * Running the command. 
          */
-        const zipCMD: string = `cd "${ this.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
+        const zipCMD: string = `cd "${ this.fns.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
         this.cmd( zipCMD );
     }
 }

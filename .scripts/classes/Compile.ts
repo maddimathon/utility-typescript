@@ -50,6 +50,13 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
 
     public stages = compileStages;
 
+    public get ARGS_DEFAULT(): CompileArgs {
+        // @ts-expect-error
+        return {
+            ...AbstractStage.ARGS_ABSTRACT,
+        };
+    }
+
 
 
     /* CONSTRUCTOR
@@ -70,13 +77,13 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        if ( !this.opts.building && (
-            this.opts.watchedWatcher
-            || this.opts.watchedFilename
-            || this.opts.watchedEvent
+        if ( !this.args.building && (
+            this.args.watchedWatcher
+            || this.args.watchedFilename
+            || this.args.watchedEvent
         ) ) {
             const emoji = which == 'end' ? '✅' : '🚨';
-            this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.opts.watchedEvent }: ${ this.opts.watchedFilename }`, 0 );
+            this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.args.watchedEvent }: ${ this.args.watchedFilename }`, 0 );
         } else {
 
             this.startEndNoticeMaker(
@@ -108,10 +115,10 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
             await this.compileTypescript( path, 2 );
         }
 
-        if ( !this.opts.watchedEvent ) {
+        if ( !this.args.watchedEvent ) {
 
             this.verboseLog( 'deleting type-only javascript files...', 2 );
-            this.deleteFiles( [
+            this.fns.deleteFiles( [
                 'dist/js/types/**/*.js',
                 'dist/js/types/**/*.js.map',
                 'dist/js/types/**/*.test.d.ts',

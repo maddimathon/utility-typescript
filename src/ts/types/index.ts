@@ -2,7 +2,6 @@
  * Exports all global types (no JavaScript).
  * 
  * @module Types
- * @category Entry Points
  * 
  * @since ___PKG_VERSION___
  * 
@@ -25,7 +24,6 @@
  */
 
 export type * as Arrays from './arrays/index.ts';
-export type * as Classes from './classes/index.ts';
 export type * as Functions from './functions/index.ts';
 export type * as Meta from './meta.ts';
 export type * as Node from './node/index.ts';

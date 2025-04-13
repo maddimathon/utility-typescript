@@ -24,11 +24,11 @@
  * @license MIT
  */
 
-/** @category Globals */
+// /** @hidden - these modules are documented, I think including these references could create confusion */
 export type * as Types from './types/index.js';
 
-/** @category Globals */
+// /** @hidden - these modules are documented, I think including these references could create confusion */
 export * as classes from './classes/index.js';
 
-/** @category Globals */
+// /** @hidden - these modules are documented, I think including these references could create confusion */
 export * as functions from './functions/index.js';

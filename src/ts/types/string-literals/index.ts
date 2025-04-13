@@ -23,4 +23,4 @@
  * @license MIT
  */
 
-export * from './html.js';
+export type * from './html.js';

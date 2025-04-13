@@ -1,0 +1,63 @@
+/**
+ * @since ___PKG_VERSION___
+ * 
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ */
+/*!
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @license MIT
+ */
+
+// import type { Test } from '../types/index.js';
+import { describe, expect, test } from '@jest/globals';
+
+import { AbstractConfigurableClass } from './AbstractConfigurableClass.js';
+
+describe( 'AbstractConfigurableClass', () => {
+
+    interface ExampleClassArgs extends AbstractConfigurableClass.Args { }
+
+    // when this is updated, consider updating the doc example as well
+    class ExampleClass extends AbstractConfigurableClass<ExampleClassArgs> {
+
+
+
+        /* PROPERTIES
+         * ====================================================================== */
+
+        public get ARGS_DEFAULT(): ExampleClassArgs {
+
+            return {
+                optsRecursive: false,
+            };
+        }
+
+        /**
+         * Build a complete args object.
+         */
+        public buildArgs( args?: Partial<ExampleClassArgs> ): ExampleClassArgs {
+            return AbstractConfigurableClass.abstractArgs( args );
+        }
+
+
+
+        /* CONSTRUCTOR
+         * ====================================================================== */
+
+        public constructor ( args: Partial<ExampleClassArgs> = {} ) {
+            super( args );
+        }
+    }
+
+    const inst_default = new ExampleClass();
+    const inst_override = new ExampleClass( { optsRecursive: true } );
+
+    test( 'ExampleClass.args', () => {
+
+        expect( inst_default.args ).toEqual( { optsRecursive: false } );
+        expect( inst_override.args ).toEqual( { optsRecursive: true } );
+    } );
+} );

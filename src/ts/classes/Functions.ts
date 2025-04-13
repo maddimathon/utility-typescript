@@ -1,0 +1,149 @@
+/**
+ * @since tmpl-0.1.1
+ * 
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ */
+/*!
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @license MIT
+ */
+
+import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
+
+import {
+    escRegExp,
+    escRegExpReplace,
+    slugify,
+    timestamp,
+    toTitleCase,
+    typeOf,
+} from '../functions/index.js';
+
+
+/**
+ * Used only for {@link Functions}.
+ */
+export namespace Functions {
+
+    /**
+     * Optional configuration for {@link Functions}.
+     * 
+     * @interface
+     */
+    export type Args = AbstractConfigurableClass.Args & {
+    };
+}
+
+/**
+ * A configurable class of utility functions.
+ * 
+ * Can be extended, but probably best as a (static) property instead.
+ */
+export class Functions extends AbstractConfigurableClass<Functions.Args> {
+
+
+    /* PROPERTIES
+     * ====================================================================== */
+
+    public get ARGS_DEFAULT(): Functions.Args {
+
+        return {
+            optsRecursive: false,
+        };
+    }
+
+    /**
+     * Build a complete args object.
+     * 
+     * @category Args
+     */
+    public buildArgs( args?: Partial<Functions.Args> ): Functions.Args {
+        return AbstractConfigurableClass.abstractArgs( args );
+    }
+
+
+
+    /* CONSTRUCTOR
+     * ====================================================================== */
+
+    public constructor ( args: Partial<Functions.Args> = {} ) {
+        super( args );
+    }
+
+
+
+    /* METHODS
+     * ====================================================================== */
+
+    /** 
+     * An alias for this package's {@link typeOf | typeOf()}.
+     * 
+     * @category Aliases
+     * 
+     * @function 
+     */
+    public typeOf = ( ...params: Parameters<typeof typeOf> ) => typeOf( ...params );
+
+
+    /* ARRAYS ===================================== */
+
+
+    /* HTML ===================================== */
+
+
+    /* OBJECTS ===================================== */
+
+
+    /* REGEX ===================================== */
+
+    /** 
+     * An alias for this package's {@link escRegExp | escRegExp()}.
+     * 
+     * @category Aliases
+     * 
+     * @function 
+     */
+    public escRegExp = ( ...params: Parameters<typeof escRegExp> ) => escRegExp( ...params );
+
+    /** 
+     * An alias for this package's {@link escRegExpReplace | escRegExpReplace()}.
+     * 
+     * @category Aliases
+     * 
+     * @function 
+     */
+    public escRegExpReplace = ( ...params: Parameters<typeof escRegExpReplace> ) => escRegExpReplace( ...params );
+
+
+    /* STRINGS ===================================== */
+
+    /** 
+     * An alias for this package's {@link slugify | slugify()}.
+     * 
+     * @category Aliases
+     * 
+     * @function 
+     */
+    public slugify = ( ...params: Parameters<typeof slugify> ) => slugify( ...params );
+
+    /** 
+     * An alias for this package's {@link timestamp | timestamp()}.
+     * 
+     * @category Aliases
+     * 
+     * @function 
+     */
+    public timestamp = ( ...params: Parameters<typeof timestamp> ) => timestamp( ...params );
+
+    /** 
+     * An alias for this package's {@link toTitleCase | toTitleCase()}.
+     * 
+     * @category Aliases
+     * 
+     * @function 
+     */
+    public toTitleCase = ( ...params: Parameters<typeof toTitleCase> ) => toTitleCase( ...params );
+}

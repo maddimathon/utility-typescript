@@ -5,7 +5,7 @@
  *
  * @mergeModuleWith <project>
  *
- * @since 1.0.0-draft
+ * @since 0.9.0-draft
  *
  * @example
  * ```ts
@@ -13,20 +13,17 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0-draft
+ * @package @maddimathon/utility-typescript@0.9.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0-draft
+ * @maddimathon/utility-typescript@0.9.0-draft
  * @license MIT
  */
-/** @category Globals */
 export type * as Types from './types/index.js';
-/** @category Globals */
 export * as classes from './classes/index.js';
-/** @category Globals */
 export * as functions from './functions/index.js';
 //# sourceMappingURL=index.d.ts.map
