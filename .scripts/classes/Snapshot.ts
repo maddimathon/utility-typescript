@@ -119,9 +119,9 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
         this.fns.copyFiles( includePaths, exportPath );
 
 
-        this.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
+        this.fns.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
 
-        this.cmd( `rm -rf ${ exportPath }` );
+        this.fns.cmd( `rm -rf ${ exportPath }` );
 
         this.progressLog( `snapshot zipped: ${ exportPath }.zip`, 1 );
     }

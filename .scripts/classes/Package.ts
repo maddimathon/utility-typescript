@@ -312,6 +312,6 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
          * Running the command. 
          */
         const zipCMD: string = `cd "${ this.fns.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
-        this.cmd( zipCMD );
+        this.fns.cmd( zipCMD );
     }
 }

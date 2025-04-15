@@ -25,4 +25,5 @@
 export * as abstracts from './abstracts/index.js';
 export * as node from './node/index.js';
 export * from './Functions.js';
+export * from './VariableInspector.js';
 //# sourceMappingURL=index.d.ts.map

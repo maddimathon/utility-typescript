@@ -1,5 +1,5 @@
 ---
-title: License
+title: MIT License
 ---
 
 **Copyright © 2025  Maddi Mathon**

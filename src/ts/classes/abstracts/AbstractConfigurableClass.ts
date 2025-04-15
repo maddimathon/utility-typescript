@@ -54,7 +54,16 @@ export namespace AbstractConfigurableClass {
  *      * Build a complete args object.
  *      *\/
  *     public buildArgs( args?: Partial<ExampleClassArgs> ): ExampleClassArgs {
- *         return AbstractConfigurableClass.abstractArgs( args );
+ * 
+ *          const mergedDefault = AbstractConfigurableClass.abstractArgs(
+ *              this.ARGS_DEFAULT
+ *          ) as ExampleClassArgs;
+ * 
+ *          return this.mergeArgs(
+ *              mergedDefault,
+ *              args,
+ *              this.ARGS_DEFAULT.optsRecursive
+ *          );
  *     }
  * 
  * 
@@ -132,15 +141,6 @@ export abstract class AbstractConfigurableClass<
     /* METHODS
      * ====================================================================== */
 
-    // /** 
-    //  * An alias for this package's {@link mergeArgs | mergeArgs()}.
-    //  * 
-    //  * @category Aliases
-    //  * 
-    //  * @function 
-    //  */
-    // public mergeArgs: typeof mergeArgs = ( ...params: Parameters<typeof mergeArgs> ) => mergeArgs( ...params );
-    // /** {@inheritDoc mergeArgs} */
     /** 
      * An alias for this package's {@link mergeArgs | mergeArgs()}.
      * 
@@ -165,12 +165,12 @@ export abstract class AbstractConfigurableClass<
     public toJSON(): any { return this; }
 
     /**
-     * Overwrites the default function to return a string representation of this
+     * Overrides the default function to return a string representation of this
      * object.
      * 
      * @category Exporters
      *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | MDN documentation}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     public toString(): string { return JSON.stringify( this, null, 4 ); }
 }

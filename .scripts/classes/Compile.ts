@@ -33,7 +33,6 @@ export type CompileStages = typeof compileStages[ number ];
 
 const compileStages = [
     'js',
-    'css',
 ] as const;
 
 
@@ -99,10 +98,6 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
 
     /* STAGE METHODS
      * ====================================================================== */
-
-    protected async css() {
-        this.progressLog( '(NOT IMPLEMENTED) compiling scss...', 1 );
-    }
 
     protected async js() {
         this.progressLog( 'compiling typescript files...', 1 );

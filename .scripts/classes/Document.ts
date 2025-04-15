@@ -41,8 +41,6 @@ export type DocumentStages = typeof docStages[ number ];
 
 const docStages = [
     'ts',
-    'sass',
-    'astro',
     'replace',
 ] as const;
 
@@ -61,10 +59,10 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     public stages = docStages;
 
     public get ARGS_DEFAULT(): DocumentArgs {
-        // @ts-expect-error
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as DocumentArgs;
     }
 
 
@@ -100,10 +98,6 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     /* STAGE METHODS
      * ====================================================================== */
 
-    protected async astro() {
-        this.progressLog( '(NOT IMPLEMENTED) building docs website (astro)...', 1 );
-    }
-
     protected async replace() {
         this.progressLog( 'replacing placeholders...', 1 );
 
@@ -119,15 +113,18 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
         }
     }
 
-    protected async sass() {
-        this.progressLog( '(NOT IMPLEMENTED) documenting sass...', 1 );
-    }
-
     protected async ts() {
         this.progressLog( 'documenting typescript...', 1 );
 
+        /** URL to documentation, without trailing slash */
+        const homepage = this.fns.pkg.homepage.replace( /\/+$/gi, '' );
+
         // TODO - generate entryPoints from pkg.main and pkg.exports
         const config: Partial<typeDoc.TypeDocOptions> = {
+
+            tsconfig: 'src/ts/tsconfig.json',
+
+            basePath: './src/ts',
 
             blockTags: [
                 ...typeDoc.OptionDefaults.blockTags,
@@ -148,6 +145,8 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 'Modules',
                 'Entry Points',
             ],
+
+            // compilerOptions,
 
             customFooterHtml: `<p>Copyright <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025. MIT license.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
             customFooterHtmlDisableWrapper: true,
@@ -185,8 +184,9 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 readme: false,
             },
             hideGenerator: true,
-            hostedBaseUrl: this.fns.pkg.homepage,
+            hostedBaseUrl: homepage,
 
+            includeHierarchySummary: true,
             includeVersion: false,
 
             // json: './dist/docs/javascript.TypeDoc.json',
@@ -220,13 +220,15 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             readme: 'none',
             router: 'structure',
 
+
             searchInComments: true,
             searchInDocuments: true,
 
-            // sidebarLinks: {
-            // },
+            sidebarLinks: {
+                // 'Class Hierarchy': `${ homepage }/hierarchy.html`,
+            },
 
-            sourceLinkTemplate: `https://github.com/maddimathon/utility-typescript/blob/main/${ this.args.packaging ? this.fns.pkg.version + '/' : '' }{path}#L{line}`,
+            sourceLinkTemplate: `${ homepage }/blob/main/${ this.args.packaging ? this.fns.pkg.version + '/' : '' }{path}#L{line}`,
             sortEntryPoints: false,
 
             useFirstParagraphOfCommentAsSummary: true,

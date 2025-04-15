@@ -8,7 +8,7 @@
 
 
 /* IMPORT TYPES */
-import type { ChildProcess } from 'node:child_process';
+// import type { ChildProcess } from 'node:child_process';
 
 import type {
     Types,
@@ -293,14 +293,6 @@ export abstract class AbstractStage<
 
     /* UTILITIES ===================================== */
 
-    public async acmd( ...params: Parameters<BuildFunctions[ 'acmd' ]> ): Promise<ChildProcess | void> {
-        return this.fns.acmd( ...params );
-    }
-
-    public cmd( ...params: Parameters<BuildFunctions[ 'cmd' ]> ): void {
-        this.fns.cmd( ...params );
-    }
-
     protected cmdArgs(
         obj: CmdArgs,
         literalFalse: boolean = false,
@@ -387,7 +379,7 @@ export abstract class AbstractStage<
         };
 
         this.verboseLog( `compiling ${ input } to ${ output }...`, 0 + logLevelBase );
-        this.cmd( `sass ${ input }:${ output } ${ this.cmdArgs( args ) }` );
+        this.fns.cmd( `sass ${ input }:${ output } ${ this.cmdArgs( args ) }` );
 
         for ( const o of currentReplacements( F ).concat( pkgReplacements( F ) ) ) {
             this.replaceInFiles(
@@ -435,10 +427,16 @@ export abstract class AbstractStage<
             }
         }
 
-        const args: CmdArgs = { ...params };
+        const cmdParams: CmdArgs = {
+            ...params,
+            project: tsconfigPath,
+        };
 
         this.verboseLog( 'running tsc...', 2 + logLevelBase );
-        this.cmd( `tsc --project ${ tsconfigPath } ${ this.cmdArgs( args ) }` );
+        const tscCmd = `tsc ${ this.cmdArgs( cmdParams, true, false ) }`;
+
+        this.args.debug && this.progressLog( tscCmd, ( this.args.verbose ? 3 : 2 ) + logLevelBase );
+        this.fns.cmd( tscCmd );
     }
 
     protected async minify(
@@ -599,6 +597,6 @@ export abstract class AbstractStage<
             ( this.args.verbose ? 1 : 0 ) + logLevelBase,
         );
 
-        this.cmd( cmd );
+        this.fns.cmd( cmd );
     }
 }

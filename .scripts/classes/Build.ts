@@ -171,8 +171,6 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         for ( const path of jsPaths ) {
             this.minify( path, 'js', ( this.args.verbose ? 3 : 2 ) );
         }
-
-        this.verboseLog( '(NOT IMPLEMENTED) minifying css...', 2 );
     }
 
     protected async prettify() {

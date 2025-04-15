@@ -53,9 +53,9 @@ export declare namespace typeOf {
  * @typeParam T  Type of the variable being checked.
  *
  * @param variable  To test for value type.
- * @param _opts     Optional configuration. See {@link typeOf.Args}.
+ * @param _args     Optional configuration. See {@link typeOf.Args}.
  *
  * @return Expanded type string.
  */
-export declare function typeOf<T extends typeOf.TestType>(variable: T, _opts?: Partial<typeOf.Args>): string & typeOf.Return<T>;
+export declare function typeOf<T extends typeOf.TestType>(variable: T, _args?: Partial<typeOf.Args>): string & typeOf.Return<T>;
 //# sourceMappingURL=typeOf.d.ts.map

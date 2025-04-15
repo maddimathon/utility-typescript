@@ -256,7 +256,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
     constructor ( args?: Partial<BuildFunctions.Args> ) {
         super( args );
-        this.args = this.mergeArgs( this.ARGS_DEFAULT, args, this.ARGS_DEFAULT.optsRecursive );
+        this.args = this.buildArgs( args ) as BuildFunctions.Args;
     }
 
 
@@ -873,14 +873,14 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         stderr: string,
     } ) {
 
-        // const output: string =
-        //     err.output
-        //         ? this.implodeWithIndent( err.output.filter( ( l ) => l !== null ) )
-        //         : Object.keys( err )
-        //             .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
-        //             .join( '\n' );
+        const output: string =
+            err.output
+                ? this.implodeWithIndent( err.output.filter( ( l ) => l !== null ) )
+                : Object.keys( err )
+                    .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
+                    .join( '\n' );
 
-        // console.log( 'Console error:' + output, );
+        console.log( 'Console error:' + output, );
         process.exit( 1 );
     }
 

@@ -35,7 +35,6 @@ export type TestStages = typeof testStages[ number ];
 
 const testStages = [
     'js',
-    'scss',
 ] as const;
 
 
@@ -95,7 +94,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     protected async js() {
         this.progressLog( 'testing javascript...', 1 );
 
-        this.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
+        this.fns.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
 
         if ( this.args.packaging && !this.args.dryrun ) {
 
@@ -107,9 +106,5 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
                 'dist/**/*.test.js.map',
             ] );
         }
-    }
-
-    protected async scss() {
-        this.progressLog( '(NOT IMPLEMENTED) testing scss...', 1 );
     }
 }

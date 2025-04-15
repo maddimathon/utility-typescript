@@ -100,20 +100,20 @@ export namespace typeOf {
  * @typeParam T  Type of the variable being checked.
  * 
  * @param variable  To test for value type.
- * @param _opts     Optional configuration. See {@link typeOf.Args}.
+ * @param _args     Optional configuration. See {@link typeOf.Args}.
  * 
  * @return Expanded type string.
  */
 export function typeOf<T extends typeOf.TestType>(
     variable: T,
-    _opts: Partial<typeOf.Args> = {},
+    _args: Partial<typeOf.Args> = {},
 ): string & typeOf.Return<T> {
 
-    const opts: typeOf.Args = mergeArgs(
+    const args: typeOf.Args = mergeArgs(
         {
             distinguishArrays: true,
         } as typeOf.Args & mergeArgs.Obj,
-        _opts,
+        _args,
         false
     );
 
@@ -140,14 +140,14 @@ export function typeOf<T extends typeOf.TestType>(
 
         case 'number':
             // returns
-            if ( isNaN( variable as number ) ) {
+            if ( Number.isNaN( variable as number ) ) {
                 return 'NaN' as typeOf.Return<T>;
             }
             return 'number' as typeOf.Return<T>;
 
         case 'object':
             // returns
-            if ( opts.distinguishArrays && Array.isArray( variable ) ) {
+            if ( args.distinguishArrays && Array.isArray( variable ) ) {
                 return 'array' as typeOf.Return<T>;
             }
             return 'object' as typeOf.Return<T>;

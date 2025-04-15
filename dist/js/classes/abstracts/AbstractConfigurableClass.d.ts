@@ -49,7 +49,16 @@ export declare namespace AbstractConfigurableClass {
  *      * Build a complete args object.
  *      *\/
  *     public buildArgs( args?: Partial<ExampleClassArgs> ): ExampleClassArgs {
- *         return AbstractConfigurableClass.abstractArgs( args );
+ *
+ *          const mergedDefault = AbstractConfigurableClass.abstractArgs(
+ *              this.ARGS_DEFAULT
+ *          ) as ExampleClassArgs;
+ *
+ *          return this.mergeArgs(
+ *              mergedDefault,
+ *              args,
+ *              this.ARGS_DEFAULT.optsRecursive
+ *          );
  *     }
  *
  *
@@ -105,12 +114,12 @@ export declare abstract class AbstractConfigurableClass<Args extends AbstractCon
      */
     toJSON(): any;
     /**
-     * Overwrites the default function to return a string representation of this
+     * Overrides the default function to return a string representation of this
      * object.
      *
      * @category Exporters
      *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | MDN documentation}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     toString(): string;
 }

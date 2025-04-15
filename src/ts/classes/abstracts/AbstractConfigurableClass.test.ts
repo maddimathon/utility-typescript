@@ -39,7 +39,16 @@ describe( 'AbstractConfigurableClass', () => {
          * Build a complete args object.
          */
         public buildArgs( args?: Partial<ExampleClassArgs> ): ExampleClassArgs {
-            return AbstractConfigurableClass.abstractArgs( args );
+
+            const mergedDefault = AbstractConfigurableClass.abstractArgs(
+                this.ARGS_DEFAULT
+            ) as ExampleClassArgs;
+
+            return this.mergeArgs(
+                mergedDefault,
+                args,
+                this.ARGS_DEFAULT.optsRecursive
+            );
         }
 
 

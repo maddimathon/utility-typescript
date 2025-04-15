@@ -65,6 +65,7 @@
 
     "scripts": {
         "commit": "sh .commit.sh",
+        "test-vardump": "tsx --tsconfig .scripts/tsconfig.json .scripts/var-inspect-sample.ts",
 
         "snap": "tsx --tsconfig .scripts/tsconfig.json .scripts/snapshot.ts",
 
