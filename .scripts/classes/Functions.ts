@@ -254,8 +254,11 @@ export class BuildFunctions extends cls.node.NodeFunctions {
     /** CONSTRUCTOR
      ** ==================================================================== **/
 
-    constructor ( args?: Partial<BuildFunctions.Args> ) {
-        super( args );
+    constructor (
+        args?: Partial<BuildFunctions.Args>,
+        utils?: ConstructorParameters<typeof cls.node.NodeFunctions>[ 1 ],
+    ) {
+        super( args, utils );
         this.args = this.buildArgs( args ) as BuildFunctions.Args;
     }
 
@@ -328,7 +331,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
             if ( stat.isDirectory() ) {
 
                 if ( dryRun ) {
-                    console.log( 'deleting directory: ' + path );
+                    this.nc.timestampLog( 'deleting directory: ' + path );
                 } else {
                     NodeFS.rmSync( path, { recursive: true, force: true } );
                 }
@@ -336,7 +339,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
             } else if ( stat.isFile() || stat.isSymbolicLink() ) {
 
                 if ( dryRun ) {
-                    console.log( 'deleting file: ' + path );
+                    this.nc.timestampLog( 'deleting file: ' + path );
                 } else {
                     NodeFS.unlinkSync( path );
                 }
@@ -718,31 +721,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         }
 
         return this.#releasePath;
-    }
-
-    public progressLog(
-        msg: string,
-        level: number = 0,
-    ): void {
-
-        // if ( level <= 0 ) { console.log( '' ); }
-        if ( level <= 1 ) { console.log( '' ); }
-
-        const timestamp = `[${ DateTime.now().toFormat( 'HH:mm' ) }] `;
-
-        const indent: string = ' '.repeat( level * timestamp.length );
-
-        // const lineWidth: number = 80 - timestamp.length;
-
-        // const lineWidthRegex: RegExp = RegExp( `(?<=^(.{${ lineWidth }})+)`, 'gi' );
-
-        // const lines: string[] = msg.split( /\n/g ).map( line => line.split( lineWidthRegex ) ).flat();
-
-        const lines: string[] = msg.split( /\n/g );
-
-        const joiner: string = '\n' + indent + ' '.repeat( timestamp.length );
-
-        console.log( indent + timestamp + lines.join( joiner ) );
     }
 
 

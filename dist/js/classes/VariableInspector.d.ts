@@ -299,7 +299,23 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @internal
      */
-    private static get _complexObject();
+    static get sampleComplexObject(): {
+        undefined: undefined;
+        null: null;
+        true: true | undefined;
+        false: false | undefined;
+        bigint: bigint | undefined;
+        number: number;
+        NaN: number;
+        string: string;
+        stringMultiline: string | undefined;
+        array: any[] | undefined;
+        objectEmpty: object | undefined;
+        objectSimple: object | undefined;
+        date: Date | undefined;
+        regex: RegExp | undefined;
+        functionParams: ((a: string, b: string) => any) | undefined;
+    };
     /**
      * Prints sample output to the console via VariableInspector.dump().
      *
@@ -307,7 +323,7 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @returns  An example, constructed instance for a sample object.
      */
-    static sample(_args?: Partial<VariableInspector.Args>): VariableInspector<typeof VariableInspector._complexObject>;
+    static sample(_args?: Partial<VariableInspector.Args>): VariableInspector<typeof VariableInspector.sampleComplexObject>;
     /**
      * @source
      */

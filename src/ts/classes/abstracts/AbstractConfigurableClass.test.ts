@@ -16,6 +16,8 @@ import { describe, expect, test } from '@jest/globals';
 
 import { AbstractConfigurableClass } from './AbstractConfigurableClass.js';
 
+import { mergeArgs } from '../../functions/index.js';
+
 describe( 'AbstractConfigurableClass', () => {
 
     interface ExampleClassArgs extends AbstractConfigurableClass.Args { }
@@ -44,7 +46,9 @@ describe( 'AbstractConfigurableClass', () => {
                 this.ARGS_DEFAULT
             ) as ExampleClassArgs;
 
-            return this.mergeArgs(
+            // using this.mergeArgs here can cause issues because this method is 
+            // sometimes called from the prototype
+            return mergeArgs(
                 mergedDefault,
                 args,
                 this.ARGS_DEFAULT.optsRecursive

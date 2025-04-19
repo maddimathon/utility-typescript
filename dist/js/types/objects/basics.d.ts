@@ -17,7 +17,7 @@ import { AnyClass } from '../functions/basics.js';
  *
  * @param T  Type to Partial-ize. Can be a non-object without error.
  */
-type RecursivePartial_Inner<T> = T extends number | null | string | undefined | AnyClass | Function ? T : T extends Record<number | string, any> ? RecursivePartial<T> : T;
+type RecursivePartial_Inner<T> = T extends number | null | string | undefined | AnyClass | Function | Date ? T : T extends Record<number | string, any> ? RecursivePartial<T> : T;
 /**
  * Similar to the default Partial, but this also makes any child objects
  * Partial.

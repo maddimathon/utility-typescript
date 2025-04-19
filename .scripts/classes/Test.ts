@@ -64,7 +64,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     * ====================================================================== */
 
     constructor ( args: TestArgs ) {
-        super( args );
+        super( args, 'red' );
     }
 
 
@@ -78,7 +78,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        this.startEndNoticeMaker(
+        this.startEndNoticeLog(
             which,
             `TESTS ${ which.toUpperCase() }ING`,
             `TESTS FINISHED`,

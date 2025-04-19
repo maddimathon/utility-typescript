@@ -87,7 +87,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
      * ====================================================================== */
 
     constructor ( args: BuildArgs ) {
-        super( args );
+        super( args, 'blue' );
     }
 
 
@@ -110,7 +110,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
             this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.args.watchedEvent }: ${ this.args.watchedFilename }`, 0 );
         } else {
 
-            this.startEndNoticeMaker(
+            this.startEndNoticeLog(
                 which,
                 `BUILD ${ which.toUpperCase() }ING`,
                 `BUILD FINISHED`,

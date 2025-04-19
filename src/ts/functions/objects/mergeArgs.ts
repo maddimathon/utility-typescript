@@ -169,17 +169,20 @@ export const mergeArgs: mergeArgs.Function = <
 
         // continues
         // this is not a property that needs recursion
-        if ( typeof defaultValue !== 'object' || typeof inputValue !== 'object' ) {
+        if (
+            defaultValue === null
+            || typeof defaultValue === 'undefined'
+            || typeof defaultValue !== 'object'
+            || typeof inputValue !== 'object'
+        ) {
             continue;
         }
 
         // continues
         // not a simple args object and shouldn't have its props overwritten
         if (
-            // @ts-expect-error
-            typeof defaultValue.prototype !== 'undefined'
-            // @ts-expect-error
-            || typeof inputValue.prototype !== 'undefined'
+            typeof ( defaultValue as { prototype?: Function; } ).prototype !== 'undefined'
+            || typeof ( inputValue as { prototype?: Function; } ).prototype !== 'undefined'
         ) {
             continue;
         }

@@ -64,8 +64,10 @@
     },
 
     "scripts": {
+        "test-vardump": "tsx --tsconfig .scripts/tsconfig.json .scripts/sample/var-inspect.ts",
+        "test-console": "tsx --tsconfig .scripts/tsconfig.json .scripts/sample/node-console.ts",
+        
         "commit": "sh .commit.sh",
-        "test-vardump": "tsx --tsconfig .scripts/tsconfig.json .scripts/var-inspect-sample.ts",
 
         "snap": "tsx --tsconfig .scripts/tsconfig.json .scripts/snapshot.ts",
 

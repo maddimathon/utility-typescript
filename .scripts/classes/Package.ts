@@ -82,7 +82,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
      * ====================================================================== */
 
     constructor ( args: PackageArgs ) {
-        super( args );
+        super( args, args.dryrun ? 'yellow' : 'purple' );
     }
 
 
@@ -96,7 +96,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        this.startEndNoticeMaker(
+        this.startEndNoticeLog(
             which,
             `PACKAGE ${ which.toUpperCase() }ING`,
             `PACKAGE FINISHED`,

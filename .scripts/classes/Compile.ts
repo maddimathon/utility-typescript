@@ -62,7 +62,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
      * ====================================================================== */
 
     constructor ( args: CompileArgs ) {
-        super( args );
+        super( args, 'green' );
     }
 
 
@@ -85,7 +85,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
             this.progressLog( `${ emoji } [watch-change-${ which }] file ${ this.args.watchedEvent }: ${ this.args.watchedFilename }`, 0 );
         } else {
 
-            this.startEndNoticeMaker(
+            this.startEndNoticeLog(
                 which,
                 `COMPILE ${ which.toUpperCase() }ING`,
                 `COMPILE FINISHED`,

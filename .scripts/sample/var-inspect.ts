@@ -8,9 +8,9 @@
  * @license MIT
  */
 
-// import { F } from './@utilities.js';
+// import { F } from '../@utilities.js';
 
-import { VariableInspector } from '../src/ts/classes/VariableInspector.js';
+import { VariableInspector } from '../../src/ts/classes/VariableInspector.js';
 
 const defaultFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str;
 const resetFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str + '\x1b[0m';

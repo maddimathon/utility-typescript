@@ -68,6 +68,16 @@ its associated types, if applicable.  Occasionally (and judiciously), it may
 make more sense to define a small number of closely-related items in the same
 file.
 
+#### Naming Conventions
+
+Long and clear is better than short and confusing.
+
+Abstract classes should start with `Abstract` (e.g., 
+[`AbstractConfigurableClass`](./src/ts/classes/abstracts/AbstractConfigurableClass.ts)).
+
+Classes made only to be children of other classes should be prefixed with their
+parent class (e.g., `ParentClass_[Child]`).
+
 #### Documentation
 
 Documentation is good and helpful.  The docs website for this package is mostly

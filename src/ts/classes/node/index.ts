@@ -26,4 +26,5 @@
  * @license MIT
  */
 
+export * from './NodeConsole.js';
 export * from './NodeFunctions.js';

@@ -12,6 +12,7 @@
  */
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { Functions } from '../Functions.js';
+import { NodeConsole } from './NodeConsole.js';
 /**
  * Used only for {@link NodeFunctions}.
  */
@@ -30,11 +31,17 @@ export declare namespace NodeFunctions {
  */
 export declare class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args> {
     /**
-     * A completed args object.
+     * The instance of {@link Functions} used within this class.
      *
      * @category Classes
      */
     readonly fns: Functions;
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     *
+     * @category Classes
+     */
+    readonly nc: NodeConsole;
     /**
      * A completed args object.
      *
@@ -46,6 +53,15 @@ export declare class NodeFunctions extends AbstractConfigurableClass<NodeFunctio
      * Build a complete args object.
      */
     buildArgs(args?: Partial<NodeFunctions.Args>): NodeFunctions.Args;
-    constructor(args?: Partial<NodeFunctions.Args>, fns?: Functions | null);
+    /**
+     * @param args   Optional. Configuration overrides.
+     * @param utils  Optional. Configured instances of utility classes. Passing
+     *               classes that you're already using is likely marginally more
+     *               efficient.
+     */
+    constructor(args?: Partial<NodeFunctions.Args>, utils?: Partial<{
+        fns: Functions;
+        nc: NodeConsole;
+    }>);
 }
 //# sourceMappingURL=NodeFunctions.d.ts.map

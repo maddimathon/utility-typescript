@@ -71,7 +71,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
      * ====================================================================== */
 
     constructor ( args: DocumentArgs ) {
-        super( args );
+        super( args, 'turquoise' );
     }
 
 
@@ -85,7 +85,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        this.startEndNoticeMaker(
+        this.startEndNoticeLog(
             which,
             `DOCUMENTATION ${ which.toUpperCase() }ING`,
             `DOCUMENTATION FINISHED`,
@@ -116,8 +116,11 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     protected async ts() {
         this.progressLog( 'documenting typescript...', 1 );
 
-        /** URL to documentation, without trailing slash */
+        /** URL to documentation, without trailing slash. */
         const homepage = this.fns.pkg.homepage.replace( /\/+$/gi, '' );
+
+        /** URL to repository, without trailing slash. */
+        const repository = this.fns.pkg.repository.url.replace( /\/+$/gi, '' );
 
         // TODO - generate entryPoints from pkg.main and pkg.exports
         const config: Partial<typeDoc.TypeDocOptions> = {
@@ -202,7 +205,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             // },
 
             navigationLinks: {
-                'GitHub': this.fns.pkg.repository.url,
+                'GitHub': repository,
                 'by Maddi Mathon': 'https://www.maddimathon.com',
             },
 
@@ -228,7 +231,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 // 'Class Hierarchy': `${ homepage }/hierarchy.html`,
             },
 
-            sourceLinkTemplate: `${ homepage }/blob/main/${ this.args.packaging ? this.fns.pkg.version + '/' : '' }{path}#L{line}`,
+            sourceLinkTemplate: `${ repository }/blob/main/${ ( this.args.packaging && !this.args.dryrun ) ? this.fns.pkg.version + '/' : '' }{path}#L{line}`,
             sortEntryPoints: false,
 
             useFirstParagraphOfCommentAsSummary: true,

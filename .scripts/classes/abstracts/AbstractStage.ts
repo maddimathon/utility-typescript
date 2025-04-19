@@ -25,10 +25,10 @@ import { currentReplacements, pkgReplacements } from '../../vars/replacements.js
 import { F, BuildFunctions } from '../../@utilities.js';
 
 import {
+    // Types as TS,
     classes as cls,
-    // functions as fns,
+    functions as fns,
 } from '../../../src/ts/index.js';
-import { AbstractConfigurableClass } from 'src/ts/classes/abstracts/AbstractConfigurableClass.js';
 
 
 
@@ -48,6 +48,8 @@ export type AbstractArgs<Stages extends string | never> = cls.abstracts.Abstract
      * Only run this stage(s), else runs them all.
      */
     only?: Stages | Stages[];
+
+    optsRecursive?: false;
 
     /**
      * Passes --quiet param to sass when compiling; quiets output.
@@ -172,7 +174,21 @@ export abstract class AbstractStage<
      * Build a complete args object.
      */
     public buildArgs( args?: Partial<Args> ): Args {
-        return AbstractConfigurableClass.abstractArgs( args ) as Args;
+
+        const optsRecursive = this.ARGS_DEFAULT.optsRecursive
+            ?? AbstractStage.ARGS_ABSTRACT.optsRecursive;
+
+        const mergedDefault = fns.mergeArgs(
+            cls.abstracts.AbstractConfigurableClass.abstractArgs(
+                AbstractStage.ARGS_ABSTRACT
+            ),
+            this.ARGS_DEFAULT,
+            optsRecursive
+        );
+
+        // using this.mergeArgs here can cause issues because this method is 
+        // sometimes called from the prototype
+        return fns.mergeArgs( mergedDefault, args, optsRecursive );
     }
 
 
@@ -180,10 +196,13 @@ export abstract class AbstractStage<
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor ( args: Args ) {
+    constructor (
+        args: Args,
+        protected readonly clr: cls.MessageMaker.Colour = 'black',
+    ) {
         super( args as Types.Objects.RecursivePartial<Args> & Args );
 
-        this.fns = new BuildFunctions( args );
+        this.fns = new BuildFunctions();
     }
 
 
@@ -194,16 +213,70 @@ export abstract class AbstractStage<
 
     /* MESSAGES ===================================== */
 
+    protected msgArgs(
+        level: number = 0,
+        msgArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 1 ] = {},
+        timeArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 2 ] = {},
+    ): {
+        msg: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 1 ];
+        time: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 2 ];
+    } {
+        const depth = level + Number( this.args[ 'log-base-level' ] ?? 0 );
+
+        const msg = {
+
+            bold: depth == 0 || level == 0,
+            clr: this.clr,
+
+            depth,
+
+            ...msgArgs,
+        };
+
+        const time = {
+            ...timeArgs,
+        };
+
+        if ( level <= 0 ) {
+            msg.linesIn = msgArgs.linesIn ?? 2;
+            msg.linesOut = msgArgs.linesOut ?? 1;
+        }
+
+        if ( level > 0 ) {
+            msg.linesIn = msgArgs.linesIn ?? 1;
+            msg.linesOut = msgArgs.linesOut ?? 0;
+        }
+
+        // if ( level > 1 ) {
+        //     msg.linesOut = msgArgs.linesOut ?? 0;
+        // }
+
+        if ( level > 2 ) {
+            msg.italic = msgArgs.italic ?? true;
+            msg.linesIn = msgArgs.linesIn ?? 0;
+        }
+
+        if ( level > 3 ) {
+            msg.clr = msgArgs.clr ?? 'grey';
+        }
+
+        return { msg, time };
+    }
+
     public progressLog(
-        msg: string,
+        msg: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 0 ],
         level: number,
+        _msgArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 1 ] = {},
+        _timeArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 2 ] = {},
     ): void {
         if ( this.args[ 'progress' ] === false ) { return; }
 
-        this.fns.progressLog(
-            msg,
-            level + Number( this.args[ 'log-base-level' ] ?? 0 ),
-        );
+        const {
+            msg: msgArgs,
+            time: timeArgs,
+        } = this.msgArgs( level, _msgArgs, _timeArgs );
+
+        this.fns.nc.timestampLog( msg, msgArgs, timeArgs );
     }
 
     public abstract startEndNotice( which: "start" | "end" ): void;
@@ -211,42 +284,59 @@ export abstract class AbstractStage<
     public verboseLog(
         msg: string,
         level: number,
+        msgArgs: Parameters<typeof this.progressLog>[ 2 ] = {},
+        timeArgs: Parameters<typeof this.progressLog>[ 3 ] = {},
     ): void {
-        if ( this.args[ 'verbose' ] !== true ) { return; }
-
-        this.progressLog( msg, level );
+        if ( !this.args[ 'verbose' ] ) { return; }
+        this.progressLog( msg, level, msgArgs, timeArgs );
     }
 
-    protected startEndNoticeMaker(
+    /**
+     * Prints a notice message to the console to signal the start or end of a stage.
+     * 
+     * @see {@link cls.node.NodeConsole.timestampLog}  Function used to print to console.
+     */
+    protected startEndNoticeLog(
         which: "start" | "end" | string,
         startMsg: string,
         endMsg: string,
         defaultMsg: string,
-    ) {
+        msgArgs?: Parameters<typeof this.progressLog>[ 2 ],
+        timeArgs?: Parameters<typeof this.progressLog>[ 3 ],
+    ): void {
         if ( this.args[ 'notice' ] === false ) { return; }
 
-        switch ( which ) {
+        const depth = Number( this.args[ 'log-base-level' ] ?? 0 );
 
-            case 'start':
-                if ( ( this.args[ 'log-base-level' ] ?? 0 ) > 0 ) {
-                    console.log( '' );
-                }
-                this.progressLog( startMsg, 0 );
-                break;
+        msgArgs = {
+            bold: true,
+            clr: this.clr,
 
-            case 'end':
-                this.progressLog( endMsg, 0 );
-                console.log( '' );
-                break;
+            linesIn: ( depth < 1 && which == 'start' ) ? 3 : 2,
+            linesOut: 1,
 
-            default:
-                this.progressLog( defaultMsg, 0 );
-                break;
+            ...msgArgs,
+
+            depth,
+        };
+
+        let msg = defaultMsg;
+
+        if ( which === 'start' ) {
+            msg = startMsg;
+        } else if ( which === 'end' ) {
+            msg = endMsg;
         }
-    }
 
-    protected subStageSeparator(): void {
-        console.log( '' );
+        this.progressLog(
+            [ [
+                msg,
+                { flag: true },
+            ] ],
+            depth,
+            msgArgs,
+            timeArgs,
+        );
     }
 
 
@@ -277,7 +367,6 @@ export abstract class AbstractStage<
 
             if ( include && !exclude && this[ method as keyof typeof this ] ) {
                 await this.runStage( method );
-                ( this.args.verbose || this.args.debug ) && this.subStageSeparator();
             }
         }
 
@@ -444,7 +533,14 @@ export abstract class AbstractStage<
         parser: "css" | "html" | "js",
         logLevelBase: number,
     ) {
-        this.verboseLog( `minifying ${ this.fns.pathRelative( path ) } (${ parser })...`, 0 + logLevelBase );
+        this.verboseLog(
+            `minifying ${ this.fns.pathRelative( path ) } (${ parser })...`,
+            0 + logLevelBase,
+            {
+                linesIn: 0,
+                linesOut: 0,
+            },
+        );
 
         let options = {};
 
@@ -570,7 +666,14 @@ export abstract class AbstractStage<
         logLevelBase: number,
         args: Partial<Omit<ReplaceInFilesArgs, "regex" | "replacement" | "string">> = {},
     ): void {
-        this.verboseLog( `replacing '${ find }' => '${ replace }'`, logLevelBase );
+        this.verboseLog(
+            `replacing '${ find }' => '${ replace }'`,
+            logLevelBase,
+            {
+                linesIn: 0,
+                linesOut: 0,
+            },
+        );
 
         const cmdArgs: ReplaceInFilesArgs = {
             replacement: replace,
@@ -593,8 +696,12 @@ export abstract class AbstractStage<
 
         const cmd: string = `replace-in-files ${ findArgs } ${ this.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
         this.args.debug && this.progressLog(
-            JSON.stringify( { cmd } ),
+            cls.VariableInspector.stringify( { cmd } ),
             ( this.args.verbose ? 1 : 0 ) + logLevelBase,
+            {
+                linesIn: 0,
+                linesOut: 0,
+            },
         );
 
         this.fns.cmd( cmd );

@@ -25,5 +25,6 @@
  * @maddimathon/utility-typescript@0.9.0-draft
  * @license MIT
  */
+export * from './NodeConsole.js';
 export * from './NodeFunctions.js';
 //# sourceMappingURL=index.d.ts.map

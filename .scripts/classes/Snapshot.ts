@@ -62,7 +62,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
      * ====================================================================== */
 
     constructor ( args: SnapshotArgs ) {
-        super( args );
+        super( args, 'orange' );
     }
 
 
@@ -76,7 +76,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
 
     public startEndNotice( which: "start" | "end" | string ): void {
 
-        this.startEndNoticeMaker(
+        this.startEndNoticeLog(
             which,
             `SNAPSHOT ${ which.toUpperCase() }ING`,
             `SNAPSHOT FINISHED`,

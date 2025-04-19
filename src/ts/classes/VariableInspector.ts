@@ -498,7 +498,7 @@ export class VariableInspector<
      * 
      * @internal
      */
-    private static get _complexObject() {
+    public static get sampleComplexObject() {
 
         const t = VariableInspector._testVars( true );
 
@@ -530,7 +530,7 @@ export class VariableInspector<
      */
     public static sample(
         _args: Partial<VariableInspector.Args> = {},
-    ): VariableInspector<typeof VariableInspector._complexObject> {
+    ): VariableInspector<typeof VariableInspector.sampleComplexObject> {
         console.log( '\nVariableInspector.sample() @ ' + timestamp( null, { date: true, time: true } ) );
         console.log( '\n' );
 
@@ -552,7 +552,7 @@ export class VariableInspector<
             varDump( { [ key ]: t[ key as keyof typeof t ] } );
         }
 
-        const complexVarInspect = new VariableInspector( { complexObject: VariableInspector._complexObject }, args );
+        const complexVarInspect = new VariableInspector( { complexObject: VariableInspector.sampleComplexObject }, args );
 
         complexVarInspect.dump();
         console.log( '\n' );
@@ -619,8 +619,12 @@ export class VariableInspector<
      */
     public buildArgs( args?: Partial<VariableInspector.Args> ): VariableInspector.Args {
 
-        const mergedDefault = AbstractConfigurableClass.abstractArgs( this.ARGS_DEFAULT ) as VariableInspector.Args;
+        const mergedDefault = AbstractConfigurableClass.abstractArgs(
+            this.ARGS_DEFAULT
+        ) as VariableInspector.Args;
 
+        // using this.mergeArgs here can cause issues because this method is 
+        // sometimes called from the prototype
         return mergeArgs(
             mergedDefault,
             args,

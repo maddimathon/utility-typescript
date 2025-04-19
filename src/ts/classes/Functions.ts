@@ -16,6 +16,7 @@ import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass
 import {
     escRegExp,
     escRegExpReplace,
+    mergeArgs,
     slugify,
     timestamp,
     toTitleCase,
@@ -61,7 +62,18 @@ export class Functions extends AbstractConfigurableClass<Functions.Args> {
      * @category Args
      */
     public buildArgs( args?: Partial<Functions.Args> ): Functions.Args {
-        return AbstractConfigurableClass.abstractArgs( args );
+
+        const mergedDefault = AbstractConfigurableClass.abstractArgs(
+            this.ARGS_DEFAULT
+        ) as Functions.Args;
+
+        // using this.mergeArgs here can cause issues because this method is 
+        // sometimes called from the prototype
+        return mergeArgs(
+            mergedDefault,
+            args,
+            this.ARGS_DEFAULT.optsRecursive
+        );
     }
 
 

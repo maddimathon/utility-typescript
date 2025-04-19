@@ -11,9 +11,12 @@
  * @license MIT
  */
 
+import { mergeArgs } from '../../functions/index.js';
+
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 
 import { Functions } from '../Functions.js';
+import { NodeConsole } from './NodeConsole.js';
 
 
 /**
@@ -42,11 +45,18 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
      * ====================================================================== */
 
     /**
-     * A completed args object.
+     * The instance of {@link Functions} used within this class.
      * 
      * @category Classes
      */
     public readonly fns: Functions;
+
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     * 
+     * @category Classes
+     */
+    public readonly nc: NodeConsole;
 
     /**
      * A completed args object.
@@ -67,9 +77,13 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
      */
     public buildArgs( args?: Partial<NodeFunctions.Args> ): NodeFunctions.Args {
 
-        const mergedDefault: NodeFunctions.Args = Functions.prototype.buildArgs( this.ARGS_DEFAULT );
+        const mergedDefault: NodeFunctions.Args = Functions.prototype.buildArgs(
+            this.ARGS_DEFAULT
+        );
 
-        return this.mergeArgs(
+        // using this.mergeArgs here can cause issues because this method is 
+        // sometimes called from the prototype
+        return mergeArgs(
             mergedDefault,
             args,
             this.ARGS_DEFAULT.optsRecursive
@@ -81,13 +95,23 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
     /* CONSTRUCTOR
      * ====================================================================== */
 
+    /**
+     * @param args   Optional. Configuration overrides.
+     * @param utils  Optional. Configured instances of utility classes. Passing 
+     *               classes that you're already using is likely marginally more 
+     *               efficient.
+     */
     public constructor (
         args: Partial<NodeFunctions.Args> = {},
-        fns: Functions | null = null,
+        utils: Partial<{
+            fns: Functions;
+            nc: NodeConsole;
+        }> = {},
     ) {
         super( args );
-        this.fns = fns ?? new Functions( this.ARGS_DEFAULT );
 
+        this.fns = utils.fns ?? new Functions( this.ARGS_DEFAULT );
+        this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT );
 
         this.args = this.buildArgs( args );
     }

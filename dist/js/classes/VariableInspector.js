@@ -154,7 +154,7 @@ export class VariableInspector extends AbstractConfigurableClass {
      *
      * @internal
      */
-    static get _complexObject() {
+    static get sampleComplexObject() {
         const t = VariableInspector._testVars(true);
         return {
             undefined: t.undefined,
@@ -198,7 +198,7 @@ export class VariableInspector extends AbstractConfigurableClass {
         for (const key in t) {
             varDump({ [key]: t[key] });
         }
-        const complexVarInspect = new VariableInspector({ complexObject: VariableInspector._complexObject }, args);
+        const complexVarInspect = new VariableInspector({ complexObject: VariableInspector.sampleComplexObject }, args);
         complexVarInspect.dump();
         console.log('\n');
         return complexVarInspect;
@@ -244,6 +244,8 @@ export class VariableInspector extends AbstractConfigurableClass {
      */
     buildArgs(args) {
         const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
+        // using this.mergeArgs here can cause issues because this method is 
+        // sometimes called from the prototype
         return mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
     }
     /* CONSTRUCTOR

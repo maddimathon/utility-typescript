@@ -19,6 +19,8 @@ export declare namespace AbstractConfigurableClass {
     /**
      * Optional configuration for {@link AbstractConfigurableClass}.
      *
+     * @since 0.9.0-draft
+     *
      * @interface
      */
     type Args = {
@@ -54,7 +56,9 @@ export declare namespace AbstractConfigurableClass {
  *              this.ARGS_DEFAULT
  *          ) as ExampleClassArgs;
  *
- *          return this.mergeArgs(
+ *          // using this.mergeArgs here can cause issues because this method is
+ *          // sometimes called from the prototype
+ *          return mergeArgs(
  *              mergedDefault,
  *              args,
  *              this.ARGS_DEFAULT.optsRecursive
