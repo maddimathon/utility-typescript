@@ -33,7 +33,6 @@ import {
  * 
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  * 
- * @class
  * @beta
  */
 export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
@@ -1078,7 +1077,6 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 /**
  * Used only for {@link NodeConsole}.
  * 
- * @namespace
  * @beta
  */
 export namespace NodeConsole {
