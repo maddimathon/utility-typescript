@@ -208,7 +208,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
             this.fns.readFile( 'README.md' )
                 .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.fns.pkgTitle } @ ${ this.fns.pkgVersion }` ) + '\n$2' )
                 .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( this.fns.pkg.description ) + '\n$2' )
-                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.fns.pkg.homepage }" class="button" target="_blank">Read Documentation</a>` ) + '\n$2' )
+                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.fns.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
         ), { force: true } );
     }
 

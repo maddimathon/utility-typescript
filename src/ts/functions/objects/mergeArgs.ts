@@ -16,94 +16,6 @@ import type { RecursivePartial } from '../../types/objects/index.js';
 
 
 /**
- * Used only for {@link mergeArgs | mergeArgs()}.
- * 
- * @namespace
- */
-export namespace mergeArgs {
-
-    /**
-     * Default allowed values for argument objects.
-     * 
-     * @source
-     */
-    export type ArgsSingleValue = AnyClass | boolean | number | null | string;
-
-    /**
-     * Default allowed values for {@link Obj | mergeArgs.Obj} properties.
-     * 
-     * @source
-     */
-    export type ObjProp<Value extends any = null> =
-        | ArgsSingleValue
-        | Value
-        | ( ( ...p: any[] ) => ( ArgsSingleValue | Value ) );
-
-    /**
-     * Argument objects compatible with {@link mergeArgs | mergeArgs()}.
-     * 
-     * @source
-     */
-    export type Obj<
-        Values extends any = any,
-        Keys extends string = string,
-    > = {
-            [ K in Keys ]:
-            | ObjProp<ArgsSingleValue | Values>
-            | ObjProp<ArgsSingleValue | Values>[]
-            | Obj<ArgsSingleValue | Values>;
-        };
-
-    /**
-     * Interface defining the overloads for {@link mergeArgs | mergeArgs()}.
-     */
-    export interface Function {
-
-        /**
-         * Passing `recursive` as false means that the input type must be a
-         * `Partial`.
-         */
-        <
-            V extends any,
-            D extends Obj<V>,
-            I extends Partial<D>,
-        >(
-            defaults: D,
-            inputs?: I | undefined,
-            recursive?: false | undefined,
-        ): D & I;
-
-        /**
-         * Passing `recursive` as true means that the input type must actually be a 
-         * {@link RecursivePartial}.
-         */
-        <
-            V extends any,
-            D extends Obj<V>,
-            I extends RecursivePartial<D>,
-        >(
-            defaults: D,
-            inputs?: I | undefined,
-            recursive?: true,
-        ): D & I;
-
-        /**
-         * Catch-all.
-         */
-        <
-            V extends any,
-            D extends Obj<V>,
-            I extends RecursivePartial<D>,
-        >(
-            defaults: D,
-            inputs?: I | undefined,
-            recursive?: boolean | undefined,
-        ): D & I;
-    }
-}
-
-
-/**
  * Returns an updated version of `defaults` merged with the contents of
  * `inputs`.
  *
@@ -212,3 +124,91 @@ export const mergeArgs: mergeArgs.Function = <
     }
     return result;
 };
+
+
+/**
+ * Used only for {@link mergeArgs | mergeArgs()}.
+ * 
+ * @namespace
+ */
+export namespace mergeArgs {
+
+    /**
+     * Default allowed values for argument objects.
+     * 
+     * @source
+     */
+    export type ArgsSingleValue = AnyClass | boolean | number | null | string;
+
+    /**
+     * Default allowed values for {@link Obj | mergeArgs.Obj} properties.
+     * 
+     * @source
+     */
+    export type ObjProp<Value extends any = null> =
+        | ArgsSingleValue
+        | Value
+        | ( ( ...p: any[] ) => ( ArgsSingleValue | Value ) );
+
+    /**
+     * Argument objects compatible with {@link mergeArgs | mergeArgs()}.
+     * 
+     * @source
+     */
+    export type Obj<
+        Values extends any = any,
+        Keys extends string = string,
+    > = {
+            [ K in Keys ]:
+            | ObjProp<ArgsSingleValue | Values>
+            | ObjProp<ArgsSingleValue | Values>[]
+            | Obj<ArgsSingleValue | Values>;
+        };
+
+    /**
+     * Interface defining the overloads for {@link mergeArgs | mergeArgs()}.
+     */
+    export interface Function {
+
+        /**
+         * Passing `recursive` as false means that the input type must be a
+         * `Partial`.
+         */
+        <
+            V extends any,
+            D extends Obj<V>,
+            I extends Partial<D>,
+        >(
+            defaults: D,
+            inputs?: I | undefined,
+            recursive?: false | undefined,
+        ): D & I;
+
+        /**
+         * Passing `recursive` as true means that the input type must actually be a 
+         * {@link RecursivePartial}.
+         */
+        <
+            V extends any,
+            D extends Obj<V>,
+            I extends RecursivePartial<D>,
+        >(
+            defaults: D,
+            inputs?: I | undefined,
+            recursive?: true,
+        ): D & I;
+
+        /**
+         * Catch-all.
+         */
+        <
+            V extends any,
+            D extends Obj<V>,
+            I extends RecursivePartial<D>,
+        >(
+            defaults: D,
+            inputs?: I | undefined,
+            recursive?: boolean | undefined,
+        ): D & I;
+    }
+}

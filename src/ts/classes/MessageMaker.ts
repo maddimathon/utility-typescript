@@ -17,9 +17,9 @@ import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass
 
 import {
     mergeArgs,
+    softWrapText,
     timestamp,
 } from '../functions/index.js';
-// import { VariableInspector } from './VariableInspector.js';
 
 
 /**
@@ -632,7 +632,15 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
         if ( built.maxWidth !== null ) {
 
-            built.maxWidth = Math.max( 10, built.minWidth, built.maxWidth );
+            const indentWidth = built.maxWidth - (
+                ( args?.tab?.length ?? 0 ) * ( args?.depth ?? 0 )
+            );
+
+            built.maxWidth = Math.max(
+                10,
+                built.minWidth,
+                indentWidth,
+            );
 
             if ( built.flag ) {
                 built.maxWidth = built.maxWidth - 2;
@@ -685,13 +693,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
             line = ' ' + line + ' ';
         }
 
-        // console.log( '' );
-        // VariableInspector.dump( { 'args.tab': args.tab } );
-        // VariableInspector.dump( { 'args.depth': args.depth } );
-        // VariableInspector.dump( { 'prefix': prefix } );
-        // VariableInspector.dump( { 'args.indent': args.indent } );
-
-        return args.tab.repeat( args.depth ) + prefix + args.indent + this.painter( line, args );
+        return args.tab.repeat( args.depth ) + args.indent + prefix + this.painter( line, args );
     }
 
     /**
@@ -714,17 +716,24 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
             msg = msg.join( '\n' );
         }
 
+        if ( args.maxWidth ) {
+            msg = softWrapText( msg, args.maxWidth );
+        }
+
         const lines: string[] = msg.split( /\n/g );
 
         return (
             '\n'.repeat( args.linesIn ?? 0 )
 
             + lines.map(
-                ( line, index ) => this.lineMapper(
-                    line,
-                    args,
-                    index > 0 ? args.hangingIndent : ''
-                )
+                ( line, index ) => {
+
+                    return this.lineMapper(
+                        line,
+                        args,
+                        index > 0 ? args.hangingIndent : ''
+                    );
+                }
             ).join( '\n' )
 
             + '\n'.repeat( args.linesOut ?? 0 )
@@ -764,11 +773,13 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
             if ( index > 0 && universalArgs.hangingIndent ) {
 
+                const indent = universalArgs.hangingIndent ?? this.ARGS_DEFAULT.msg.hangingIndent;
+
                 args = {
                     ...args,
 
                     hangingIndent: '',
-                    indent: universalArgs.hangingIndent ?? this.ARGS_DEFAULT.msg.hangingIndent,
+                    indent,
                 };
             }
 
@@ -835,7 +846,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
         } ) as MessageMaker.BulkMsgArgs;
 
         if ( typeof msg === 'string' ) {
-            msg = [ [ msg ] ];
+            msg = msg ? [ [ msg ] ] : [];
             args.joiner = args.joiner ?? '\n';
         } else {
 
@@ -894,8 +905,10 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                     linesOut: 0,
                 }, true )
             )
-            + ( args.flag ? this.msg( ' ', args ) : ' ' )
-            + this.msgs( messages, args )
+            + ( messages.length ? (
+                ( args.flag ? this.msg( ' ', args ) : ' ' )
+                + this.msgs( messages, args )
+            ) : '' )
             + '\n'.repeat( linesOut ?? 0 )
         );
     }

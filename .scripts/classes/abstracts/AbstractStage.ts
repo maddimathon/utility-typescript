@@ -230,6 +230,9 @@ export abstract class AbstractStage<
 
             depth,
 
+            linesIn: 0,
+            linesOut: 0,
+
             ...msgArgs,
         };
 
@@ -239,16 +242,13 @@ export abstract class AbstractStage<
 
         if ( level <= 0 ) {
             msg.linesIn = msgArgs.linesIn ?? 2;
-            msg.linesOut = msgArgs.linesOut ?? 1;
         }
 
         if ( level > 0 ) {
             msg.linesIn = msgArgs.linesIn ?? 1;
-            msg.linesOut = msgArgs.linesOut ?? 0;
         }
 
         // if ( level > 1 ) {
-        //     msg.linesOut = msgArgs.linesOut ?? 0;
         // }
 
         if ( level > 2 ) {
@@ -301,32 +301,45 @@ export abstract class AbstractStage<
         startMsg: string,
         endMsg: string,
         defaultMsg: string,
-        msgArgs?: Parameters<typeof this.progressLog>[ 2 ],
-        timeArgs?: Parameters<typeof this.progressLog>[ 3 ],
+        msgArgs: Parameters<typeof this.progressLog>[ 2 ] = {},
+        timeArgs: Parameters<typeof this.progressLog>[ 3 ] = {},
     ): void {
         if ( this.args[ 'notice' ] === false ) { return; }
 
         const depth = Number( this.args[ 'log-base-level' ] ?? 0 );
 
-        msgArgs = {
-            bold: true,
-            clr: this.clr,
-
-            linesIn: ( depth < 1 && which == 'start' ) ? 3 : 2,
-            linesOut: 1,
-
-            ...msgArgs,
-
-            depth,
-        };
+        let linesIn = msgArgs.linesIn ?? 2;
+        let linesOut = msgArgs.linesOut ?? ( this.args.debug || this.args.verbose ) ? 1 : 0;
 
         let msg = defaultMsg;
 
         if ( which === 'start' ) {
             msg = startMsg;
+
+            if ( depth < 1 ) {
+                linesIn += 1;
+            }
+
         } else if ( which === 'end' ) {
             msg = endMsg;
+            linesOut += 1;
+
+            if ( depth < 1 ) {
+                linesOut += 1;
+            }
         }
+
+        msgArgs = {
+            bold: true,
+            clr: this.clr,
+
+            linesIn,
+            linesOut,
+
+            ...msgArgs,
+
+            depth,
+        };
 
         this.progressLog(
             [ [
@@ -481,11 +494,10 @@ export abstract class AbstractStage<
     }
 
     protected async compileTypescript(
-        _tsconfigPath: string,
+        tsconfigPath: string,
         logLevelBase: number,
         params: CmdArgs = {},
     ): Promise<void> {
-        const tsconfigPath = _tsconfigPath;
         this.verboseLog( `compiling typescript project ${ tsconfigPath }...`, 0 + logLevelBase );
 
         const tsconfig: Partial<{
@@ -533,7 +545,7 @@ export abstract class AbstractStage<
         parser: "css" | "html" | "js",
         logLevelBase: number,
     ) {
-        this.verboseLog(
+        this.args.debug && this.progressLog(
             `minifying ${ this.fns.pathRelative( path ) } (${ parser })...`,
             0 + logLevelBase,
             {

@@ -13,6 +13,32 @@
 import type { AnyClass } from '../../types/functions/index.js';
 import type { RecursivePartial } from '../../types/objects/index.js';
 /**
+ * Returns an updated version of `defaults` merged with the contents of
+ * `inputs`.
+ *
+ * Useful for parsing objects passed to functions with extra, optional options.
+ * Preserves all input properties.
+ *
+ * Overloaded for better typing dependent on recursion.
+ *
+ * @category Arg Objects
+ *
+ * @function
+ *
+ * @typeParam V  Args object values.
+ * @typeParam D  Default object type.
+ * @typeParam I  Input object type.
+ *
+ * @param defaults   Default values (if not specified in inputs).
+ * @param inputs     Overriding values (changes to make).
+ * @param recursive  Optional. Whether to merge the object recursively.
+ *                   Default false.
+ *
+ * @return  Resulting object with all the `defaults` and `inputs` keys with
+ *          either default values or input values, as appropriate.
+ */
+export declare const mergeArgs: mergeArgs.Function;
+/**
  * Used only for {@link mergeArgs | mergeArgs()}.
  *
  * @namespace
@@ -58,30 +84,4 @@ export declare namespace mergeArgs {
         <V extends any, D extends Obj<V>, I extends RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined): D & I;
     }
 }
-/**
- * Returns an updated version of `defaults` merged with the contents of
- * `inputs`.
- *
- * Useful for parsing objects passed to functions with extra, optional options.
- * Preserves all input properties.
- *
- * Overloaded for better typing dependent on recursion.
- *
- * @category Arg Objects
- *
- * @function
- *
- * @typeParam V  Args object values.
- * @typeParam D  Default object type.
- * @typeParam I  Input object type.
- *
- * @param defaults   Default values (if not specified in inputs).
- * @param inputs     Overriding values (changes to make).
- * @param recursive  Optional. Whether to merge the object recursively.
- *                   Default false.
- *
- * @return  Resulting object with all the `defaults` and `inputs` keys with
- *          either default values or input values, as appropriate.
- */
-export declare const mergeArgs: mergeArgs.Function;
 //# sourceMappingURL=mergeArgs.d.ts.map

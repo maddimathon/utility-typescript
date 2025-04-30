@@ -1,0 +1,33 @@
+/**
+ * @since ___PKG_VERSION___
+ * 
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ */
+/*!
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @license MIT
+ */
+
+/**
+ * Takes an input string and inserts `\n` to soft wrap text within the given width.
+ * 
+ * @param text
+ * @param maxWidth
+ */
+export function softWrapText(
+    text: string,
+    maxWidth: number,
+): string {
+
+    const splits: ( string | string[] )[] = text.split( /\n/g ).map( ( line ) => {
+
+        return line.replace(
+            new RegExp( `(?![^\\n]{1,${ maxWidth }}$)([^\\n]{1,${ maxWidth }})\\s`, 'g' ), '$1\n'
+        );
+    } );
+
+    return splits.flat().join( '\n' );
+}

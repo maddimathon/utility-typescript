@@ -126,6 +126,7 @@
     "dependencies": {
     },
     "devDependencies": {
+        "@inquirer/prompts": "7.4.1",
         "@tsconfig/node20": "20.1.5",
         "@types/jest": "29.5.14",
         "@types/luxon": "3.6.2",

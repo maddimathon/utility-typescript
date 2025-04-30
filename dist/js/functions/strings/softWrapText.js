@@ -1,0 +1,1 @@
+function a(A,b){var c=A.split(/\n/g).map(_=>_.replace(new RegExp(`(?![^\\n]{1,${b}}$)([^\\n]{1,${b}})\\s`, 'g'),'$1\n'));return c.flat().join('\n')}export{a as softWrapText};
