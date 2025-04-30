@@ -24,7 +24,6 @@ import { VariableInspector } from '../VariableInspector.js';
  *
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
- * @class
  * @beta
  */
 export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
@@ -236,7 +235,6 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
 /**
  * Used only for {@link NodeConsole}.
  *
- * @namespace
  * @beta
  */
 export declare namespace NodeConsole {
