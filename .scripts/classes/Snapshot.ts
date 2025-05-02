@@ -74,7 +74,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
         await this[ stage ]();
     }
 
-    public startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
         this.startEndNoticeLog(
             which,
@@ -123,6 +123,6 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
 
         this.fns.cmd( `rm -rf ${ exportPath }` );
 
-        this.progressLog( `snapshot zipped: ${ exportPath }.zip`, 1 );
+        this.progressLog( `snapshot zipped: ${ exportPath }.zip`, 1, { maxWidth: null } );
     }
 }

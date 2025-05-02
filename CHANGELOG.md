@@ -15,9 +15,5 @@ and this project adheres to
 > - [MINOR] version when you add backwards-compatible functionality
 > - [PATCH] version when you make backwards-compatible bug fixes
 
+
 <!--CHANGELOG_NEW-->
-
-
-## [___PKG_VERSION___] - ___PKG_DATE___
-
-Initial release; everything is new!

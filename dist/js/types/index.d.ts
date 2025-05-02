@@ -3,7 +3,7 @@
  *
  * @module Types
  *
- * @since 0.9.0-draft
+ * @since 0.1.0-draft
  *
  * @example
  * ```ts
@@ -12,14 +12,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.9.0-draft
+ * @package @maddimathon/utility-typescript@0.1.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.9.0-draft
+ * @maddimathon/utility-typescript@0.1.0-draft
  * @license MIT
  */
 export type * as Arrays from './arrays/index.ts';

@@ -82,7 +82,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
      * ====================================================================== */
 
     constructor ( args: PackageArgs ) {
-        super( args, args.dryrun ? 'yellow' : 'purple' );
+        super( args, args.releasing ? 'yellow' : 'purple' );
     }
 
 
@@ -94,7 +94,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         await this[ stage ]();
     }
 
-    public startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
         this.startEndNoticeLog(
             which,
@@ -102,6 +102,32 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
             `PACKAGE FINISHED`,
             `${ which.toUpperCase() }ING PACKAGE`,
         );
+
+        if ( which === 'start' && !this.args.releasing ) {
+
+            const depth = this.args[ 'log-base-level' ] ?? 0;
+
+            const promptArgs: Omit<Parameters<typeof this.fns.nc.prompt>[ 1 ], "message"> = {
+
+                default: false,
+
+                msgArgs: {
+                    clr: this.clr,
+                    depth: depth + 1,
+                    maxWidth: null,
+                },
+
+                styleClrs: {
+                    highlight: this.clr,
+                },
+            };
+
+            this.args.dryrun = await this.fns.nc.prompt( 'bool', {
+                ...promptArgs,
+                message: `Is this a dry run?`,
+                default: !!this.args.dryrun,
+            } );
+        }
     }
 
 
@@ -110,6 +136,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
      * ====================================================================== */
 
     protected async snapshot() {
+
         const snap = new Snapshot( {
             ...this.args as SnapshotArgs,
 
@@ -118,10 +145,12 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
             only: this.args[ 'only-snap' ],
             without: this.args[ 'without-snap' ],
         } );
+
         await snap.run();
     }
 
     protected async build() {
+
         const build = new Build( {
             ...this.args as BuildArgs,
 
@@ -130,6 +159,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
             only: this.args[ 'only-build' ],
             without: this.args[ 'without-build' ],
         } );
+
         await build.run();
     }
 
@@ -179,20 +209,6 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
                 o.replace,
                 this.args.verbose ? 4 : 3,
             );
-        }
-
-
-        this.verboseLog( 'replacing placeholders in source...', 3 );
-        if ( !this.args.dryrun ) {
-
-            for ( const o of pkgReplacements( this.fns ) ) {
-                this.replaceInFiles(
-                    '**/*',
-                    o.find,
-                    o.replace,
-                    this.args.verbose ? 4 : 3,
-                );
-            }
         }
     }
 

@@ -132,6 +132,8 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
             ] );
         }
 
+        nc.logs( clrMsgs, { joiner: '\n' } );
+
         const clrFlagMsgs: MessageMaker.BulkMsgs = [];
         for ( const clr of colours ) {
 
@@ -147,10 +149,26 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
             ] );
         }
 
-        nc.logs( clrMsgs, { joiner: '\n' } );
-
         nc.h3( 'H3: Flags' );
         nc.logs( clrFlagMsgs, { joiner: '\n' } );
+
+        const clrReverseFlagMsgs: MessageMaker.BulkMsgs = [];
+        for ( const clr of colours ) {
+
+            clrReverseFlagMsgs.push( [
+                `This is a ${ clr }, bold, italic, reverse flag message.`,
+                {
+                    clr,
+
+                    bold: true,
+                    flag: 'reverse',
+                    italic: true,
+                },
+            ] );
+        }
+
+        nc.heading( 'H4: Reversed Flags', 4 );
+        nc.logs( clrReverseFlagMsgs, { joiner: '\n' } );
 
 
         nc.heading( 'H4: Random Test Heading', 4 );

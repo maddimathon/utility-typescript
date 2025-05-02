@@ -1,13 +1,13 @@
 /**
- * @since 0.9.0-draft
+ * @since 0.1.0-draft
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.9.0-draft
+ * @package @maddimathon/utility-typescript@0.1.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.9.0-draft
+ * @maddimathon/utility-typescript@0.1.0-draft
  * @license MIT
  */
 /**
@@ -15,8 +15,8 @@
  *
  * @category  Formatters
  *
- * @param text
- * @param maxWidth
+ * @param text      Text to wrap.
+ * @param maxWidth  Optional. Max number of characters per line.
  */
-export declare function softWrapText(text: string, maxWidth: number): string;
+export declare function softWrapText(text: string, maxWidth?: number): string;
 //# sourceMappingURL=softWrapText.d.ts.map

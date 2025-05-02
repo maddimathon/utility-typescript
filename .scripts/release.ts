@@ -12,12 +12,12 @@ import minimist from 'minimist';
 
 // import { F } from './@utilities.js';
 
-import type { SnapshotArgs } from './classes/Snapshot.js';
-import { Snapshot } from './classes/Snapshot.js';
+import type { ReleaseArgs } from './classes/Release.js';
+import { Release } from './classes/Release.js';
 
 // @ts-expect-error
-const args: SnapshotArgs = minimist( process.argv.slice( 2 ) );
+const args: ReleaseArgs = minimist( process.argv.slice( 2 ) );
 
-const snap = new Snapshot( args );
+const rel = new Release( args );
 
-await snap.run();
+await rel.run();

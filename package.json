@@ -1,6 +1,6 @@
 {
     "name": "@maddimathon/utility-typescript",
-    "version": "0.9.0",
+    "version": "0.1.0",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
@@ -104,23 +104,7 @@
         "package": "tsx --tsconfig .scripts/tsconfig.json .scripts/package.ts --packaging",
 
 
-
-        "release-zip": "echo \"$( tsx --tsconfig .scripts/tsconfig.json .scripts/release-path.ts --packaging ).zip\"",
-         
-        "update-gh": "gh repo edit --description=\"${npm_package_description}\" --homepage=\"${npm_package_homepage}\"",
-        "update-gh-test": "echo \"${npm_package_description} - ${npm_package_homepage}\"",
-
-        "release": "run-s release:*",
-            "release:commit": "git add @releases/*.zip && git commit -a --allow-empty -m \"[$(date +%Y-%m-%d)] release: ${npm_package_version}\"",
-            "release:tag": "git tag -a -f ${npm_package_version} -m \"release ${npm_package_version}\"",
-            "release:push-tag": "git push --tags || echo ''",
-
-            "release:gh": "run-s release:gh:*",
-                "release:gh:update": "echo ''",
-                "release:gh:release": "gh release create ${npm_package_version} \"$( npm run --silent release-zip )#${npm_package_name}@${npm_package_version}\" --draft --notes-file .releasenotes.md --title \"${npm_package_version} — $(date +%Y-%m-%d)\"",
-
-            "release:notes": "rm .releasenotes.md && touch .releasenotes.md",
-            "release:push": "git push"
+        "release": "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts"
 
     },
     "dependencies": {

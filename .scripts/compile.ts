@@ -15,7 +15,7 @@ import minimist from 'minimist';
 import type { CompileArgs } from './classes/Compile.js';
 import { Compile } from './classes/Compile.js';
 
-
+// @ts-expect-error
 const args: CompileArgs = minimist( process.argv.slice( 2 ) );
 
 const cmpl = new Compile( args );

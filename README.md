@@ -3,11 +3,12 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 0.9.0-draft
+# Utility TypeScript @ 0.1.0-draft
 <!--/README_HEADER-->
 
 <!--README_DESC-->
-TypeScript utilities (types, functions, classes) to use in various node/npm projects.
+TypeScript utilities (types, functions, classes) to use in various node/npm
+projects.
 <!--/README_DESC-->
 
 Probably not best to use in production/client-side without a bundler (and
@@ -115,7 +116,8 @@ but with `.test` added before the extension — e.g., `myFunction.ts` is tested 
 ### TypeScript
 
 Every subdirectory should have its own `index.ts` that re-exports the contents
-of its files.
+of its files.  **Types should also be tested** using the utility types in 
+{@link Types.Test|`Types.Test`}.
 
 
 

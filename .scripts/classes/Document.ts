@@ -83,7 +83,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
         await this[ stage ]();
     }
 
-    public startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): void {
 
         this.startEndNoticeLog(
             which,
@@ -119,8 +119,8 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
         /** URL to documentation, without trailing slash. */
         const homepage = this.fns.pkg.homepage.replace( /\/+$/gi, '' );
 
-        /** URL to repository, without trailing slash. */
-        const repository = this.fns.pkg.repository.url.replace( /\/+$/gi, '' );
+        /** URL to repository, without trailing slash or `.git`. */
+        const repository = this.fns.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' );
 
         // TODO - generate entryPoints from pkg.main and pkg.exports
         const config: Partial<typeDoc.TypeDocOptions> = {
@@ -151,7 +151,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             // compilerOptions,
 
-            customFooterHtml: `<p>Copyright <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025. MIT license.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
+            customFooterHtml: `<p>Copyright <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025. <a href="${ homepage }/MIT_License.html">MIT license</a>.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
             customFooterHtmlDisableWrapper: true,
 
             defaultCategory: 'Misc.',
@@ -201,10 +201,8 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 this.fns.pkgVersion,
             ].filter( v => v ).join( ' @ ' ),
 
-            // navigation: {
-            // },
-
             navigationLinks: {
+                'About': `${ homepage }/ReadMe.html`,
                 'GitHub': repository,
                 'by Maddi Mathon': 'https://www.maddimathon.com',
             },

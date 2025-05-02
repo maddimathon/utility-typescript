@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.9.0-draft
+ * @package @maddimathon/utility-typescript@0.1.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.9.0-draft
+ * @maddimathon/utility-typescript@0.1.0-draft
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';

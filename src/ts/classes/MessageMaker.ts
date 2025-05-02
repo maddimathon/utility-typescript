@@ -102,73 +102,85 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                     args: Partial<MessageMaker.PainterArgs> = {},
                 ) => {
                     // returns
+                    // if no styling is to be applied, then we can return early
                     if ( !args.bold && !args.clr && !args.flag && !args.italic ) {
                         return line;
                     }
 
+                    /** The complete ansi escape string, joined by `;`. */
                     const ansi: string[] = [];
 
                     // paint colour
                     if ( args.clr || args.flag ) {
 
+                        /** Colour depth available in this console. */
                         const clrDepth = process.stdout.getColorDepth() as 1 | 4 | 8 | 24;
 
-                        let bg: null | MessageMaker.Colour | "white";
-                        let fg: null | MessageMaker.Colour | "white";
+                        // start by assuming it's the foreground
+
+                        /** Background colour slug for this text. */
+                        let bg: null | MessageMaker.Colour | "light-grey" | "white" = null;
+
+                        /** Foreground colour slug for this text. */
+                        let fg: null | MessageMaker.Colour | "light-grey" | "white" = args.clr ?? 'black';
+
+                        if ( args.flag ) {
+
+                            if ( args.flag == 'reverse' && clrDepth > 4 ) {
+
+                                switch ( fg ) {
+
+                                    case 'grey':
+                                        bg = 'light-grey';
+                                        fg = 'black';
+                                        break;
+
+                                    default:
+                                        bg = 'light-grey';
+                                        break;
+                                }
+
+                                if ( clrDepth === 8 ) {
+
+                                    switch ( fg ) {
+
+                                        case 'orange':
+                                        case 'pink':
+                                            bg = 'grey';
+                                            break;
+                                    }
+                                }
+                            } else {
+                                bg = args.clr ?? 'black';
+                                fg = clrDepth > 4 ? 'white' : null;
+                            }
+                        }
 
                         switch ( clrDepth ) {
 
                             case 4:
-                                // case 8:
-                                // case 24:
-                                const clrs_4 = classArgs.ansiColours[ 4 ];
-
-                                const selectedClr_4 = args.clr ?? 'black';
-
-                                // start by assuming it's the foreground
-                                bg = null;
-                                fg = selectedClr_4;
-
-                                if ( args.flag ) {
-                                    bg = selectedClr_4;
-                                    fg = null;
-                                }
-
                                 // setting the foreground to black (without a
-                                // background) can make text invisible
+                                // background) can make text invisible in dark
+                                // modes
                                 if ( bg || fg !== 'black' ) {
 
                                     ansi.push( [
-                                        fg ? clrs_4.fg[ fg ] : '',
-                                        bg ? clrs_4.bg[ bg ] : '',
+                                        fg ? classArgs.ansiColours[ 4 ].fg[ fg ] : '',
+                                        bg ? classArgs.ansiColours[ 4 ].bg[ bg ] : '',
                                     ].filter( s => s ).join( ';' ) );
                                 }
                                 break;
 
                             case 8:
                             case 24:
-                                const clrs_8_24 = classArgs.ansiColours[ clrDepth ];
-
-                                const selectedClr_8_24 = args.clr ?? 'black';
-
-                                // start by assuming it's the foreground
-                                bg = null;
-                                fg = selectedClr_8_24;
-
-                                if ( args.flag ) {
-                                    bg = selectedClr_8_24;
-                                    fg = 'white';
-                                }
-
-                                if ( bg ) {
+                                if ( bg && args.flag !== 'reverse' ) {
 
                                     if ( clrDepth == 8 ) {
 
                                         switch ( bg ) {
 
+                                            case 'light-grey':
                                             case 'orange':
-                                            case 'pink':
-                                            case 'turquoise':
                                             case 'yellow':
                                                 fg = 'black';
                                                 break;
@@ -177,22 +189,34 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                                                 fg = 'white';
                                                 break;
                                         }
-                                    } else if ( bg === 'yellow' ) {
-                                        fg = 'black';
+                                    } else {
+
+                                        switch ( bg ) {
+
+                                            case 'grey':
+                                            case 'yellow':
+                                                fg = 'black';
+                                                break;
+
+                                            default:
+                                                fg = 'white';
+                                                break;
+                                        }
                                     }
                                 }
 
                                 // setting the foreground to black (without a
-                                // background) can make text invisible
+                                // background) can make text invisible in dark
+                                // modes
                                 if ( bg || fg !== 'black' ) {
 
-                                    const clrs = [ `38;${ clrs_8_24[ fg ] }` ];
-
-                                    if ( bg ) {
-                                        clrs.push( `48;${ clrs_8_24[ bg ] }` );
+                                    if ( fg ) {
+                                        ansi.push( `38;${ classArgs.ansiColours[ clrDepth ][ fg ] }` );
                                     }
 
-                                    ansi.push( clrs.join( ';' ) );
+                                    if ( bg ) {
+                                        ansi.push( `48;${ classArgs.ansiColours[ clrDepth ][ bg ] }` );
+                                    }
                                 }
                                 break;
                         }
@@ -231,7 +255,8 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
                     fg: {
                         black: '30',
-                        grey: '37',
+                        grey: '30',
+                        'light-grey': '37',
                         white: '37',
 
                         red: '31',
@@ -247,6 +272,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                     bg: {
                         black: '40',
                         grey: '40',
+                        'light-grey': '47',
                         white: '47',
 
                         red: '41',
@@ -262,22 +288,24 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
                 8: {
                     black: '5;232',
-                    grey: '5;243',
+                    grey: '5;241',
+                    'light-grey': '5;247',
                     white: '5;255',
 
                     red: '5;124',
                     orange: '5;166',
-                    yellow: '5;215',
+                    yellow: '5;208',
                     green: '5;28',
-                    turquoise: '5;37',
+                    turquoise: '5;30',
                     blue: '5;20',
                     purple: '5;55',
-                    pink: '5;212',
+                    pink: '5;162',
                 },
 
                 24: {
                     black: '2;26;26;26',
-                    grey: '2;105;105;105',
+                    grey: '2;108;108;108',
+                    'light-grey': '2;208;208;208',
                     white: '2;248;248;248',
 
                     red: '2;168;36;36',
@@ -507,7 +535,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
             args = this.mergeArgs( defaultUniversalArgs, args, true );
 
-            if ( index > 0 && universalArgs.hangingIndent ) {
+            if ( index > 0 && universalArgs.hangingIndent && defaultUniversalArgs.joiner?.match( /\n/g ) ) {
 
                 const indent = universalArgs.hangingIndent ?? this.ARGS_DEFAULT.msg.hangingIndent;
 
@@ -669,10 +697,10 @@ export namespace MessageMaker {
          */
         4: {
             /** Codes used for foreground colours. */
-            fg: { [ C in Colour | "white" ]: string; };
+            fg: { [ C in Colour | "light-grey" | "white" ]: string; };
 
             /** Codes used for background colours. */
-            bg: { [ C in Colour | "white" ]: string; };
+            bg: { [ C in Colour | "light-grey" | "white" ]: string; };
         };
 
         /** 
@@ -680,14 +708,14 @@ export namespace MessageMaker {
          * 
          * e.g., `8.white = '5;7'`
          */
-        8: { [ C in Colour | "white" ]: string; };
+        8: { [ C in Colour | "light-grey" | "white" ]: string; };
 
         /** 
          * 24-bit colours to be used for foreground or background.
          * 
          * e.g., `24.white = '2;245;245;245'`
          */
-        24: { [ C in Colour | "white" ]: string; };
+        24: { [ C in Colour | "light-grey" | "white" ]: string; };
     };
 
     /**
@@ -894,11 +922,13 @@ export namespace MessageMaker {
         clr: null | Colour;
 
         /**
-         * Colours the message in the inverse -- clr is the background.
-         * 
+         * Colours the message in the inverse -- clr is the background. If ``,
+         * the flag background should be solid black and the foreground is the
+         * chosen colour.
+         *
          * @default false
          */
-        flag: boolean;
+        flag: boolean | "reverse";
 
         /**
          * If true, applies italic font styles.

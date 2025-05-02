@@ -27,6 +27,7 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
+import { softWrapText } from 'src/ts/functions/index.js';
 
 
 
@@ -55,7 +56,6 @@ const buildStages = [
     'compile',
     'minimize',
     'replace',
-    'prettify',
     'test',
     'document',
 ] as const;
@@ -99,7 +99,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         await this[ stage ]();
     }
 
-    public startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
         if (
             this.args.watchedWatcher
@@ -173,10 +173,6 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         }
     }
 
-    protected async prettify() {
-        this.progressLog( '(NOT IMPLEMENTED) prettifying files...', 1 );
-    }
-
     protected async replace() {
         this.progressLog( 'replacing placeholders...', 1 );
 
@@ -195,6 +191,23 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
             }
         }
 
+        if ( this.args.releasing && !this.args.debug ) {
+
+            for ( const o of pkgReplacements( this.fns ) ) {
+
+                this.replaceInFiles(
+                    [
+                        '**/*',
+                        '!.vscode/**/*',
+                        '!.scripts/vars/replacements.ts',
+                    ],
+                    o.find,
+                    o.replace,
+                    this.args.verbose ? 4 : 3,
+                );
+            }
+        }
+
 
         this.verboseLog( 'replacing in README...', 2 );
 
@@ -207,7 +220,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         this.fns.writeFile( 'README.md', (
             this.fns.readFile( 'README.md' )
                 .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.fns.pkgTitle } @ ${ this.fns.pkgVersion }` ) + '\n$2' )
-                .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( this.fns.pkg.description ) + '\n$2' )
+                .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.fns.pkg.description, 80 ) ) + '\n$2' )
                 .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.fns.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
         ), { force: true } );
     }

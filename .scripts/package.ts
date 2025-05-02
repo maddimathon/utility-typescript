@@ -15,7 +15,7 @@ import minimist from 'minimist';
 import type { PackageArgs } from './classes/Package.js';
 import { Package } from './classes/Package.js';
 
-
+// @ts-expect-error
 const args: PackageArgs = minimist( process.argv.slice( 2 ) );
 
 const pkg = new Package( args );

@@ -15,7 +15,7 @@ import minimist from 'minimist';
 import type { DocumentArgs } from './classes/Document.js';
 import { Document } from './classes/Document.js';
 
-
+// @ts-expect-error
 const args: DocumentArgs = minimist( process.argv.slice( 2 ) );
 
 const doc = new Document( args );

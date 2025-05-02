@@ -110,6 +110,12 @@ export type AbstractArgs<Stages extends string | never> = cls.abstracts.Abstract
     packaging?: boolean;
 
     /**
+     * Indicates that this is being done as part of the releasing script - i.e.,
+     * go full out and update all placeholders.
+     */
+    releasing?: boolean;
+
+    /**
      * Indicates that this is being done as just before the start or watch scripts.
      */
     starting?: boolean;
@@ -225,7 +231,7 @@ export abstract class AbstractStage<
 
         const msg = {
 
-            bold: depth == 0 || level == 0,
+            bold: depth == 0 || level <= 1,
             clr: this.clr,
 
             depth,
@@ -279,7 +285,7 @@ export abstract class AbstractStage<
         this.fns.nc.timestampLog( msg, msgArgs, timeArgs );
     }
 
-    public abstract startEndNotice( which: "start" | "end" ): void;
+    public abstract startEndNotice( which: "start" | "end" ): Promise<void>;
 
     public verboseLog(
         msg: string,
@@ -306,10 +312,10 @@ export abstract class AbstractStage<
     ): void {
         if ( this.args[ 'notice' ] === false ) { return; }
 
-        const depth = Number( this.args[ 'log-base-level' ] ?? 0 );
+        const depth = ( this.args[ 'log-base-level' ] ?? 0 );
 
         let linesIn = msgArgs.linesIn ?? 2;
-        let linesOut = msgArgs.linesOut ?? ( this.args.debug || this.args.verbose ) ? 1 : 0;
+        let linesOut = msgArgs.linesOut ?? 0;
 
         let msg = defaultMsg;
 
@@ -332,6 +338,7 @@ export abstract class AbstractStage<
         msgArgs = {
             bold: true,
             clr: this.clr,
+            italic: false,
 
             linesIn,
             linesOut,
@@ -362,7 +369,7 @@ export abstract class AbstractStage<
         };
 
         /* start */
-        this.startEndNotice( 'start' );
+        await this.startEndNotice( 'start' );
 
         /* loop through the steps in order */
         for ( const method of this.stages ) {
@@ -384,7 +391,7 @@ export abstract class AbstractStage<
         }
 
         /* end */
-        this.startEndNotice( 'end' );
+        await this.startEndNotice( 'end' );
     }
 
     /**
@@ -684,6 +691,7 @@ export abstract class AbstractStage<
             {
                 linesIn: 0,
                 linesOut: 0,
+                maxWidth: null,
             },
         );
 
@@ -707,14 +715,13 @@ export abstract class AbstractStage<
         } ).join( ' ' );
 
         const cmd: string = `replace-in-files ${ findArgs } ${ this.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
-        this.args.debug && this.progressLog(
-            cls.VariableInspector.stringify( { cmd } ),
-            ( this.args.verbose ? 1 : 0 ) + logLevelBase,
-            {
-                linesIn: 0,
-                linesOut: 0,
-            },
-        );
+        this.args.debug && this.fns.nc.timestampVarDump( { cmd }, {
+            clr: this.clr,
+            depth: ( this.args.verbose ? 1 : 0 ) + logLevelBase + ( this.args[ 'log-base-level' ] ?? 0 ),
+            linesIn: 0,
+            linesOut: 0,
+            maxWidth: null,
+        } );
 
         this.fns.cmd( cmd );
     }

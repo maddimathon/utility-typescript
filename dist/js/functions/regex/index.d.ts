@@ -1,13 +1,13 @@
 /**
- * @since 0.9.0-draft
+ * @since 0.1.0-draft
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.9.0-draft
+ * @package @maddimathon/utility-typescript@0.1.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.9.0-draft
+ * @maddimathon/utility-typescript@0.1.0-draft
  * @license MIT
  */
 export * from './escRegExp.js';

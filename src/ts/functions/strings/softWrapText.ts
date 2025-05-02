@@ -16,12 +16,12 @@
  * 
  * @category  Formatters
  * 
- * @param text
- * @param maxWidth
+ * @param text      Text to wrap.
+ * @param maxWidth  Optional. Max number of characters per line.
  */
 export function softWrapText(
     text: string,
-    maxWidth: number,
+    maxWidth: number = 80,
 ): string {
 
     const splits: ( string | string[] )[] = text.split( /\n/g ).map( ( line ) => {

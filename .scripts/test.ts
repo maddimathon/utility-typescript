@@ -15,7 +15,7 @@ import minimist from 'minimist';
 import type { TestArgs } from './classes/Test.js';
 import { Test } from './classes/Test.js';
 
-
+// @ts-expect-error
 const args: TestArgs = minimist( process.argv.slice( 2 ) );
 
 const ts = new Test( args );

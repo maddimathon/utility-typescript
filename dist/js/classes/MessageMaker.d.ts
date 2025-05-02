@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.9.0-draft
+ * @package @maddimathon/utility-typescript@0.1.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.9.0-draft
+ * @maddimathon/utility-typescript@0.1.0-draft
  * @license MIT
  */
 import type { RecursivePartial } from '../types/objects/index.js';
@@ -121,11 +121,11 @@ export declare namespace MessageMaker {
         4: {
             /** Codes used for foreground colours. */
             fg: {
-                [C in Colour | "white"]: string;
+                [C in Colour | "light-grey" | "white"]: string;
             };
             /** Codes used for background colours. */
             bg: {
-                [C in Colour | "white"]: string;
+                [C in Colour | "light-grey" | "white"]: string;
             };
         };
         /**
@@ -134,7 +134,7 @@ export declare namespace MessageMaker {
          * e.g., `8.white = '5;7'`
          */
         8: {
-            [C in Colour | "white"]: string;
+            [C in Colour | "light-grey" | "white"]: string;
         };
         /**
          * 24-bit colours to be used for foreground or background.
@@ -142,7 +142,7 @@ export declare namespace MessageMaker {
          * e.g., `24.white = '2;245;245;245'`
          */
         24: {
-            [C in Colour | "white"]: string;
+            [C in Colour | "light-grey" | "white"]: string;
         };
     };
     /**
@@ -312,11 +312,13 @@ export declare namespace MessageMaker {
          */
         clr: null | Colour;
         /**
-         * Colours the message in the inverse -- clr is the background.
+         * Colours the message in the inverse -- clr is the background. If ``,
+         * the flag background should be solid black and the foreground is the
+         * chosen colour.
          *
          * @default false
          */
-        flag: boolean;
+        flag: boolean | "reverse";
         /**
          * If true, applies italic font styles.
          *
