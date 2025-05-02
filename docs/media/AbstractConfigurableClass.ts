@@ -14,26 +14,6 @@
 import { mergeArgs } from '../../functions/index.js';
 import { RecursivePartial } from '../../types/objects/basics.js';
 
-/**
- * Used only for {@link AbstractConfigurableClass}.
- */
-export namespace AbstractConfigurableClass {
-
-    /**
-     * Optional configuration for {@link AbstractConfigurableClass}.
-     * 
-     * @since 0.9.0-draft
-     * 
-     * @interface
-     */
-    export type Args = {
-
-        /**
-         * Whether the arguments should be merged recursively.
-         */
-        optsRecursive: boolean;
-    };
-}
 
 /**
  * Classes with configurable options set in the constructor.
@@ -151,10 +131,53 @@ export abstract class AbstractConfigurableClass<
      * An alias for this package's {@link mergeArgs | mergeArgs()}.
      * 
      * @category Aliases
-     * 
-     * @function 
      */
-    public mergeArgs: typeof mergeArgs = ( ...params: Parameters<typeof mergeArgs> ) => mergeArgs( ...params );
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends Partial<D> | RecursivePartial<D>,
+    >(
+        defaults: D,
+        inputs?: I | undefined,
+        recursive?: boolean | undefined,
+    ): D & I;
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends Partial<D>,
+    >(
+        defaults: D,
+        inputs?: I | undefined,
+        recursive?: false | undefined,
+    ): D & I;
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends RecursivePartial<D>,
+    >(
+        defaults: D,
+        inputs: I | undefined,
+        recursive: true,
+    ): D & I;
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+    >(
+        defaults: D,
+        inputs?: undefined,
+        recursive?: boolean | undefined,
+    ): D;
+    public mergeArgs<
+        V extends unknown,
+        D extends mergeArgs.Obj<V>,
+        I extends RecursivePartial<D>,
+    >(
+        defaults: D,
+        inputs?: I | undefined,
+        recursive: boolean = false,
+    ): D & I {
+        return mergeArgs( defaults, inputs, recursive );
+    }
 
 
 
@@ -179,4 +202,25 @@ export abstract class AbstractConfigurableClass<
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     public toString(): string { return JSON.stringify( this, null, 4 ); }
+}
+
+/**
+ * Used only for {@link AbstractConfigurableClass}.
+ */
+export namespace AbstractConfigurableClass {
+
+    /**
+     * Optional configuration for {@link AbstractConfigurableClass}.
+     * 
+     * @since 0.9.0-draft
+     * 
+     * @interface
+     */
+    export type Args = {
+
+        /**
+         * Whether the arguments should be merged recursively.
+         */
+        optsRecursive: boolean;
+    };
 }

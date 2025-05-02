@@ -13,17 +13,7 @@
 import type { AnyClass } from '../../types/functions/index.js';
 import type { RecursivePartial } from '../../types/objects/index.js';
 /**
- * Returns an updated version of `defaults` merged with the contents of
- * `inputs`.
- *
- * Useful for parsing objects passed to functions with extra, optional options.
- * Preserves all input properties.
- *
- * Overloaded for better typing dependent on recursion.
- *
- * @category Arg Objects
- *
- * @function
+ * Universal overload.
  *
  * @typeParam V  Args object values.
  * @typeParam D  Default object type.
@@ -37,11 +27,23 @@ import type { RecursivePartial } from '../../types/objects/index.js';
  * @return  Resulting object with all the `defaults` and `inputs` keys with
  *          either default values or input values, as appropriate.
  */
-export declare const mergeArgs: mergeArgs.Function;
+export declare function mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined): D & I;
+/**
+ * Passing `recursive` as false means that the input type must be a
+ * `Partial` (not {@link RecursivePartial}).
+ */
+export declare function mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends Partial<D>>(defaults: D, inputs: I, recursive?: false | undefined): D & I;
+/**
+ * Passing `recursive` as true means that the input type must actually be a
+ * {@link RecursivePartial}.
+ */
+export declare function mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends RecursivePartial<D>>(defaults: D, inputs: I, recursive: true): D & I;
+/**
+ * If inputs is undefined, then the return is just the defaults.
+ */
+export declare function mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>>(defaults: D, inputs?: undefined, recursive?: boolean | undefined): D;
 /**
  * Used only for {@link mergeArgs | mergeArgs()}.
- *
- * @namespace
  */
 export declare namespace mergeArgs {
     /**
@@ -64,24 +66,5 @@ export declare namespace mergeArgs {
     type Obj<Values extends any = any, Keys extends string = string> = {
         [K in Keys]: ObjProp<ArgsSingleValue | Values> | ObjProp<ArgsSingleValue | Values>[] | Obj<ArgsSingleValue | Values>;
     };
-    /**
-     * Interface defining the overloads for {@link mergeArgs | mergeArgs()}.
-     */
-    interface Function {
-        /**
-         * Passing `recursive` as false means that the input type must be a
-         * `Partial`.
-         */
-        <V extends any, D extends Obj<V>, I extends Partial<D>>(defaults: D, inputs?: I | undefined, recursive?: false | undefined): D & I;
-        /**
-         * Passing `recursive` as true means that the input type must actually be a
-         * {@link RecursivePartial}.
-         */
-        <V extends any, D extends Obj<V>, I extends RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: true): D & I;
-        /**
-         * Catch-all.
-         */
-        <V extends any, D extends Obj<V>, I extends RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined): D & I;
-    }
 }
 //# sourceMappingURL=mergeArgs.d.ts.map

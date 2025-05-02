@@ -11,6 +11,21 @@
  * @license MIT
  */
 /**
+ * Formats a date in a predictable way.
+ *
+ * Meant for human-readable timestamps, not ISO or Unix, etc.
+ *
+ * @category Formatters
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
+ *
+ * @param date   Optional. Date object to format. Defaults to now.
+ * @param _args  Optional.
+ *
+ * @return  Formatted date string.
+ */
+export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Input): string;
+/**
  * Used only for {@link timestamp | timestamp()}.
  */
 export declare namespace timestamp {
@@ -92,19 +107,4 @@ export declare namespace timestamp {
         format?: Partial<Args['format']>;
     };
 }
-/**
- * Formats a date in a predictable way.
- *
- * Meant for human-readable timestamps, not ISO or Unix, etc.
- *
- * @category Formatters
- *
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
- *
- * @param date   Optional. Date object to format. Defaults to now.
- * @param _args  Optional.
- *
- * @return  Formatted date string.
- */
-export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Input): string;
 //# sourceMappingURL=timestamp.d.ts.map

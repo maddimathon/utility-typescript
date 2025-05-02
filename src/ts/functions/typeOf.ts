@@ -15,6 +15,75 @@ import { AnyClass } from '../types/functions/index.js';
 
 import { mergeArgs } from './objects/mergeArgs.js';
 
+
+/**
+ * An alias for the typeof keyword that returns additional options.
+ * 
+ * @category  Debuggers
+ * 
+ * @see {@link typeOf.Args}
+ * @see {@link typeOf.TestType}
+ * @see {@link typeOf.Return}
+ * 
+ * @typeParam T  Type of the variable being checked.
+ * 
+ * @param variable  To test for value type.
+ * @param _args     Optional configuration. See {@link typeOf.Args}.
+ * 
+ * @return Expanded type string.
+ */
+export function typeOf<T extends typeOf.TestType>(
+    variable: T,
+    _args: Partial<typeOf.Args> = {},
+): string & typeOf.Return<T> {
+
+    const args: typeOf.Args = mergeArgs(
+        {
+            distinguishArrays: true,
+        } as typeOf.Args & mergeArgs.Obj,
+        _args,
+        false
+    );
+
+
+    /*
+     * BY VALUE
+     */
+    if ( variable === null ) { return 'null' as typeOf.Return<T>; }
+    if ( variable === undefined ) { return 'undefined' as typeOf.Return<T>; }
+
+
+    /*
+     * BY TYPE
+     */
+
+    const typeOf = typeof variable;
+
+    switch ( typeOf ) {
+
+        case 'function':
+            return typeof ( variable as Function ).prototype === 'undefined'
+                ? 'function' as typeOf.Return<T>
+                : 'class' as typeOf.Return<T>;
+
+        case 'number':
+            // returns
+            if ( Number.isNaN( variable as number ) ) {
+                return 'NaN' as typeOf.Return<T>;
+            }
+            return 'number' as typeOf.Return<T>;
+
+        case 'object':
+            // returns
+            if ( args.distinguishArrays && Array.isArray( variable ) ) {
+                return 'array' as typeOf.Return<T>;
+            }
+            return 'object' as typeOf.Return<T>;
+    }
+
+    return typeOf as typeOf.Return<T>;
+}
+
 /**
  * Used only for {@link typeOf | typeOf()}.
  */
@@ -88,70 +157,4 @@ export namespace typeOf {
         | symbol
         | Symbol
         | undefined;
-}
-
-/**
- * An alias for the typeof keyword that returns additional options.
- * 
- * @see {@link typeOf.Args}
- * @see {@link typeOf.TestType}
- * @see {@link typeOf.Return}
- * 
- * @typeParam T  Type of the variable being checked.
- * 
- * @param variable  To test for value type.
- * @param _args     Optional configuration. See {@link typeOf.Args}.
- * 
- * @return Expanded type string.
- */
-export function typeOf<T extends typeOf.TestType>(
-    variable: T,
-    _args: Partial<typeOf.Args> = {},
-): string & typeOf.Return<T> {
-
-    const args: typeOf.Args = mergeArgs(
-        {
-            distinguishArrays: true,
-        } as typeOf.Args & mergeArgs.Obj,
-        _args,
-        false
-    );
-
-
-    /*
-     * BY VALUE
-     */
-    if ( variable === null ) { return 'null' as typeOf.Return<T>; }
-    if ( variable === undefined ) { return 'undefined' as typeOf.Return<T>; }
-
-
-    /*
-     * BY TYPE
-     */
-
-    const typeOf = typeof variable;
-
-    switch ( typeOf ) {
-
-        case 'function':
-            return typeof ( variable as Function ).prototype === 'undefined'
-                ? 'function' as typeOf.Return<T>
-                : 'class' as typeOf.Return<T>;
-
-        case 'number':
-            // returns
-            if ( Number.isNaN( variable as number ) ) {
-                return 'NaN' as typeOf.Return<T>;
-            }
-            return 'number' as typeOf.Return<T>;
-
-        case 'object':
-            // returns
-            if ( args.distinguishArrays && Array.isArray( variable ) ) {
-                return 'array' as typeOf.Return<T>;
-            }
-            return 'object' as typeOf.Return<T>;
-    }
-
-    return typeOf as typeOf.Return<T>;
 }

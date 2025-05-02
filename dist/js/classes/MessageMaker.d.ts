@@ -14,6 +14,96 @@ import type { RecursivePartial } from '../types/objects/index.js';
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { timestamp } from '../functions/index.js';
 /**
+ * A configurable class for formatting message strings for various outputs.
+ *
+ * Not currently tested, marked beta.
+ *
+ * @beta
+ */
+export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
+    /**
+     * Returns the default painter callback function for the given format.
+     *
+     * `'html'` and `'markdown'` default painters currently do not apply any
+     * colours.
+     *
+     * Used only by {@link MessageMaker.buildArgs}.
+     *
+     * @category Static
+     *
+     * @param classArgs  A complete arguments object.  Requires complete to
+     *                   avoid building complete arguments multiple times.
+     */
+    protected static defaultPainter(classArgs: MessageMaker.Args): MessageMaker.Args['painter'];
+    get ARGS_DEFAULT(): MessageMaker.Args & {
+        ansiColours: MessageMaker.Args['ansiColours'];
+        msg: MessageMaker.MsgArgs;
+    };
+    /**
+     * Build a complete args object.
+     *
+     * @category Args
+     */
+    buildArgs(args?: RecursivePartial<MessageMaker.Args>): MessageMaker.Args;
+    /**
+     * Build a complete args object.
+     *
+     * @category Args
+     */
+    msgArgs(args?: RecursivePartial<MessageMaker.MsgArgs>): MessageMaker.MsgArgs;
+    constructor(args?: RecursivePartial<MessageMaker.Args>);
+    /**
+     * Used to map each line of a message in {@link MessageMaker.msg}.
+     *
+     * Does not wrap or split it (assumes this has already been done).  Applies
+     * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
+     *
+     * @category  Messagers
+     *
+     * @param line    String to map. Already wrapped to line width, if applicable.
+     * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
+     * @param prefix  Optional. Unpainted string added before the line. Helpful for hanging indents. Default ''.
+     */
+    protected lineMapper(line: string, args: MessageMaker.MsgArgs, prefix?: string): string;
+    /**
+     * Formats the given message according to options.
+     *
+     * @category  Messagers
+     *
+     * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
+     * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
+     */
+    msg(msg: string | string[], _args?: RecursivePartial<MessageMaker.MsgArgs>): string;
+    /**
+     * Formats given messages individually and then joins them on return.
+     *
+     * @category  Messagers
+     *
+     * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
+     * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
+     */
+    msgs(messages: MessageMaker.BulkMsgs, universalArgs?: Partial<MessageMaker.BulkMsgArgs>): string;
+    /**
+     * Applies colour and font styles to an message for output.
+     *
+     * @category  Stylers
+     */
+    painter(msg: string, args?: Partial<MessageMaker.PainterArgs>): string;
+    /**
+     * Formats the given message according to options.
+     *
+     * @category  Messagers
+     *
+     * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
+     * @param _args     Optional. Overrides for default arguments in {@link MessageMaker.args}. Used for the whole message.
+     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker.args}. Used only for the timestamp.
+     */
+    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, _args?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: RecursivePartial<MessageMaker.MsgArgs> & Partial<{
+        date: Date;
+        stamp: timestamp.Args_Input;
+    }>): string;
+}
+/**
  * Used only for {@link MessageMaker}.
  */
 export declare namespace MessageMaker {
@@ -234,95 +324,5 @@ export declare namespace MessageMaker {
          */
         italic: boolean;
     };
-}
-/**
- * A configurable class for formatting message strings for various outputs.
- *
- * Not currently tested, marked beta.
- *
- * @beta
- */
-export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
-    /**
-     * Returns the default painter callback function for the given format.
-     *
-     * `'html'` and `'markdown'` default painters currently do not apply any
-     * colours.
-     *
-     * Used only by {@link MessageMaker.buildArgs}.
-     *
-     * @category Static
-     *
-     * @param classArgs  A complete arguments object.  Requires complete to
-     *                   avoid building complete arguments multiple times.
-     */
-    protected static defaultPainter(classArgs: MessageMaker.Args): MessageMaker.Args['painter'];
-    get ARGS_DEFAULT(): MessageMaker.Args & {
-        ansiColours: MessageMaker.Args['ansiColours'];
-        msg: MessageMaker.MsgArgs;
-    };
-    /**
-     * Build a complete args object.
-     *
-     * @category Args
-     */
-    buildArgs(args?: RecursivePartial<MessageMaker.Args>): MessageMaker.Args;
-    /**
-     * Build a complete args object.
-     *
-     * @category Args
-     */
-    msgArgs(args?: RecursivePartial<MessageMaker.MsgArgs>): MessageMaker.MsgArgs;
-    constructor(args?: RecursivePartial<MessageMaker.Args>);
-    /**
-     * Used to map each line of a message in {@link MessageMaker.msg}.
-     *
-     * Does not wrap or split it (assumes this has already been done).  Applies
-     * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
-     *
-     * @category  Messagers
-     *
-     * @param line    String to map. Already wrapped to line width, if applicable.
-     * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
-     * @param prefix  Optional. Unpainted string added before the line. Helpful for hanging indents. Default ''.
-     */
-    protected lineMapper(line: string, args: MessageMaker.MsgArgs, prefix?: string): string;
-    /**
-     * Formats the given message according to options.
-     *
-     * @category  Messagers
-     *
-     * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
-     * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
-     */
-    msg(msg: string | string[], _args?: RecursivePartial<MessageMaker.MsgArgs>): string;
-    /**
-     * Formats given messages individually and then joins them on return.
-     *
-     * @category  Messagers
-     *
-     * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
-     * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
-     */
-    msgs(messages: MessageMaker.BulkMsgs, universalArgs?: Partial<MessageMaker.BulkMsgArgs>): string;
-    /**
-     * Applies colour and font styles to an message for output.
-     *
-     * @category  Stylers
-     */
-    painter(msg: string, args?: Partial<MessageMaker.PainterArgs>): string;
-    /**
-     * Formats the given message according to options.
-     *
-     * @category  Messagers
-     *
-     * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param _args     Optional. Overrides for default arguments in {@link MessageMaker.args}. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker.args}. Used only for the timestamp.
-     */
-    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, _args?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: RecursivePartial<MessageMaker.MsgArgs> & Partial<{
-        date: Date;
-        stamp: timestamp.Args_Input;
-    }>): string;
 }
 //# sourceMappingURL=MessageMaker.d.ts.map

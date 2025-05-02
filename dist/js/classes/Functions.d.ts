@@ -13,17 +13,6 @@
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { escRegExp, escRegExpReplace, slugify, timestamp, toTitleCase, typeOf } from '../functions/index.js';
 /**
- * Used only for {@link Functions}.
- */
-export declare namespace Functions {
-    /**
-     * Optional configuration for {@link Functions}.
-     *
-     * @interface
-     */
-    type Args = AbstractConfigurableClass.Args & {};
-}
-/**
  * A configurable class of utility functions.
  *
  * Can be extended, but probably best as a (static) property instead.
@@ -44,7 +33,7 @@ export declare class Functions extends AbstractConfigurableClass<Functions.Args>
      *
      * @function
      */
-    typeOf: (...params: Parameters<typeof typeOf>) => "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function" | "NaN" | "null" | "array" | "class";
+    typeOf: (...params: Parameters<typeof typeOf>) => "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function" | "null" | "array" | "class" | "NaN";
     /**
      * An alias for this package's {@link escRegExp | escRegExp()}.
      *
@@ -85,5 +74,16 @@ export declare class Functions extends AbstractConfigurableClass<Functions.Args>
      * @function
      */
     toTitleCase: (...params: Parameters<typeof toTitleCase>) => string;
+}
+/**
+ * Used only for {@link Functions}.
+ */
+export declare namespace Functions {
+    /**
+     * Optional configuration for {@link Functions}.
+     *
+     * @interface
+     */
+    type Args = AbstractConfigurableClass.Args & {};
 }
 //# sourceMappingURL=Functions.d.ts.map

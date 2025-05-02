@@ -92,7 +92,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     * ====================================================================== */
 
     protected async js() {
-        this.progressLog( 'testing javascript...', 1 );
+        this.progressLog( 'running jest...', 1 );
 
         this.fns.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
 

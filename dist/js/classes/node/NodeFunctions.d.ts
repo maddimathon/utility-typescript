@@ -14,17 +14,6 @@ import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClas
 import { Functions } from '../Functions.js';
 import { NodeConsole } from './NodeConsole.js';
 /**
- * Used only for {@link NodeFunctions}.
- */
-export declare namespace NodeFunctions {
-    /**
-     * Optional configuration for {@link NodeFunctions}.
-     *
-     * @interface
-     */
-    type Args = Functions.Args & {};
-}
-/**
  * A configurable class of utility functions.
  *
  * Can be extended, but probably best as a (static) property instead.
@@ -63,5 +52,16 @@ export declare class NodeFunctions extends AbstractConfigurableClass<NodeFunctio
         fns: Functions;
         nc: NodeConsole;
     }>);
+}
+/**
+ * Used only for {@link NodeFunctions}.
+ */
+export declare namespace NodeFunctions {
+    /**
+     * Optional configuration for {@link NodeFunctions}.
+     *
+     * @interface
+     */
+    type Args = Functions.Args & {};
 }
 //# sourceMappingURL=NodeFunctions.d.ts.map

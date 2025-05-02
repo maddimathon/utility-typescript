@@ -20,7 +20,7 @@ my personal needs/preferences rather than developers in general.
 
 ## Install
 
-```sh
+```shell
 npm i -D github:maddimathon/utility-typescript
 ```
 
@@ -121,5 +121,5 @@ of its files.
 
 ## License
 
-This mini-library uses the [MIT license](LICENSE.md).  Please read and
-understand the license — I promise it’s short!
+This library uses the [MIT license](LICENSE.md).  Please read and understand the
+license — I promise it’s short!

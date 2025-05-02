@@ -12,6 +12,23 @@
  */
 import { AnyClass } from '../types/functions/index.js';
 /**
+ * An alias for the typeof keyword that returns additional options.
+ *
+ * @category  Debuggers
+ *
+ * @see {@link typeOf.Args}
+ * @see {@link typeOf.TestType}
+ * @see {@link typeOf.Return}
+ *
+ * @typeParam T  Type of the variable being checked.
+ *
+ * @param variable  To test for value type.
+ * @param _args     Optional configuration. See {@link typeOf.Args}.
+ *
+ * @return Expanded type string.
+ */
+export declare function typeOf<T extends typeOf.TestType>(variable: T, _args?: Partial<typeOf.Args>): string & typeOf.Return<T>;
+/**
  * Used only for {@link typeOf | typeOf()}.
  */
 export declare namespace typeOf {
@@ -43,19 +60,4 @@ export declare namespace typeOf {
     export type TestType = (() => any) | any[] | AnyClass | BigInt | boolean | Function | null | number | object | Object | string | symbol | Symbol | undefined;
     export {};
 }
-/**
- * An alias for the typeof keyword that returns additional options.
- *
- * @see {@link typeOf.Args}
- * @see {@link typeOf.TestType}
- * @see {@link typeOf.Return}
- *
- * @typeParam T  Type of the variable being checked.
- *
- * @param variable  To test for value type.
- * @param _args     Optional configuration. See {@link typeOf.Args}.
- *
- * @return Expanded type string.
- */
-export declare function typeOf<T extends typeOf.TestType>(variable: T, _args?: Partial<typeOf.Args>): string & typeOf.Return<T>;
 //# sourceMappingURL=typeOf.d.ts.map

@@ -16,17 +16,7 @@ import type { RecursivePartial } from '../../types/objects/index.js';
 
 
 /**
- * Returns an updated version of `defaults` merged with the contents of
- * `inputs`.
- *
- * Useful for parsing objects passed to functions with extra, optional options.
- * Preserves all input properties.
- * 
- * Overloaded for better typing dependent on recursion.
- * 
- * @category Arg Objects
- * 
- * @function
+ * Universal overload.
  * 
  * @typeParam V  Args object values.
  * @typeParam D  Default object type.
@@ -40,24 +30,87 @@ import type { RecursivePartial } from '../../types/objects/index.js';
  * @return  Resulting object with all the `defaults` and `inputs` keys with 
  *          either default values or input values, as appropriate.
  */
-export const mergeArgs: mergeArgs.Function = <
-    V extends any,
+export function mergeArgs<
+    V extends unknown,
+    D extends mergeArgs.Obj<V>,
+    I extends Partial<D> | RecursivePartial<D>,
+>(
+    defaults: D,
+    inputs?: I | undefined,
+    recursive?: boolean | undefined,
+): D & I;
+
+/**
+ * Passing `recursive` as false means that the input type must be a
+ * `Partial` (not {@link RecursivePartial}).
+ */
+export function mergeArgs<
+    V extends unknown,
+    D extends mergeArgs.Obj<V>,
+    I extends Partial<D>,
+>(
+    defaults: D,
+    inputs: I,
+    recursive?: false | undefined,
+): D & I;
+
+/**
+ * Passing `recursive` as true means that the input type must actually be a 
+ * {@link RecursivePartial}.
+ */
+export function mergeArgs<
+    V extends unknown,
+    D extends mergeArgs.Obj<V>,
+    I extends RecursivePartial<D>,
+>(
+    defaults: D,
+    inputs: I,
+    recursive: true,
+): D & I;
+
+/**
+ * If inputs is undefined, then the return is just the defaults.
+ */
+export function mergeArgs<
+    V extends unknown,
+    D extends mergeArgs.Obj<V>,
+>(
+    defaults: D,
+    inputs?: undefined,
+    recursive?: boolean | undefined,
+): D;
+
+
+/**
+ * Returns an updated version of `defaults` merged with the contents of
+ * `inputs`.
+ *
+ * Useful for parsing objects passed to functions with extra, optional options.
+ * Preserves all input properties.
+ * 
+ * Overloaded for better typing dependent on recursion.
+ * 
+ * @category Arg Objects
+ */
+export function mergeArgs<
+    V extends unknown,
     D extends mergeArgs.Obj<V>,
     I extends RecursivePartial<D>,
 >(
     defaults: D,
     inputs?: I | undefined,
     recursive: boolean = false,
-): D & I => {
+): D | D & I {
     // invalid default object becomes an empty object
     if ( typeof defaults !== 'object' || !defaults ) { defaults = {} as D; }
 
     // returns
     // invalid or non-existant input means we can just return a copy of the defaults
     if ( typeof inputs === 'undefined' || typeof inputs !== 'object' || !inputs ) {
-        return { ...defaults } as D & I;
+        return { ...defaults };
     }
 
+    // merged, but not recursively
     const result: D & I = {
         ...defaults,
         ...inputs,
@@ -83,8 +136,10 @@ export const mergeArgs: mergeArgs.Function = <
         // this is not a property that needs recursion
         if (
             defaultValue === null
+            || inputValue === null
             || typeof defaultValue === 'undefined'
             || typeof defaultValue !== 'object'
+            || typeof inputValue === 'undefined'
             || typeof inputValue !== 'object'
         ) {
             continue;
@@ -102,34 +157,26 @@ export const mergeArgs: mergeArgs.Function = <
         // continues
         // not a simple args object and shouldn't have its props overwritten
         if (
-            defaultValue === null
-            || inputValue === null
-            || Array.isArray( defaultValue )
+            Array.isArray( defaultValue )
             || Array.isArray( inputValue )
         ) {
             continue;
         }
 
         // get deep
-        // I am fairly certain that I have accounted for all possibilities and
-        // that this typing issue might be unavoidable -- or at least requires
-        // typing skills I don't yet have
-        // @ts-expect-error
-        result[ key ]
-            = mergeArgs(
-                defaultValue as mergeArgs.Obj<V>,
-                inputValue,
-                recursive,
-            );
+        result[ key ] = mergeArgs(
+            defaultValue as mergeArgs.Obj<V>,
+            inputValue,
+            recursive,
+        ) as ( D & I )[ keyof D ];
     }
+
     return result;
-};
+}
 
 
 /**
  * Used only for {@link mergeArgs | mergeArgs()}.
- * 
- * @namespace
  */
 export namespace mergeArgs {
 
@@ -164,51 +211,4 @@ export namespace mergeArgs {
             | ObjProp<ArgsSingleValue | Values>[]
             | Obj<ArgsSingleValue | Values>;
         };
-
-    /**
-     * Interface defining the overloads for {@link mergeArgs | mergeArgs()}.
-     */
-    export interface Function {
-
-        /**
-         * Passing `recursive` as false means that the input type must be a
-         * `Partial`.
-         */
-        <
-            V extends any,
-            D extends Obj<V>,
-            I extends Partial<D>,
-        >(
-            defaults: D,
-            inputs?: I | undefined,
-            recursive?: false | undefined,
-        ): D & I;
-
-        /**
-         * Passing `recursive` as true means that the input type must actually be a 
-         * {@link RecursivePartial}.
-         */
-        <
-            V extends any,
-            D extends Obj<V>,
-            I extends RecursivePartial<D>,
-        >(
-            defaults: D,
-            inputs?: I | undefined,
-            recursive?: true,
-        ): D & I;
-
-        /**
-         * Catch-all.
-         */
-        <
-            V extends any,
-            D extends Obj<V>,
-            I extends RecursivePartial<D>,
-        >(
-            defaults: D,
-            inputs?: I | undefined,
-            recursive?: boolean | undefined,
-        ): D & I;
-    }
 }

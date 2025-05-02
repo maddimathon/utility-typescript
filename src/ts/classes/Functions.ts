@@ -25,20 +25,6 @@ import {
 
 
 /**
- * Used only for {@link Functions}.
- */
-export namespace Functions {
-
-    /**
-     * Optional configuration for {@link Functions}.
-     * 
-     * @interface
-     */
-    export type Args = AbstractConfigurableClass.Args & {
-    };
-}
-
-/**
  * A configurable class of utility functions.
  * 
  * Can be extended, but probably best as a (static) property instead.
@@ -158,4 +144,18 @@ export class Functions extends AbstractConfigurableClass<Functions.Args> {
      * @function 
      */
     public toTitleCase = ( ...params: Parameters<typeof toTitleCase> ) => toTitleCase( ...params );
+}
+
+/**
+ * Used only for {@link Functions}.
+ */
+export namespace Functions {
+
+    /**
+     * Optional configuration for {@link Functions}.
+     * 
+     * @interface
+     */
+    export type Args = AbstractConfigurableClass.Args & {
+    };
 }

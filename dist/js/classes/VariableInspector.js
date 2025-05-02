@@ -11,15 +11,7 @@
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-import { arrayUnique, 
-// arrayUnique,
-mergeArgs, 
-// escRegExp,
-// escRegExpReplace,
-// slugify,
-timestamp, 
-// toTitleCase,
-typeOf, } from '../functions/index.js';
+import { arrayUnique, mergeArgs, timestamp, typeOf, } from '../functions/index.js';
 /**
  * Inspects the value of a variable for debugging.
  *

@@ -14,11 +14,13 @@
 /**
  * Converts the given string to title case.
  * 
- * @source
+ * @category  Formatters
  *
  * @param input  String to convert.
  *
  * @return  Title case version of the input string.
+ * 
+ * @source
  */
 export function toTitleCase( input: string ): string {
 

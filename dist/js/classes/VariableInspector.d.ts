@@ -13,226 +13,6 @@
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { typeOf } from '../functions/index.js';
 /**
- * Used only for {@link VariableInspector}.
- */
-export declare namespace VariableInspector {
-    /**
-     * A function for formatting inspection output strings.
-     *
-     * @expand
-     */
-    type Formatter = (str: string) => string;
-    /**
-     * Stages at which formatter functions may be used.
-     *
-     * `_` is used if the applicable formatter is not present.
-     *
-     * @expand
-     */
-    type StageKeys = "_" | "prefix" | "type" | "value" | "via";
-    /**
-     * Optional configuration for {@link VariableInspector}.
-     *
-     * @interface
-     */
-    type Args = AbstractConfigurableClass.Args & {
-        /**
-         * Arguments to use as an override for child inspections (i.e., of the
-         * property values).
-         *
-         * Useful to change things like the
-         * {@link VariableInspector.Args.formatter} functions.
-         *
-         * @default
-         * { includeValue: true }
-         */
-        childArgs: Partial<Args>;
-        /**
-         * Outputs some var dumps to the console.
-         *
-         * @internal
-         *
-         * @default false
-         */
-        debug: boolean;
-        /**
-         * String to use directly following the variable name in the prefix.
-         *
-         * @see {@link VariableInspector.prefix}
-         *
-         * @default ' ='
-         */
-        equalString: string;
-        /**
-         * Whether to include a search for toJSON for unidentified var types.
-         *
-         * @default true
-         */
-        fallbackToJSON: boolean;
-        /**
-         * An optional callback for formatting the output values.
-         *
-         * @default null
-         */
-        formatter: null | {
-            [K in StageKeys]?: Formatter;
-        };
-        /**
-         * Whether to include the prefix in the output string.
-         *
-         * @see {@link VariableInspector.prefix}
-         *
-         * @default true
-         */
-        includePrefix: boolean;
-        /**
-         * Whether to include the type in the output string.
-         *
-         * @see {@link VariableInspector.type}
-         *
-         * @default true
-         */
-        includeType: boolean;
-        /**
-         * Whether to include the value in the output string.
-         *
-         * @see {@link VariableInspector.value}
-         *
-         * @default true
-         */
-        includeValue: boolean;
-        /**
-         * Text used to indent text.
-         *
-         * @default '    '
-         */
-        indent: string;
-        /**
-         * Whether to include a string representation of classes.
-         *
-         * @default false
-         */
-        inspectClasses: boolean;
-        /**
-         * Whether to include a string representation of functions.
-         *
-         * @default false
-         */
-        inspectFunctions: boolean;
-        /**
-         * Locale to use when formatting dates and numbers.
-         *
-         * Passed to {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}.
-         *
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales | MDN} for allowed values.
-         *
-         * @default 'en-CA'
-         */
-        locale: undefined | Intl.LocalesArgument;
-        /**
-         * Whether to format dates according to locale.
-         *
-         * If true, `toLocaleString()` is used in place of `toString()`.
-         *
-         * @default true
-         *
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}
-         */
-        localizeDates: boolean;
-        /**
-         * Options for formatting dates.
-         *
-         * @default {}
-         *
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#options | MDN} for allowed values.
-         */
-        localizeDateOptions: Intl.DateTimeFormatOptions;
-        /**
-         * Whether to format numbers according to locale.
-         *
-         * If true, `toLocaleString()` is used in place of `toString()`.
-         *
-         * @default false
-         *
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString | Date.toLocaleString()}
-         */
-        localizeNumbers: boolean;
-        /**
-         * Options for formatting numbers.
-         *
-         * @default {}
-         *
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options | MDN (numbers)} for allowed values.
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt/toLocaleString#options | MDN (bigint)} for allowed values.
-         */
-        localizeNumberOptions: Intl.NumberFormatOptions & BigIntToLocaleStringOptions;
-        /**
-         * Character used to represent strings.
-         *
-         * @default '"'
-         */
-        stringQuoteCharacter: string;
-    };
-    /**
-     * The shape used for {@link VariableInspector._properties}.
-     */
-    interface Child {
-        key: {
-            name: number | string | symbol;
-            type: "number" | "string" | "symbol";
-        };
-        vi: VariableInspector;
-    }
-    /**
-     * The shape used when converting this object to JSON.
-     *
-     * @expandType ReturnType
-     *
-     * @expand
-     */
-    interface JSON<Type extends typeOf.TestType = typeOf.TestType> {
-        /**
-         * A string representation of the inspection. May have tabs and line breaks.
-         *
-         * @see {@link VariableInspector.toString}
-         */
-        inspection: string;
-        /**
-         * The provided name for the inspecte variable.
-         *
-         * @see {@link VariableInspector._name}
-         */
-        name: string;
-        /**
-         * If this is an object with properties or methods, they are included
-         * here.
-         *
-         * @see {@link VariableInspector._properties}
-         *
-         * @interface
-         */
-        properties?: {
-            [key: number | string | symbol]: JSON_Child;
-        };
-        /**
-         * The simple type name.
-         *
-         * @see {@link VariableInspector._typeOf}
-         */
-        type: VariableInspector<Type>['_typeOf'];
-    }
-    /**
-     * The shape used when converting this object to JSON.
-     */
-    interface JSON_Child {
-        key: {
-            name: number | string | symbol;
-            type: "number" | "string" | "symbol";
-        };
-        value: JSON;
-    }
-}
-/**
  * Inspects the value of a variable for debugging.
  *
  * Can statically return a readable string ({@link VariableInspector.stringify})
@@ -478,5 +258,225 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      * @category Translators
      */
     protected _valueAsObject(): string;
+}
+/**
+ * Used only for {@link VariableInspector}.
+ */
+export declare namespace VariableInspector {
+    /**
+     * A function for formatting inspection output strings.
+     *
+     * @expand
+     */
+    type Formatter = (str: string) => string;
+    /**
+     * Stages at which formatter functions may be used.
+     *
+     * `_` is used if the applicable formatter is not present.
+     *
+     * @expand
+     */
+    type StageKeys = "_" | "prefix" | "type" | "value" | "via";
+    /**
+     * Optional configuration for {@link VariableInspector}.
+     *
+     * @interface
+     */
+    type Args = AbstractConfigurableClass.Args & {
+        /**
+         * Arguments to use as an override for child inspections (i.e., of the
+         * property values).
+         *
+         * Useful to change things like the
+         * {@link VariableInspector.Args.formatter} functions.
+         *
+         * @default
+         * { includeValue: true }
+         */
+        childArgs: Partial<Args>;
+        /**
+         * Outputs some var dumps to the console.
+         *
+         * @internal
+         *
+         * @default false
+         */
+        debug: boolean;
+        /**
+         * String to use directly following the variable name in the prefix.
+         *
+         * @see {@link VariableInspector.prefix}
+         *
+         * @default ' ='
+         */
+        equalString: string;
+        /**
+         * Whether to include a search for toJSON for unidentified var types.
+         *
+         * @default true
+         */
+        fallbackToJSON: boolean;
+        /**
+         * An optional callback for formatting the output values.
+         *
+         * @default null
+         */
+        formatter: null | {
+            [K in StageKeys]?: Formatter;
+        };
+        /**
+         * Whether to include the prefix in the output string.
+         *
+         * @see {@link VariableInspector.prefix}
+         *
+         * @default true
+         */
+        includePrefix: boolean;
+        /**
+         * Whether to include the type in the output string.
+         *
+         * @see {@link VariableInspector.type}
+         *
+         * @default true
+         */
+        includeType: boolean;
+        /**
+         * Whether to include the value in the output string.
+         *
+         * @see {@link VariableInspector.value}
+         *
+         * @default true
+         */
+        includeValue: boolean;
+        /**
+         * Text used to indent text.
+         *
+         * @default '    '
+         */
+        indent: string;
+        /**
+         * Whether to include a string representation of classes.
+         *
+         * @default false
+         */
+        inspectClasses: boolean;
+        /**
+         * Whether to include a string representation of functions.
+         *
+         * @default false
+         */
+        inspectFunctions: boolean;
+        /**
+         * Locale to use when formatting dates and numbers.
+         *
+         * Passed to {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}.
+         *
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales | MDN} for allowed values.
+         *
+         * @default 'en-CA'
+         */
+        locale: undefined | Intl.LocalesArgument;
+        /**
+         * Whether to format dates according to locale.
+         *
+         * If true, `toLocaleString()` is used in place of `toString()`.
+         *
+         * @default true
+         *
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}
+         */
+        localizeDates: boolean;
+        /**
+         * Options for formatting dates.
+         *
+         * @default {}
+         *
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#options | MDN} for allowed values.
+         */
+        localizeDateOptions: Intl.DateTimeFormatOptions;
+        /**
+         * Whether to format numbers according to locale.
+         *
+         * If true, `toLocaleString()` is used in place of `toString()`.
+         *
+         * @default false
+         *
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString | Date.toLocaleString()}
+         */
+        localizeNumbers: boolean;
+        /**
+         * Options for formatting numbers.
+         *
+         * @default {}
+         *
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options | MDN (numbers)} for allowed values.
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt/toLocaleString#options | MDN (bigint)} for allowed values.
+         */
+        localizeNumberOptions: Intl.NumberFormatOptions & BigIntToLocaleStringOptions;
+        /**
+         * Character used to represent strings.
+         *
+         * @default '"'
+         */
+        stringQuoteCharacter: string;
+    };
+    /**
+     * The shape used for {@link VariableInspector._properties}.
+     */
+    interface Child {
+        key: {
+            name: number | string | symbol;
+            type: "number" | "string" | "symbol";
+        };
+        vi: VariableInspector;
+    }
+    /**
+     * The shape used when converting this object to JSON.
+     *
+     * @expandType ReturnType
+     *
+     * @expand
+     */
+    interface JSON<Type extends typeOf.TestType = typeOf.TestType> {
+        /**
+         * A string representation of the inspection. May have tabs and line breaks.
+         *
+         * @see {@link VariableInspector.toString}
+         */
+        inspection: string;
+        /**
+         * The provided name for the inspecte variable.
+         *
+         * @see {@link VariableInspector._name}
+         */
+        name: string;
+        /**
+         * If this is an object with properties or methods, they are included
+         * here.
+         *
+         * @see {@link VariableInspector._properties}
+         *
+         * @interface
+         */
+        properties?: {
+            [key: number | string | symbol]: JSON_Child;
+        };
+        /**
+         * The simple type name.
+         *
+         * @see {@link VariableInspector._typeOf}
+         */
+        type: VariableInspector<Type>['_typeOf'];
+    }
+    /**
+     * The shape used when converting this object to JSON.
+     */
+    interface JSON_Child {
+        key: {
+            name: number | string | symbol;
+            type: "number" | "string" | "symbol";
+        };
+        value: JSON;
+    }
 }
 //# sourceMappingURL=VariableInspector.d.ts.map

@@ -14,6 +14,8 @@
 /**
  * Takes an input string and inserts `\n` to soft wrap text within the given width.
  * 
+ * @category  Formatters
+ * 
  * @param text
  * @param maxWidth
  */

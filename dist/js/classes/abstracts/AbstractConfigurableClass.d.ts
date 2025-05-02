@@ -13,24 +13,6 @@
 import { mergeArgs } from '../../functions/index.js';
 import { RecursivePartial } from '../../types/objects/basics.js';
 /**
- * Used only for {@link AbstractConfigurableClass}.
- */
-export declare namespace AbstractConfigurableClass {
-    /**
-     * Optional configuration for {@link AbstractConfigurableClass}.
-     *
-     * @since 0.9.0-draft
-     *
-     * @interface
-     */
-    type Args = {
-        /**
-         * Whether the arguments should be merged recursively.
-         */
-        optsRecursive: boolean;
-    };
-}
-/**
  * Classes with configurable options set in the constructor.
  *
  * @example
@@ -105,10 +87,11 @@ export declare abstract class AbstractConfigurableClass<Args extends AbstractCon
      * An alias for this package's {@link mergeArgs | mergeArgs()}.
      *
      * @category Aliases
-     *
-     * @function
      */
-    mergeArgs: typeof mergeArgs;
+    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined): D & I;
+    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends Partial<D>>(defaults: D, inputs?: I | undefined, recursive?: false | undefined): D & I;
+    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends RecursivePartial<D>>(defaults: D, inputs: I | undefined, recursive: true): D & I;
+    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>>(defaults: D, inputs?: undefined, recursive?: boolean | undefined): D;
     /**
      * The object shape used when converting to JSON.
      *
@@ -126,5 +109,23 @@ export declare abstract class AbstractConfigurableClass<Args extends AbstractCon
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     toString(): string;
+}
+/**
+ * Used only for {@link AbstractConfigurableClass}.
+ */
+export declare namespace AbstractConfigurableClass {
+    /**
+     * Optional configuration for {@link AbstractConfigurableClass}.
+     *
+     * @since 0.9.0-draft
+     *
+     * @interface
+     */
+    type Args = {
+        /**
+         * Whether the arguments should be merged recursively.
+         */
+        optsRecursive: boolean;
+    };
 }
 //# sourceMappingURL=AbstractConfigurableClass.d.ts.map

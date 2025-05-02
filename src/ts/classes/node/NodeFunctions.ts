@@ -20,20 +20,6 @@ import { NodeConsole } from './NodeConsole.js';
 
 
 /**
- * Used only for {@link NodeFunctions}.
- */
-export namespace NodeFunctions {
-
-    /**
-     * Optional configuration for {@link NodeFunctions}.
-     * 
-     * @interface
-     */
-    export type Args = Functions.Args & {
-    };
-}
-
-/**
  * A configurable class of utility functions.
  * 
  * Can be extended, but probably best as a (static) property instead.
@@ -120,4 +106,18 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
 
     /* METHODS
      * ====================================================================== */
+}
+
+/**
+ * Used only for {@link NodeFunctions}.
+ */
+export namespace NodeFunctions {
+
+    /**
+     * Optional configuration for {@link NodeFunctions}.
+     * 
+     * @interface
+     */
+    export type Args = Functions.Args & {
+    };
 }
