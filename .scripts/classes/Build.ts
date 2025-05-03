@@ -179,31 +179,16 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         if ( !this.args.watchedEvent ) {
 
             this.verboseLog( 'replacing in dist...', 2 );
+
             for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
+
                 this.replaceInFiles(
                     [
-                        './dist/**/*',
+                        'dist/**/*',
                     ],
                     o.find,
                     o.replace,
                     this.args.verbose ? 3 : 2,
-                );
-            }
-        }
-
-        if ( this.args.releasing && !this.args.debug ) {
-
-            for ( const o of pkgReplacements( this.fns ) ) {
-
-                this.replaceInFiles(
-                    [
-                        '**/*',
-                        '!.vscode/**/*',
-                        '!.scripts/vars/replacements.ts',
-                    ],
-                    o.find,
-                    o.replace,
-                    this.args.verbose ? 4 : 3,
                 );
             }
         }

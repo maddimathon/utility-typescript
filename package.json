@@ -1,6 +1,6 @@
 {
     "name": "@maddimathon/utility-typescript",
-    "version": "0.1.0",
+    "version": "0.1.1",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",

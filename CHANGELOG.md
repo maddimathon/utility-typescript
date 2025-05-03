@@ -19,6 +19,11 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## [0.1.1] - 2025-05-02
+
+Trying to fix npm publish workflow.
+
+
 ## [0.1.0] - 2025-05-02
 
 **Initial release; everything is new!**

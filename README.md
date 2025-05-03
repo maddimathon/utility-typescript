@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 0.1.0
+# Utility TypeScript @ 0.1.1
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -21,7 +21,8 @@ my personal needs/preferences rather than developers in general.
 
 ## Install
 
-```shell
+```bash
+npm i -D @maddimathon/utility-typescript
 npm i -D github:maddimathon/utility-typescript
 ```
 

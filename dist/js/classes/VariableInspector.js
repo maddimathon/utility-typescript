@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.0
+ * @package @maddimathon/utility-typescript@0.1.1
  */
 /*!
- * @maddimathon/utility-typescript@0.1.0
+ * @maddimathon/utility-typescript@0.1.1
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
