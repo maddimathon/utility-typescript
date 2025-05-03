@@ -58,11 +58,6 @@
         "./types/*.d.ts": "./dist/types/*.d.ts"
     },
 
-    "publishConfig": {
-        "access": "restricted",
-        "registry": "https://npm.pkg.github.com"
-    },
-
     "scripts": {
         "test-vardump": "tsx --tsconfig .scripts/tsconfig.json .scripts/sample/var-inspect.ts",
         "test-console": "tsx --tsconfig .scripts/tsconfig.json .scripts/sample/node-console.ts",
