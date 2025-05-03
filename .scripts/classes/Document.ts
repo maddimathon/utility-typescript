@@ -117,10 +117,10 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
         this.progressLog( 'documenting typescript...', 1 );
 
         /** URL to documentation, without trailing slash. */
-        const homepage = this.fns.pkg.homepage.replace( /\/+$/gi, '' );
+        const homepage = this.pkg.homepage.replace( /\/+$/gi, '' );
 
         /** URL to repository, without trailing slash or `.git`. */
-        const repository = this.fns.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' );
+        const repository = this.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' );
 
         // TODO - generate entryPoints from pkg.main and pkg.exports
         const config: Partial<typeDoc.TypeDocOptions> = {
@@ -196,8 +196,8 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             markdownLinkExternal: true,
 
             name: [
-                this.fns.pkgTitle,
-                this.fns.pkgVersion,
+                this.pkg.config.title,
+                this.pkgVersion,
             ].filter( v => v ).join( ' @ ' ),
 
             navigationLinks: {
@@ -228,7 +228,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 // 'Class Hierarchy': `${ homepage }/hierarchy.html`,
             },
 
-            sourceLinkTemplate: `${ repository }/blob/main/${ ( this.args.packaging && !this.args.dryrun ) ? this.fns.pkg.version + '/' : '' }{path}#L{line}`,
+            sourceLinkTemplate: `${ repository }/blob/main/${ ( this.args.packaging && !this.args.dryrun ) ? this.pkg.version + '/' : '' }{path}#L{line}`,
             sortEntryPoints: false,
 
             useFirstParagraphOfCommentAsSummary: true,

@@ -76,7 +76,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
         await this[ stage ]();
     }
 
-    public async startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
         this.startEndNoticeLog(
             which,

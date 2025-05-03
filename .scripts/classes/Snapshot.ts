@@ -92,9 +92,9 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
     protected async snapshot() {
         // this.progressLog( 'making snapshot...', 1 );
 
-        const snapdir = this.fns.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
+        const snapdir = this.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
 
-        const exportPath: string = this.fns.fs.uniquePath( `${ snapdir }/${ this.fns.pkgName.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.fns.pkgVersion }_${ this.fns.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
+        const exportPath: string = this.fns.fs.uniquePath( `${ snapdir }/${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.pkgVersion }_${ this.fns.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
         const exportName: string = exportPath.replace( /^\/?([^\/]+\/)*/gi, '' );
 
 

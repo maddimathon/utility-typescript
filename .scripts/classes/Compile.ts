@@ -74,7 +74,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
         await this[ stage ]();
     }
 
-    public async startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
         if ( !this.args.building && (
             this.args.watchedWatcher

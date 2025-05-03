@@ -99,7 +99,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
         this.startEndNoticeLog(
             which,
-            `PACKAGING: ${ this.fns.pkgVersion }`,
+            `PACKAGING: ${ this.pkgVersion }`,
             `PACKAGE FINISHED`,
             `${ which.toUpperCase() }ING PACKAGE`,
         );
@@ -179,7 +179,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         this.verboseLog( 'copying files to package...', 2 );
         this._copyToPkg(
             [
-                ...this.fns.pkg.files,
+                ...this.pkg.files,
 
                 '.npmrc',
                 '.nvmrc',

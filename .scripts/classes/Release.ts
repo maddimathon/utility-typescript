@@ -46,7 +46,7 @@ export type ReleaseStages = typeof testStages[ number ];
 
 const testStages = [
     'changelog',
-    'pkg',
+    'package',
     'replace',
     'commit',
     'github',
@@ -114,7 +114,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                         { flag: 'reverse' },
                     ],
                     [
-                        this.fns.pkg.version,
+                        this.pkg.version,
                         { flag: true },
                     ],
                 ]
@@ -178,7 +178,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                     ...promptArgs,
                     message: inputVersionMessage,
 
-                    default: this.fns.pkg.version,
+                    default: this.pkg.version,
                     validate: ( value ) => (
                         value.trim().match( /^\d+\.\d+\.\d+(\-((alpha|beta)(\.\d+)?|\d+\.\d+\.\d+))?(\+[^\s]+)?$/gi )
                             ? true
@@ -189,11 +189,11 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                     ),
                 } ) ).trim();
 
-                if ( inputVersion !== this.fns.pkg.version ) {
+                if ( inputVersion !== this.pkg.version ) {
 
                     const currentPkgJson = this.fns.readFile( 'package.json' );
 
-                    this.fns.pkg.version = inputVersion;
+                    this.pkg.version = inputVersion;
 
                     this.fns.writeFile(
                         'package.json',
@@ -233,7 +233,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         const newChangeLogEntry =
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
-            + `## **${ this.fns.pkgVersion }** -- ${ this.fns.datestamp() }`
+            + `## **${ this.pkgVersion }** -- ${ this.fns.datestamp() }`
             + '\n\n'
             + this.fns.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';
@@ -257,7 +257,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
         ), { force: true } );
     }
 
-    protected async pkg() {
+    protected async package() {
 
         const pkg = new Package( {
             ...this.args as PackageArgs,
@@ -318,7 +318,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     protected async commit() {
         this.progressLog( 'commiting any new changes...', 1 );
 
-        const gitCmd = `git add @releases/*.zip dist docs CHANGELOG.md README.md && git commit -a --allow-empty -m "[${ this.fns.datestamp() }] release: ${ this.fns.pkgVersion }"`;
+        const gitCmd = `git add @releases/*.zip dist docs CHANGELOG.md README.md && git commit -a --allow-empty -m "[${ this.fns.datestamp() }] release: ${ this.pkgVersion }"`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping git commit during dryrun...', 2 );
@@ -338,7 +338,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             } );
 
             this.fns.cmd( gitCmd );
-            this.fns.cmd( `git tag -a -f ${ this.fns.pkgVersion } -m "release: ${ this.fns.pkgVersion }"` );
+            this.fns.cmd( `git tag -a -f ${ this.pkgVersion } -m "release: ${ this.pkgVersion }"` );
             this.fns.cmd( `git push --tags || echo ''` );
 
             this.verboseLog( 'pushing to origin...', 2 );
@@ -351,7 +351,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
 
         this.verboseLog( 'updating repo metadata...', 2 );
-        const repoUpdateCmd = `gh repo edit --description="${ this.fns.pkg.description }" --homepage="${ this.fns.pkg.homepage }"`;
+        const repoUpdateCmd = `gh repo edit --description="${ this.pkg.description }" --homepage="${ this.pkg.homepage }"`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping git commit during dryrun...', 3 );
@@ -368,7 +368,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
 
         this.verboseLog( 'creating github release...', 2 );
-        const releaseCmd = `gh release create ${ this.fns.pkgVersion } "${ this.fns.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.fns.pkgName }@${ this.fns.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.fns.pkgVersion } — ${ this.fns.datestamp() }"`;
+        const releaseCmd = `gh release create ${ this.pkgVersion } "${ this.fns.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.pkgVersion } — ${ this.fns.datestamp() }"`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping github release during dryrun...', 3 );

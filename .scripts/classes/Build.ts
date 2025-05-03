@@ -186,9 +186,9 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         this.fns.writeFile( 'README.md', (
             this.fns.readFile( 'README.md' )
-                .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.fns.pkgTitle } @ ${ this.fns.pkgVersion }` ) + '\n$2' )
-                .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.fns.pkg.description, 80 ) ) + '\n$2' )
-                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.fns.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
+                .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.pkg.config.title } @ ${ this.pkgVersion }` ) + '\n$2' )
+                .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.pkg.description, 80 ) ) + '\n$2' )
+                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
         ), { force: true } );
 
         if ( this.args.releasing ) {
@@ -199,8 +199,8 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
                 this.fns.readFile( 'README.md' )
                     .replace( installRegex, '$1\n' + this.fns.fns.escRegExpReplace( [
                         '```bash',
-                        'npm i -D @maddimathon/utility-typescript@' + this.fns.pkg.version,
-                        'npm i -D github:maddimathon/utility-typescript#' + this.fns.pkg.version,
+                        'npm i -D @maddimathon/utility-typescript@' + this.pkg.version,
+                        'npm i -D github:maddimathon/utility-typescript#' + this.pkg.version,
                         '```',
                     ].join( '\n' ) ) + '\n$2' )
             ), { force: true } );

@@ -10,9 +10,7 @@
 /* IMPORT TYPES */
 // import type { ChildProcess } from 'node:child_process';
 
-import type {
-    Types,
-} from '../../@utilities.js';
+import type * as U from '../../@utilities.js';
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
@@ -204,7 +202,7 @@ export abstract class AbstractStage<
         args: Args,
         protected readonly clr: cls.MessageMaker.Colour = 'black',
     ) {
-        super( args as Types.Objects.RecursivePartial<Args> & Args );
+        super( args as U.Types.Objects.RecursivePartial<Args> & Args );
 
         this.fns = new BuildFunctions();
     }
@@ -213,6 +211,35 @@ export abstract class AbstractStage<
 
     /* LOCAL METHODS
      * ====================================================================== */
+
+
+    /* META UTILITIES ===================================== */
+
+    /** 
+     * An object of the project’s pacakge.json file.
+     */
+    #pkg: U.Types.PackageJson | undefined = undefined;
+
+    /** 
+     * An object of the project’s pacakge.json file.
+     */
+    public get pkg(): U.Types.PackageJson {
+
+        if ( this.#pkg === undefined ) {
+            this.#pkg = JSON.parse(
+                this.fns.readFile( this.fns.args.paths.packageJson )
+            ) as U.Types.PackageJson;
+        }
+
+        return this.#pkg;
+    }
+
+    /**
+     * The package version being prepared.
+     */
+    public get pkgVersion(): string {
+        return `${ this.pkg.version }${ this.args.dryrun ? '-draft' : '' }`;
+    }
 
 
     /* MESSAGES ===================================== */

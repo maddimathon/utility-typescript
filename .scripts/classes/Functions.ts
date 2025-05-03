@@ -399,49 +399,16 @@ export class BuildFunctions extends cls.node.NodeFunctions {
     public get pkg(): U.Types.PackageJson {
 
         if ( this.#pkg === undefined ) {
-            this.#pkg = JSON.parse( this.readFile( this.args.paths.packageJson ) ) as U.Types.PackageJson;
+            this.#pkg = JSON.parse(
+                this.readFile( this.args.paths.packageJson )
+            ) as U.Types.PackageJson;
         }
 
         return this.#pkg;
     }
 
-    /**
-     * The package slug as defined in package.json.
-     */
-    #pkgName: string | undefined = undefined;
-
-    /**
-     * The package slug as defined in package.json.
-     */
-    public get pkgName(): string {
-
-        if ( this.#pkgName === undefined ) {
-            this.#pkgName = this.pkg.name;
-        }
-
-        return this.#pkgName;
-    }
-
-    /**
-     * A readable name for the package in sentence case.
-     */
-    #pkgTitle: string | undefined = undefined;
-
-    /**
-     * A readable name for the package in sentence case.
-     */
-    public get pkgTitle(): string {
-
-        if ( this.#pkgTitle === undefined ) {
-            this.#pkgTitle = this.pkg.config.title;
-        }
-
-        return this.#pkgTitle;
-    }
-
     public get pkgVersion(): string {
-        const suffix: string = this.args.dryrun ? '-draft' : '';
-        return `${ this.pkg.version }${ suffix }`;
+        return `${ this.pkg.version }${ this.args.dryrun ? '-draft' : '' }`;
     }
 
     #releasePath: string | undefined = undefined;
@@ -452,7 +419,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
             this.#releasePath = this.fs.pathRelative( this.fs.pathResolve(
                 this.pkg.config.paths.releases,
-                `${ this.pkgName.replace( /^@([^\/]+)\//, '$1_' ) }@${ this.pkgVersion.replace( /^(tpl|template)-/gi, '' ).replace( /\./gi, '-' ) }`
+                `${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }@${ this.pkgVersion.replace( /^(tpl|template)-/gi, '' ).replace( /\./gi, '-' ) }`
             ) );
         }
 
