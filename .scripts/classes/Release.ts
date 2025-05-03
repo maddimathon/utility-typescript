@@ -368,7 +368,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
 
         this.verboseLog( 'creating github release...', 2 );
-        const releaseCmd = `gh release create ${ this.fns.pkgVersion } "${ this.fns.releasePath }#${ this.fns.pkgName }@${ this.fns.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.fns.pkgVersion } — ${ this.fns.datestamp() }"`;
+        const releaseCmd = `gh release create ${ this.fns.pkgVersion } "${ this.fns.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.fns.pkgName }@${ this.fns.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.fns.pkgVersion } — ${ this.fns.datestamp() }"`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping github release during dryrun...', 3 );
@@ -380,6 +380,13 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             } );
 
         } else {
+
+            this.args.debug && this.fns.nc.varDump( { releaseCmd }, {
+                clr: this.clr,
+                depth: ( this.args.verbose ? 3 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
+                maxWidth: null,
+            } );
+
             this.fns.cmd( releaseCmd );
         }
     }
