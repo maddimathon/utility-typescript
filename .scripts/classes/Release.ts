@@ -233,7 +233,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         const newChangeLogEntry =
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
-            + `## [${ this.fns.pkgVersion }] - ${ this.fns.datestamp() }`
+            + `## **${ this.fns.pkgVersion }** -- ${ this.fns.datestamp() }`
             + '\n\n'
             + this.fns.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';

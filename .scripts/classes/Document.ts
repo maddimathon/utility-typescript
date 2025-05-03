@@ -83,7 +83,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
         await this[ stage ]();
     }
 
-    public async startEndNotice( which: "start" | "end" | string ): void {
+    public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
         this.startEndNoticeLog(
             which,
@@ -127,7 +127,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             tsconfig: 'src/ts/tsconfig.json',
 
-            basePath: './src/ts',
+            basePath: 'src/ts',
 
             blockTags: [
                 ...typeDoc.OptionDefaults.blockTags,
@@ -160,10 +160,9 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
             disableSources: false,
 
             entryPoints: [
-                // './src/ts/index.ts',
-                './src/ts/classes/index.ts',
-                './src/ts/functions/index.ts',
-                './src/ts/types/index.ts',
+                'src/ts/classes/index.ts',
+                'src/ts/functions/index.ts',
+                'src/ts/types/index.ts',
             ],
 
             excludeInternal: true,
@@ -207,7 +206,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
                 'by Maddi Mathon': 'https://www.maddimathon.com',
             },
 
-            out: './docs',
+            out: 'docs',
             plugin: [
                 'typedoc-plugin-inline-sources',
             ],

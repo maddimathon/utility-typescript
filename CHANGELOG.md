@@ -19,12 +19,17 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
-## [0.1.1] - 2025-05-02
+## **0.1.2** -- 2025-05-02
+
+Final quick fix and test to package publishing.
+
+
+## **0.1.1** -- 2025-05-02
 
 Trying to fix npm publish workflow.
 
 
-## [0.1.0] - 2025-05-02
+## **0.1.0** -- 2025-05-02
 
 **Initial release; everything is new!**
 - Set up the template from
