@@ -208,6 +208,21 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
                 .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.fns.pkg.description, 80 ) ) + '\n$2' )
                 .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.fns.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
         ), { force: true } );
+
+        if ( this.args.releasing ) {
+
+            const installRegex = /(<!--README_INSTALL-->).*?(<!--\/README_INSTALL-->)/gs;
+
+            this.fns.writeFile( 'README.md', (
+                this.fns.readFile( 'README.md' )
+                    .replace( installRegex, '$1\n' + this.fns.fns.escRegExpReplace( [
+                        '```bash',
+                        'npm i -D @maddimathon/utility-typescript@' + this.fns.pkg.version,
+                        'npm i -D github:maddimathon/utility-typescript#' + this.fns.pkg.version,
+                        '```',
+                    ].join( '\n' ) ) + '\n$2' )
+            ), { force: true } );
+        }
     }
 
     protected async test() {

@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.1
+ * @package @maddimathon/utility-typescript@0.1.2
  */
 /*!
- * @maddimathon/utility-typescript@0.1.1
+ * @maddimathon/utility-typescript@0.1.2
  * @license MIT
  */
 export * from './escRegExp.js';

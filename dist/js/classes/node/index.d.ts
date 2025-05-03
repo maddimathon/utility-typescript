@@ -15,14 +15,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.1
+ * @package @maddimathon/utility-typescript@0.1.2
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.1.1
+ * @maddimathon/utility-typescript@0.1.2
  * @license MIT
  */
 export * from './NodeConsole.js';
