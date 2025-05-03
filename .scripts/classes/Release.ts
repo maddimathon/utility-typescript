@@ -330,9 +330,19 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             } );
 
         } else {
+
+            this.args.debug && this.fns.nc.varDump( { gitCmd }, {
+                clr: this.clr,
+                depth: 2 + ( this.args[ 'log-base-level' ] ?? 0 ),
+                maxWidth: null,
+            } );
+
             this.fns.cmd( gitCmd );
             this.fns.cmd( `git tag -a -f ${ this.fns.pkgVersion } -m "release: ${ this.fns.pkgVersion }"` );
             this.fns.cmd( `git push --tags || echo ''` );
+
+            this.verboseLog( 'pushing to origin...', 2 );
+            this.fns.cmd( 'git push' );
         }
     }
 
@@ -361,7 +371,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
         const releaseCmd = `gh release create ${ this.fns.pkgVersion } "${ this.fns.releasePath }#${ this.fns.pkgName }@${ this.fns.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.fns.pkgVersion } — ${ this.fns.datestamp() }"`;
 
         if ( this.args.dryrun ) {
-            this.verboseLog( 'skipping git github release during dryrun...', 3 );
+            this.verboseLog( 'skipping github release during dryrun...', 3 );
 
             this.args.debug && this.fns.nc.varDump( { releaseCmd }, {
                 clr: this.clr,
@@ -398,9 +408,6 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                 '',
                 '',
             ].join( '\n' ), { force: true } );
-
-            this.verboseLog( 'pushing to origin...', 2 );
-            this.fns.cmd( 'git push' );
         }
     }
 }
