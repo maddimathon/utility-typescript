@@ -8,8 +8,8 @@ commitmsg="[$(date +%Y-%m-%d)] $(cat .gitcommit.md)"
 
 git commit -m "${commitmsg}"
 
-echo "---
-
+echo "
+---
 
 ${commitmsg}" >> .releasenotes.md
 

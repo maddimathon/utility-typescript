@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.0-draft
+ * @package @maddimathon/utility-typescript@0.1.0
  */
 /*!
- * @maddimathon/utility-typescript@0.1.0-draft
+ * @maddimathon/utility-typescript@0.1.0
  * @license MIT
  */
 import type { RecursivePartial } from '../types/objects/index.js';

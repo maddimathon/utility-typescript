@@ -704,7 +704,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
     }
 
     public get pkgVersion(): string {
-        const suffix: string = ( this.args.dryrun || ( !this.args.packaging && !this.args.releasing ) ) ? '-draft' : '';
+        const suffix: string = this.args.dryrun ? '-draft' : '';
         return `${ this.pkg.version }${ suffix }`;
     }
 

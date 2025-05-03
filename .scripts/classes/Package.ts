@@ -83,6 +83,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
     constructor ( args: PackageArgs ) {
         super( args, args.releasing ? 'yellow' : 'purple' );
+        this.args.packaging = true;
     }
 
 
@@ -98,7 +99,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
         this.startEndNoticeLog(
             which,
-            `PACKAGE ${ which.toUpperCase() }ING`,
+            `PACKAGING: ${ this.fns.pkgVersion }`,
             `PACKAGE FINISHED`,
             `${ which.toUpperCase() }ING PACKAGE`,
         );
@@ -144,6 +145,8 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
             only: this.args[ 'only-snap' ],
             without: this.args[ 'without-snap' ],
+
+            packaging: true,
         } );
 
         await snap.run();
@@ -158,6 +161,8 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
             only: this.args[ 'only-build' ],
             without: this.args[ 'without-build' ],
+
+            packaging: true,
         } );
 
         await build.run();

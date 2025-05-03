@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 0.1.0-draft
+# Utility TypeScript @ 0.1.0
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -28,7 +28,8 @@ npm i -D github:maddimathon/utility-typescript
 
 ## Use
 
-For an overview of all exported items, including types, see the documentation below.
+For an overview of all exported items, including types, see the documentation
+below.
 
 <!--README_DOCS_CTA-->
 <a href="https://maddimathon.github.io/utility-typescript" class="button">Read Documentation</a>

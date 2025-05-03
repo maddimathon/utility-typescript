@@ -80,6 +80,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     * ====================================================================== */
 
     constructor ( args: ReleaseArgs ) {
+        args.releasing = true;
         super( args, 'purple' );
     }
 
@@ -281,13 +282,36 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             return;
         }
 
-        for ( const o of pkgReplacements( this.fns ) ) {
-            this.replaceInFiles(
-                '**/*',
-                o.find,
-                o.replace,
-                this.args.verbose ? 4 : 3,
+        const replacementGlobs: ( string | string[] )[] = [
+            '.github/**/*',
+            [
+                '.scripts/**/*',
+                '!.scripts/vars/replacements.ts',
+            ],
+            'src/**/*',
+            [
+                'CHANGELOG.md',
+                'jest.config.js',
+                'LICENSE.md',
+                'README.md',
+            ],
+        ];
+
+        for ( const globs of replacementGlobs ) {
+            this.args.debug && this.progressLog(
+                `replacing in globs: ${ [ globs ].flat().map( s => `'${ s }'` ).join( ' ' ) }`,
+                2,
             );
+
+            for ( const o of pkgReplacements( this.fns ) ) {
+
+                this.replaceInFiles(
+                    globs,
+                    o.find,
+                    o.replace,
+                    this.args.debug ? 3 : 2,
+                );
+            }
         }
     }
 

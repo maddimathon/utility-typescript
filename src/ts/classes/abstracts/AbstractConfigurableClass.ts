@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 0.1.0
  * 
  * @packageDocumentation
  */
@@ -212,7 +212,7 @@ export namespace AbstractConfigurableClass {
     /**
      * Optional configuration for {@link AbstractConfigurableClass}.
      * 
-     * @since ___PKG_VERSION___
+     * @since 0.1.0
      * 
      * @interface
      */

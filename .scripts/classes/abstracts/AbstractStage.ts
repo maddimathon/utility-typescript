@@ -685,7 +685,7 @@ export abstract class AbstractStage<
         logLevelBase: number,
         args: Partial<Omit<ReplaceInFilesArgs, "regex" | "replacement" | "string">> = {},
     ): void {
-        this.verboseLog(
+        this.args.debug && this.progressLog(
             `replacing '${ find }' => '${ replace }'`,
             logLevelBase,
             {
@@ -715,6 +715,7 @@ export abstract class AbstractStage<
         } ).join( ' ' );
 
         const cmd: string = `replace-in-files ${ findArgs } ${ this.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
+
         this.args.debug && this.fns.nc.timestampVarDump( { cmd }, {
             clr: this.clr,
             depth: ( this.args.verbose ? 1 : 0 ) + logLevelBase + ( this.args[ 'log-base-level' ] ?? 0 ),

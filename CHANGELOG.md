@@ -17,3 +17,36 @@ and this project adheres to
 
 
 <!--CHANGELOG_NEW-->
+
+
+## [0.1.0] - 2025-05-02
+
+**Initial release; everything is new!**
+- Set up the template from
+  [template-npm-library](https://github.com/maddimathon/template-npm-library)
+- Complete build scripts and system, including stages: Compile, Build, Test,
+  Document, Snapshot, Package, Release
+    - Publishes package to NPM (via GitHub workflow), updates GitHub repo meta,
+      and creates a GitHub release
+- Automated documentation via TypeDoc
+- Testing with Jest and custom utility types
+
+### Classes
+- `./abstract` - AbstractConfigurableClass
+- Some untested beta classes:
+    - Functions, MessageMaker, VariableInspector
+    - `./node` - NodeConsole, NodeFunctions
+
+### Functions
+- `./arrays` - arrayUnique()
+- `./objects` - mergeArgs()
+- `./regex` - escRegExp(), escRegExpReplace()
+- `./strings` - slugify(), softWrapText(), timestamp(), toTitleCase()
+- typeOf()
+
+### Types
+- Type submodules: `Arrays`, `Functions`, `Meta`, `Node`, `Objects`,
+  `StringLiterals`, `Test`
+- Some simple utility types
+
+
