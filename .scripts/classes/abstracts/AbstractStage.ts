@@ -16,8 +16,6 @@ import type {
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
-import { minify } from 'minify';
-import * as prettier from "prettier";
 
 
 /* IMPORT LOCAL DEPENDENCIES */
@@ -450,14 +448,6 @@ export abstract class AbstractStage<
 
     /* Building Tools ------------------ */
 
-    public async catchErrCLI( fn: Function, logLevelBase: number, ) {
-        try {
-            await fn();
-        } catch ( err ) {
-            // nodeErrorCLI( err as NodeError, 1 + logLevelBase );
-        }
-    }
-
     protected async compileScss(
         input: string,
         output: string,
@@ -545,137 +535,6 @@ export abstract class AbstractStage<
 
         this.args.debug && this.progressLog( tscCmd, ( this.args.verbose ? 3 : 2 ) + logLevelBase );
         this.fns.cmd( tscCmd );
-    }
-
-    protected async minify(
-        path: string,
-        parser: "css" | "html" | "js",
-        logLevelBase: number,
-    ) {
-        this.args.debug && this.progressLog(
-            `minifying ${ this.fns.fs.pathRelative( path ) } (${ parser })...`,
-            0 + logLevelBase,
-            {
-                linesIn: 0,
-                linesOut: 0,
-            },
-        );
-
-        let options = {};
-
-        switch ( parser ) {
-
-            case 'css':
-                const uglyCSS = async () =>
-                    await this.prettier( path, 'css', 1 + logLevelBase, {
-                        printWidth: 10000,
-                        tabWidth: 0,
-                    } );
-
-                await this.catchErrCLI( uglyCSS, 1 + logLevelBase );
-                break;
-
-            case 'html':
-                options = {
-                    collapseBooleanAttributes: false,
-                    removeEmptyAttributes: false,
-                    removeRedundantAttributes: false,
-                    removeComments: false,
-                    removeAttributeQuotes: false,
-                    removeEmptyElements: false,
-                    removeOptionalTags: false,
-                    removeScriptTypeAttributes: false,
-                    removeStyleLinkTypeAttributes: false,
-                    useShortDoctype: false,
-                    minifyJS: true,
-                    minifyCSS: true,
-                };
-                break;
-
-            case 'js':
-                options = {
-                    type: 'putout',
-                    putout: {
-                        mangle: false,
-                        mangleClassNames: false,
-                        removeConsole: true,
-                        removeUnusedVariables: false,
-                        removeUselessSpread: false,
-                    },
-                };
-                break;
-        }
-
-        await this.catchErrCLI( async () => {
-
-            const content = this.fns.readFile( path );
-
-            if ( content ) {
-                const min = await minify[ parser ]( this.fns.readFile( path ), options );
-                this.fns.writeFile( path, min, { force: true } );
-            }
-        }, 1 + logLevelBase );
-    }
-
-    protected async prettier(
-        target: string,
-        parser: NonNullable<prettier.Options[ 'parser' ]>,
-        logLevelBase: number,
-        params: Omit<prettier.Options, "parser"> = {},
-    ): Promise<void> {
-        this.verboseLog( `prettifying ${ target } (${ parser })...`, 0 + logLevelBase );
-
-        let defaultParams: prettier.Options = {
-            arrowParens: 'always',
-            bracketSameLine: false,
-            bracketSpacing: true,
-            htmlWhitespaceSensitivity: 'strict',
-            printWidth: 80,
-            proseWrap: 'always',
-            quoteProps: 'preserve',
-            semi: true,
-            singleAttributePerLine: true,
-            singleQuote: true,
-            tabWidth: 4,
-            trailingComma: 'all',
-            useTabs: false,
-        };
-
-        switch ( parser ) {
-
-            case 'css':
-                defaultParams = {
-                    ...defaultParams,
-                    singleQuote: false,
-                };
-                break;
-
-            case 'html':
-                defaultParams = {
-                    ...defaultParams,
-                    printWidth: 10000,
-                };
-                break;
-
-            // case 'scss':
-            //     defaultParams = {
-            //         ...defaultParams,
-            //     };
-            //     break;
-        }
-
-        const pretty = await prettier.format(
-            this.fns.readFile( target ),
-            {
-                ...defaultParams,
-                ...params,
-                filepath: undefined,
-                parser,
-                write: false,
-            }
-        );
-
-        this.fns.writeFile( target, pretty, { force: true } );
     }
 
     protected replaceInFiles(

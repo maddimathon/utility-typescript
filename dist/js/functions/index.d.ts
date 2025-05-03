@@ -12,14 +12,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.2.0
+ * @package @maddimathon/utility-typescript@0.3.0
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.2.0
+ * @maddimathon/utility-typescript@0.3.0
  * @license MIT
  */
 export * from './arrays/index.js';

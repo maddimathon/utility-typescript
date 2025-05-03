@@ -13,14 +13,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.2.0
+ * @package @maddimathon/utility-typescript@0.3.0
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.2.0
+ * @maddimathon/utility-typescript@0.3.0
  * @license MIT
  */
 // /** @hidden - these modules are documented, I think including these references could create confusion */

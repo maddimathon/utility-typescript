@@ -33,117 +33,6 @@ import {
 } from '../../src/ts/index.js';
 
 
-export namespace BuildFunctions {
-
-    export type Args = cls.node.NodeFunctions.Args & {
-        dryrun: boolean;
-        packaging: boolean;
-        releasing: boolean;
-
-        ansiEscape: string;
-
-        /** Colour codes that I like for each colour. */
-        ansiColours: {
-            [ C in U.Types.ColourSlug ]: string;
-        };
-
-        copyFilesOpts: CopyFilesOpts,
-
-        /** For printing Date objects */
-        formats: {
-            date: Intl.DateTimeFormatOptions;
-            // datetime: Intl.DateTimeFormatOptions;
-            time: Intl.DateTimeFormatOptions;
-        };
-
-        globOpts: GlobOptions,
-
-        /** Language code to use for content */
-        lang: U.Types.StringLiterals.LangCode | U.Types.StringLiterals.LangLocaleCode;
-
-        /**
-         * Paths to important files/dirs used by this class.
-         */
-        paths: {
-            /**
-             * Cache directory to use while building.
-             */
-            cacheDir: string;
-            packageJson: string;
-        };
-
-        /**
-         * Function that returns the string to use for folders/zips while packaging.
-         */
-        pkgName: ( pkg: U.Types.PackageJson ) => string;
-
-        readDirOpts: ReadDirOpts,
-        readFileOpts: ReadFileOpts,
-
-        root: string,
-
-        tabWidth: number;
-        tabCharacter: string;
-
-        /** For the typeOf() method. */
-        typeOfOpts: {
-            /** If true, arrays will return `'array'` instead of `'object'`. */
-            distinguishArrays: boolean;
-        };
-
-        writeFileOpts: WriteFileOpts,
-    };
-
-    type OptsPartialKeys = "copyFilesOpts" | "globOpts" | "readDirOpts" | "readFileOpts" | "typeOfOpts" | "writeFileOpts";
-
-    export type Opts_Partial = Partial<Omit<Args, OptsPartialKeys>> & {
-        [ K in OptsPartialKeys ]?: Partial<Args[ K ]>;
-    };
-
-    /** For notices */
-    export type BuildStage =
-        | "compile"
-        | "build"
-        | "dryrun"
-        | "package"
-        | "setup"
-        | "start"
-        | "watch";
-
-    /** Default options for `copyFiles()`. */
-    export type CopyFilesOpts = {
-
-        /** Default globs to ignore when dealing with files. */
-        ignoreGlobs: string[],
-
-        /** Whether to include the default ignoreGlobs. */
-        includeDefaultIgnoreGlobs: boolean,
-    };
-
-    export type ReadDirOpts = {
-        encoding: BufferEncoding;
-        recursive: boolean;
-    };
-
-    export type ReadFileOpts = {
-        encoding: BufferEncoding;
-        flag?: string | undefined;
-    };
-
-    /** Default options for `writeFile()`. */
-    export type WriteFileOpts = {
-
-        /** Overwrite file at destination if it exists. */
-        force: boolean,
-
-        /** If a file exists at destination, append a number to the file’s basename so it’s unique. */
-        rename: boolean,
-
-        /** Value to pass to the node write file function. */
-        opts: WriteFileOptions,
-    };
-}
-
 export class BuildFunctions extends cls.node.NodeFunctions {
 
 
@@ -160,22 +49,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
             dryrun: false,
             packaging: false,
             releasing: false,
-
-            ansiColours: {
-                red: "2;165;44;50",
-                orange: "2;147;63;34",
-                yellow: "2;122;80;0",
-                green: "2;24;103;31",
-                turquoise: "2;4;98;76",
-                blue: "2;45;91;134",
-                purple: "2;121;60;150",
-                pink: "2;143;56;114",
-                grey: "2;91;87;88",
-
-                white: "2;245;245;245",
-                black: "2;51;51;51",
-            },
-            ansiEscape: '\x1b',
 
             copyFilesOpts: {
                 ignoreGlobs: [],
@@ -512,62 +385,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
 
 
-    /** CACHING
-     ** ==================================================================== **/
-
-    /** 
-     * Resolves subpath & returns absolute path in cache.
-     * 
-     * @param subPath  Relative to the cache directory set in opts.
-     * 
-     * @return  Absolute path.
-     */
-    protected _cachePath( subPath: string ): string {
-        return this.fs.pathResolve( this.args.paths.cacheDir, subPath );
-    }
-
-    /**
-     * Writes information to a file in the cache directory.
-     * 
-     * @param name   Cache name to use.
-     * @param value  Value to cache, as a string.
-     * 
-     * @return  Path to the cache or false on failure.
-     */
-    public cacheSet( name: string, value: string ): string | false {
-
-        return this.writeFile(
-            this._cachePath( `${ name }.txt` ),
-            value,
-            { force: true, rename: false, }
-        );
-    }
-
-    /**
-     * Gets information from a file in the cache directory.
-     * 
-     * @param name  Cache name to get.
-     * 
-     * @return  Contents of the cache or null if none exists.
-     */
-    public cacheGet( name: string ): string | null {
-
-        const path = this._cachePath( `${ name }.txt` );
-
-        if ( !NodeFS.existsSync( path ) ) { return null; }
-
-        return this.readFile( path );
-    }
-
-    /**
-     * @param name  Cache name to delete.
-     */
-    public cacheDel( name: string ): void {
-        return this.deleteFiles( this._cachePath( `${ name }.txt` ) );
-    }
-
-
-
     /** META UTILITIES
      ** ==================================================================== **/
 
@@ -646,23 +463,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
     /** OBJECT MANIPULATION
      ** ==================================================================== **/
-
-    /**
-     * Adds an indent after every new line.
-     * 
-     * @param str     
-     * @param indent  Optional. Default `this.tab`.
-     * 
-     * @return  The same text, but with an indent added after every new line.
-     * 
-     * @see this.tab  Default for `indent` param.
-     */
-    protected hangingIndent(
-        str: string,
-        indent: string = this.tab,
-    ): string {
-        return str.replace( /\n/gis, '\n' + indent );
-    }
 
     /**
      * Joins string arrays with a single new line and adds an indent to the
@@ -806,4 +606,108 @@ export class BuildFunctions extends cls.node.NodeFunctions {
             this._cmdErr( err as Parameters<typeof this._cmdErr>[ 0 ] );
         }
     }
+}
+
+export namespace BuildFunctions {
+
+    export type Args = cls.node.NodeFunctions.Args & {
+        dryrun: boolean;
+        packaging: boolean;
+        releasing: boolean;
+
+        copyFilesOpts: CopyFilesOpts,
+
+        /** For printing Date objects */
+        formats: {
+            date: Intl.DateTimeFormatOptions;
+            // datetime: Intl.DateTimeFormatOptions;
+            time: Intl.DateTimeFormatOptions;
+        };
+
+        globOpts: GlobOptions,
+
+        /** Language code to use for content */
+        lang: U.Types.StringLiterals.LangCode | U.Types.StringLiterals.LangLocaleCode;
+
+        /**
+         * Paths to important files/dirs used by this class.
+         */
+        paths: {
+            /**
+             * Cache directory to use while building.
+             */
+            cacheDir: string;
+            packageJson: string;
+        };
+
+        /**
+         * Function that returns the string to use for folders/zips while packaging.
+         */
+        pkgName: ( pkg: U.Types.PackageJson ) => string;
+
+        readDirOpts: ReadDirOpts,
+        readFileOpts: ReadFileOpts,
+
+        root: string,
+
+        tabWidth: number;
+        tabCharacter: string;
+
+        /** For the typeOf() method. */
+        typeOfOpts: {
+            /** If true, arrays will return `'array'` instead of `'object'`. */
+            distinguishArrays: boolean;
+        };
+
+        writeFileOpts: WriteFileOpts,
+    };
+
+    type OptsPartialKeys = "copyFilesOpts" | "globOpts" | "readDirOpts" | "readFileOpts" | "typeOfOpts" | "writeFileOpts";
+
+    export type Opts_Partial = Partial<Omit<Args, OptsPartialKeys>> & {
+        [ K in OptsPartialKeys ]?: Partial<Args[ K ]>;
+    };
+
+    /** For notices */
+    export type BuildStage =
+        | "compile"
+        | "build"
+        | "dryrun"
+        | "package"
+        | "setup"
+        | "start"
+        | "watch";
+
+    /** Default options for `copyFiles()`. */
+    export type CopyFilesOpts = {
+
+        /** Default globs to ignore when dealing with files. */
+        ignoreGlobs: string[],
+
+        /** Whether to include the default ignoreGlobs. */
+        includeDefaultIgnoreGlobs: boolean,
+    };
+
+    export type ReadDirOpts = {
+        encoding: BufferEncoding;
+        recursive: boolean;
+    };
+
+    export type ReadFileOpts = {
+        encoding: BufferEncoding;
+        flag?: string | undefined;
+    };
+
+    /** Default options for `writeFile()`. */
+    export type WriteFileOpts = {
+
+        /** Overwrite file at destination if it exists. */
+        force: boolean,
+
+        /** If a file exists at destination, append a number to the file’s basename so it’s unique. */
+        rename: boolean,
+
+        /** Value to pass to the node write file function. */
+        opts: WriteFileOptions,
+    };
 }
