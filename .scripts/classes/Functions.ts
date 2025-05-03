@@ -296,12 +296,12 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
         if ( opts.filesOnly ) {
             filepaths = filepaths.filter(
-                path => NodeFS.lstatSync( this.pathResolve( path ) ).isFile()
+                path => NodeFS.lstatSync( this.fs.pathResolve( path ) ).isFile()
             );
         }
 
         return relative ? filepaths.map(
-            ( path ) => this.pathRelative( path )
+            ( path ) => this.fs.pathRelative( path )
         ) : filepaths;
     }
 
@@ -359,7 +359,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         _path: string,
         _opts: Partial<BuildFunctions.ReadFileOpts> = {},
     ): string {
-        const path = this.pathResolve( _path );
+        const path = this.fs.pathResolve( _path );
 
         const opts: BuildFunctions.ReadFileOpts
             = this.mergeArgs(
@@ -402,8 +402,8 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         ) as BuildFunctions.WriteFileOpts;
 
         const path = !opts.force && opts.rename
-            ? this.uniquePath( this.pathResolve( _path ) )
-            : this.pathResolve( _path );
+            ? this.fs.uniquePath( this.fs.pathResolve( _path ) )
+            : this.fs.pathResolve( _path );
 
         /**
          * Write the file
@@ -413,7 +413,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         NodeFS.mkdirSync( NodePath.dirname( path ), { recursive: true } );
 
         NodeFS.writeFileSync(
-            this.pathResolve( path ),
+            this.fs.pathResolve( path ),
             content,
             opts.opts
         );
@@ -425,47 +425,9 @@ export class BuildFunctions extends cls.node.NodeFunctions {
     }
 
 
-    /** NodePath ==================================== **/
-
-    /**
-     * Returns relative paths, based on the root defined the the opts.
-     * 
-     * @param path  Path to make relative. Passed through this.pathResolve() first.
-     */
-    public pathRelative( path: string ): string {
-        return NodePath.relative( this.pathResolve(), this.pathResolve( path ) );
-    }
-
-    /**
-     * Resolves relative to the root defined the the opts.
-     */
-    public pathResolve( ...paths: string[] ): string {
-        return NodePath.resolve( this.args.root, ...paths );
-    }
-
-
 
     /** FILE UTILITIES
      ** ==================================================================== **/
-
-    /**
-     * Changes just the file name of a path
-     * 
-     * @param path     
-     * @param newName  
-     * 
-     * @return  Full path with updated basename.
-     */
-    protected _changeBaseName(
-        path: string,
-        newName: string
-    ): string {
-
-        return this.pathResolve(
-            NodePath.dirname( path ),
-            newName
-        );
-    }
 
     /**
      * Copies globbedFiles from one directory to another.
@@ -496,8 +458,8 @@ export class BuildFunctions extends cls.node.NodeFunctions {
          * Resolved versions of the directory paths with trailing slashes.
          */
         const resolved = {
-            destination: this.pathResolve( destination ).replace( /\/*$/gi, '/' ),
-            source: this.pathResolve( source ).replace( /\/*$/gi, '/' ),
+            destination: this.fs.pathResolve( destination ).replace( /\/*$/gi, '/' ),
+            source: this.fs.pathResolve( source ).replace( /\/*$/gi, '/' ),
         };
 
         const ignoreGlobs: string[] = opts.includeDefaultIgnoreGlobs ? [
@@ -505,7 +467,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         ] : opts.ignoreGlobs;
         ignoreGlobs.push( '**/._*' );
 
-        // Uses NodePath because the resolved paths have already gone through this.pathResolve()
+        // Uses NodePath because the resolved paths have already gone through this.fs.pathResolve()
         const globbedFiles: string[] = this.glob(
             glob.map( g => NodePath.resolve( resolved.source, g ) ),
             {
@@ -548,49 +510,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         }
     }
 
-    /**
-     * Returns a unique version of the inputPath (i.e., where no file exists) by
-     * appending a number.
-     *
-     * @return  A unique version of the given inputPath.
-     */
-    public uniquePath( _path: string ): string {
-        if ( !NodeFS.existsSync( _path ) ) { return _path; }
-        const inputPath: typeof _path = _path;
-
-        /** @var pathExtension  This file’s extension. */
-        const pathExtension: string = NodePath.extname( inputPath );
-
-        /** @var copyIndex  Copy index - a number to append to OG name */
-        let copyIndex = 1;
-
-        /** @var uniqueFileName */
-        let uniqueFileName = NodePath.basename(
-            inputPath,
-            pathExtension || undefined
-        ) + `-${ copyIndex }${ pathExtension }`;
-
-        /** 
-         * Iterate the index until the inputPath is unique
-         */
-        while ( NodeFS.existsSync(
-            this._changeBaseName( inputPath, uniqueFileName )
-        ) ) {
-
-            uniqueFileName = uniqueFileName.replace(
-                new RegExp(
-                    `-${ copyIndex }${ this.fns.escRegExp( pathExtension ) }$`,
-                    'gi'
-                ),
-                `-${ copyIndex + 1 }${ this.fns.escRegExpReplace( pathExtension ) }`
-            );
-            copyIndex++;
-        }
-
-        /** RETURN **/
-        return this._changeBaseName( inputPath, uniqueFileName );
-    }
-
 
 
     /** CACHING
@@ -604,7 +523,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
      * @return  Absolute path.
      */
     protected _cachePath( subPath: string ): string {
-        return this.pathResolve( this.args.paths.cacheDir, subPath );
+        return this.fs.pathResolve( this.args.paths.cacheDir, subPath );
     }
 
     /**
@@ -714,7 +633,7 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
         if ( this.#releasePath === undefined ) {
 
-            this.#releasePath = this.pathRelative( this.pathResolve(
+            this.#releasePath = this.fs.pathRelative( this.fs.pathResolve(
                 this.pkg.config.paths.releases,
                 `${ this.pkgName.replace( /^@([^\/]+)\//, '$1_' ) }@${ this.pkgVersion.replace( /^(tpl|template)-/gi, '' ).replace( /\./gi, '-' ) }`
             ) );

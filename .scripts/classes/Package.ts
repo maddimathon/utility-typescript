@@ -224,7 +224,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         ignoreGlobs: string[] = [],
     ) {
 
-        if ( NodeFS.existsSync( this.fns.pathResolve( outDir, '../' ) ) ) {
+        if ( NodeFS.existsSync( this.fns.fs.pathResolve( outDir, '../' ) ) ) {
             this.verboseLog( 'deleting current contents...', 3 );
 
             try {
@@ -294,7 +294,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
          * Directory to use as working dir when zipping the project.
          * With a trailing slash.
          */
-        const zippingPWD: string = this.fns.pathResolve( sourceDir, '..' ).replace( /\/*$/g, '' ) + '/';
+        const zippingPWD: string = this.fns.fs.pathResolve( sourceDir, '..' ).replace( /\/*$/g, '' ) + '/';
 
         /**
          * Regex that matches the path to the working directory to zip from.
@@ -304,7 +304,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         /*
          * Correcting and formatting the output zip path. 
          */
-        zipPath = this.fns.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
+        zipPath = this.fns.fs.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
 
         while ( NodeFS.existsSync( zipPath ) ) {
             zipPath = zipPath.replace( /(\/*|\.zip)?$/g, '' ) + `-${ this.fns.timestamp( null, 'yyyy_MM_dd-HH_mm' ).replace( /_/g, '' ) }.zip`;
@@ -332,7 +332,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         /*
          * Running the command. 
          */
-        const zipCMD: string = `cd "${ this.fns.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
+        const zipCMD: string = `cd "${ this.fns.fs.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
         this.fns.cmd( zipCMD );
     }
 }

@@ -13,14 +13,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.2
+ * @package @maddimathon/utility-typescript@0.2.0
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.1.2
+ * @maddimathon/utility-typescript@0.2.0
  * @license MIT
  */
 export type * as Types from './types/index.js';

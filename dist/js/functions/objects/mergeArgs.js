@@ -1,1 +1,80 @@
-const{isArray:A}=Array;const{keys:b}=Object;var c=a=>a==void 0;function d(_,B,C=!1){(typeof _!=='object'||!_)&&(_={});if(c(B)||typeof B!=='object'||!B)return _;var D={..._,...B};if(!C)return D;var e=b(_);for(const _a of e){if(!(_a in B)||c(B[_a]))continue;var f=_[_a],g=B[_a];if(f===null||g===null||c(f)||typeof f!=='object'||c(g)||typeof g!=='object')continue;if(!c(f.prototype)||!c(g.prototype))continue;if(A(f)||A(g))continue;D[_a]=d(f,g,C)}return D}export{d as mergeArgs};
+/**
+ * @since 0.1.0
+ *
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@0.2.0
+ */
+/*!
+ * @maddimathon/utility-typescript@0.2.0
+ * @license MIT
+ */
+/**
+ * Returns an updated version of `defaults` merged with the contents of
+ * `inputs`.
+ *
+ * Useful for parsing objects passed to functions with extra, optional options.
+ * Preserves all input properties.
+ *
+ * Overloaded for better typing dependent on recursion.
+ *
+ * @category Arg Objects
+ */
+export function mergeArgs(defaults, inputs, recursive = false) {
+    // invalid default object becomes an empty object
+    if (typeof defaults !== 'object' || !defaults) {
+        defaults = {};
+    }
+    // returns
+    // invalid or non-existant input means we can just return a copy of the defaults
+    if (typeof inputs === 'undefined' || typeof inputs !== 'object' || !inputs) {
+        return { ...defaults };
+    }
+    // merged, but not recursively
+    const result = {
+        ...defaults,
+        ...inputs,
+    };
+    // returns
+    // no need to get any deeper than that
+    if (!recursive) {
+        return result;
+    }
+    const defaultKeys = Object.keys(defaults);
+    for (const key of defaultKeys) {
+        // continues
+        // no override value for this key was input
+        if (!(key in inputs) || inputs[key] === undefined) {
+            continue;
+        }
+        const defaultValue = defaults[key];
+        const inputValue = inputs[key];
+        // continues
+        // this is not a property that needs recursion
+        if (defaultValue === null
+            || inputValue === null
+            || typeof defaultValue === 'undefined'
+            || typeof defaultValue !== 'object'
+            || typeof inputValue === 'undefined'
+            || typeof inputValue !== 'object') {
+            continue;
+        }
+        // continues
+        // not a simple args object and shouldn't have its props overwritten
+        if (typeof defaultValue.prototype !== 'undefined'
+            || typeof inputValue.prototype !== 'undefined') {
+            continue;
+        }
+        // continues
+        // not a simple args object and shouldn't have its props overwritten
+        if (Array.isArray(defaultValue)
+            || Array.isArray(inputValue)) {
+            continue;
+        }
+        // get deep
+        result[key] = mergeArgs(defaultValue, inputValue, recursive);
+    }
+    return result;
+}
+//# sourceMappingURL=mergeArgs.js.map

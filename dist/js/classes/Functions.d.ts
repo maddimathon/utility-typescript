@@ -1,13 +1,13 @@
 /**
- * @since tmpl-0.1.1
+ * @since 0.1.1
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.2
+ * @package @maddimathon/utility-typescript@0.2.0
  */
 /*!
- * @maddimathon/utility-typescript@0.1.2
+ * @maddimathon/utility-typescript@0.2.0
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';

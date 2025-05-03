@@ -1,5 +1,5 @@
 /**
- * @since tmpl-0.1.1
+ * @since 0.1.1
  * 
  * @packageDocumentation
  */
@@ -17,6 +17,7 @@ import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClas
 
 import { Functions } from '../Functions.js';
 import { NodeConsole } from './NodeConsole.js';
+import { NodeFiles } from './NodeFiles.js';
 
 
 /**
@@ -43,6 +44,13 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
      * @category Classes
      */
     public readonly nc: NodeConsole;
+
+    /**
+     * The instance of {@link NodeFiles} used within this class.
+     * 
+     * @category Classes
+     */
+    public readonly fs: NodeFiles;
 
     /**
      * A completed args object.
@@ -91,6 +99,7 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
         args: Partial<NodeFunctions.Args> = {},
         utils: Partial<{
             fns: Functions;
+            fs: NodeFiles;
             nc: NodeConsole;
         }> = {},
     ) {
@@ -98,6 +107,7 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
 
         this.fns = utils.fns ?? new Functions( this.ARGS_DEFAULT );
         this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT );
+        this.fs = utils.fs ?? new NodeFiles( this.ARGS_DEFAULT );
 
         this.args = this.buildArgs( args );
     }

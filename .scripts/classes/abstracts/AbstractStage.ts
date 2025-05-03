@@ -528,7 +528,7 @@ export abstract class AbstractStage<
                 const tsconfigDir = tsconfigPath.replace( /\/[^\/]+\.json$/, '/' ).replace( /^[^\/]+\.json$/, './' );
                 this.args.debug && this.progressLog( `tsconfigDir = ${ tsconfigDir }`, ( this.args.verbose ? 1 : 0 ) + logLevelBase );
 
-                const outDirGlobs = this.fns.pathRelative( this.fns.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
+                const outDirGlobs = this.fns.fs.pathRelative( this.fns.fs.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
 
                 this.verboseLog( `deleting current contents (${ outDirGlobs })...`, 1 + logLevelBase );
                 this.fns.deleteFiles( outDirGlobs );
@@ -553,7 +553,7 @@ export abstract class AbstractStage<
         logLevelBase: number,
     ) {
         this.args.debug && this.progressLog(
-            `minifying ${ this.fns.pathRelative( path ) } (${ parser })...`,
+            `minifying ${ this.fns.fs.pathRelative( path ) } (${ parser })...`,
             0 + logLevelBase,
             {
                 linesIn: 0,

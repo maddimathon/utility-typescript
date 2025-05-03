@@ -1,1 +1,742 @@
-import * as a from'@inquirer/prompts';const{isArray:b}=Array;import {AbstractConfigurableClass as c} from'../abstracts/AbstractConfigurableClass.js';import {MessageMaker as d} from'../MessageMaker.js';import {VariableInspector as e} from'../VariableInspector.js';import {mergeArgs as f} from'../../functions/index.js';export class NodeConsole extends c{static async sample(A={}){var _=new NodeConsole(A);_.h1('H1: Sample NodeConsole Output');_.log('This is a completely default, single-line message.');_.h2('H2: Multi-line Strings');_.log(['This is a completely default array of messages (via log).','','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.','Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.','---','Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.']);A.debug&&(_.separator(),_.logs([['This is a completely default array of messages (via logs).'],[''],['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.'],['Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.'],['---'],['I AM BLUE.',{clr:'blue',flag:!0}],['Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.']]));_.separator();_.log('This message has a hanging indent. \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. \nSuspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.',{hangingIndent:' '.repeat(8)});A.debug&&(_.separator(),_.log(['This array message has a hanging indent.','','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.','Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.','---','Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.'],{hangingIndent:' '.repeat(8)}));_.h2('H2: Colours');var B=['black','grey','red','orange','yellow','green','turquoise','blue','purple','pink'],D=[],F=[];for(const C of B)D.push([`This is a ${C}, italic message.`,{clr:C,italic:!0}]);_.logs(D,{joiner:'\n'});var E=[];for(const _A of B)E.push([`This is a ${_A}, bold, italic, flag message.`,{clr:_A,bold:!0,flag:!0,italic:!0}]);_.h3('H3: Flags');_.logs(E,{joiner:'\n'});for(const aA of B)F.push([`This is a ${aA}, bold, italic, reverse flag message.`,{clr:aA,bold:!0,flag:'reverse',italic:!0}]);_.heading('H4: Reversed Flags',4);_.logs(F,{joiner:'\n'});_.heading('H4: Random Test Heading',4);_.h2('H2: Styles');_.log('This is a red, italic message.',{clr:'red',italic:!0});_.log('This is a turquoise, bold message.',{clr:'turquoise',bold:!0});_.log('This message is both bold *and* italic.',{bold:!0,italic:!0});_.h2('H2: Depth');for(let i=0;i<=7;i++)_.log([`This is a depth level ${i} message.`,'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.'],{depth:i});_.h2('H2: Timestamps');_.timestampLog('This is a red, italic timestamped message.',{clr:'red',italic:!0});_.timestampLog('This is a turquoise, bold timestamped message.',{clr:'turquoise',bold:!0});_.timestampLog('This timestamped message is both bold *and* italic.',{bold:!0,italic:!0});A.debug&&(_.timestampLog(['This is an array timestamped message.','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.','Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.','Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.'],{clr:'purple'}),_.timestampLog([['This is a bulk timestamped message.'],['I AM BLUE.',{clr:'blue',flag:!0}],['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.'],['Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.'],['Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.']],{clr:'purple'}));_.h3('H3: Timestamped Depth');for(let i=0;i<=7;i++)_.timestampLog([`This is a timestamped depth level ${i} message.`,'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.'],{depth:i});if(A.debug){_.h2('H2: Variable Inspections');var g=e.sampleComplexObject;_.varDump({exampleVariable:g});_.timestampVarDump({exampleVariable:g})}_.h2('H2: Interactivity');await NodeConsole.sampleInteractivity(_,A);_.h1('All done! (in purple)',{clr:'purple'});return _}static async sampleInteractivity(aB,_B={}){!aB&&(aB=new NodeConsole(_B));var _C=async (aC,aD,aE,_D=[])=>{var _E,_F;aB.varDump({result:await aB.prompt(aC,{...aE!==null&&aE!==void 0&&aE,message:aD})});if(_B.debug)for(const aF of _D){const aG={result:await aB.prompt(aC,{...aE!==null&&aE!==void 0&&aE,...aF!==null&&aF!==void 0&&aF})},aH={...(_E=aE.msgArgs)!==null&&_E!==void 0&&_E,...(_F=aF.msgArgs)!==null&&_F!==void 0&&_F,bold:!1,italic:!1};aF.timestamp?aB.timestampVarDump(aG,aH):aB.varDump(aG,aH)}};aB.h3('H3: Bool');await _C('bool','This bool method should let you say yes or no:',{},[{message:'This method should have a depth level 1 and be red:',msgArgs:{clr:'red',depth:1}},{message:'This timestamped bool method should have a depth level 2 and be a yellow flag:',msgArgs:{clr:'yellow',depth:2,flag:!0,timestamp:!0}}]);aB.h3('H3: Input');await _C('input','This input method should let you input a custom string:',{validate:aI=>aI=='I_AM_A_ERROR'?'Your string matched the test error string, pick something else':!0},[{message:'This input method should have a depth level 1 and be orange:',msgArgs:{clr:'orange',depth:1}},{message:'This timestamped input method should have a depth level 2 and be purple:',msgArgs:{clr:'purple',depth:2,timestamp:!0}}]);aB.h3('H3: Select');await _C('select','This select method should let you choose from a multiple-choice list:',{choices:['Simple Option 1','Simple Option 2',{value:'example hidden value',description:'Option description',name:'Detailed Option 1'},{value:'Detailed Option 2',description:'Option description',disabled:!0},{value:'Detailed Option 3',disabled:'(this option is disabled with a message)'},{value:4,description:'This option returns a number',name:'Detailed Option 4'}]},[{message:'This timestamped select method should have a depth level 3 and be turquoise:',msgArgs:{clr:'turquoise',depth:3,timestamp:!0}},{message:'This select method should have a depth level 1:',msgArgs:{depth:1}},{message:'This select method should have a depth level 2:',msgArgs:{depth:2}},{message:'This select method should have a depth level 3:',msgArgs:{depth:3}}]);return aB}get ARGS_DEFAULT(){var aJ={msgMaker:{msg:{maxWidth:100,tab:'        '},paintFormat:'node'},optsRecursive:!0,separator:null,styleClrs:{disabled:'grey',error:'red',help:'grey',highlight:'purple'},varInspect:{}},aK=aJ;return aJ}buildArgs(aL){var aM=c.abstractArgs(this.ARGS_DEFAULT),aN=f(aM,aL,this.ARGS_DEFAULT.optsRecursive);aL===null||aL===void 0?void 0:aL.msgMaker&&(aN.msgMaker=d.prototype.buildArgs(f(aM.msgMaker,aL.msgMaker,d.prototype.ARGS_DEFAULT.optsRecursive)));return aN}get maxWidth(){var _a,_b,_c;return (_c=(_b=(_a=this.args.msgMaker)===null||_a===void 0?void 0:_a.msg)===null||_b===void 0?void 0:_b.maxWidth)!==null&&_c!==void 0?_c:120}constructor(aO={}){super(aO);this.msg=new d(this.args.msgMaker)}log(aP,aQ={}){var aR;console[(aR=aQ.via)!==null&&aR!==void 0?aR:'log'](this.msg.msg(aP,aQ))}logs(aS,aT={}){var aU;!b(aS)&&(aS=[aS]);console[(aU=aT.via)!==null&&aU!==void 0?aU:'log'](this.msg.msgs(aS,aT))}timestampLog(aV,aW={},aX={}){var aY;console[(aY=aW.via)!==null&&aY!==void 0?aY:'log'](this.msg.timestampMsg(aV,aW,aX))}timestampVarDump(aZ,bA={},bB={}){this.timestampLog(e.stringify(aZ,this.mergeArgs(this.args.varInspect,bA)),bA,bB)}varDump(bC,bD={}){this.log(e.stringify(bC,this.mergeArgs(this.args.varInspect,bD)),bD)}heading(bE,bF,bG={}){var bH,bI,bJ,G,h,I;var j={bold:!0,joiner:'\n',...bG,linesIn:2,linesOut:1,maxWidth:(bH=bG.maxWidth)!==null&&bH!==void 0?bH:this.maxWidth};let k=[[bE]];switch(bF) {case 1:j.clr=(bI=j.clr)!==null&&bI!==void 0?bI:null;j.linesIn=3;k=[[bE.toUpperCase(),{flag:!0,fullWidth:!0}],['='.repeat(this.maxWidth)]];break;case 2:j.clr=(bJ=j.clr)!==null&&bJ!==void 0?bJ:'purple';j.maxWidth=this.maxWidth*2/3;k=[[bE,{flag:!0,fullWidth:!0}],['+ '.repeat(j.maxWidth/2).trim()]];break;case 3:j.clr=(G=j.clr)!==null&&G!==void 0?G:'turquoise';j.maxWidth=this.maxWidth/3;k=[[bE,{flag:!0,fullWidth:!0}],['+ '.repeat(j.maxWidth/2).trim()]];break;default:j.clr=(h=j.clr)!==null&&h!==void 0?h:'green';k=[[bE,{flag:!0}],['- '.repeat(Math.ceil(Math.min(bE.length,j.maxWidth/2)/2+1.5)).trim()]];break}console[(I=j.via)!==null&&I!==void 0?I:'log'](this.msg.msgs(k,j))}separator(bK={}){var bL,bM,bN,bO,bP;var _g=this.maxWidth/4,H=' '.repeat(_g),_i={bold:!0,clr:'grey',...(bM=(bL=this.args.separator)===null||bL===void 0?void 0:bL[1])!==null&&bM!==void 0&&bM};console[(bN=bK.via)!==null&&bN!==void 0?bN:'log'](this.msg.msg((bP=(bO=this.args.separator)===null||bO===void 0?void 0:bO[0])!==null&&bP!==void 0?bP:['',H+'- '.repeat(_g).trim()+H,''],{..._i,...bK}))}async prompt(bQ,bR){var bS,bT,bU,bV,_G;var _h=this.mergeArgs({msgArgs:{}},bR,!1),{depth:_I=0,indent:J='',hangingIndent:K='',linesIn:l=0,linesOut:m=0,timestamp:n=!1}=(bS=_h.msgArgs)!==null&&bS!==void 0?bS:{},o={bold:!0,...(bT=_h.msgArgs)!==null&&bT!==void 0&&bT,linesIn:0,linesOut:0,depth:0,hangingIndent:'',indent:''},p={...this.args.styleClrs,...(bU=_h.styleClrs)!==null&&bU!==void 0&&bU,highlight:(_G=(bV=_h.styleClrs)===null||bV===void 0?void 0:bV.highlight)!==null&&_G!==void 0?_G:((o.clr&&o.clr!='black'&&o.clr!='grey')?o.clr:this.args.styleClrs.highlight)},q=this.msg.args.msg.tab.repeat(_I)+' '.repeat(K.length+J.length),r=n?this.msg.timestampMsg('',o):'',s=n?' '.repeat(this.msg.timestampMsg('').length):'',t=bQ=='select'?'  ':'';_h.theme={helpMode:'always',icon:{cursor:'→'},prefix:{done:q+(n?r:this.msg.msg('✓',{clr:p.highlight,...o!==null&&o!==void 0&&o,bold:!0})),idle:q+(n?r:this.msg.msg('?',{...o!==null&&o!==void 0&&o,bold:!0}))},style:{answer:text=>text,description:bW=>'\n'+t+this.msg.msg(bW,{...o!==null&&o!==void 0&&o,bold:!1,clr:p.highlight,italic:!(o===null||o===void 0?void 0:o.italic)}),disabled:bX=>t+this.msg.msg(bX,{...o!==null&&o!==void 0&&o,bold:!1,clr:p.disabled}),error:bY=>q+s+' '.repeat(_h.message.length+(n?1:3))+this.msg.msg(bY,{...o!==null&&o!==void 0&&o,bold:!1,clr:p.error,italic:!(o===null||o===void 0?void 0:o.italic)}),help:bZ=>this.msg.msg(bZ,{...o!==null&&o!==void 0&&o,bold:!1,clr:p.help,italic:!(o===null||o===void 0?void 0:o.italic)}),highlight:cA=>this.msg.msg(cA,{clr:p.highlight,...o!==null&&o!==void 0&&o,bold:!0,italic:!(o===null||o===void 0?void 0:o.italic)}),key:text=>`KEY: (${text})`,message:(cB,cC)=>this.msg.msg(cB,o)},validationFailureMode:'keep'};l&&this.log('\n'.repeat(l));let u;switch(bQ) {case 'bool':u=await this.promptBool(_h);break;case 'input':u=await this.promptInput(_h);break;case 'select':u=await this.promptSelect(_h);break}m&&this.log('\n'.repeat(m));return u}async promptBool(cD){return await a.confirm(this.mergeArgs({default:!1},cD,!0))}async promptInput(cE){return await a.input(this.mergeArgs({required:!0},cE,!0))}async promptSelect(cF){return await a.select(this.mergeArgs({pageSize:10},cF,!0))}debug(cG,cH={}){this.log(cG,{...cH,via:'debug'})}debugs(cI,cJ={}){this.logs(cI,{...cJ,via:'debug'})}h1(cK,cL={}){this.heading(cK,1,cL)}h2(cM,cN={}){this.heading(cM,2,cN)}h3(cO,cP={}){this.heading(cO,3,cP)}sep(...cQ){this.separator(...cQ)}warn(cR,cS={}){this.log(cR,{...cS,via:'warn'})}warns(cT,cU={}){this.logs(cT,{...cU,via:'warn'})}}(function(cV){;})(NodeConsole||(NodeConsole={}));
+/**
+ * @since 0.1.1
+ *
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@0.2.0
+ */
+/*!
+ * @maddimathon/utility-typescript@0.2.0
+ * @license MIT
+ */
+import * as inquirer from '@inquirer/prompts';
+import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
+import { MessageMaker } from '../MessageMaker.js';
+import { VariableInspector } from '../VariableInspector.js';
+import { mergeArgs, } from '../../functions/index.js';
+/**
+ * A configurable class for outputting to console within Node.
+ *
+ * Includes formatting and interactive utilities.
+ *
+ * Not currently tested, marked beta.
+ *
+ * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
+ *
+ * @beta
+ */
+export class NodeConsole extends AbstractConfigurableClass {
+    /* STATIC METHODS
+     * ====================================================================== */
+    /**
+     * Prints sample output to the console via NodeConsole.log().
+     *
+     * @category Static
+     *
+     * @returns  An example, constructed instance used for the sample.
+     */
+    static async sample(args = {}) {
+        const nc = new NodeConsole(args);
+        nc.h1('H1: Sample NodeConsole Output');
+        nc.log('This is a completely default, single-line message.');
+        nc.h2('H2: Multi-line Strings');
+        nc.log([
+            'This is a completely default array of messages (via log).',
+            '',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.',
+            'Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.',
+            '---',
+            'Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.',
+        ]);
+        if (args.debug) {
+            nc.separator();
+            nc.logs([
+                ['This is a completely default array of messages (via logs).'],
+                [''],
+                ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.'],
+                ['Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.'],
+                ['---'],
+                ['I AM BLUE.', { clr: 'blue', flag: true, }],
+                ['Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.'],
+            ]);
+        }
+        nc.separator();
+        nc.log('This message has a hanging indent. \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. \nSuspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.', { hangingIndent: ' '.repeat(8) });
+        if (args.debug) {
+            nc.separator();
+            nc.log([
+                'This array message has a hanging indent.',
+                '',
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.',
+                'Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.',
+                '---',
+                'Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.',
+            ], { hangingIndent: ' '.repeat(8) });
+        }
+        nc.h2('H2: Colours');
+        const colours = [
+            'black',
+            'grey',
+            'red',
+            'orange',
+            'yellow',
+            'green',
+            'turquoise',
+            'blue',
+            'purple',
+            'pink',
+        ];
+        const clrMsgs = [];
+        for (const clr of colours) {
+            clrMsgs.push([
+                `This is a ${clr}, italic message.`,
+                {
+                    clr,
+                    italic: true,
+                }
+            ]);
+        }
+        nc.logs(clrMsgs, { joiner: '\n' });
+        const clrFlagMsgs = [];
+        for (const clr of colours) {
+            clrFlagMsgs.push([
+                `This is a ${clr}, bold, italic, flag message.`,
+                {
+                    clr,
+                    bold: true,
+                    flag: true,
+                    italic: true,
+                },
+            ]);
+        }
+        nc.h3('H3: Flags');
+        nc.logs(clrFlagMsgs, { joiner: '\n' });
+        const clrReverseFlagMsgs = [];
+        for (const clr of colours) {
+            clrReverseFlagMsgs.push([
+                `This is a ${clr}, bold, italic, reverse flag message.`,
+                {
+                    clr,
+                    bold: true,
+                    flag: 'reverse',
+                    italic: true,
+                },
+            ]);
+        }
+        nc.heading('H4: Reversed Flags', 4);
+        nc.logs(clrReverseFlagMsgs, { joiner: '\n' });
+        nc.heading('H4: Random Test Heading', 4);
+        nc.h2('H2: Styles');
+        nc.log('This is a red, italic message.', { clr: 'red', italic: true, });
+        nc.log('This is a turquoise, bold message.', { clr: 'turquoise', bold: true, });
+        nc.log('This message is both bold *and* italic.', { bold: true, italic: true, });
+        nc.h2('H2: Depth');
+        for (let i = 0; i <= 7; i++) {
+            nc.log([
+                `This is a depth level ${i} message.`,
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.',
+            ], { depth: i });
+        }
+        nc.h2('H2: Timestamps');
+        nc.timestampLog('This is a red, italic timestamped message.', { clr: 'red', italic: true, });
+        nc.timestampLog('This is a turquoise, bold timestamped message.', { clr: 'turquoise', bold: true, });
+        nc.timestampLog('This timestamped message is both bold *and* italic.', { bold: true, italic: true, });
+        if (args.debug) {
+            nc.timestampLog([
+                'This is an array timestamped message.',
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.',
+                'Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.',
+                'Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.',
+            ], { clr: 'purple', });
+            nc.timestampLog([
+                ['This is a bulk timestamped message.'],
+                ['I AM BLUE.', { clr: 'blue', flag: true, }],
+                ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.'],
+                ['Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.'],
+                ['Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.'],
+            ], { clr: 'purple', });
+        }
+        nc.h3('H3: Timestamped Depth');
+        for (let i = 0; i <= 7; i++) {
+            nc.timestampLog([
+                `This is a timestamped depth level ${i} message.`,
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.',
+            ], { depth: i });
+        }
+        if (args.debug) {
+            nc.h2('H2: Variable Inspections');
+            const exampleVariable = VariableInspector.sampleComplexObject;
+            nc.varDump({ exampleVariable });
+            nc.timestampVarDump({ exampleVariable });
+        }
+        nc.h2('H2: Interactivity');
+        await NodeConsole.sampleInteractivity(nc, args);
+        nc.h1('All done! (in purple)', { clr: 'purple' });
+        return nc;
+    }
+    /**
+     * Samples the interactive methods.
+     *
+     * @category Static
+     */
+    static async sampleInteractivity(nc, args = {}) {
+        if (!nc) {
+            nc = new NodeConsole(args);
+        }
+        /**
+         * For testing the prompt methods.
+         */
+        const tester = async (prompt, basicMsg, config, extras = []) => {
+            var _a, _b;
+            nc.varDump({
+                result: await nc.prompt(prompt, {
+                    ...config !== null && config !== void 0 ? config : {},
+                    message: basicMsg,
+                })
+            });
+            if (args.debug) {
+                for (const extra of extras) {
+                    const inspectorVar = {
+                        result: await nc.prompt(prompt, {
+                            ...config !== null && config !== void 0 ? config : {},
+                            ...extra !== null && extra !== void 0 ? extra : {},
+                        })
+                    };
+                    const inspectorMsgArgs = {
+                        ...(_a = config.msgArgs) !== null && _a !== void 0 ? _a : {},
+                        ...(_b = extra.msgArgs) !== null && _b !== void 0 ? _b : {},
+                        bold: false,
+                        italic: false,
+                    };
+                    if (extra.timestamp) {
+                        nc.timestampVarDump(inspectorVar, inspectorMsgArgs);
+                    }
+                    else {
+                        nc.varDump(inspectorVar, inspectorMsgArgs);
+                    }
+                }
+            }
+        };
+        nc.h3('H3: Bool');
+        await tester('bool', 'This bool method should let you say yes or no:', {}, [
+            {
+                message: 'This method should have a depth level 1 and be red:',
+                msgArgs: {
+                    clr: 'red',
+                    depth: 1,
+                },
+            },
+            {
+                message: 'This timestamped bool method should have a depth level 2 and be a yellow flag:',
+                msgArgs: {
+                    clr: 'yellow',
+                    depth: 2,
+                    flag: true,
+                    timestamp: true,
+                },
+            },
+        ]);
+        nc.h3('H3: Input');
+        await tester('input', 'This input method should let you input a custom string:', {
+            validate: (value) => value == 'I_AM_A_ERROR' ? 'Your string matched the test error string, pick something else' : true,
+        }, [
+            {
+                message: 'This input method should have a depth level 1 and be orange:',
+                msgArgs: {
+                    clr: 'orange',
+                    depth: 1,
+                },
+            },
+            {
+                message: 'This timestamped input method should have a depth level 2 and be purple:',
+                msgArgs: {
+                    clr: 'purple',
+                    depth: 2,
+                    timestamp: true,
+                },
+            },
+        ]);
+        nc.h3('H3: Select');
+        await tester('select', 'This select method should let you choose from a multiple-choice list:', {
+            choices: [
+                'Simple Option 1',
+                'Simple Option 2',
+                {
+                    value: 'example hidden value',
+                    description: 'Option description',
+                    name: 'Detailed Option 1',
+                },
+                {
+                    value: 'Detailed Option 2',
+                    description: 'Option description',
+                    disabled: true,
+                },
+                {
+                    value: 'Detailed Option 3',
+                    disabled: '(this option is disabled with a message)',
+                },
+                {
+                    value: 4,
+                    description: 'This option returns a number',
+                    name: 'Detailed Option 4',
+                },
+            ],
+        }, [
+            {
+                message: 'This timestamped select method should have a depth level 3 and be turquoise:',
+                msgArgs: {
+                    clr: 'turquoise',
+                    depth: 3,
+                    timestamp: true,
+                },
+            },
+            {
+                message: 'This select method should have a depth level 1:',
+                msgArgs: {
+                    depth: 1,
+                },
+            },
+            {
+                message: 'This select method should have a depth level 2:',
+                msgArgs: {
+                    depth: 2,
+                },
+            },
+            {
+                message: 'This select method should have a depth level 3:',
+                msgArgs: {
+                    depth: 3,
+                },
+            },
+        ]);
+        return nc;
+    }
+    /* Args ===================================== */
+    /**
+     * @category Args
+     */
+    get ARGS_DEFAULT() {
+        const defaults = {
+            msgMaker: {
+                msg: {
+                    maxWidth: 100,
+                    tab: '        ',
+                },
+                paintFormat: 'node',
+            },
+            optsRecursive: true,
+            separator: null,
+            styleClrs: {
+                disabled: 'grey',
+                error: 'red',
+                help: 'grey',
+                highlight: 'purple',
+            },
+            varInspect: {},
+        };
+        // this lets the types work a bit better by letting us export the
+        // default as const but ensure that it is the same shape as the args
+        const testType = defaults;
+        testType;
+        return defaults;
+    }
+    /**
+     * Build a complete args object.
+     *
+     * @category Args
+     */
+    buildArgs(args) {
+        const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
+        // using this.mergeArgs here can cause issues because this method is 
+        // sometimes called from the prototype
+        const merged = mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        if (args === null || args === void 0 ? void 0 : args.msgMaker) {
+            merged.msgMaker = MessageMaker.prototype.buildArgs(mergeArgs(mergedDefault.msgMaker, args.msgMaker, MessageMaker.prototype.ARGS_DEFAULT.optsRecursive));
+        }
+        return merged;
+    }
+    /* Aliases ===================================== */
+    /**
+     * Gets the `maxWidth` from {@link NodeConsole.args}, or default (`120`) if
+     * none is set.
+     *
+     * @category Args
+     */
+    get maxWidth() {
+        var _a, _b, _c;
+        return (_c = (_b = (_a = this.args.msgMaker) === null || _a === void 0 ? void 0 : _a.msg) === null || _b === void 0 ? void 0 : _b.maxWidth) !== null && _c !== void 0 ? _c : 120;
+    }
+    /* CONSTRUCTOR
+     * ====================================================================== */
+    constructor(args = {}) {
+        super(args);
+        this.msg = new MessageMaker(this.args.msgMaker);
+    }
+    /* METHODS
+     * ====================================================================== */
+    /* Outputters ===================================== */
+    /**
+     * Outputs the given message to the console.
+     *
+     * @category  Outputters
+     *
+     * @see {@link MessageMaker.msg}  Used to format the message.
+     */
+    log(msg, args = {}) {
+        var _a;
+        console[(_a = args.via) !== null && _a !== void 0 ? _a : 'log'](this.msg.msg(msg, args));
+    }
+    /**
+     * Outputs the given message to the console.
+     *
+     * @category  Outputters
+     *
+     * @see {@link MessageMaker.msg}  Used to format the message.
+     */
+    logs(msgs, args = {}) {
+        var _a;
+        if (!Array.isArray(msgs)) {
+            msgs = [msgs];
+        }
+        console[(_a = args.via) !== null && _a !== void 0 ? _a : 'log'](this.msg.msgs(msgs, args));
+    }
+    /**
+     * Outputs the given message to the console prefixed with a timestamp.
+     *
+     * @category  Outputters
+     *
+     * @see {@link MessageMaker.timestampMsg}  Used to format the message.
+     *
+     * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
+     * @param args      Optional. Overrides for default message arguments. Used for the whole message.
+     * @param timeArgs  Optional. Overrides for default message arguments. Used only for the timestamp.
+     */
+    timestampLog(msg, args = {}, timeArgs = {}) {
+        var _a;
+        console[(_a = args.via) !== null && _a !== void 0 ? _a : 'log'](this.msg.timestampMsg(msg, args, timeArgs));
+    }
+    /**
+     * Outputs the given message to the console prefixed with a timestamp.
+     *
+     * @category  Outputters
+     *
+     * @see {@link NodeConsole.timestampLog}  Used to print the inspection.
+     *
+     * @see {@link VariableInspector}  Used to inspect the variable.
+     * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+     */
+    timestampVarDump(variable, args = {}, timeArgs = {}) {
+        this.timestampLog(VariableInspector.stringify(variable, this.mergeArgs(this.args.varInspect, args)), args, timeArgs);
+    }
+    /**
+     * Outputs an inspection of the given variable to the console.
+     *
+     * @category  Outputters
+     *
+     * @see {@link NodeConsole.log}  Used to print the inspection.
+     *
+     * @see {@link VariableInspector}  Used to inspect the variable.
+     * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+     */
+    varDump(variable, args = {}) {
+        this.log(VariableInspector.stringify(variable, this.mergeArgs(this.args.varInspect, args)), args);
+    }
+    /* Outputters (Pre-formatted) ===================================== */
+    /**
+     * Outputs a heading string to the console.
+     *
+     * @category  Outputters (Pre-formatted)
+     *
+     * @see {@link MessageMaker.msg}  Used to format the message.
+     */
+    heading(heading, level, _args = {}) {
+        var _a, _b, _c, _d, _e, _f;
+        const args = {
+            bold: true,
+            joiner: '\n',
+            ..._args,
+            linesIn: 2,
+            linesOut: 1,
+            maxWidth: (_a = _args.maxWidth) !== null && _a !== void 0 ? _a : this.maxWidth,
+        };
+        let messages = [
+            [heading],
+        ];
+        switch (level) {
+            case 1:
+                args.clr = (_b = args.clr) !== null && _b !== void 0 ? _b : null;
+                args.linesIn = 3;
+                messages = [
+                    [heading.toUpperCase(), { flag: true, fullWidth: true }],
+                    ['='.repeat(this.maxWidth)],
+                ];
+                break;
+            case 2:
+                args.clr = (_c = args.clr) !== null && _c !== void 0 ? _c : 'purple';
+                args.maxWidth = this.maxWidth * 2 / 3;
+                messages = [
+                    [heading, { flag: true, fullWidth: true }],
+                    ['+ '.repeat(args.maxWidth / 2).trim()],
+                ];
+                break;
+            case 3:
+                args.clr = (_d = args.clr) !== null && _d !== void 0 ? _d : 'turquoise';
+                args.maxWidth = this.maxWidth / 3;
+                messages = [
+                    [heading, { flag: true, fullWidth: true }],
+                    ['+ '.repeat(args.maxWidth / 2).trim()],
+                ];
+                break;
+            default:
+                args.clr = (_e = args.clr) !== null && _e !== void 0 ? _e : 'green';
+                messages = [
+                    [heading, { flag: true }],
+                    ['- '.repeat(Math.ceil(Math.min(heading.length, args.maxWidth / 2) / 2 + 1.5)).trim()],
+                ];
+                break;
+        }
+        console[(_f = args.via) !== null && _f !== void 0 ? _f : 'log'](this.msg.msgs(messages, args));
+    }
+    /**
+     * Outputs a separator string to the console.
+     *
+     * @category  Outputters (Pre-formatted)
+     *
+     * @see {@link MessageMaker.msg}  Used to format the message.
+     */
+    separator(args = {}) {
+        var _a, _b, _c, _d, _e;
+        const quarterWidth = this.maxWidth / 4;
+        const padding = ' '.repeat(quarterWidth);
+        const defaultArgs = {
+            bold: true,
+            clr: 'grey',
+            ...((_b = (_a = this.args.separator) === null || _a === void 0 ? void 0 : _a[1]) !== null && _b !== void 0 ? _b : {}),
+        };
+        console[(_c = args.via) !== null && _c !== void 0 ? _c : 'log'](this.msg.msg((_e = (_d = this.args.separator) === null || _d === void 0 ? void 0 : _d[0]) !== null && _e !== void 0 ? _e : [
+            '',
+            padding + '- '.repeat(quarterWidth).trim() + padding,
+            '',
+        ], { ...defaultArgs, ...args }));
+    }
+    /* Prompters ===================================== */
+    /**
+     * Public alias for internal prompting methods.
+     *
+     * @category  Interactivity
+     *
+     * @param prompter  Which prompting method to use.
+     * @param _config   Optional partial configuration for the prompting method.
+     *
+     * @see {@link NodeConsole.promptBool}  Used if `prompter` param is `"bool"`.
+     * @see {@link NodeConsole.promptInput}  Used if `prompter` param is `"input"`.
+     */
+    async prompt(prompter, _config) {
+        var _a, _b, _c, _d, _e;
+        const config = this.mergeArgs({
+            msgArgs: {},
+        }, _config, false);
+        const { depth = 0, indent = '', hangingIndent = '', linesIn = 0, linesOut = 0, timestamp = false, } = (_a = config.msgArgs) !== null && _a !== void 0 ? _a : {};
+        const msgArgs = {
+            bold: true,
+            ...(_b = config.msgArgs) !== null && _b !== void 0 ? _b : {},
+            linesIn: 0,
+            linesOut: 0,
+            depth: 0,
+            hangingIndent: '',
+            indent: '',
+        };
+        const styleClrs = {
+            ...this.args.styleClrs,
+            ...(_c = config.styleClrs) !== null && _c !== void 0 ? _c : {},
+            highlight: (_e = (_d = config.styleClrs) === null || _d === void 0 ? void 0 : _d.highlight) !== null && _e !== void 0 ? _e : ((msgArgs.clr && msgArgs.clr != 'black' && msgArgs.clr != 'grey')
+                ? msgArgs.clr
+                : this.args.styleClrs.highlight),
+        };
+        const prefixIndent = this.msg.args.msg.tab.repeat(depth)
+            + ' '.repeat(hangingIndent.length + indent.length);
+        const prefixTimestamp = timestamp ? this.msg.timestampMsg('', msgArgs) : '';
+        const prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestampMsg('').length) : '';
+        const selectCursorIndent = prompter == 'select' ? '  ' : '';
+        config.theme = {
+            helpMode: 'always',
+            icon: {
+                cursor: '→',
+            },
+            prefix: {
+                done: prefixIndent + (timestamp ? prefixTimestamp : this.msg.msg('✓', {
+                    clr: styleClrs.highlight,
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: true,
+                })),
+                idle: prefixIndent + (timestamp ? prefixTimestamp : this.msg.msg('?', {
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: true,
+                })),
+            },
+            style: {
+                answer: (text) => text,
+                description: (text) => '\n' + selectCursorIndent + this.msg.msg(text, {
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: false,
+                    clr: styleClrs.highlight,
+                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
+                }),
+                disabled: (text) => selectCursorIndent + this.msg.msg(text, {
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: false,
+                    clr: styleClrs.disabled,
+                }),
+                error: (text) => prefixIndent + prefixTimestampIndent + ' '.repeat(config.message.length + (timestamp ? 1 : 3)) + this.msg.msg(text, {
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: false,
+                    clr: styleClrs.error,
+                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
+                }),
+                help: (text) => this.msg.msg(text, {
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: false,
+                    clr: styleClrs.help,
+                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
+                }),
+                highlight: (text) => this.msg.msg(text, {
+                    clr: styleClrs.highlight,
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    bold: true,
+                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
+                }),
+                key: (text) => 'KEY: (' + text + ')',
+                message: (text, status) => this.msg.msg(text, msgArgs),
+            },
+            validationFailureMode: 'keep',
+        };
+        if (linesIn) {
+            this.log('\n'.repeat(linesIn));
+        }
+        let result;
+        switch (prompter) {
+            case 'bool':
+                result = await this.promptBool(config);
+                break;
+            case 'input':
+                result = await this.promptInput(config);
+                break;
+            case 'select':
+                result = await this.promptSelect(config);
+                break;
+        }
+        if (linesOut) {
+            this.log('\n'.repeat(linesOut));
+        }
+        return result;
+    }
+    /**
+     * @category  Interactivity
+     */
+    async promptBool(config) {
+        const defaultConfig = {
+            default: false,
+        };
+        return await inquirer.confirm(this.mergeArgs(defaultConfig, config, true));
+    }
+    /**
+     * @category  Interactivity
+     */
+    async promptInput(config) {
+        const defaultConfig = {
+            required: true,
+        };
+        return await inquirer.input(this.mergeArgs(defaultConfig, config, true));
+    }
+    /**
+     * @category  Interactivity
+     */
+    async promptSelect(config) {
+        const defaultConfig = {
+            pageSize: 10,
+        };
+        return await inquirer.select(this.mergeArgs(defaultConfig, config, true));
+    }
+    /* Aliases ===================================== */
+    /**
+     * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
+     *
+     * @category  Aliases
+     */
+    debug(msg, args = {}) {
+        this.log(msg, { ...args, via: 'debug' });
+    }
+    /**
+     * Alias for {@link NodeConsole.logs} with `via: "debug"` argument.
+     *
+     * @category  Aliases
+     */
+    debugs(msgs, args = {}) {
+        this.logs(msgs, { ...args, via: 'debug' });
+    }
+    /**
+     * Outputs a level-one heading string to the console.
+     *
+     * Alias for {@link MessageMaker.heading}.
+     *
+     * @category  Outputters (Pre-formatted)
+     */
+    h1(heading, args = {}) {
+        this.heading(heading, 1, args);
+    }
+    /**
+     * Outputs a level-two heading string to the console.
+     *
+     * Alias for {@link MessageMaker.heading}.
+     *
+     * @category  Outputters (Pre-formatted)
+     */
+    h2(heading, args = {}) {
+        this.heading(heading, 2, args);
+    }
+    /**
+     * Outputs a level-three heading string to the console.
+     *
+     * Alias for {@link MessageMaker.heading}.
+     *
+     * @category  Outputters (Pre-formatted)
+     */
+    h3(heading, args = {}) {
+        this.heading(heading, 3, args);
+    }
+    /**
+     * Alias for {@link NodeConsole.separator}.
+     *
+     * @category  Aliases
+     */
+    sep(...params) {
+        this.separator(...params);
+    }
+    /**
+     * Alias for {@link NodeConsole.log} with `via: "warn"` argument.
+     *
+     * @category  Aliases
+     */
+    warn(msg, args = {}) {
+        this.log(msg, { ...args, via: 'warn' });
+    }
+    /**
+     * Alias for {@link NodeConsole.logs} with `via: "warn"` argument.
+     *
+     * @category  Aliases
+     */
+    warns(msgs, args = {}) {
+        this.logs(msgs, { ...args, via: 'warn' });
+    }
+}
+/**
+ * Used only for {@link NodeConsole}.
+ *
+ * @beta
+ */
+(function (NodeConsole) {
+    ;
+    ;
+})(NodeConsole || (NodeConsole = {}));
+//# sourceMappingURL=NodeConsole.js.map

@@ -1,18 +1,19 @@
 /**
- * @since tmpl-0.1.1
+ * @since 0.1.1
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.1.2
+ * @package @maddimathon/utility-typescript@0.2.0
  */
 /*!
- * @maddimathon/utility-typescript@0.1.2
+ * @maddimathon/utility-typescript@0.2.0
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { Functions } from '../Functions.js';
 import { NodeConsole } from './NodeConsole.js';
+import { NodeFiles } from './NodeFiles.js';
 /**
  * A configurable class of utility functions.
  *
@@ -32,6 +33,12 @@ export declare class NodeFunctions extends AbstractConfigurableClass<NodeFunctio
      */
     readonly nc: NodeConsole;
     /**
+     * The instance of {@link NodeFiles} used within this class.
+     *
+     * @category Classes
+     */
+    readonly fs: NodeFiles;
+    /**
      * A completed args object.
      *
      * @category Args
@@ -50,6 +57,7 @@ export declare class NodeFunctions extends AbstractConfigurableClass<NodeFunctio
      */
     constructor(args?: Partial<NodeFunctions.Args>, utils?: Partial<{
         fns: Functions;
+        fs: NodeFiles;
         nc: NodeConsole;
     }>);
 }

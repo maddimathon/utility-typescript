@@ -1,1 +1,73 @@
-import {mergeArgs as a} from'../objects/mergeArgs.js';function b(A=null,_={}){var c,d=a({date:!1, time:!1, debug:!1, format:a({date:{year:'numeric',month:'2-digit',day:'2-digit'},time:{hour12:!1,hour:'2-digit',minute:'2-digit'}},(c=_.format)!==null&&c!==void 0?c:{}), lang:'en-CA', separator:' @ '},_);d.debug&&console.log('timestamp() args =',d);A===null&&(A=new Date);(!d.date&&!d.time)&&(d.time=!0);var e=[];d.date&&e.push(A.toLocaleString(d.lang,d.format.date));d.time&&e.push(A.toLocaleString(d.lang,d.format.time));d.debug&&console.log('timestamp() formatted =',e);return e.join(d.separator)}export{b as timestamp};
+/**
+ * @since 0.1.0
+ *
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@0.2.0
+ */
+/*!
+ * @maddimathon/utility-typescript@0.2.0
+ * @license MIT
+ */
+// import type {  } from '../../types/string-literals/index.js';
+import { mergeArgs } from '../objects/mergeArgs.js';
+/**
+ * Formats a date in a predictable way.
+ *
+ * Meant for human-readable timestamps, not ISO or Unix, etc.
+ *
+ * @category Formatters
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
+ *
+ * @param date   Optional. Date object to format. Defaults to now.
+ * @param _args  Optional.
+ *
+ * @return  Formatted date string.
+ */
+export function timestamp(date = null, _args = {}) {
+    var _a;
+    const DEFAULT_ARGS = {
+        date: false,
+        time: false,
+        debug: false,
+        format: mergeArgs({
+            date: {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            },
+            time: {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                // second: '2-digit',
+            },
+        }, (_a = _args.format) !== null && _a !== void 0 ? _a : {}),
+        lang: 'en-CA',
+        separator: ' @ ',
+    };
+    const args = mergeArgs(DEFAULT_ARGS, _args);
+    if (args.debug) {
+        console.log('timestamp() args =', args);
+    }
+    if (date === null) {
+        date = new Date();
+    }
+    if (!args.date && !args.time) {
+        args.time = true;
+    }
+    const formatted = [];
+    if (args.date) {
+        formatted.push(date.toLocaleString(args.lang, args.format.date));
+    }
+    if (args.time) {
+        formatted.push(date.toLocaleString(args.lang, args.format.time));
+    }
+    if (args.debug) {
+        console.log('timestamp() formatted =', formatted);
+    }
+    return formatted.join(args.separator);
+}
+//# sourceMappingURL=timestamp.js.map

@@ -1,1 +1,46 @@
-function a(A){let b=A.toLowerCase();b=b.replace(/([àáâãäåæā])/gi,'a');b=b.replace(/([èéêëēėę])/gi,'e');b=b.replace(/([ìíîïīį])/gi,'i');b=b.replace(/([òóôõöøōœ])/gi,'o');b=b.replace(/([ùúûüū])/gi,'u');b=b.replace(/(ñ|ń)/gi,'n');b=b.replace(/(\s)&+(\s)/gi,'$1and$2');b=b.replace(/[^\s\w\/\:\;|–—\-]+/gi,'');b=b.replace(/[^\d|a-z]+/gi,'-');b=b.replace(/(^[\s|\-]+|[\s|\-]+$)/gi,'');b=b.replace(/-+/gi,'-');return b}export{a as slugify};
+/**
+ * @since 0.1.0
+ *
+ * @packageDocumentation
+ */
+/**
+ * @package @maddimathon/utility-typescript@0.2.0
+ */
+/*!
+ * @maddimathon/utility-typescript@0.2.0
+ * @license MIT
+ */
+/**
+ * Turns the given slug into a string with only a-z, 0-9, and hyphens.
+ *
+ * @category  Escapers
+ *
+ * @param input  String to convert.
+ *
+ * @return  Slug version of the input string.
+ *
+ * @source
+ */
+export function slugify(input) {
+    let slug = input.toLowerCase();
+    // replace accented letters
+    slug = slug.replace(/(À|Á|Â|Ä|Ã|Æ|Å|Ā|à|á|â|ä|ã|æ|å|ā)/gi, 'a');
+    slug = slug.replace(/(È|É|Ê|Ë|Ē|Ė|Ę|è|é|ê|ë|ē|ė|ę)/gi, 'e');
+    slug = slug.replace(/(Î|Ï|Í|Ī|Į|Ì|î|ï|í|ī|į|ì)/gi, 'i');
+    slug = slug.replace(/(Ô|Ö|Ò|Ó|Œ|Ø|Ō|Õ|ô|ö|ò|ó|œ|ø|ō|õ)/gi, 'o');
+    slug = slug.replace(/(Û|Ü|Ù|Ú|Ū|û|ü|ù|ú|ū)/gi, 'u');
+    slug = slug.replace(/(Ñ|Ń|ñ|ń)/gi, 'n');
+    // change ampersands to 'and'
+    slug = slug.replace(/(\s)&+(\s)/gi, '$1and$2');
+    // remove non-letters & non-digits (except spaces & some punctuation, 
+    // which will become dashes)
+    slug = slug.replace(/[^\s|a-z|\d|\n|\-|–|—|_|\:|\;|\/]+/gi, '');
+    // and now everything else is a dash!
+    slug = slug.replace(/[^\d|a-z]+/gi, '-');
+    // remove leading/trailing "whitespace"
+    slug = slug.replace(/(^[\n|\s|\-]+|[\n|\s|\-]+$)/gi, '');
+    // remove multi-dashes
+    slug = slug.replace(/-+/gi, '-');
+    return slug;
+}
+//# sourceMappingURL=slugify.js.map
