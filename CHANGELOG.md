@@ -19,6 +19,16 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **0.2.0** -- 2025-05-02
+
+### Added
+- NodeFiles class for paths & files within node
+- NodeFiles methods - changeBaseName(), pathRelative(), pathResolve(), uniquePath()
+
+### Changed
+- Removed minimize in Build script -- seemed to be causing occasaional issues
+
+
 ## **0.1.2** -- 2025-05-02
 
 Final quick fix and test to package publishing.

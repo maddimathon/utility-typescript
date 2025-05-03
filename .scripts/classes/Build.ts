@@ -54,7 +54,6 @@ export type BuildStages = typeof buildStages[ number ];
 
 const buildStages = [
     'compile',
-    'minimize',
     'replace',
     'test',
     'document',
@@ -154,23 +153,6 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         } );
 
         await doc.run();
-    }
-
-    protected async minimize() {
-        this.progressLog( 'minifying files...', 1 );
-
-        this.verboseLog( 'minifying javascript...', 2 );
-
-        const jsPaths = this.fns.glob( 'dist/js/**/*.js', {
-            ignore: [
-                '**/*.test.d.ts',
-                '**/*.test.js',
-            ].concat( ( this.fns.args.globOpts?.ignore ?? [] ) as string[] ),
-        } );
-
-        for ( const path of jsPaths ) {
-            this.minify( path, 'js', ( this.args.verbose ? 3 : 2 ) );
-        }
     }
 
     protected async replace() {

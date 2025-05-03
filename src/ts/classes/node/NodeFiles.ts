@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 0.2.0
  * 
  * @packageDocumentation
  */
