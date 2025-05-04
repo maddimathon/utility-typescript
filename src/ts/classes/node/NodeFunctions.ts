@@ -52,13 +52,6 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
      */
     public readonly fs: NodeFiles;
 
-    /**
-     * A completed args object.
-     * 
-     * @category Args
-     */
-    public override readonly args: NodeFunctions.Args;
-
     public get ARGS_DEFAULT(): NodeFunctions.Args {
 
         return {
@@ -107,9 +100,7 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
 
         this.fns = utils.fns ?? new Functions( this.ARGS_DEFAULT );
         this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT );
-        this.fs = utils.fs ?? new NodeFiles( this.ARGS_DEFAULT );
-
-        this.args = this.buildArgs( args );
+        this.fs = utils.fs ?? new NodeFiles( this.ARGS_DEFAULT, { nc: this.nc } );
     }
 
 

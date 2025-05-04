@@ -164,43 +164,40 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             } );
 
             // corrects package number
-            if ( !this.args.dryrun || this.args.debug ) {
+            const inputVersionMessage = 'What version is being released?';
 
-                const inputVersionMessage = 'What version is being released?';
+            const inputVersionIndent: string = ' '.repeat(
+                ( depth * this.fns.nc.msg.args.msg.tab.length )
+                + inputVersionMessage.length
+                + 11
+            );
 
-                const inputVersionIndent: string = ' '.repeat(
-                    ( depth * this.fns.nc.msg.args.msg.tab.length )
-                    + inputVersionMessage.length
-                    + 11
+            const inputVersion = ( await this.fns.nc.prompt( 'input', {
+                ...promptArgs,
+                message: inputVersionMessage,
+
+                default: this.pkg.version,
+                validate: ( value ) => (
+                    value.trim().match( /^\d+\.\d+\.\d+(\-((alpha|beta)(\.\d+)?|\d+\.\d+\.\d+))?(\+[^\s]+)?$/gi )
+                        ? true
+                        : softWrapText(
+                            'The version should be in [MAJOR].[MINOR].[PATCH] format, optionally suffixed with `-alpha[.#]`, `-beta[.#]`, another valid version code, or metadata prefixed with `+`.',
+                            Math.max( 20, ( this.fns.nc.msg.args.msg.maxWidth ?? 80 ) - inputVersionIndent.length )
+                        ).split( /\n/g ).join( '\n' + inputVersionIndent )
+                ),
+            } ) ).trim();
+
+            if ( inputVersion !== this.pkg.version ) {
+
+                const currentPkgJson = this.fns.fs.readFile( 'package.json' );
+
+                this.pkg.version = inputVersion;
+
+                this.fns.fs.writeFile(
+                    'package.json',
+                    currentPkgJson.replace( /"version":\s*"[^"]*"/gi, this.fns.fns.escRegExpReplace( `"version": "${ inputVersion }"` ) ),
+                    { force: true }
                 );
-
-                const inputVersion = ( await this.fns.nc.prompt( 'input', {
-                    ...promptArgs,
-                    message: inputVersionMessage,
-
-                    default: this.pkg.version,
-                    validate: ( value ) => (
-                        value.trim().match( /^\d+\.\d+\.\d+(\-((alpha|beta)(\.\d+)?|\d+\.\d+\.\d+))?(\+[^\s]+)?$/gi )
-                            ? true
-                            : softWrapText(
-                                'The version should be in [MAJOR].[MINOR].[PATCH] format, optionally suffixed with `-alpha[.#]`, `-beta[.#]`, another valid version code, or metadata prefixed with `+`.',
-                                Math.max( 20, ( this.fns.nc.msg.args.msg.maxWidth ?? 80 ) - inputVersionIndent.length )
-                            ).split( /\n/g ).join( '\n' + inputVersionIndent )
-                    ),
-                } ) ).trim();
-
-                if ( inputVersion !== this.pkg.version ) {
-
-                    const currentPkgJson = this.fns.readFile( 'package.json' );
-
-                    this.pkg.version = inputVersion;
-
-                    this.fns.writeFile(
-                        'package.json',
-                        currentPkgJson.replace( /"version":\s*"[^"]*"/gi, this.fns.fns.escRegExpReplace( `"version": "${ inputVersion }"` ) ),
-                        { force: true }
-                    );
-                }
             }
 
             // returns if prep questions fail
@@ -235,7 +232,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
             + `## **${ this.pkgVersion }** -- ${ this.fns.datestamp() }`
             + '\n\n'
-            + this.fns.readFile( '.releasenotes.md' ).trim()
+            + this.fns.fs.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';
 
         // returns
@@ -251,8 +248,8 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             return;
         }
 
-        this.fns.writeFile( 'CHANGELOG.md', (
-            this.fns.readFile( 'CHANGELOG.md' )
+        this.fns.fs.writeFile( 'CHANGELOG.md', (
+            this.fns.fs.readFile( 'CHANGELOG.md' )
                 .replace( newEntryRegex, this.fns.fns.escRegExpReplace( newChangeLogEntry ) )
         ), { force: true } );
     }
@@ -303,7 +300,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                 2,
             );
 
-            for ( const o of pkgReplacements( this.fns ) ) {
+            for ( const o of pkgReplacements( this ) ) {
 
                 this.replaceInFiles(
                     globs,
@@ -368,7 +365,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
 
         this.verboseLog( 'creating github release...', 2 );
-        const releaseCmd = `gh release create ${ this.pkgVersion } "${ this.fns.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.pkgVersion } — ${ this.fns.datestamp() }"`;
+        const releaseCmd = `gh release create ${ this.pkgVersion } "${ this.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.pkgVersion } — ${ this.fns.datestamp() }"`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping github release during dryrun...', 3 );
@@ -396,7 +393,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         if ( !this.args.dryrun ) {
             this.verboseLog( 'resetting release notes...', 2 );
-            this.fns.writeFile( '.releasenotes.md', [
+            this.fns.fs.writeFile( '.releasenotes.md', [
                 '',
                 '### Breaking',
                 '- ',

@@ -8,8 +8,6 @@
  * @license MIT
  */
 
-// import { F } from '../@utilities.js';
-
 import { NodeConsole } from '../../src/ts/classes/node/NodeConsole.js';
 
 await NodeConsole.sample( { debug: false, msgMaker: { msg: { maxWidth: 80 } } } );

@@ -10,8 +10,6 @@
 
 import minimist from 'minimist';
 
-// import { F } from './@utilities.js';
-
 import type { ReleaseArgs } from './classes/Release.js';
 import { Release } from './classes/Release.js';
 

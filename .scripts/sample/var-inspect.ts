@@ -8,8 +8,6 @@
  * @license MIT
  */
 
-// import { F } from '../@utilities.js';
-
 import { VariableInspector } from '../../src/ts/classes/VariableInspector.js';
 
 const defaultFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str;
@@ -35,5 +33,5 @@ VariableInspector.sample( {
     }
 } );
 
-// F.writeFile( `.scripts/tmp/var-inspect-OBJ_${ F.fns.slugify( F.datetimestamp() ) }.json`, JSON.stringify( vi, null, 4 ), { force: true } );
-// F.writeFile( `.scripts/tmp/var-inspect-OBJ_${ F.fns.slugify( F.datetimestamp() ) }.txt`, vi.toString(), { force: true } );
+// F.fs.writeFile( `.scripts/tmp/var-inspect-OBJ_${ F.fns.slugify( F.datetimestamp() ) }.json`, JSON.stringify( vi, null, 4 ), { force: true } );
+// F.fs.writeFile( `.scripts/tmp/var-inspect-OBJ_${ F.fns.slugify( F.datetimestamp() ) }.txt`, vi.toString(), { force: true } );

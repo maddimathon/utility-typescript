@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.3.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
 import { mergeArgs } from '../../functions/index.js';
@@ -48,8 +48,7 @@ export class NodeFunctions extends AbstractConfigurableClass {
         super(args);
         this.fns = (_a = utils.fns) !== null && _a !== void 0 ? _a : new Functions(this.ARGS_DEFAULT);
         this.nc = (_b = utils.nc) !== null && _b !== void 0 ? _b : new NodeConsole(this.ARGS_DEFAULT);
-        this.fs = (_c = utils.fs) !== null && _c !== void 0 ? _c : new NodeFiles(this.ARGS_DEFAULT);
-        this.args = this.buildArgs(args);
+        this.fs = (_c = utils.fs) !== null && _c !== void 0 ? _c : new NodeFiles(this.ARGS_DEFAULT, { nc: this.nc });
     }
 }
 //# sourceMappingURL=NodeFunctions.js.map

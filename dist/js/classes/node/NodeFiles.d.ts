@@ -4,23 +4,34 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.3.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
+import { NodeConsole } from './NodeConsole.js';
 /**
  * A configurable class for working with files and paths in node.
  */
 export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     *
+     * @category Classes
+     */
+    readonly nc: NodeConsole;
     /**
      * @category Args
      */
     get ARGS_DEFAULT(): {
         readonly optsRecursive: false;
         readonly root: "./";
+        readonly writeFileArgs: {
+            readonly force: false;
+            readonly rename: false;
+        };
     };
     /**
      * Build a complete args object.
@@ -28,7 +39,36 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @category Args
      */
     buildArgs(args?: Partial<NodeFiles.Args>): NodeFiles.Args;
-    constructor(args?: Partial<NodeFiles.Args>);
+    constructor(args?: Partial<NodeFiles.Args>, utils?: Partial<{
+        nc: NodeConsole;
+    }>);
+    /**
+     * Deletes given files.
+     *
+     * @param paths         Paths to delete. Absolute or relative to root dir.
+     * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
+     * @param logBaseLevel  Base depth for console messages (via NodeConsole).
+     */
+    deleteFiles(paths: string[], dryRun?: boolean, logBaseLevel?: number): void;
+    /**
+     * Reads a file.
+     *
+     * @param path  File to read.
+     * @param args  Optional configuration.
+     *
+     * @return  Contents of the file.
+     */
+    readFile(path: string, args?: Partial<NodeFiles.ReadFileArgs>): string;
+    /**
+     * Writes a file.
+     *
+     * @param path     Location to write file.
+     * @param content  Contents to write.
+     * @param args     Optional configuration.
+     *
+     * @return  Path to file if written, or false on failure.
+     */
+    writeFile(path: string, content: string | string[], args?: Partial<NodeFiles.WriteFileArgs>): string | false;
     /**
      * Changes just the file name of a path
      *
@@ -62,11 +102,13 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @param _path  Path to make unique.
+     * @see {@link NodeFiles.changeBaseName}  Used to update the basename to test for uniqueness.
+     *
+     * @param inputPath  Path to make unique.
      *
      * @return  Absolute, unique version of the given `_path`.
      */
-    uniquePath(_path: string): string;
+    uniquePath(inputPath: string): string;
 }
 /**
  * Used only for {@link NodeFiles}.
@@ -82,6 +124,35 @@ export declare namespace NodeFiles {
          * @default './'
          */
         root: string;
+        /**
+         * Default configuration for {@link NodeFiles.writeFile}.
+         */
+        writeFileArgs: WriteFileArgs;
+    }
+    /**
+     * Optional configuration for {@link NodeFiles.readFile}.
+     */
+    interface ReadFileArgs {
+        encoding: BufferEncoding;
+        flag?: string | undefined;
+    }
+    /**
+     * Optional configuration for {@link NodeFiles.writeFile}.
+     */
+    interface WriteFileArgs extends Partial<ReadFileArgs> {
+        /**
+         * Overwrite file at destination if it exists.
+         *
+         * @default false
+         */
+        force: boolean;
+        /**
+         * If a file exists at destination, append a number to the file’s
+         * basename so it’s unique.
+         *
+         * @default false
+         */
+        rename: boolean;
     }
 }
 //# sourceMappingURL=NodeFiles.d.ts.map

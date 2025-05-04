@@ -23,6 +23,8 @@ import {
     mergeArgs,
 } from '../../functions/index.js';
 
+import { NodeConsole } from './NodeConsole.js';
+
 
 /**
  * A configurable class for working with files and paths in node.
@@ -33,6 +35,13 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
 
     /* LOCAL PROPERTIES
      * ====================================================================== */
+
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     * 
+     * @category Classes
+     */
+    public readonly nc: NodeConsole;
 
 
     /* Args ===================================== */
@@ -45,6 +54,10 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
         const defaults = {
             optsRecursive: false,
             root: './',
+            writeFileArgs: {
+                force: false,
+                rename: false,
+            },
         } as const;
 
         // this lets the types work a bit better by letting us export the
@@ -82,8 +95,15 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    public constructor ( args: Partial<NodeFiles.Args> = {} ) {
+    public constructor (
+        args: Partial<NodeFiles.Args> = {},
+        utils: Partial<{
+            nc: NodeConsole;
+        }> = {},
+    ) {
         super( args );
+
+        this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT );
     }
 
 
@@ -93,6 +113,117 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
 
 
     /* Files ===================================== */
+
+    /**
+     * Deletes given files.
+     * 
+     * @param paths         Paths to delete. Absolute or relative to root dir.
+     * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
+     * @param logBaseLevel  Base depth for console messages (via NodeConsole).
+     */
+    public deleteFiles(
+        paths: string[],
+        dryRun: boolean = false,
+        logBaseLevel: number = 0,
+    ): void {
+
+        for ( const path of paths ) {
+            // continues
+            if ( !NodeFS.existsSync( path ) ) { continue; }
+
+            const stat = NodeFS.statSync( path );
+
+            if ( stat.isDirectory() ) {
+
+                if ( dryRun ) {
+                    this.nc.timestampLog( 'deleting directory: ' + path, { depth: logBaseLevel } );
+                } else {
+                    NodeFS.rmSync( path, { recursive: true, force: true } );
+                }
+
+            } else if ( stat.isFile() || stat.isSymbolicLink() ) {
+
+                if ( dryRun ) {
+                    this.nc.timestampLog( 'deleting file: ' + path, { depth: logBaseLevel } );
+                } else {
+                    NodeFS.unlinkSync( path );
+                }
+            }
+        }
+    }
+
+    /**
+     * Reads a file.
+     * 
+     * @param path  File to read.
+     * @param args  Optional configuration.
+     * 
+     * @return  Contents of the file.
+     */
+    public readFile(
+        path: string,
+        args: Partial<NodeFiles.ReadFileArgs> = {},
+    ): string {
+
+        return NodeFS.readFileSync(
+            this.pathResolve( path ),
+            {
+                ...args,
+                encoding: 'utf-8',
+            }
+        );
+    }
+
+    /**
+     * Writes a file.
+     * 
+     * @param path     Location to write file.
+     * @param content  Contents to write.
+     * @param args     Optional configuration.
+     * 
+     * @return  Path to file if written, or false on failure.
+     */
+    public writeFile(
+        path: string,
+        content: string | string[],
+        args: Partial<NodeFiles.WriteFileArgs> = {},
+    ): string | false {
+
+        path = this.pathResolve( path );
+
+        content = Array.isArray( content )
+            ? content.join( '\n' )
+            : content;
+
+        args = this.mergeArgs<
+            any,
+            NodeFiles.WriteFileArgs,
+            Partial<NodeFiles.WriteFileArgs>
+        >(
+            this.args.writeFileArgs,
+            args,
+            false
+        );
+
+        // returns if we aren't forcing or renaming
+        if ( NodeFS.existsSync( path ) ) {
+
+            // returns
+            if ( !args.force && !args.rename ) {
+                return false;
+            }
+
+            if ( args.rename ) {
+                path = this.uniquePath( path );
+            }
+        }
+
+        NodeFS.mkdirSync( NodePath.dirname( path ), { recursive: true } );
+
+        NodeFS.writeFileSync( path, content, args );
+
+        return NodeFS.existsSync( path ) && path;
+    }
 
 
     /* Paths ===================================== */
@@ -152,46 +283,45 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @param _path  Path to make unique.
+     * @see {@link NodeFiles.changeBaseName}  Used to update the basename to test for uniqueness.
+     * 
+     * @param inputPath  Path to make unique.
      *
      * @return  Absolute, unique version of the given `_path`.
      */
-    public uniquePath( _path: string ): string {
-        _path = this.pathResolve( _path );
-        if ( !NodeFS.existsSync( _path ) ) { return _path; }
+    public uniquePath( inputPath: string ): string {
+        inputPath = this.pathResolve( inputPath );
+        if ( !NodeFS.existsSync( inputPath ) ) { return inputPath; }
 
-        const inputPath: string = _path;
+        /** Used to iterate until we have a unique path. */
+        const inputBaseName: string = NodePath.basename(
+            inputPath,
+            NodePath.extname( inputPath ) || undefined
+        );
 
-        /** This file’s extension. */
-        const pathExtension: string | undefined = NodePath.extname( inputPath ) || undefined;
-
-        let uniqueBaseName: string = NodePath.basename( inputPath, pathExtension );
-
-        const inputPathIsNumbered: boolean = uniqueBaseName.match( /-(\d+)$/gi ) !== null;
+        /** Used as a base to append copyIndex to. */
+        const inputBaseNameWithoutNumber: string = inputBaseName.replace( /-(\d+)$/gi, '' );
 
         /** Copy index - a number to append to OG name. */
-        let copyIndex: number = inputPathIsNumbered
-            ? Number( inputPath.replace( /^.+-(\d+)\.[a-z|0-9|\.]+$/gi, '$1' ) )
-            : 0;
+        let copyIndex: number = Number(
+            inputBaseName.replace( /^.+-(\d+)$/gi, '$1' )
+        ) || 0;
 
-        if ( Number.isNaN( copyIndex ) ) {
-            copyIndex = 0;
-        }
+        /** Full path with the updated unique basename. */
+        let uniqueFullPath = inputPath;
 
-        /** 
-         * Iterate the index until the inputPath is unique
-         */
-        while ( NodeFS.existsSync(
-            this.changeBaseName( inputPath, uniqueBaseName )
-        ) ) {
+        // Iterate the index until the inputPath is unique
+        while ( NodeFS.existsSync( uniqueFullPath ) ) {
+            // increments here because the index starts at 0
             copyIndex++;
 
-            uniqueBaseName = uniqueBaseName.replace( /-(\d+)$/gi, '' )
-                + `-${ copyIndex }`;
+            uniqueFullPath = this.changeBaseName(
+                inputPath,
+                inputBaseNameWithoutNumber + `-${ copyIndex }`
+            );
         }
 
-        /** RETURN **/
-        return this.changeBaseName( inputPath, uniqueBaseName );
+        return uniqueFullPath;
     }
 }
 
@@ -211,5 +341,39 @@ export namespace NodeFiles {
          * @default './'
          */
         root: string;
+
+        /**
+         * Default configuration for {@link NodeFiles.writeFile}.
+         */
+        writeFileArgs: WriteFileArgs;
+    }
+
+    /**
+     * Optional configuration for {@link NodeFiles.readFile}.
+     */
+    export interface ReadFileArgs {
+        encoding: BufferEncoding;
+        flag?: string | undefined;
+    }
+
+    /**
+     * Optional configuration for {@link NodeFiles.writeFile}.
+     */
+    export interface WriteFileArgs extends Partial<ReadFileArgs> {
+
+        /** 
+         * Overwrite file at destination if it exists.
+         * 
+         * @default false
+         */
+        force: boolean;
+
+        /** 
+         * If a file exists at destination, append a number to the file’s
+         * basename so it’s unique.
+         *
+         * @default false
+         */
+        rename: boolean;
     }
 }

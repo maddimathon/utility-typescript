@@ -10,8 +10,6 @@
 
 import minimist from 'minimist';
 
-// import { F } from './@utilities.js';
-
 import type { DocumentArgs } from './classes/Document.js';
 import { Document } from './classes/Document.js';
 

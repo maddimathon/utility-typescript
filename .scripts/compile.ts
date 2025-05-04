@@ -10,8 +10,6 @@
 
 import minimist from 'minimist';
 
-// import { F } from './@utilities.js';
-
 import type { CompileArgs } from './classes/Compile.js';
 import { Compile } from './classes/Compile.js';
 

@@ -162,7 +162,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
             this.verboseLog( 'replacing in dist...', 2 );
 
-            for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
+            for ( const o of currentReplacements( this ).concat( pkgReplacements( this ) ) ) {
 
                 this.replaceInFiles(
                     [
@@ -184,8 +184,8 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         const ctaRegex = /(<!--README_DOCS_CTA-->).*?(<!--\/README_DOCS_CTA-->)/gs;
 
-        this.fns.writeFile( 'README.md', (
-            this.fns.readFile( 'README.md' )
+        this.fns.fs.writeFile( 'README.md', (
+            this.fns.fs.readFile( 'README.md' )
                 .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.pkg.config.title } @ ${ this.pkgVersion }` ) + '\n$2' )
                 .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.pkg.description, 80 ) ) + '\n$2' )
                 .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
@@ -195,8 +195,8 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
             const installRegex = /(<!--README_INSTALL-->).*?(<!--\/README_INSTALL-->)/gs;
 
-            this.fns.writeFile( 'README.md', (
-                this.fns.readFile( 'README.md' )
+            this.fns.fs.writeFile( 'README.md', (
+                this.fns.fs.readFile( 'README.md' )
                     .replace( installRegex, '$1\n' + this.fns.fns.escRegExpReplace( [
                         '```bash',
                         'npm i -D @maddimathon/utility-typescript@' + this.pkg.version,

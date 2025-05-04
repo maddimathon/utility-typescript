@@ -101,7 +101,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     protected async replace() {
         this.progressLog( 'replacing placeholders...', 1 );
 
-        for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
+        for ( const o of currentReplacements( this ).concat( pkgReplacements( this ) ) ) {
             this.replaceInFiles(
                 [
                     './docs/**/*',
@@ -248,17 +248,17 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             const outDir = config.out.replace( /\/+$/gi, '' );
 
-            this.fns.deleteFiles( [
+            this.fns.fs.deleteFiles( this.fns.glob( [
                 outDir + '/*',
                 outDir + '/.*',
-            ] );
+            ] ) );
         }
 
         if ( config.json ) {
             if ( !config.out ) {
                 this.verboseLog( 'deleting existing files...', 2 );
             }
-            this.fns.deleteFiles( config.json );
+            this.fns.fs.deleteFiles( [ config.json ] );
         }
 
         this.verboseLog( 'running typedoc...', 2 );

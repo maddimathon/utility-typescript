@@ -113,12 +113,12 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
         if ( !this.args.watchedEvent ) {
 
             this.verboseLog( 'deleting type-only javascript files...', 2 );
-            this.fns.deleteFiles( [
+            this.fns.fs.deleteFiles( this.fns.glob( [
                 'dist/js/types/**/*.js',
                 'dist/js/types/**/*.js.map',
                 'dist/js/types/**/*.test.d.ts',
                 'dist/js/types/**/*.test.d.ts.map',
-            ] );
+            ] ) );
         }
     }
 }

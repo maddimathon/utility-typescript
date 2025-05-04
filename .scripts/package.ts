@@ -10,8 +10,6 @@
 
 import minimist from 'minimist';
 
-// import { F } from './@utilities.js';
-
 import type { PackageArgs } from './classes/Package.js';
 import { Package } from './classes/Package.js';
 

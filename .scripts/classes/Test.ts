@@ -99,12 +99,12 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
         if ( this.args.packaging && !this.args.dryrun ) {
 
             this.verboseLog( 'removing test files from dist...', 2 );
-            this.fns.deleteFiles( [
+            this.fns.fs.deleteFiles( this.fns.glob( [
                 'dist/**/*.test.d.ts',
                 'dist/**/*.test.d.ts.map',
                 'dist/**/*.test.js',
                 'dist/**/*.test.js.map',
-            ] );
+            ] ) );
         }
     }
 }

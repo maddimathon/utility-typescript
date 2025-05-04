@@ -188,7 +188,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
                 'LICENSE.md',
                 'README.md',
             ],
-            this.fns.releasePath,
+            this.releasePath,
             './',
             [
                 '**/*.css.map',
@@ -202,13 +202,13 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
 
         this.verboseLog( 'replacing placeholders in package...', 3 );
-        for ( const o of currentReplacements( this.fns ).concat( pkgReplacements( this.fns ) ) ) {
+        for ( const o of currentReplacements( this ).concat( pkgReplacements( this ) ) ) {
             this.replaceInFiles(
                 [
-                    this.fns.releasePath.replace( /\/*$/g, '/**' ),
-                    // this.fns.releasePath.replace( /\/*$/g, '/*' ),
-                    // this.fns.releasePath.replace( /\/*$/g, '/**/*' ),
-                    '!' + this.fns.releasePath.replace( /\/*$/g, '/.vscode/*.code-snippets' ),
+                    this.releasePath.replace( /\/*$/g, '/**' ),
+                    // this.releasePath.replace( /\/*$/g, '/*' ),
+                    // this.releasePath.replace( /\/*$/g, '/**/*' ),
+                    '!' + this.releasePath.replace( /\/*$/g, '/.vscode/*.code-snippets' ),
                 ],
                 o.find,
                 o.replace,
@@ -228,7 +228,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
             this.verboseLog( 'deleting current contents...', 3 );
 
             try {
-                this.fns.deleteFiles( outDir );
+                this.fns.fs.deleteFiles( [ outDir ] );
             } catch ( err ) {
                 // nodeErrorCLI( err as NodeError, ( this.args.verbose ? 4 : 3 ) );
             }
@@ -259,7 +259,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
         this.progressLog( 'zipping release packages...', 1 );
 
-        const zipPath: string = this.fns.releasePath.replace( /\/*$/g, '' ) + '.zip';
+        const zipPath: string = this.releasePath.replace( /\/*$/g, '' ) + '.zip';
 
         if ( !this.args.packaging ) {
             this.verboseLog( 'skipping the real zipping...', 2 );
@@ -268,7 +268,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
         this.verboseLog( 'zipping package...', 2 );
         this._zip(
-            this.fns.releasePath,
+            this.releasePath,
             zipPath,
             [],
             false,

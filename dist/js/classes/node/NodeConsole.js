@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.3.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -375,6 +375,49 @@ export class NodeConsole extends AbstractConfigurableClass {
     }
     /* METHODS
      * ====================================================================== */
+    /**
+     * Formats an arguments object into a command-line string of arguments.
+     *
+     * @category Formatters
+     *
+     * @param obj           Arguments to translate.
+     * @param literalFalse  Optional. If true, false arguments are converted to
+     *                      `--key=false`. Otherwise false args are `--no-key`.
+     *                      Default false.
+     * @param equals        Optional. Whether argument keys should include an
+     *                      equals character (e.g., `--key=false`). Default true.
+     */
+    cmdArgs(obj, literalFalse = false, equals = true) {
+        const arr = [];
+        const sep = equals ? '=' : ' ';
+        for (const key in obj) {
+            if (obj[key] === null
+                || typeof obj[key] === 'undefined'
+                || obj[key] === undefined) {
+                continue;
+            }
+            switch (typeof obj[key]) {
+                case 'boolean':
+                    if (obj[key]) {
+                        arr.push(`--${key}`);
+                    }
+                    else if (literalFalse) {
+                        arr.push(`--${key}${sep}false`);
+                    }
+                    else {
+                        arr.push(`--no-${key}`);
+                    }
+                    continue;
+                case 'number':
+                    arr.push(`--${key}${sep}${obj[key]}`);
+                    continue;
+                case 'string':
+                    arr.push(`--${key}${sep}"${obj[key]}"`);
+                    continue;
+            }
+        }
+        return arr.join(' ');
+    }
     /* Outputters ===================================== */
     /**
      * Outputs the given message to the console.

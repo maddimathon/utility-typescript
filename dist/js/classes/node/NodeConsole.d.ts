@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.3.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -87,6 +87,21 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
      */
     get maxWidth(): number;
     constructor(args?: RecursivePartial<NodeConsole.Args>);
+    /**
+     * Formats an arguments object into a command-line string of arguments.
+     *
+     * @category Formatters
+     *
+     * @param obj           Arguments to translate.
+     * @param literalFalse  Optional. If true, false arguments are converted to
+     *                      `--key=false`. Otherwise false args are `--no-key`.
+     *                      Default false.
+     * @param equals        Optional. Whether argument keys should include an
+     *                      equals character (e.g., `--key=false`). Default true.
+     */
+    cmdArgs(obj: {
+        [key: string]: boolean | number | string | null;
+    }, literalFalse?: boolean, equals?: boolean): string;
     /**
      * Outputs the given message to the console.
      *

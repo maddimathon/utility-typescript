@@ -10,8 +10,6 @@
 
 import minimist from 'minimist';
 
-// import { F } from './@utilities.js';
-
 import type { SnapshotArgs } from './classes/Snapshot.js';
 import { Snapshot } from './classes/Snapshot.js';
 

@@ -13,7 +13,6 @@ import {
     execSync as nodeExecSync,
 } from 'child_process';
 
-import type { WriteFileOptions } from 'node:fs';
 import NodeFS from 'node:fs';
 
 import NodePath from 'node:path';
@@ -25,7 +24,7 @@ import { globSync } from 'glob';
 
 import { DateTime } from 'luxon';
 
-import type * as U from '../@utilities.js';
+import type * as TU from '../@types/utilities.js';
 
 import {
     classes as cls,
@@ -92,15 +91,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
             pkgName: p => `${ p.name }@${ p.version }`,
 
-            readDirOpts: {
-                encoding: 'utf-8',
-                recursive: true,
-            },
-            readFileOpts: {
-                encoding: 'utf-8',
-                flag: undefined,
-            },
-
             root: NodePath.resolve( './' ),
 
             tabCharacter: ' ',
@@ -108,14 +98,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
 
             typeOfOpts: {
                 distinguishArrays: false,
-            },
-
-            writeFileOpts: {
-                force: false,
-                rename: false,
-                opts: {
-                    encoding: 'utf-8',
-                },
             },
         };
     }
@@ -156,8 +138,8 @@ export class BuildFunctions extends cls.node.NodeFunctions {
     ): string[] {
 
         const globResult = globSync( globs, this.mergeArgs(
-            this.args.globOpts as U.Types.ArgsObject,
-            opts as U.Types.ArgsObject,
+            this.args.globOpts as TU.ArgsObject,
+            opts as TU.ArgsObject,
             false
         ) ) as string | string[];
 
@@ -176,125 +158,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
         return relative ? filepaths.map(
             ( path ) => this.fs.pathRelative( path )
         ) : filepaths;
-    }
-
-
-    /** NodeFS ==================================== **/
-
-    /**
-     * Deletes globbed files.
-     * 
-     * @param glob      
-     * @param globOpts  
-     */
-    public deleteFiles(
-        glob: string | string[],
-        globOpts: GlobOptions = {},
-        dryRun: boolean = false
-    ): void {
-
-        const paths = this.glob( glob, globOpts, false );
-
-        for ( const path of paths ) {
-
-            if ( !NodeFS.existsSync( path ) ) { continue; }
-
-            const stat = NodeFS.statSync( path );
-
-            if ( stat.isDirectory() ) {
-
-                if ( dryRun ) {
-                    this.nc.timestampLog( 'deleting directory: ' + path );
-                } else {
-                    NodeFS.rmSync( path, { recursive: true, force: true } );
-                }
-
-            } else if ( stat.isFile() || stat.isSymbolicLink() ) {
-
-                if ( dryRun ) {
-                    this.nc.timestampLog( 'deleting file: ' + path );
-                } else {
-                    NodeFS.unlinkSync( path );
-                }
-            }
-        }
-    }
-
-    /**
-     * Reads a file.
-     * 
-     * @param _path     
-     * @param _opts     
-     * 
-     * @return  Contents of the file.
-     */
-    public readFile(
-        _path: string,
-        _opts: Partial<BuildFunctions.ReadFileOpts> = {},
-    ): string {
-        const path = this.fs.pathResolve( _path );
-
-        const opts: BuildFunctions.ReadFileOpts
-            = this.mergeArgs(
-                this.args.readFileOpts,
-                {
-                    ..._opts,
-                    encoding: 'utf-8',
-                } as Partial<BuildFunctions.ReadFileOpts> & { encoding: 'utf-8'; },
-            );
-
-        /**
-         * RETURN
-         */
-        return NodeFS.readFileSync( path, opts );
-    }
-
-    /**
-     * Writes a file.
-     * 
-     * @param _path     
-     * @param _content  
-     * @param _opts     
-     * 
-     * @return  Path to file if written, or false on failure.
-     */
-    public writeFile(
-        _path: string,
-        _content: string | string[],
-        _opts: Partial<BuildFunctions.WriteFileOpts> = {},
-    ): string | false {
-
-        const content: string = Array.isArray( _content )
-            ? _content.join( '\n' )
-            : _content;
-
-        const opts: BuildFunctions.WriteFileOpts = this.mergeArgs(
-            this.args.writeFileOpts as U.Types.ArgsObject,
-            _opts as U.Types.ArgsObject,
-            true
-        ) as BuildFunctions.WriteFileOpts;
-
-        const path = !opts.force && opts.rename
-            ? this.fs.uniquePath( this.fs.pathResolve( _path ) )
-            : this.fs.pathResolve( _path );
-
-        /**
-         * Write the file
-         */
-        if ( !opts.force && NodeFS.existsSync( path ) ) { return false; }
-
-        NodeFS.mkdirSync( NodePath.dirname( path ), { recursive: true } );
-
-        NodeFS.writeFileSync(
-            this.fs.pathResolve( path ),
-            content,
-            opts.opts
-        );
-
-        /**
-         * RETURN
-         */
-        return NodeFS.existsSync( path ) ? path : false;
     }
 
 
@@ -381,49 +244,6 @@ export class BuildFunctions extends cls.node.NodeFunctions {
                 NodeFS.copyFileSync( file, destFile );
             }
         }
-    }
-
-
-
-    /** META UTILITIES
-     ** ==================================================================== **/
-
-    /** 
-     * An object of the project’s pacakge.json file.
-     */
-    #pkg: U.Types.PackageJson | undefined = undefined;
-
-    /** 
-     * An object of the project’s pacakge.json file.
-     */
-    public get pkg(): U.Types.PackageJson {
-
-        if ( this.#pkg === undefined ) {
-            this.#pkg = JSON.parse(
-                this.readFile( this.args.paths.packageJson )
-            ) as U.Types.PackageJson;
-        }
-
-        return this.#pkg;
-    }
-
-    public get pkgVersion(): string {
-        return `${ this.pkg.version }${ this.args.dryrun ? '-draft' : '' }`;
-    }
-
-    #releasePath: string | undefined = undefined;
-
-    public get releasePath(): string {
-
-        if ( this.#releasePath === undefined ) {
-
-            this.#releasePath = this.fs.pathRelative( this.fs.pathResolve(
-                this.pkg.config.paths.releases,
-                `${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }@${ this.pkgVersion.replace( /^(tpl|template)-/gi, '' ).replace( /\./gi, '-' ) }`
-            ) );
-        }
-
-        return this.#releasePath;
     }
 
 
@@ -594,7 +414,7 @@ export namespace BuildFunctions {
         globOpts: GlobOptions,
 
         /** Language code to use for content */
-        lang: U.Types.StringLiterals.LangCode | U.Types.StringLiterals.LangLocaleCode;
+        lang: TU.StringLiterals.LangCode | TU.StringLiterals.LangLocaleCode;
 
         /**
          * Paths to important files/dirs used by this class.
@@ -610,10 +430,7 @@ export namespace BuildFunctions {
         /**
          * Function that returns the string to use for folders/zips while packaging.
          */
-        pkgName: ( pkg: U.Types.PackageJson ) => string;
-
-        readDirOpts: ReadDirOpts,
-        readFileOpts: ReadFileOpts,
+        pkgName: ( pkg: TU.PackageJson ) => string;
 
         root: string,
 
@@ -625,11 +442,9 @@ export namespace BuildFunctions {
             /** If true, arrays will return `'array'` instead of `'object'`. */
             distinguishArrays: boolean;
         };
-
-        writeFileOpts: WriteFileOpts,
     };
 
-    type OptsPartialKeys = "copyFilesOpts" | "globOpts" | "readDirOpts" | "readFileOpts" | "typeOfOpts" | "writeFileOpts";
+    type OptsPartialKeys = "globOpts" | "typeOfOpts";
 
     export type Opts_Partial = Partial<Omit<Args, OptsPartialKeys>> & {
         [ K in OptsPartialKeys ]?: Partial<Args[ K ]>;
@@ -653,28 +468,5 @@ export namespace BuildFunctions {
 
         /** Whether to include the default ignoreGlobs. */
         includeDefaultIgnoreGlobs: boolean,
-    };
-
-    export type ReadDirOpts = {
-        encoding: BufferEncoding;
-        recursive: boolean;
-    };
-
-    export type ReadFileOpts = {
-        encoding: BufferEncoding;
-        flag?: string | undefined;
-    };
-
-    /** Default options for `writeFile()`. */
-    export type WriteFileOpts = {
-
-        /** Overwrite file at destination if it exists. */
-        force: boolean,
-
-        /** If a file exists at destination, append a number to the file’s basename so it’s unique. */
-        rename: boolean,
-
-        /** Value to pass to the node write file function. */
-        opts: WriteFileOptions,
     };
 }

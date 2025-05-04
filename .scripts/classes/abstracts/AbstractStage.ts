@@ -10,7 +10,7 @@
 /* IMPORT TYPES */
 // import type { ChildProcess } from 'node:child_process';
 
-import type * as U from '../../@utilities.js';
+import type * as TU from '../../@types/utilities.js';
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
@@ -18,10 +18,10 @@ import type * as U from '../../@utilities.js';
 
 /* IMPORT LOCAL DEPENDENCIES */
 import { currentReplacements, pkgReplacements } from '../../vars/replacements.js';
-import { F, BuildFunctions } from '../../@utilities.js';
+import { BuildFunctions } from '../../classes/Functions.js';
 
 import {
-    // Types as TS,
+    // TU as TS,
     classes as cls,
     functions as fns,
 } from '../../../src/ts/index.js';
@@ -170,7 +170,7 @@ export abstract class AbstractStage<
 
     public abstract stages: readonly Stages[];
 
-    protected readonly fns: BuildFunctions;
+    public readonly fns: BuildFunctions;
 
     /**
      * Build a complete args object.
@@ -202,7 +202,7 @@ export abstract class AbstractStage<
         args: Args,
         protected readonly clr: cls.MessageMaker.Colour = 'black',
     ) {
-        super( args as U.Types.Objects.RecursivePartial<Args> & Args );
+        super( args as TU.Objects.RecursivePartial<Args> & Args );
 
         this.fns = new BuildFunctions();
     }
@@ -218,17 +218,17 @@ export abstract class AbstractStage<
     /** 
      * An object of the project’s pacakge.json file.
      */
-    #pkg: U.Types.PackageJson | undefined = undefined;
+    #pkg: TU.PackageJson | undefined = undefined;
 
     /** 
      * An object of the project’s pacakge.json file.
      */
-    public get pkg(): U.Types.PackageJson {
+    public get pkg(): TU.PackageJson {
 
         if ( this.#pkg === undefined ) {
             this.#pkg = JSON.parse(
-                this.fns.readFile( this.fns.args.paths.packageJson )
-            ) as U.Types.PackageJson;
+                this.fns.fs.readFile( this.fns.args.paths.packageJson )
+            ) as TU.PackageJson;
         }
 
         return this.#pkg;
@@ -239,6 +239,27 @@ export abstract class AbstractStage<
      */
     public get pkgVersion(): string {
         return `${ this.pkg.version }${ this.args.dryrun ? '-draft' : '' }`;
+    }
+
+    #releasePath: string | undefined = undefined;
+
+    /**
+     * Path to release directory for building a package for the current version.
+     */
+    public get releasePath(): string {
+
+        if ( this.#releasePath === undefined ) {
+
+            const name = this.pkg.name.replace( /^@([^\/]+)\//, '$1_' );
+            const version = this.pkgVersion.replace( /^(tpl|template)-/gi, '' ).replace( /\./gi, '-' );
+
+            this.#releasePath = this.fns.fs.pathRelative( this.fns.fs.pathResolve(
+                this.pkg.config.paths.releases,
+                `${ name }@${ version }`
+            ) );
+        }
+
+        return this.#releasePath;
     }
 
 
@@ -427,63 +448,18 @@ export abstract class AbstractStage<
 
     /* UTILITIES ===================================== */
 
-    protected cmdArgs(
-        obj: CmdArgs,
-        literalFalse: boolean = false,
-        equals: boolean = true,
-    ): string {
-
-        const arr: string[] = [];
-
-        const sep: " " | "=" = equals ? '=' : ' ';
-
-        for ( const key in obj ) {
-
-            if (
-                obj[ key ] === null
-                || typeof obj[ key ] === 'undefined'
-                || obj[ key ] === undefined
-            ) {
-                continue;
-            }
-
-            switch ( typeof obj[ key ] ) {
-
-                case 'boolean':
-                    if ( obj[ key ] ) {
-                        arr.push( `--${ key }` );
-                    } else if ( literalFalse ) {
-                        arr.push( `--${ key }${ sep }false` );
-                    } else {
-                        arr.push( `--no-${ key }` );
-                    }
-                    continue;
-
-                case 'number':
-                    arr.push( `--${ key }${ sep }${ obj[ key ] }` );
-                    continue;
-
-                case 'string':
-                    arr.push( `--${ key }${ sep }"${ obj[ key ] }"` );
-                    continue;
-            }
-        }
-
-        return arr.join( ' ' );
-    }
-
 
     /* Building Tools ------------------ */
 
     protected async compileScss(
         input: string,
         output: string,
-        logLevelBase: number,
+        logBaseLevel: number,
         params: CmdArgs = {},
     ): Promise<void> {
 
         if ( !this.args[ 'css-update' ] ) {
-            this.fns.deleteFiles( output );
+            this.fns.fs.deleteFiles( this.fns.glob( output ) );
         }
 
         const packaging: boolean | null = this.args.packaging || null;
@@ -504,25 +480,25 @@ export abstract class AbstractStage<
             ...params,
         };
 
-        this.verboseLog( `compiling ${ input } to ${ output }...`, 0 + logLevelBase );
-        this.fns.cmd( `sass ${ input }:${ output } ${ this.cmdArgs( args ) }` );
+        this.verboseLog( `compiling ${ input } to ${ output }...`, 0 + logBaseLevel );
+        this.fns.cmd( `sass ${ input }:${ output } ${ this.fns.nc.cmdArgs( args ) }` );
 
-        for ( const o of currentReplacements( F ).concat( pkgReplacements( F ) ) ) {
+        for ( const o of currentReplacements( this ).concat( pkgReplacements( this ) ) ) {
             this.replaceInFiles(
                 output,
                 o.find,
                 o.replace,
-                1 + logLevelBase,
+                1 + logBaseLevel,
             );
         }
     }
 
     protected async compileTypescript(
         tsconfigPath: string,
-        logLevelBase: number,
+        logBaseLevel: number,
         params: CmdArgs = {},
     ): Promise<void> {
-        this.verboseLog( `compiling typescript project ${ tsconfigPath }...`, 0 + logLevelBase );
+        this.verboseLog( `compiling typescript project ${ tsconfigPath }...`, 0 + logBaseLevel );
 
         const tsconfig: Partial<{
             exclude: string | string[];
@@ -533,7 +509,7 @@ export abstract class AbstractStage<
                 noEmit: boolean;
                 outDir: string;
             }>;
-        }> = JSON.parse( this.fns.readFile( tsconfigPath ) );
+        }> = JSON.parse( this.fns.fs.readFile( tsconfigPath ) );
 
         // deleting current files
         if ( !this.args.watchedEvent && tsconfig.compilerOptions?.noEmit !== true ) {
@@ -543,12 +519,12 @@ export abstract class AbstractStage<
             if ( outDir ) {
 
                 const tsconfigDir = tsconfigPath.replace( /\/[^\/]+\.json$/, '/' ).replace( /^[^\/]+\.json$/, './' );
-                this.args.debug && this.progressLog( `tsconfigDir = ${ tsconfigDir }`, ( this.args.verbose ? 1 : 0 ) + logLevelBase );
+                this.args.debug && this.progressLog( `tsconfigDir = ${ tsconfigDir }`, ( this.args.verbose ? 1 : 0 ) + logBaseLevel );
 
                 const outDirGlobs = this.fns.fs.pathRelative( this.fns.fs.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
 
-                this.verboseLog( `deleting current contents (${ outDirGlobs })...`, 1 + logLevelBase );
-                this.fns.deleteFiles( outDirGlobs );
+                this.verboseLog( `deleting current contents (${ outDirGlobs })...`, 1 + logBaseLevel );
+                this.fns.fs.deleteFiles( this.fns.glob( outDirGlobs ) );
             }
         }
 
@@ -557,10 +533,10 @@ export abstract class AbstractStage<
             project: tsconfigPath,
         };
 
-        this.verboseLog( 'running tsc...', 2 + logLevelBase );
-        const tscCmd = `tsc ${ this.cmdArgs( cmdParams, true, false ) }`;
+        this.verboseLog( 'running tsc...', 2 + logBaseLevel );
+        const tscCmd = `tsc ${ this.fns.nc.cmdArgs( cmdParams, true, false ) }`;
 
-        this.args.debug && this.progressLog( tscCmd, ( this.args.verbose ? 3 : 2 ) + logLevelBase );
+        this.args.debug && this.progressLog( tscCmd, ( this.args.verbose ? 3 : 2 ) + logBaseLevel );
         this.fns.cmd( tscCmd );
     }
 
@@ -568,12 +544,12 @@ export abstract class AbstractStage<
         files: string | string[],
         find: ( string | RegExp ) | ( string | RegExp )[],
         replace: string,
-        logLevelBase: number,
+        logBaseLevel: number,
         args: Partial<Omit<ReplaceInFilesArgs, "regex" | "replacement" | "string">> = {},
     ): void {
         this.args.debug && this.progressLog(
             `replacing '${ find }' => '${ replace }'`,
-            logLevelBase,
+            logBaseLevel,
             {
                 linesIn: 0,
                 linesOut: 0,
@@ -600,11 +576,11 @@ export abstract class AbstractStage<
             return `--regex='${ f }'`;
         } ).join( ' ' );
 
-        const cmd: string = `replace-in-files ${ findArgs } ${ this.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
+        const cmd: string = `replace-in-files ${ findArgs } ${ this.fns.nc.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
 
         this.args.debug && this.fns.nc.timestampVarDump( { cmd }, {
             clr: this.clr,
-            depth: ( this.args.verbose ? 1 : 0 ) + logLevelBase + ( this.args[ 'log-base-level' ] ?? 0 ),
+            depth: ( this.args.verbose ? 1 : 0 ) + logBaseLevel + ( this.args[ 'log-base-level' ] ?? 0 ),
             linesIn: 0,
             linesOut: 0,
             maxWidth: null,

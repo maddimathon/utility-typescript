@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.3.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
@@ -38,12 +38,6 @@ export declare class NodeFunctions extends AbstractConfigurableClass<NodeFunctio
      * @category Classes
      */
     readonly fs: NodeFiles;
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    readonly args: NodeFunctions.Args;
     get ARGS_DEFAULT(): NodeFunctions.Args;
     /**
      * Build a complete args object.

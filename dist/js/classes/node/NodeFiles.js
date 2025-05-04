@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.3.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
 // import type { WriteFileOptions } from 'node:fs';
@@ -16,12 +16,11 @@ import NodePath from 'node:path';
 // import type { RecursivePartial } from '../../types/objects/index.js';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { mergeArgs, } from '../../functions/index.js';
+import { NodeConsole } from './NodeConsole.js';
 /**
  * A configurable class for working with files and paths in node.
  */
 export class NodeFiles extends AbstractConfigurableClass {
-    /* LOCAL PROPERTIES
-     * ====================================================================== */
     /* Args ===================================== */
     /**
      * @category Args
@@ -30,6 +29,10 @@ export class NodeFiles extends AbstractConfigurableClass {
         const defaults = {
             optsRecursive: false,
             root: './',
+            writeFileArgs: {
+                force: false,
+                rename: false,
+            },
         };
         // this lets the types work a bit better by letting us export the
         // default as const but ensure that it is the same shape as the args
@@ -51,12 +54,89 @@ export class NodeFiles extends AbstractConfigurableClass {
     }
     /* CONSTRUCTOR
      * ====================================================================== */
-    constructor(args = {}) {
+    constructor(args = {}, utils = {}) {
+        var _a;
         super(args);
+        this.nc = (_a = utils.nc) !== null && _a !== void 0 ? _a : new NodeConsole(this.ARGS_DEFAULT);
     }
     /* METHODS
      * ====================================================================== */
     /* Files ===================================== */
+    /**
+     * Deletes given files.
+     *
+     * @param paths         Paths to delete. Absolute or relative to root dir.
+     * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
+     * @param logBaseLevel  Base depth for console messages (via NodeConsole).
+     */
+    deleteFiles(paths, dryRun = false, logBaseLevel = 0) {
+        for (const path of paths) {
+            // continues
+            if (!NodeFS.existsSync(path)) {
+                continue;
+            }
+            const stat = NodeFS.statSync(path);
+            if (stat.isDirectory()) {
+                if (dryRun) {
+                    this.nc.timestampLog('deleting directory: ' + path, { depth: logBaseLevel });
+                }
+                else {
+                    NodeFS.rmSync(path, { recursive: true, force: true });
+                }
+            }
+            else if (stat.isFile() || stat.isSymbolicLink()) {
+                if (dryRun) {
+                    this.nc.timestampLog('deleting file: ' + path, { depth: logBaseLevel });
+                }
+                else {
+                    NodeFS.unlinkSync(path);
+                }
+            }
+        }
+    }
+    /**
+     * Reads a file.
+     *
+     * @param path  File to read.
+     * @param args  Optional configuration.
+     *
+     * @return  Contents of the file.
+     */
+    readFile(path, args = {}) {
+        return NodeFS.readFileSync(this.pathResolve(path), {
+            ...args,
+            encoding: 'utf-8',
+        });
+    }
+    /**
+     * Writes a file.
+     *
+     * @param path     Location to write file.
+     * @param content  Contents to write.
+     * @param args     Optional configuration.
+     *
+     * @return  Path to file if written, or false on failure.
+     */
+    writeFile(path, content, args = {}) {
+        path = this.pathResolve(path);
+        content = Array.isArray(content)
+            ? content.join('\n')
+            : content;
+        args = this.mergeArgs(this.args.writeFileArgs, args, false);
+        // returns if we aren't forcing or renaming
+        if (NodeFS.existsSync(path)) {
+            // returns
+            if (!args.force && !args.rename) {
+                return false;
+            }
+            if (args.rename) {
+                path = this.uniquePath(path);
+            }
+        }
+        NodeFS.mkdirSync(NodePath.dirname(path), { recursive: true });
+        NodeFS.writeFileSync(path, content, args);
+        return NodeFS.existsSync(path) && path;
+    }
     /* Paths ===================================== */
     /**
      * Changes just the file name of a path
@@ -100,37 +180,32 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @param _path  Path to make unique.
+     * @see {@link NodeFiles.changeBaseName}  Used to update the basename to test for uniqueness.
+     *
+     * @param inputPath  Path to make unique.
      *
      * @return  Absolute, unique version of the given `_path`.
      */
-    uniquePath(_path) {
-        _path = this.pathResolve(_path);
-        if (!NodeFS.existsSync(_path)) {
-            return _path;
+    uniquePath(inputPath) {
+        inputPath = this.pathResolve(inputPath);
+        if (!NodeFS.existsSync(inputPath)) {
+            return inputPath;
         }
-        const inputPath = _path;
-        /** This file’s extension. */
-        const pathExtension = NodePath.extname(inputPath) || undefined;
-        let uniqueBaseName = NodePath.basename(inputPath, pathExtension);
-        const inputPathIsNumbered = uniqueBaseName.match(/-(\d+)$/gi) !== null;
+        /** Used to iterate until we have a unique path. */
+        const inputBaseName = NodePath.basename(inputPath, NodePath.extname(inputPath) || undefined);
+        /** Used as a base to append copyIndex to. */
+        const inputBaseNameWithoutNumber = inputBaseName.replace(/-(\d+)$/gi, '');
         /** Copy index - a number to append to OG name. */
-        let copyIndex = inputPathIsNumbered
-            ? Number(inputPath.replace(/^.+-(\d+)\.[a-z|0-9|\.]+$/gi, '$1'))
-            : 0;
-        if (Number.isNaN(copyIndex)) {
-            copyIndex = 0;
-        }
-        /**
-         * Iterate the index until the inputPath is unique
-         */
-        while (NodeFS.existsSync(this.changeBaseName(inputPath, uniqueBaseName))) {
+        let copyIndex = Number(inputBaseName.replace(/^.+-(\d+)$/gi, '$1')) || 0;
+        /** Full path with the updated unique basename. */
+        let uniqueFullPath = inputPath;
+        // Iterate the index until the inputPath is unique
+        while (NodeFS.existsSync(uniqueFullPath)) {
+            // increments here because the index starts at 0
             copyIndex++;
-            uniqueBaseName = uniqueBaseName.replace(/-(\d+)$/gi, '')
-                + `-${copyIndex}`;
+            uniqueFullPath = this.changeBaseName(inputPath, inputBaseNameWithoutNumber + `-${copyIndex}`);
         }
-        /** RETURN **/
-        return this.changeBaseName(inputPath, uniqueBaseName);
+        return uniqueFullPath;
     }
 }
 //# sourceMappingURL=NodeFiles.js.map
