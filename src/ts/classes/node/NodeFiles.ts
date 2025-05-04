@@ -117,6 +117,8 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
     /**
      * Deletes given files.
      * 
+     * @category Filers
+     * 
      * @param paths         Paths to delete. Absolute or relative to root dir.
      * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
      * @param logBaseLevel  Base depth for console messages (via NodeConsole).
@@ -155,6 +157,8 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
     /**
      * Reads a file.
      * 
+     * @category Filers
+     * 
      * @param path  File to read.
      * @param args  Optional configuration.
      * 
@@ -176,6 +180,8 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
 
     /**
      * Writes a file.
+     * 
+     * @category Filers
      * 
      * @param path     Location to write file.
      * @param content  Contents to write.
@@ -287,7 +293,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @param inputPath  Path to make unique.
      *
-     * @return  Absolute, unique version of the given `_path`.
+     * @return  Absolute, unique version of the given `inputPath`.
      */
     public uniquePath( inputPath: string ): string {
         inputPath = this.pathResolve( inputPath );

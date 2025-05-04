@@ -12,7 +12,8 @@ projects.
 <!--/README_DESC-->
 
 Probably not best to use in production/client-side without a bundler (and
-including only the required exports) to avoid bulk and inefficiency.
+including only the required exports) to avoid bulk, inefficiency, and alpha/beta
+items.
 
 The library aims to be pretty configurable, but it's definitely targeted towards
 my personal needs/preferences rather than developers in general.

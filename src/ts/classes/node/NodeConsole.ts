@@ -11,6 +11,10 @@
  * @license MIT
  */
 
+import {
+    execSync as nodeExecSync,
+} from 'child_process';
+
 import * as inquirer from '@inquirer/prompts';
 
 import type { RecursivePartial } from '../../types/objects/index.js';
@@ -20,6 +24,7 @@ import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
 
 import {
+    escRegExpReplace,
     mergeArgs,
 } from '../../functions/index.js';
 
@@ -434,7 +439,22 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
      */
     public get ARGS_DEFAULT() {
 
+        const cmdErrorHandler: NodeConsole.CmdErrorHandler = ( err ) => {
+
+            const output: string =
+                err.output
+                    ? this.msg.implodeWithIndent( err.output.filter( ( l ) => l !== null ) )
+                    : Object.keys( err )
+                        .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
+                        .join( '\n' );
+
+            this.log( 'Console error:' + output, { clr: 'red' } );
+            process.exit( 1 );
+        };
+
         const defaults = {
+
+            cmdErrorHandler,
 
             msgMaker: {
                 msg: {
@@ -526,6 +546,31 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
     /* METHODS
      * ====================================================================== */
 
+
+    /* Terminal ===================================== */
+
+    /**
+     * Runs given string as a terminal command, optional with arguments.
+     */
+    public cmd(
+        cmd: string,
+        args: Parameters<NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
+        literalFalse?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 1 ],
+        equals?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 2 ],
+    ) {
+
+        try {
+            nodeExecSync(
+                `${ cmd } ${ this.cmdArgs( args, literalFalse, equals ) }`,
+                {
+                    encoding: 'utf-8',
+                },
+            );
+        } catch ( err ) {
+            this.args.cmdErrorHandler( err as NodeConsole.CmdError );
+        }
+    }
+
     /**
      * Formats an arguments object into a command-line string of arguments.
      * 
@@ -575,7 +620,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
                     continue;
 
                 case 'string':
-                    arr.push( `--${ key }${ sep }"${ obj[ key ] }"` );
+                    arr.push( `--${ key }${ sep }"${ obj[ key ].replace( /(?<!\\)"/g, escRegExpReplace( '\\"' ) ) }"` );
                     continue;
             }
         }
@@ -1162,6 +1207,11 @@ export namespace NodeConsole {
     export interface Args extends AbstractConfigurableClass.Args {
 
         /**
+         * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
+         */
+        cmdErrorHandler: CmdErrorHandler;
+
+        /**
          * Optional overrides used when initializing {@link MessageMaker}.
          */
         msgMaker: RecursivePartial<MessageMaker.Args>;
@@ -1183,6 +1233,24 @@ export namespace NodeConsole {
          */
         varInspect: Partial<VariableInspector.Args>;
     }
+
+    /**
+     * Error thrown from the terminal in {@link NodeConsole.cmd}.
+     */
+    export type CmdError = {
+        status: number;
+        signal: number | null;
+        output?: string[];
+        pid: number;
+        stdout?: string;
+        stderr?: string;
+    };
+
+    /**
+     * Function used to handle errors from the terminal in
+     * {@link NodeConsole.cmd}.
+     */
+    export type CmdErrorHandler = ( err: CmdError ) => void;
 
     /**
      * Optional configuration for {@link NodeConsole.log}.

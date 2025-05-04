@@ -94,11 +94,11 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
 
         const snapdir = this.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
 
-        const exportPath: string = this.fns.fs.uniquePath( `${ snapdir }/${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.pkgVersion }_${ this.fns.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
+        const exportPath: string = this.fns.fs.uniquePath( `${ snapdir }/${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.pkgVersion }_${ this.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
         const exportName: string = exportPath.replace( /^\/?([^\/]+\/)*/gi, '' );
 
 
-        const includePaths: string[] = this.fns.glob(
+        const includePaths: string[] = this.glob(
             [ '**/*', ],
             {
                 ignore: [
@@ -116,12 +116,12 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
             true
         ).map( path => path.replace( new RegExp( `^${ this.fns.fns.escRegExp( `${ snapdir }/` ) }`, 'gi' ), '' ) );
 
-        this.fns.copyFiles( includePaths, exportPath );
+        this.copyFiles( includePaths, exportPath );
 
 
-        this.fns.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
+        this.fns.nc.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
 
-        this.fns.cmd( `rm -rf ${ exportPath }` );
+        this.fns.nc.cmd( `rm -rf ${ exportPath }` );
 
         this.progressLog( `snapshot zipped: ${ exportPath }.zip`, 1, { maxWidth: null } );
     }

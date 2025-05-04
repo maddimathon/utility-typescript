@@ -230,7 +230,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         const newChangeLogEntry =
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
-            + `## **${ this.pkgVersion }** -- ${ this.fns.datestamp() }`
+            + `## **${ this.pkgVersion }** -- ${ this.datestamp() }`
             + '\n\n'
             + this.fns.fs.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';
@@ -315,7 +315,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     protected async commit() {
         this.progressLog( 'commiting any new changes...', 1 );
 
-        const gitCmd = `git add @releases/*.zip dist docs CHANGELOG.md README.md && git commit -a --allow-empty -m "[${ this.fns.datestamp() }] release: ${ this.pkgVersion }"`;
+        const gitCmd = `git add @releases/*.zip dist docs CHANGELOG.md README.md && git commit -a --allow-empty -m "[${ this.datestamp() }] release: ${ this.pkgVersion }"`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping git commit during dryrun...', 2 );
@@ -334,12 +334,12 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                 maxWidth: null,
             } );
 
-            this.fns.cmd( gitCmd );
-            this.fns.cmd( `git tag -a -f ${ this.pkgVersion } -m "release: ${ this.pkgVersion }"` );
-            this.fns.cmd( `git push --tags || echo ''` );
+            this.fns.nc.cmd( gitCmd );
+            this.fns.nc.cmd( `git tag -a -f ${ this.pkgVersion } -m "release: ${ this.pkgVersion }"` );
+            this.fns.nc.cmd( `git push --tags || echo ''` );
 
             this.verboseLog( 'pushing to origin...', 2 );
-            this.fns.cmd( 'git push' );
+            this.fns.nc.cmd( 'git push' );
         }
     }
 
@@ -348,7 +348,10 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
 
         this.verboseLog( 'updating repo metadata...', 2 );
-        const repoUpdateCmd = `gh repo edit --description="${ this.pkg.description }" --homepage="${ this.pkg.homepage }"`;
+        const repoUpdateCmd = `gh repo edit ${ this.fns.nc.cmdArgs( {
+            description: this.pkg.description,
+            homepage: this.pkg.homepage,
+        }, false, false ) }`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping git commit during dryrun...', 3 );
@@ -360,12 +363,19 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             } );
 
         } else {
-            this.fns.cmd( repoUpdateCmd );
+            this.fns.nc.cmd( repoUpdateCmd );
         }
 
 
         this.verboseLog( 'creating github release...', 2 );
-        const releaseCmd = `gh release create ${ this.pkgVersion } "${ this.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }" --draft --notes-file .releasenotes.md --title "${ this.pkgVersion } — ${ this.fns.datestamp() }"`;
+
+        const releaseAttachment = `"${ this.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }"`;
+
+        const releaseCmd = `gh release create ${ this.pkgVersion } ${ releaseAttachment } ${ this.fns.nc.cmdArgs( {
+            draft: true,
+            'notes-file': '.releasenotes.md',
+            title: `${ this.pkgVersion } — ${ this.datestamp() }`,
+        }, false, false ) }`;
 
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping github release during dryrun...', 3 );
@@ -384,7 +394,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                 maxWidth: null,
             } );
 
-            this.fns.cmd( releaseCmd );
+            this.fns.nc.cmd( releaseCmd );
         }
     }
 

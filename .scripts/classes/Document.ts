@@ -248,7 +248,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
             const outDir = config.out.replace( /\/+$/gi, '' );
 
-            this.fns.fs.deleteFiles( this.fns.glob( [
+            this.fns.fs.deleteFiles( this.glob( [
                 outDir + '/*',
                 outDir + '/.*',
             ] ) );

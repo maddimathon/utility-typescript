@@ -236,7 +236,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
 
         this.verboseLog( 'copying files...', 3 );
-        this.fns.copyFiles(
+        this.copyFiles(
             sourceGlobs,
             outDir,
             sourceDir,
@@ -307,14 +307,14 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         zipPath = this.fns.fs.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
 
         while ( NodeFS.existsSync( zipPath ) ) {
-            zipPath = zipPath.replace( /(\/*|\.zip)?$/g, '' ) + `-${ this.fns.timestamp( null, 'yyyy_MM_dd-HH_mm' ).replace( /_/g, '' ) }.zip`;
+            zipPath = zipPath.replace( /(\/*|\.zip)?$/g, '' ) + `-${ this.timestamp( null, 'yyyy_MM_dd-HH_mm' ).replace( /_/g, '' ) }.zip`;
         }
 
 
         /**
          * All files to include in the zip file.
          */
-        const files: string[] = this.fns.glob(
+        const files: string[] = this.glob(
             sourceDir.replace( /\/*$/g, '/**' ),
             {
                 filesOnly,
@@ -333,6 +333,6 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
          * Running the command. 
          */
         const zipCMD: string = `cd "${ this.fns.fs.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
-        this.fns.cmd( zipCMD );
+        this.fns.nc.cmd( zipCMD );
     }
 }

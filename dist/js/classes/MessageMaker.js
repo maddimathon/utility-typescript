@@ -11,7 +11,7 @@
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-import { mergeArgs, softWrapText, timestamp, } from '../functions/index.js';
+import { mergeArgs, softWrapText, timestamp, typeOf, } from '../functions/index.js';
 /**
  * A configurable class for formatting message strings for various outputs.
  *
@@ -311,6 +311,29 @@ export class MessageMaker extends AbstractConfigurableClass {
     }
     /* METHODS
      * ====================================================================== */
+    /**
+     * Joins string arrays with a single new line and adds an indent to the
+     * beginning of every line, and adds next level of indent for child arrays.
+     *
+     * @category  Formatters
+     *
+     * @param lines   String to implode. Arrays are joined with `'\n'`.
+     * @param indent  Optional. Default `this.args.msg.tab`.
+     *
+     * @return  The same text, but with an indent added after every new line.
+     */
+    implodeWithIndent(lines, indent = this.args.msg.tab) {
+        return lines.map((line) => {
+            switch (typeOf(line, { distinguishArrays: true, })) {
+                case 'array':
+                    return this.implodeWithIndent(line, indent + this.args.msg.tab);
+                case 'string':
+                    return indent + line;
+                default:
+                    return indent + String(line);
+            }
+        }).flat().join('\n');
+    }
     /**
      * Used to map each line of a message in {@link MessageMaker.msg}.
      *

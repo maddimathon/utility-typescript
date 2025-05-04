@@ -53,6 +53,18 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
     msgArgs(args?: RecursivePartial<MessageMaker.MsgArgs>): MessageMaker.MsgArgs;
     constructor(args?: RecursivePartial<MessageMaker.Args>);
     /**
+     * Joins string arrays with a single new line and adds an indent to the
+     * beginning of every line, and adds next level of indent for child arrays.
+     *
+     * @category  Formatters
+     *
+     * @param lines   String to implode. Arrays are joined with `'\n'`.
+     * @param indent  Optional. Default `this.args.msg.tab`.
+     *
+     * @return  The same text, but with an indent added after every new line.
+     */
+    implodeWithIndent(lines: (string | string[])[], indent?: string): string;
+    /**
      * Used to map each line of a message in {@link MessageMaker.msg}.
      *
      * Does not wrap or split it (assumes this has already been done).  Applies

@@ -17,14 +17,14 @@ export function currentReplacements( stage: AbstractStage<any, any> ): Replaceme
         { find: '___CURRENT_DESC___', replace: stage.pkg.description, },
         { find: '___CURRENT_URL___', replace: stage.pkg.homepage, },
         { find: '___CURRENT_VERSION___', replace: stage.pkgVersion, },
-        { find: '___CURRENT_YEAR___', replace: stage.fns.datestamp( null, 'yyyy' ), },
+        { find: '___CURRENT_YEAR___', replace: stage.datestamp( null, 'yyyy' ), },
     ];
 }
 
 export function pkgReplacements( stage: AbstractStage<any, any> ): ReplacementObject[] {
     return [
-        { find: '___PKG_DATE___', replace: stage.fns.datestamp( null, 'yyyy-MM-dd' ), },
+        { find: '___PKG_DATE___', replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
         { find: '___PKG_VERSION___', replace: stage.pkgVersion, },
-        { find: '___PKG_YEAR___', replace: stage.fns.datestamp( null, 'yyyy' ), },
+        { find: '___PKG_YEAR___', replace: stage.datestamp( null, 'yyyy' ), },
     ];
 }

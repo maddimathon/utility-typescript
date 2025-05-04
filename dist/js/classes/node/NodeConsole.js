@@ -10,11 +10,12 @@
  * @maddimathon/utility-typescript@0.3.0-draft
  * @license MIT
  */
+import { execSync as nodeExecSync, } from 'child_process';
 import * as inquirer from '@inquirer/prompts';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
-import { mergeArgs, } from '../../functions/index.js';
+import { escRegExpReplace, mergeArgs, } from '../../functions/index.js';
 /**
  * A configurable class for outputting to console within Node.
  *
@@ -317,7 +318,17 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @category Args
      */
     get ARGS_DEFAULT() {
+        const cmdErrorHandler = (err) => {
+            const output = err.output
+                ? this.msg.implodeWithIndent(err.output.filter((l) => l !== null))
+                : Object.keys(err)
+                    .map((key) => `${key}: ${err[key]}`)
+                    .join('\n');
+            this.log('Console error:' + output, { clr: 'red' });
+            process.exit(1);
+        };
         const defaults = {
+            cmdErrorHandler,
             msgMaker: {
                 msg: {
                     maxWidth: 100,
@@ -375,10 +386,31 @@ export class NodeConsole extends AbstractConfigurableClass {
     }
     /* METHODS
      * ====================================================================== */
+    /* Terminal ===================================== */
+    /**
+     * Runs given string as a terminal command, optional with arguments.
+     *
+     * @category Terminal
+     *
+     * @param cmd           Command to run in the terminal.
+     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     */
+    cmd(cmd, args = {}, literalFalse, equals) {
+        try {
+            nodeExecSync(`${cmd} ${this.cmdArgs(args, literalFalse, equals)}`, {
+                encoding: 'utf-8',
+            });
+        }
+        catch (err) {
+            this.args.cmdErrorHandler(err);
+        }
+    }
     /**
      * Formats an arguments object into a command-line string of arguments.
      *
-     * @category Formatters
+     * @category Terminal
      *
      * @param obj           Arguments to translate.
      * @param literalFalse  Optional. If true, false arguments are converted to
@@ -412,7 +444,7 @@ export class NodeConsole extends AbstractConfigurableClass {
                     arr.push(`--${key}${sep}${obj[key]}`);
                     continue;
                 case 'string':
-                    arr.push(`--${key}${sep}"${obj[key]}"`);
+                    arr.push(`--${key}${sep}"${obj[key].replace(/(?<!\\)"/g, escRegExpReplace('\\"'))}"`);
                     continue;
             }
         }

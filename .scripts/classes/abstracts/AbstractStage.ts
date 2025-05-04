@@ -9,16 +9,22 @@
 
 /* IMPORT TYPES */
 // import type { ChildProcess } from 'node:child_process';
+import type { GlobOptions } from 'glob';
 
 import type * as TU from '../../@types/utilities.js';
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
+import NodeFS from 'node:fs';
+import NodePath from 'node:path';
+
+import { DateTime } from 'luxon';
+
+import { globSync } from 'glob';
 
 
 /* IMPORT LOCAL DEPENDENCIES */
 import { currentReplacements, pkgReplacements } from '../../vars/replacements.js';
-import { BuildFunctions } from '../../classes/Functions.js';
 
 import {
     // TU as TS,
@@ -135,6 +141,24 @@ export type AbstractArgs<Stages extends string | never> = cls.abstracts.Abstract
     watchedWatcher?: string;
 };
 
+/**
+ * Optional configuration for {@link AbstractStage.copyFiles}.
+ */
+export type CopyFilesArgs = {
+
+    /** 
+     * Default paths to ignore when dealing with files. Relative to root or
+     * absolute.
+     */
+    ignoreGlobs: string[],
+
+    /** 
+     * Whether to include the default ignoreGlobs with the input ignore
+     * paths.
+     */
+    includeDefaultIgnoreGlobs: boolean,
+};
+
 export type CmdArgs = { [ key: string ]: boolean | number | string | null; };
 
 export type ReplaceInFilesArgs = CmdArgs & {
@@ -170,7 +194,7 @@ export abstract class AbstractStage<
 
     public abstract stages: readonly Stages[];
 
-    public readonly fns: BuildFunctions;
+    public readonly fns: cls.node.NodeFunctions;
 
     /**
      * Build a complete args object.
@@ -194,26 +218,7 @@ export abstract class AbstractStage<
     }
 
 
-
-    /* CONSTRUCTOR
-     * ====================================================================== */
-
-    constructor (
-        args: Args,
-        protected readonly clr: cls.MessageMaker.Colour = 'black',
-    ) {
-        super( args as TU.Objects.RecursivePartial<Args> & Args );
-
-        this.fns = new BuildFunctions();
-    }
-
-
-
-    /* LOCAL METHODS
-     * ====================================================================== */
-
-
-    /* META UTILITIES ===================================== */
+    /* Meta ------------------ */
 
     /** 
      * An object of the project’s pacakge.json file.
@@ -227,7 +232,7 @@ export abstract class AbstractStage<
 
         if ( this.#pkg === undefined ) {
             this.#pkg = JSON.parse(
-                this.fns.fs.readFile( this.fns.args.paths.packageJson )
+                this.fns.fs.readFile( 'package.json' )
             ) as TU.PackageJson;
         }
 
@@ -261,6 +266,25 @@ export abstract class AbstractStage<
 
         return this.#releasePath;
     }
+
+
+
+    /* CONSTRUCTOR
+     * ====================================================================== */
+
+    constructor (
+        args: Args,
+        protected readonly clr: cls.MessageMaker.Colour = 'black',
+    ) {
+        super( args as TU.Objects.RecursivePartial<Args> & Args );
+
+        this.fns = new cls.node.NodeFunctions();
+    }
+
+
+
+    /* LOCAL METHODS
+     * ====================================================================== */
 
 
     /* MESSAGES ===================================== */
@@ -459,7 +483,7 @@ export abstract class AbstractStage<
     ): Promise<void> {
 
         if ( !this.args[ 'css-update' ] ) {
-            this.fns.fs.deleteFiles( this.fns.glob( output ) );
+            this.fns.fs.deleteFiles( this.glob( output ) );
         }
 
         const packaging: boolean | null = this.args.packaging || null;
@@ -481,7 +505,7 @@ export abstract class AbstractStage<
         };
 
         this.verboseLog( `compiling ${ input } to ${ output }...`, 0 + logBaseLevel );
-        this.fns.cmd( `sass ${ input }:${ output } ${ this.fns.nc.cmdArgs( args ) }` );
+        this.fns.nc.cmd( `sass ${ input }:${ output }`, args );
 
         for ( const o of currentReplacements( this ).concat( pkgReplacements( this ) ) ) {
             this.replaceInFiles(
@@ -524,7 +548,7 @@ export abstract class AbstractStage<
                 const outDirGlobs = this.fns.fs.pathRelative( this.fns.fs.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
 
                 this.verboseLog( `deleting current contents (${ outDirGlobs })...`, 1 + logBaseLevel );
-                this.fns.fs.deleteFiles( this.fns.glob( outDirGlobs ) );
+                this.fns.fs.deleteFiles( this.glob( outDirGlobs ) );
             }
         }
 
@@ -537,7 +561,7 @@ export abstract class AbstractStage<
         const tscCmd = `tsc ${ this.fns.nc.cmdArgs( cmdParams, true, false ) }`;
 
         this.args.debug && this.progressLog( tscCmd, ( this.args.verbose ? 3 : 2 ) + logBaseLevel );
-        this.fns.cmd( tscCmd );
+        this.fns.nc.cmd( tscCmd );
     }
 
     protected replaceInFiles(
@@ -586,6 +610,195 @@ export abstract class AbstractStage<
             maxWidth: null,
         } );
 
-        this.fns.cmd( cmd );
+        this.fns.nc.cmd( cmd );
+    }
+
+
+    /* Files ------------------ */
+
+    /**
+     * Copies globbedFiles from one directory to another.
+     * 
+     * @param _glob         
+     * @param _destination  Destination directory.
+     * @param _source       Optional. Source directory. Default `'.'`.
+     * @param _opts         
+     */
+    public copyFiles(
+        _glob: string | string[],
+        _destination: string,
+        _source: string = '.',
+        args: Partial<CopyFilesArgs> = {}
+    ): void {
+        if ( !Array.isArray( _glob ) ) { _glob = [ _glob ]; }
+
+        // I prefer them as constants
+        const [ glob, destination, source ] = [ _glob, _destination, _source ];
+
+        const fullArgs = this.mergeArgs<
+            any,
+            CopyFilesArgs,
+            Partial<CopyFilesArgs>
+        >(
+            {
+                ignoreGlobs: [],
+                includeDefaultIgnoreGlobs: false,
+            } as CopyFilesArgs,
+            args
+        ) as CopyFilesArgs;
+
+        /** 
+         * Resolved versions of the directory paths with trailing slashes.
+         */
+        const resolved = {
+            destination: this.fns.fs.pathResolve( destination ).replace( /\/*$/gi, '/' ),
+            source: this.fns.fs.pathResolve( source ).replace( /\/*$/gi, '/' ),
+        };
+
+        const ignoreGlobs: string[] = fullArgs.includeDefaultIgnoreGlobs ? [
+            ...fullArgs.ignoreGlobs,
+        ] : fullArgs.ignoreGlobs;
+        ignoreGlobs.push( '**/._*' );
+
+        // Uses NodePath because the resolved paths have already gone through this.fns.fs.pathResolve()
+        const globbedFiles: string[] = this.glob(
+            glob.map( g => NodePath.resolve( resolved.source, g ) ),
+            {
+                ignore: ignoreGlobs.map( g => NodePath.resolve( resolved.source, g ) ),
+            }
+        );
+
+        // const ignoreFiles = this.glob( fullArgs.ignoreGlobs, { root: resolved.source, ignore: [], } );
+
+        /**
+         * Write the files.
+         */
+        for ( const file of globbedFiles ) {
+            // if ( ignoreFiles.includes( file ) ) { continue; }
+
+            const destFile = file
+                .replace(
+                    new RegExp( '^' + fns.escRegExp( resolved.source ), 'gi' ),
+                    fns.escRegExpReplace( resolved.destination )
+                )
+                .replace( /\/+$/gi, '' );
+
+            const destDirectory = NodePath.dirname( destFile );
+
+            const stats = NodeFS.statSync( file );
+
+            if ( stats.isDirectory() ) {
+
+                NodeFS.mkdirSync( destDirectory, { recursive: true } );
+                // this.copyFiles(
+                //     '*',
+                //     destFile,
+                //     file,
+                // );
+
+            } else {
+                NodeFS.mkdirSync( destDirectory, { recursive: true } );
+                NodeFS.copyFileSync( file, destFile );
+            }
+        }
+    }
+
+    /**
+     * Alias for `globSync()`.
+     * 
+     * @param relative  Whether relative paths should be returned.
+     */
+    public glob(
+        globs: string | string[],
+        args: GlobOptions & { filesOnly?: boolean; } = {},
+        relative: boolean = false,
+    ): string[] {
+        const DEFAULT_GlobOptions: GlobOptions = {
+            absolute: true,
+            dot: true,
+            ignore: [
+                '**/._*',
+                '**/._*/**/*',
+                '**/.DS_STORE',
+                '**/.smbdelete*',
+                '**/.smbdelete*/**/*',
+            ],
+            realpath: true,
+        };
+
+        const globResult = globSync( globs, this.mergeArgs<
+            any,
+            GlobOptions,
+            Partial<GlobOptions>
+        >(
+            DEFAULT_GlobOptions,
+            args,
+            false
+        ) ) as string | string[];
+
+        let filepaths: string[] = (
+            Array.isArray( globResult )
+                ? globResult
+                : [ globResult ]
+        ).sort();
+
+        if ( args.filesOnly ) {
+
+            filepaths = filepaths.filter(
+                path => NodeFS.lstatSync( this.fns.fs.pathResolve( path ) ).isFile()
+            );
+        }
+
+        return relative ? filepaths.map(
+            ( path ) => this.fns.fs.pathRelative( path )
+        ) : filepaths;
+    }
+
+
+    /* Formatters ------------------ */
+
+    /**
+     * A predictably-formatted datestamp.
+     * 
+     * @param date    Optional. Default is a new Date object.
+     * @param format  Optional. Default `'yyyy-MM-dd'`.
+     * 
+     * @return
+     */
+    public datestamp(
+        date: Date | null = null,
+        format: string | null = null,
+    ): string {
+        return DateTime.fromJSDate( date ?? new Date() ).toFormat( format ?? 'yyyy-MM-dd' );
+    }
+
+    /**
+     * A predictably-formatted datetimestamp.
+     * 
+     * @param date    Optional. Default is a new Date object.
+     * @param format  Optional. Default `'yyyy-MM-dd hh:mm'`.
+     * 
+     * @return
+     */
+    public datetimestamp(
+        date: Date | null = null,
+        format: string | null = null,
+    ): string {
+        return DateTime.fromJSDate( date ?? new Date() ).toFormat( format ?? 'yyyy-MM-dd hh:mm' );
+    }
+
+    /**
+     * A predictably-formatted timestamp.
+     * 
+     * @param date    Optional. Default is a new Date object.
+     * @param format  Optional. Default `'hh:mm'`.
+     * 
+     * @return
+     */
+    public timestamp(
+        date: Date | null = null,
+        format: string | null = null,
+    ): string {
+        return DateTime.fromJSDate( date ?? new Date() ).toFormat( format ?? 'hh:mm' );
     }
 }

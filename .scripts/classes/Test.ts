@@ -94,12 +94,12 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     protected async js() {
         this.progressLog( 'running jest...', 1 );
 
-        this.fns.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
+        this.fns.nc.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
 
         if ( this.args.packaging && !this.args.dryrun ) {
 
             this.verboseLog( 'removing test files from dist...', 2 );
-            this.fns.fs.deleteFiles( this.fns.glob( [
+            this.fns.fs.deleteFiles( this.glob( [
                 'dist/**/*.test.d.ts',
                 'dist/**/*.test.d.ts.map',
                 'dist/**/*.test.js',

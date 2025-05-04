@@ -56,6 +56,7 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
      * @category Args
      */
     get ARGS_DEFAULT(): {
+        readonly cmdErrorHandler: NodeConsole.CmdErrorHandler;
         readonly msgMaker: {
             readonly msg: {
                 readonly maxWidth: 100;
@@ -88,9 +89,20 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
     get maxWidth(): number;
     constructor(args?: RecursivePartial<NodeConsole.Args>);
     /**
+     * Runs given string as a terminal command, optional with arguments.
+     *
+     * @category Terminal
+     *
+     * @param cmd           Command to run in the terminal.
+     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     */
+    cmd(cmd: string, args?: Parameters<NodeConsole['cmdArgs']>[0], literalFalse?: Parameters<NodeConsole['cmdArgs']>[1], equals?: Parameters<NodeConsole['cmdArgs']>[2]): void;
+    /**
      * Formats an arguments object into a command-line string of arguments.
      *
-     * @category Formatters
+     * @category Terminal
      *
      * @param obj           Arguments to translate.
      * @param literalFalse  Optional. If true, false arguments are converted to
@@ -258,6 +270,10 @@ export declare namespace NodeConsole {
      */
     interface Args extends AbstractConfigurableClass.Args {
         /**
+         * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
+         */
+        cmdErrorHandler: CmdErrorHandler;
+        /**
          * Optional overrides used when initializing {@link MessageMaker}.
          */
         msgMaker: RecursivePartial<MessageMaker.Args>;
@@ -276,6 +292,22 @@ export declare namespace NodeConsole {
          */
         varInspect: Partial<VariableInspector.Args>;
     }
+    /**
+     * Error thrown from the terminal in {@link NodeConsole.cmd}.
+     */
+    type CmdError = {
+        status: number;
+        signal: number | null;
+        output?: string[];
+        pid: number;
+        stdout?: string;
+        stderr?: string;
+    };
+    /**
+     * Function used to handle errors from the terminal in
+     * {@link NodeConsole.cmd}.
+     */
+    type CmdErrorHandler = (err: CmdError) => void;
     /**
      * Optional configuration for {@link NodeConsole.log}.
      */
