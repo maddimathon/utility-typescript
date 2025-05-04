@@ -19,6 +19,34 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **0.3.0** -- 2025-05-04
+
+### Breaking
+- Removed BuildFunctions
+- Moved BuildFunctions.releasePath and BuildFunctions.pkgVersion to
+  AbstractStage
+- Moved BuildFunctions methods to AbstractStage - copyFiles(), datestamp(),
+  datetimestamp(), glob(), timestamp()
+- Moved BuildFunctions.implodeWithIndent() to MessageMaker
+- Moved BuildFunctions.cmd() to NodeConsole
+
+### Added
+- NodeFiles methods - deleteFiles(), readFile(), writeFile()
+- NodeConsole (beta) method - cmdArgs()
+
+### Changed
+- NodeFiles.uniquePath() - slight performance improvements
+
+### Fixed
+- Minor build script improvements
+
+### Removed
+- Removed minify, prettify, catchErrCLI methods from AbstractStage (build
+  scripts) - was unused
+- Removed hangingIndent methods from BuildFunctions (build scripts) - was
+  protected
+
+
 ## **0.2.0** -- 2025-05-02
 
 ### Added

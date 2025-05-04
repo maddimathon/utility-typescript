@@ -432,6 +432,8 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /**
      * Joins string arrays with a single new line and adds an indent to the
      * beginning of every line, and adds next level of indent for child arrays.
+     * 
+     * @category  Formatters
      *
      * @param lines   String to implode. Arrays are joined with `'\n'`.
      * @param indent  Optional. Default `this.args.msg.tab`.

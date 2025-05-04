@@ -551,13 +551,20 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
     /**
      * Runs given string as a terminal command, optional with arguments.
+     * 
+     * @category Terminal
+     * 
+     * @param cmd           Command to run in the terminal.
+     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      */
     public cmd(
         cmd: string,
         args: Parameters<NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
         literalFalse?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 1 ],
         equals?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 2 ],
-    ) {
+    ): void {
 
         try {
             nodeExecSync(
@@ -574,7 +581,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
     /**
      * Formats an arguments object into a command-line string of arguments.
      * 
-     * @category Formatters
+     * @category Terminal
      * 
      * @param obj           Arguments to translate.
      * @param literalFalse  Optional. If true, false arguments are converted to 
