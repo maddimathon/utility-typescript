@@ -66,8 +66,6 @@
 
         "snap": "tsx --tsconfig .scripts/tsconfig.json .scripts/snapshot.ts",
 
-
-
         "compile": "tsx --tsconfig .scripts/tsconfig.json .scripts/compile.ts",
 
         "build":       "tsx --tsconfig .scripts/tsconfig.json .scripts/build.ts",
@@ -77,28 +75,15 @@
         "test": "tsx --tsconfig .scripts/tsconfig.json .scripts/test.ts",
         
 
-        
         "prewatch": "npm run --silent build -- --starting --without minimize,prettify,test",
         
         "watch": "run-p --silent watch:*",
             "watch:js": "watch -p 'src/ts/**/*' -c 'npm run --silent quick-build -- --compile-only js --watchedWatcher \"watch:js\" --watchedChange --watchedFilename \"$FILENAME\" --watchedEvent \"$EVENT\" && npm run --silent reload'",
-
-        
-        "prestart": "run-s --silent prewatch",
-
-        "quick-start": "run-p --silent start:* watch:*",
-        
-        "start": "run-p --silent start:* watch:*",
-            "start:server": "browser-sync docs",
-
-        "reload": "echo \"[$(date +%H:%M)] reloading page (${FILENAME})...\" && browser-sync reload",
         
 
-        
-        "dryrun":  "tsx --tsconfig .scripts/tsconfig.json .scripts/package.ts --packaging --dryrun",
         "package": "tsx --tsconfig .scripts/tsconfig.json .scripts/package.ts --packaging",
-
-
+        
+        "dryrun":  "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts --packaging --dryrun",
         "release": "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts"
 
     },
@@ -111,7 +96,6 @@
         "@types/luxon": "3.6.2",
         "@types/minimist": "1.2.5",
         "@types/node": "22.14.0",
-        "browser-sync": "3.0.4",
         "glob": "11.0.1",
         "jest": "29.7.0",
         "luxon": "3.6.1",
