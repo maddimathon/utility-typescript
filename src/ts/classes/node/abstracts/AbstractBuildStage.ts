@@ -1,5 +1,5 @@
 /**
- * @since 0.4.0-draft
+ * @since 0.4.1
  * 
  * @packageDocumentation
  */
@@ -149,6 +149,38 @@ export abstract class AbstractBuildStage<
     /* METHODS
      * ====================================================================== */
 
+    /**
+     * Whether the given substage should be run according to the values of
+     * `{@link AbstractBuildStage.Args}.only` and
+     * `{@link AbstractBuildStage.Args}.without`.
+     * 
+     * @param subStage  Substage to check.
+     * 
+     * @return  Whether to run this stage.
+     */
+    public isSubStageIncluded( subStage: SubStage ): boolean {
+
+        const include: boolean = Boolean(
+            !this.args.only
+            || this.args.only == subStage
+            || this.args.only.includes( subStage )
+        );
+
+        const exclude: boolean = Boolean(
+            this.args.without
+            && (
+                this.args.without == subStage
+                || this.args.without.includes( subStage )
+            )
+        );
+
+        return Boolean(
+            include
+            && !exclude
+            && this[ subStage as keyof typeof this ]
+        );
+    }
+
 
     /* MESSAGES ===================================== */
 
@@ -294,18 +326,7 @@ export abstract class AbstractBuildStage<
         /* loop through the steps in order */
         for ( const method of this.subStages ) {
 
-            const include: boolean = Boolean(
-                !this.args.only
-                || this.args.only == method
-                || this.args.only.includes( method )
-            );
-
-            const exclude: boolean = Boolean(
-                this.args.without
-                && ( this.args.without == method || this.args.without.includes( method ) )
-            );
-
-            if ( include && !exclude && this[ method as keyof typeof this ] ) {
+            if ( this.isSubStageIncluded( method ) ) {
                 await this.runStage( method );
             }
         }

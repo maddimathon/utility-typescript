@@ -1,13 +1,13 @@
 /**
- * @since 0.4.0
+ * @since 0.4.1
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0
+ * @package @maddimathon/utility-typescript@0.4.1
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0
+ * @maddimathon/utility-typescript@0.4.1
  * @license MIT
  */
 // import type { RecursivePartial } from '../../types/objects/index.js';
@@ -76,6 +76,26 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
     }
     /* METHODS
      * ====================================================================== */
+    /**
+     * Whether the given substage should be run according to the values of
+     * `{@link AbstractBuildStage.Args}.only` and
+     * `{@link AbstractBuildStage.Args}.without`.
+     *
+     * @param subStage  Substage to check.
+     *
+     * @return  Whether to run this stage.
+     */
+    isSubStageIncluded(subStage) {
+        const include = Boolean(!this.args.only
+            || this.args.only == subStage
+            || this.args.only.includes(subStage));
+        const exclude = Boolean(this.args.without
+            && (this.args.without == subStage
+                || this.args.without.includes(subStage)));
+        return Boolean(include
+            && !exclude
+            && this[subStage]);
+    }
     /* MESSAGES ===================================== */
     /**
      * Creates an argument object used to print messages to the terminal, adding
@@ -177,12 +197,7 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
         await this.startEndNotice('start');
         /* loop through the steps in order */
         for (const method of this.subStages) {
-            const include = Boolean(!this.args.only
-                || this.args.only == method
-                || this.args.only.includes(method));
-            const exclude = Boolean(this.args.without
-                && (this.args.without == method || this.args.without.includes(method)));
-            if (include && !exclude && this[method]) {
+            if (this.isSubStageIncluded(method)) {
                 await this.runStage(method);
             }
         }

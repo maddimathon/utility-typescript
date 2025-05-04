@@ -1,5 +1,5 @@
 /**
- * @since 0.4.0-draft
+ * @since 0.4.1
  * 
  * @packageDocumentation
  */

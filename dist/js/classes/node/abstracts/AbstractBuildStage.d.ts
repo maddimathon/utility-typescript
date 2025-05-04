@@ -1,13 +1,13 @@
 /**
- * @since 0.4.0
+ * @since 0.4.1
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0
+ * @package @maddimathon/utility-typescript@0.4.1
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0
+ * @maddimathon/utility-typescript@0.4.1
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../../abstracts/AbstractConfigurableClass.js';
@@ -61,6 +61,16 @@ export declare abstract class AbstractBuildStage<SubStage extends string | never
      */
     buildArgs(args?: Partial<Args>): Args;
     constructor(args?: Partial<Args>, clr?: MessageMaker.Colour);
+    /**
+     * Whether the given substage should be run according to the values of
+     * `{@link AbstractBuildStage.Args}.only` and
+     * `{@link AbstractBuildStage.Args}.without`.
+     *
+     * @param subStage  Substage to check.
+     *
+     * @return  Whether to run this stage.
+     */
+    isSubStageIncluded(subStage: SubStage): boolean;
     /**
      * Creates an argument object used to print messages to the terminal, adding
      * styling defaults by depth level.

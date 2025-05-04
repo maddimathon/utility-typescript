@@ -200,18 +200,16 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
                 this.fns.fs.writeFile(
                     'package.json',
-                    currentPkgJson.replace( /"version":\s*"[^"]*"/gi, this.fns.fns.escRegExpReplace( `"version": "${ inputVersion }"` ) ),
+                    currentPkgJson.replace(
+                        /"version":\s*"[^"]*"/gi,
+                        this.fns.fns.escRegExpReplace( `"version": "${ inputVersion }"` )
+                    ),
                     { force: true }
                 );
             }
 
-            const excludeChangelog: boolean = Boolean(
-                this.args.without
-                && ( this.args.without == 'changelog' || this.args.without.includes( 'changelog' ) )
-            );
-
             // returns if prep questions fail
-            if ( !this.args.dryrun && !excludeChangelog ) {
+            if ( !this.args.dryrun && this.isSubStageIncluded( 'changelog' ) ) {
 
                 // returns
                 if (
