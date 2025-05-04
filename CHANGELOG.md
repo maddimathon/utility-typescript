@@ -19,13 +19,13 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
-## **0.4.1** -- 2025-05-04
+## **0.4.2** -- 2025-05-04
 
 ### Added
 - AbstractBuildStage new method - isSubStageIncluded()
 
 
-## **0.4.1** -- 2025-05-04
+## **0.4.2** -- 2025-05-04
 
 ### Added
 - Added AbstractBuildStage - and updated build scripts accordingly

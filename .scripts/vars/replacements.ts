@@ -23,7 +23,7 @@ export function currentReplacements( stage: AbstractStage<any, any> ): Replaceme
 export function pkgReplacements( stage: AbstractStage<any, any> ): ReplacementObject[] {
     return [
         { find: '2025-05-04', replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
-        { find: '0.4.1', replace: stage.pkgVersion, },
+        { find: '0.4.2', replace: stage.pkgVersion, },
         { find: '2025', replace: stage.datestamp( null, 'yyyy' ), },
     ];
 }

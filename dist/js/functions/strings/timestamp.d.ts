@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.1
+ * @package @maddimathon/utility-typescript@0.4.2
  */
 /*!
- * @maddimathon/utility-typescript@0.4.1
+ * @maddimathon/utility-typescript@0.4.2
  * @license MIT
  */
 import type { LangLocaleCode } from '../../types/string-literals/index.js';

@@ -4,17 +4,17 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.1
+ * @package @maddimathon/utility-typescript@0.4.2
  */
 /*!
- * @maddimathon/utility-typescript@0.4.1
+ * @maddimathon/utility-typescript@0.4.2
  * @license MIT
  */
 import { AnyClass } from '../functions/basics.js';
 /**
  * Merges object shapes into one.
  *
- * @since 0.4.1
+ * @since 0.4.2
  *
  * @example
  * ```ts
