@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -239,6 +239,7 @@ export class MessageMaker extends AbstractConfigurableClass {
                     pink: '2;179;77;145',
                 },
             },
+            argsRecursive: true,
             msg: {
                 bold: false,
                 clr: null,
@@ -254,7 +255,6 @@ export class MessageMaker extends AbstractConfigurableClass {
                 maxWidth: null,
                 tab: '    ',
             },
-            argsRecursive: true,
             painter: null,
             paintFormat: null,
             paintIfEmpty: false,

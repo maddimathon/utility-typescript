@@ -12,14 +12,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 export type * from './basics.js';

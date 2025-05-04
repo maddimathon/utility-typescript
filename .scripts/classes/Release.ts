@@ -36,14 +36,14 @@ export type ReleaseArgs = AbstractArgs<ReleaseStages> & {
     'without-pkg'?: PackageStages | PackageStages[];
 };
 
-export type ReleaseStages = typeof testStages[ number ];
+export type ReleaseStages = typeof releaseSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const testStages = [
+const releaseSubStages = [
     'changelog',
     'package',
     'replace',
@@ -64,7 +64,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     /* LOCAL PROPERTIES
     * ====================================================================== */
 
-    public stages = testStages;
+    public subStages = releaseSubStages;
 
     public get ARGS_DEFAULT() {
 
@@ -97,7 +97,10 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
         const depth = this.args[ 'log-base-level' ] ?? 0;
 
         let linesIn = 2;
-        let linesOut = ( this.args.debug || this.args.verbose ) ? 1 : 0;
+
+        let linesOut = ( this.args.debug || this.args.verbose )
+            ? 1
+            : ( which === 'start' ? 1 : 0 );
 
         const msg: Parameters<typeof this.progressLog>[ 0 ] = which === 'start'
             ? [
@@ -199,8 +202,13 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
                 );
             }
 
+            const excludeChangelog: boolean = Boolean(
+                this.args.without
+                && ( this.args.without == 'changelog' || this.args.without.includes( 'changelog' ) )
+            );
+
             // returns if prep questions fail
-            if ( !this.args.dryrun ) {
+            if ( !this.args.dryrun && !excludeChangelog ) {
 
                 // returns
                 if (

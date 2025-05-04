@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -210,9 +210,6 @@ export class VariableInspector extends AbstractConfigurableClass {
             includePrefix: true,
             includeType: true,
             includeValue: true,
-            // includePrototypeDescriptors: true,
-            // includeDefaultPrototypeDescriptors: false,
-            // includePrototypeInspection: false,
             indent: '    ',
             inspectClasses: false,
             inspectFunctions: false,
@@ -221,8 +218,6 @@ export class VariableInspector extends AbstractConfigurableClass {
             localizeDateOptions: {},
             localizeNumbers: false,
             localizeNumberOptions: {},
-            // multilineBreakVisualizers: false,
-            // multilineBreakVisualizerString: '⠀',
             argsRecursive: false,
             stringQuoteCharacter: '"',
         };

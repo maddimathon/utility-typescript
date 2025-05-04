@@ -22,8 +22,8 @@ export function currentReplacements( stage: AbstractStage<any, any> ): Replaceme
 
 export function pkgReplacements( stage: AbstractStage<any, any> ): ReplacementObject[] {
     return [
-        { find: '___PKG_DATE___', replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
-        { find: '___PKG_VERSION___', replace: stage.pkgVersion, },
-        { find: '___PKG_YEAR___', replace: stage.datestamp( null, 'yyyy' ), },
+        { find: '2025-05-04', replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
+        { find: '0.4.0-draft', replace: stage.pkgVersion, },
+        { find: '2025', replace: stage.datestamp( null, 'yyyy' ), },
     ];
 }

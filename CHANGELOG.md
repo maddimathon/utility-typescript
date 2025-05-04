@@ -19,6 +19,30 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **0.4.0-draft** -- 2025-05-04
+
+### Added
+- Added AbstractBuildStage - and updated build scripts accordingly
+- Added object type - MergeObjects - allows prettier types for merged objects
+  (e.g., in mergeArgs())
+
+### Changed
+- Moved AbstractStage (build script) properties to AbstractBuildStage - fns,
+  stages
+- Moved AbstractStage (build script) methods to AbstractBuildStage -
+  buildArgs(), msgArgs(), progressLog(), run(), runStage(), startEndNotice(),
+  verboseLog()
+
+### Fixed
+- Slight improvements to mergeArgs() typing
+
+### Removed
+- Removed replace-in-files-cli dependency and updated AbstractStage with custom
+  implementation
+- Removed start npm scripts
+- Removed browser-sync dev dependency
+
+
 ## **0.3.0** -- 2025-05-04
 
 ### Breaking

@@ -16,7 +16,7 @@ import { AnyClass } from '../functions/basics.js';
 /**
  * Merges object shapes into one.
  * 
- * @since ___PKG_VERSION___
+ * @since 0.4.0-draft
  * 
  * @example
  * ```ts

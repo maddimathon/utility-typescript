@@ -23,14 +23,14 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 
 export type CompileArgs = AbstractArgs<CompileStages> & {};
 
-export type CompileStages = typeof compileStages[ number ];
+export type CompileStages = typeof compileSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const compileStages = [
+const compileSubStages = [
     'js',
 ] as const;
 
@@ -46,7 +46,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public stages = compileStages;
+    public subStages = compileSubStages;
 
     public get ARGS_DEFAULT() {
 

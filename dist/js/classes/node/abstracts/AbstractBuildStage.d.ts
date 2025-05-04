@@ -1,13 +1,13 @@
 /**
- * @since 0.4.0-draft
+ * @since 0.4.0
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../../abstracts/AbstractConfigurableClass.js';
@@ -20,19 +20,19 @@ import { NodeFunctions } from '../NodeFunctions.js';
  * To run a build stage, an instance of the class should be constructed.  Then,
  * call the async {@link AbstractBuildStage['run'] | `run` method}.  The
  * {@link AbstractBuildStage['run'] | `run` method} iterates through the
- * {@link AbstractBuildStage['stages'] | `stages` property} and calls each
+ * {@link AbstractBuildStage['subStages'] | `subStages` property} and calls each
  * substage as a method of this class (via the
  * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
  *
- * @typeParam Stages  String literal of substage names to be run during this
- * stage.
+ * @typeParam SubStage  String literal of substage names to be run during this
+ *                       stage.
  * @typeParam Args
  *
  * @example
  * ```ts
  * ```
  */
-export declare abstract class AbstractBuildStage<Stages extends string | never, Args extends AbstractBuildStage.Args<Stages>> extends AbstractConfigurableClass<Args> {
+export declare abstract class AbstractBuildStage<SubStage extends string | never, Args extends AbstractBuildStage.Args<SubStage>> extends AbstractConfigurableClass<Args> {
     /**
      * Default arguments for new objects.
      *
@@ -53,7 +53,7 @@ export declare abstract class AbstractBuildStage<Stages extends string | never, 
      * The substages for this class' build. There must be methods for each
      * stage.
      */
-    abstract readonly stages: readonly Stages[];
+    abstract readonly subStages: readonly SubStage[];
     /**
      * Build a complete args object.
      *
@@ -95,6 +95,12 @@ export declare abstract class AbstractBuildStage<Stages extends string | never, 
      * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
     progressLog(msg: Parameters<NodeConsole['timestampLog']>[0], level: number, msgArgs?: Parameters<NodeConsole['timestampLog']>[1], timeArgs?: Parameters<NodeConsole['timestampLog']>[2]): void;
+    /**
+     * Prints a message to the console signalling the start or end of this build
+     * stage.
+     *
+     * @param which  Whether we are starting or ending.
+     */
     abstract startEndNotice(which: "start" | "end"): Promise<void>;
     /**
      * Method for printing a log message to the console. Only if
@@ -110,12 +116,19 @@ export declare abstract class AbstractBuildStage<Stages extends string | never, 
      * @param msgArgs   Optional. Argument overrides for the message.
      * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
-    verboseLog(msg: Parameters<AbstractBuildStage<Stages, Args>['progressLog']>[0], level: Parameters<AbstractBuildStage<Stages, Args>['progressLog']>[1], msgArgs?: Parameters<AbstractBuildStage<Stages, Args>['progressLog']>[2], timeArgs?: Parameters<AbstractBuildStage<Stages, Args>['progressLog']>[3]): void;
-    run(args?: Partial<Args>): Promise<void>;
+    verboseLog(msg: Parameters<AbstractBuildStage<SubStage, Args>['progressLog']>[0], level: Parameters<AbstractBuildStage<SubStage, Args>['progressLog']>[1], msgArgs?: Parameters<AbstractBuildStage<SubStage, Args>['progressLog']>[2], timeArgs?: Parameters<AbstractBuildStage<SubStage, Args>['progressLog']>[3]): void;
+    /**
+     * This method should probably not be overwritten.
+     *
+     * Cycles through each substage and runs
+     * {@link AbstractBuildStage['runStage']} if the stage is not excluded or
+     * all sub-stages are included.
+     */
+    run(): Promise<void>;
     /**
      * Used to run a single stage within this class; used by `run()`.
      */
-    protected abstract runStage(stage: Stages): Promise<void>;
+    protected abstract runStage(stage: SubStage): Promise<void>;
 }
 /**
  * Used only for {@link AbstractBuildStage}.
@@ -124,15 +137,15 @@ export declare namespace AbstractBuildStage {
     /**
      * Optional configuration for {@link AbstractBuildStage}.
      */
-    type Args<Stages extends string | never> = AbstractConfigurableClass.Args & {
+    type Args<SubStage extends string | never> = AbstractConfigurableClass.Args & {
         /**
          * Only run this stage(s), else runs them all.
          */
-        only?: Stages | Stages[];
+        only?: SubStage | SubStage[];
         /**
          * Exclude this stage(s), else runs them all.
          */
-        without?: Stages | Stages[];
+        without?: SubStage | SubStage[];
         /**
          * Display extra information that could be helpful for debugging scripts.
          *

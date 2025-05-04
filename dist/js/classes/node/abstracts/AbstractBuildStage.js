@@ -1,13 +1,13 @@
 /**
- * @since 0.4.0-draft
+ * @since 0.4.0
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 // import type { RecursivePartial } from '../../types/objects/index.js';
@@ -20,12 +20,12 @@ import { NodeFunctions } from '../NodeFunctions.js';
  * To run a build stage, an instance of the class should be constructed.  Then,
  * call the async {@link AbstractBuildStage['run'] | `run` method}.  The
  * {@link AbstractBuildStage['run'] | `run` method} iterates through the
- * {@link AbstractBuildStage['stages'] | `stages` property} and calls each
+ * {@link AbstractBuildStage['subStages'] | `subStages` property} and calls each
  * substage as a method of this class (via the
  * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
  *
- * @typeParam Stages  String literal of substage names to be run during this
- * stage.
+ * @typeParam SubStage  String literal of substage names to be run during this
+ *                       stage.
  * @typeParam Args
  *
  * @example
@@ -165,20 +165,23 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
         this.progressLog(msg, level, msgArgs, timeArgs);
     }
     /* RUNNING ===================================== */
-    async run(args = {}) {
-        args = {
-            ...this.args,
-            ...args,
-        };
+    /**
+     * This method should probably not be overwritten.
+     *
+     * Cycles through each substage and runs
+     * {@link AbstractBuildStage['runStage']} if the stage is not excluded or
+     * all sub-stages are included.
+     */
+    async run() {
         /* start */
         await this.startEndNotice('start');
         /* loop through the steps in order */
-        for (const method of this.stages) {
-            const include = Boolean(!args.only
-                || args.only == method
-                || args.only.includes(method));
-            const exclude = Boolean(args.without
-                && (args.without == method || args.without.includes(method)));
+        for (const method of this.subStages) {
+            const include = Boolean(!this.args.only
+                || this.args.only == method
+                || this.args.only.includes(method));
+            const exclude = Boolean(this.args.without
+                && (this.args.without == method || this.args.without.includes(method)));
             if (include && !exclude && this[method]) {
                 await this.runStage(method);
             }

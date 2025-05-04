@@ -4,15 +4,15 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
+import type { LangLocaleCode } from '../types/string-literals/index.js';
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { typeOf } from '../functions/index.js';
-import { LangLocaleCode } from '../types/string-literals/html.js';
 /**
  * Inspects the value of a variable for debugging.
  *

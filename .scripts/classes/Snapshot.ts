@@ -23,14 +23,14 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 
 export type SnapshotArgs = AbstractArgs<SnapshotStages> & {};
 
-export type SnapshotStages = typeof snapshotStages[ number ];
+export type SnapshotStages = typeof snapshotSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const snapshotStages = [
+const snapshotSubStages = [
     'snapshot',
 ] as const;
 
@@ -46,7 +46,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public stages = snapshotStages;
+    public subStages = snapshotSubStages;
 
     public get ARGS_DEFAULT() {
 

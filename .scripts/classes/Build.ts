@@ -44,14 +44,14 @@ export type BuildArgs = AbstractArgs<BuildStages> & {
     'without-test'?: TestStages | TestStages[];
 };
 
-export type BuildStages = typeof buildStages[ number ];
+export type BuildStages = typeof buildSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const buildStages = [
+const buildSubStages = [
     'compile',
     'replace',
     'test',
@@ -70,7 +70,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public stages = buildStages;
+    public subStages = buildSubStages;
 
     public get ARGS_DEFAULT() {
 

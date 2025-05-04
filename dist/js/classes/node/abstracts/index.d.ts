@@ -1,13 +1,13 @@
 /**
- * @since 0.4.0-draft
+ * @since 0.4.0
  *
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 export * from './AbstractBuildStage.js';

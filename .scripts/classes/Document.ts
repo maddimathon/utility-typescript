@@ -31,14 +31,14 @@ import {
 export type DocumentArgs = AbstractArgs<DocumentStages> & {
 };
 
-export type DocumentStages = typeof docStages[ number ];
+export type DocumentStages = typeof docSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const docStages = [
+const docSubStages = [
     'ts',
     'replace',
 ] as const;
@@ -55,7 +55,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public stages = docStages;
+    public subStages = docSubStages;
 
     public get ARGS_DEFAULT() {
 

@@ -25,14 +25,14 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 
 export type TestArgs = AbstractArgs<TestStages> & {};
 
-export type TestStages = typeof testStages[ number ];
+export type TestStages = typeof testSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const testStages = [
+const testSubStages = [
     'js',
 ] as const;
 
@@ -48,7 +48,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     /* LOCAL PROPERTIES
     * ====================================================================== */
 
-    public stages = testStages;
+    public subStages = testSubStages;
 
     public get ARGS_DEFAULT() {
 

@@ -40,14 +40,14 @@ export type PackageArgs = AbstractArgs<PackageStages> & {
     'without-snap'?: SnapshotStages | SnapshotStages[];
 };
 
-export type PackageStages = typeof packageStages[ number ];
+export type PackageStages = typeof packageSubStages[ number ];
 
 
 
 /* # VARIABLES
  * ========================================================================== */
 
-const packageStages = [
+const packageSubStages = [
     'snapshot',
     'build',
     'copy',
@@ -66,7 +66,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public stages = packageStages;
+    public subStages = packageSubStages;
 
     public get ARGS_DEFAULT() {
 
@@ -172,7 +172,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
      * Copies files into @releases/ subdirectory.
      */
     public async copy(): Promise<void> {
-        this.progressLog( 'copying files to release directory...', 1 );
+        this.progressLog( 'copying files to package directory...', 1 );
 
 
         this.verboseLog( 'copying files to package...', 2 );

@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 0.4.0-draft
  * 
  * @packageDocumentation
  */
@@ -30,12 +30,12 @@ import { NodeFunctions } from '../NodeFunctions.js';
  * To run a build stage, an instance of the class should be constructed.  Then,
  * call the async {@link AbstractBuildStage['run'] | `run` method}.  The
  * {@link AbstractBuildStage['run'] | `run` method} iterates through the
- * {@link AbstractBuildStage['stages'] | `stages` property} and calls each
+ * {@link AbstractBuildStage['subStages'] | `subStages` property} and calls each
  * substage as a method of this class (via the
  * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
  *
- * @typeParam Stages  String literal of substage names to be run during this
- * stage.
+ * @typeParam SubStage  String literal of substage names to be run during this
+ *                       stage.
  * @typeParam Args    
  *
  * @example
@@ -43,8 +43,8 @@ import { NodeFunctions } from '../NodeFunctions.js';
  * ```
  */
 export abstract class AbstractBuildStage<
-    Stages extends string | never,
-    Args extends AbstractBuildStage.Args<Stages>,
+    SubStage extends string | never,
+    Args extends AbstractBuildStage.Args<SubStage>,
 > extends AbstractConfigurableClass<Args> {
 
 
@@ -102,7 +102,7 @@ export abstract class AbstractBuildStage<
      * The substages for this class' build. There must be methods for each
      * stage.
      */
-    public readonly abstract stages: readonly Stages[];
+    public readonly abstract subStages: readonly SubStage[];
 
 
     /* Args ===================================== */
@@ -244,6 +244,12 @@ export abstract class AbstractBuildStage<
         this.fns.nc.timestampLog( msg, args.msg, args.time );
     }
 
+    /**
+     * Prints a message to the console signalling the start or end of this build
+     * stage.
+     * 
+     * @param which  Whether we are starting or ending.
+     */
     public abstract startEndNotice( which: "start" | "end" ): Promise<void>;
 
     /**
@@ -261,10 +267,10 @@ export abstract class AbstractBuildStage<
      * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
     public verboseLog(
-        msg: Parameters<AbstractBuildStage<Stages, Args>[ 'progressLog' ]>[ 0 ],
-        level: Parameters<AbstractBuildStage<Stages, Args>[ 'progressLog' ]>[ 1 ],
-        msgArgs?: Parameters<AbstractBuildStage<Stages, Args>[ 'progressLog' ]>[ 2 ],
-        timeArgs?: Parameters<AbstractBuildStage<Stages, Args>[ 'progressLog' ]>[ 3 ],
+        msg: Parameters<AbstractBuildStage<SubStage, Args>[ 'progressLog' ]>[ 0 ],
+        level: Parameters<AbstractBuildStage<SubStage, Args>[ 'progressLog' ]>[ 1 ],
+        msgArgs?: Parameters<AbstractBuildStage<SubStage, Args>[ 'progressLog' ]>[ 2 ],
+        timeArgs?: Parameters<AbstractBuildStage<SubStage, Args>[ 'progressLog' ]>[ 3 ],
     ): void {
         if ( !this.args[ 'verbose' ] ) { return; }
         this.progressLog( msg, level, msgArgs, timeArgs );
@@ -273,27 +279,30 @@ export abstract class AbstractBuildStage<
 
     /* RUNNING ===================================== */
 
-    public async run( args: Partial<Args> = {} ) {
-        args = {
-            ...this.args,
-            ...args,
-        };
+    /**
+     * This method should probably not be overwritten.
+     *
+     * Cycles through each substage and runs
+     * {@link AbstractBuildStage['runStage']} if the stage is not excluded or
+     * all sub-stages are included.
+     */
+    public async run() {
 
         /* start */
         await this.startEndNotice( 'start' );
 
         /* loop through the steps in order */
-        for ( const method of this.stages ) {
+        for ( const method of this.subStages ) {
 
             const include: boolean = Boolean(
-                !args.only
-                || args.only == method
-                || args.only.includes( method )
+                !this.args.only
+                || this.args.only == method
+                || this.args.only.includes( method )
             );
 
             const exclude: boolean = Boolean(
-                args.without
-                && ( args.without == method || args.without.includes( method ) )
+                this.args.without
+                && ( this.args.without == method || this.args.without.includes( method ) )
             );
 
             if ( include && !exclude && this[ method as keyof typeof this ] ) {
@@ -308,7 +317,7 @@ export abstract class AbstractBuildStage<
     /**
      * Used to run a single stage within this class; used by `run()`.
      */
-    protected abstract runStage( stage: Stages ): Promise<void>;
+    protected abstract runStage( stage: SubStage ): Promise<void>;
 }
 
 /**
@@ -319,17 +328,17 @@ export namespace AbstractBuildStage {
     /**
      * Optional configuration for {@link AbstractBuildStage}.
      */
-    export type Args<Stages extends string | never> = AbstractConfigurableClass.Args & {
+    export type Args<SubStage extends string | never> = AbstractConfigurableClass.Args & {
 
         /**
          * Only run this stage(s), else runs them all.
          */
-        only?: Stages | Stages[];
+        only?: SubStage | SubStage[];
 
         /**
          * Exclude this stage(s), else runs them all.
          */
-        without?: Stages | Stages[];
+        without?: SubStage | SubStage[];
 
 
         /* ## LOG MESSAGES ===================================== */

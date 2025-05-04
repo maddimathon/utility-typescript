@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.0-draft
+ * @maddimathon/utility-typescript@0.4.0
  * @license MIT
  */
 import type { RecursivePartial } from '../types/objects/index.js';
@@ -96,6 +96,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
                 readonly pink: "2;179;77;145";
             };
         };
+        readonly argsRecursive: true;
         readonly msg: {
             readonly bold: false;
             readonly clr: null;
@@ -111,7 +112,6 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
             readonly maxWidth: null;
             readonly tab: "    ";
         };
-        readonly argsRecursive: true;
         readonly painter: null;
         readonly paintFormat: null;
         readonly paintIfEmpty: false;

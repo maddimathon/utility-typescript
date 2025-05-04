@@ -36,7 +36,9 @@ import {
 /* # TYPES
  * ========================================================================== */
 
-export type AbstractArgs<Stages extends string | never> = cls.node.AbstractBuildStage.Args<Stages> & {
+export type AbstractArgs<
+    SubStage extends string | never,
+> = cls.node.AbstractBuildStage.Args<SubStage> & {
 
     _: string[];
 
@@ -79,9 +81,9 @@ type GlobArgs = fns.mergeArgs.Obj & GlobOptions;
  * ========================================================================== */
 
 export abstract class AbstractStage<
-    Stages extends string | never,
-    Args extends AbstractArgs<Stages>,
-> extends cls.node.AbstractBuildStage<Stages, Args> {
+    SubStage extends string | never,
+    Args extends AbstractArgs<SubStage>,
+> extends cls.node.AbstractBuildStage<SubStage, Args> {
 
     public static get ARGS_ABSTRACT(): AbstractArgs<string> {
 
