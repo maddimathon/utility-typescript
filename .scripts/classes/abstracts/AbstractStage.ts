@@ -1,7 +1,6 @@
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -27,7 +26,7 @@ import { globSync } from 'glob';
 import { currentReplacements, pkgReplacements } from '../../vars/replacements.js';
 
 import {
-    // TU as TS,
+    // Types as TS,
     classes as cls,
     functions as fns,
 } from '../../../src/ts/index.js';
@@ -37,7 +36,7 @@ import {
 /* # TYPES
  * ========================================================================== */
 
-export type AbstractArgs<Stages extends string | never> = cls.abstracts.AbstractConfigurableClass.Args & {
+export type AbstractArgs<Stages extends string | never> = cls.node.AbstractBuildStage.Args<Stages> & {
 
     _: string[];
 
@@ -47,98 +46,9 @@ export type AbstractArgs<Stages extends string | never> = cls.abstracts.Abstract
     'css-update'?: boolean;
 
     /**
-     * Only run this stage(s), else runs them all.
-     */
-    only?: Stages | Stages[];
-
-    optsRecursive?: false;
-
-    /**
      * Passes --quiet param to sass when compiling; quiets output.
      */
     'sass-quiet'?: boolean;
-
-    /**
-     * Exclude this stage(s), else runs them all.
-     */
-    without?: Stages | Stages[];
-
-
-    /* ## LOG MESSAGES ===================================== */
-
-    /**
-     * Display extra information that could be helpful for debugging scripts.
-     */
-    debug?: boolean;
-
-    /**
-     * The minimum log level to output.
-     */
-    'log-base-level'?: number;
-
-    /**
-     * Display notice when starting/ending.
-     */
-    notice?: boolean;
-
-    /**
-     * Display progress update messages after initial notice.
-     */
-    progress?: boolean;
-
-    /**
-     * Display extra status updates.
-     */
-    verbose?: boolean;
-
-
-    /* ## STAGE FLAGS ===================================== */
-    /* these are values used to indicate that another build script is being run */
-
-    /**
-     * Indicates that this is being done as part of the building script.
-     */
-    building?: boolean;
-
-    /**
-     * Indicates a package/release dry-run - i.e., make no irreversable changes.
-     */
-    dryrun?: boolean;
-
-    /**
-     * Indicates that this is being done as part of the packaging script - i.e.,
-     * go full out.
-     */
-    packaging?: boolean;
-
-    /**
-     * Indicates that this is being done as part of the releasing script - i.e.,
-     * go full out and update all placeholders.
-     */
-    releasing?: boolean;
-
-    /**
-     * Indicates that this is being done as just before the start or watch scripts.
-     */
-    starting?: boolean;
-
-
-    /* ### Watching-Related ------------------ */
-
-    /**
-     * Event name that triggered a watch event.
-     */
-    watchedEvent?: string;
-
-    /**
-     * File that triggered a watch event.
-     */
-    watchedFilename?: string;
-
-    /**
-     * Watcher script that triggered a watch event.
-     */
-    watchedWatcher?: string;
 };
 
 /**
@@ -159,15 +69,9 @@ export type CopyFilesArgs = {
     includeDefaultIgnoreGlobs: boolean,
 };
 
-export type CmdArgs = { [ key: string ]: boolean | number | string | null; };
+type CmdArgs = Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 0 ];
 
-export type ReplaceInFilesArgs = CmdArgs & {
-    regex?: RegExp | RegExp[];
-    string?: string | string[];
-    replacement: string;
-    'ignore-case': true | null;
-    'no-glob': true | null;
-};
+type GlobArgs = fns.mergeArgs.Obj & GlobOptions;
 
 
 
@@ -177,45 +81,22 @@ export type ReplaceInFilesArgs = CmdArgs & {
 export abstract class AbstractStage<
     Stages extends string | never,
     Args extends AbstractArgs<Stages>,
-> extends cls.abstracts.AbstractConfigurableClass<Args> {
+> extends cls.node.AbstractBuildStage<Stages, Args> {
 
     public static get ARGS_ABSTRACT(): AbstractArgs<string> {
 
         return {
             _: [],
-            optsRecursive: false,
-        };
+            ...cls.node.AbstractBuildStage.abstractArgs( {
+                argsRecursive: false,
+            } )
+        } as AbstractArgs<string>;
     }
 
 
 
     /* LOCAL PROPERTIES
      * ====================================================================== */
-
-    public abstract stages: readonly Stages[];
-
-    public readonly fns: cls.node.NodeFunctions;
-
-    /**
-     * Build a complete args object.
-     */
-    public buildArgs( args?: Partial<Args> ): Args {
-
-        const optsRecursive = this.ARGS_DEFAULT.optsRecursive
-            ?? AbstractStage.ARGS_ABSTRACT.optsRecursive;
-
-        const mergedDefault = fns.mergeArgs(
-            cls.abstracts.AbstractConfigurableClass.abstractArgs(
-                AbstractStage.ARGS_ABSTRACT
-            ),
-            this.ARGS_DEFAULT,
-            optsRecursive
-        );
-
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        return fns.mergeArgs( mergedDefault, args, optsRecursive );
-    }
 
 
     /* Meta ------------------ */
@@ -243,7 +124,7 @@ export abstract class AbstractStage<
      * The package version being prepared.
      */
     public get pkgVersion(): string {
-        return `${ this.pkg.version }${ this.args.dryrun ? '-draft' : '' }`;
+        return `${ this.pkg.version }${ ( this.args.dryrun || !this.args.packaging ) ? '-draft' : '' }`;
     }
 
     #releasePath: string | undefined = undefined;
@@ -272,14 +153,12 @@ export abstract class AbstractStage<
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor (
-        args: Args,
-        protected readonly clr: cls.MessageMaker.Colour = 'black',
-    ) {
-        super( args as TU.Objects.RecursivePartial<Args> & Args );
-
-        this.fns = new cls.node.NodeFunctions();
-    }
+    // constructor (
+    //     args: Args,
+    //     clr: cls.MessageMaker.Colour = 'black',
+    // ) {
+    //     super( args, clr );
+    // }
 
 
 
@@ -288,84 +167,6 @@ export abstract class AbstractStage<
 
 
     /* MESSAGES ===================================== */
-
-    protected msgArgs(
-        level: number = 0,
-        msgArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 1 ] = {},
-        timeArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 2 ] = {},
-    ): {
-        msg: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 1 ];
-        time: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 2 ];
-    } {
-        const depth = level + Number( this.args[ 'log-base-level' ] ?? 0 );
-
-        const msg = {
-
-            bold: depth == 0 || level <= 1,
-            clr: this.clr,
-
-            depth,
-
-            linesIn: 0,
-            linesOut: 0,
-
-            ...msgArgs,
-        };
-
-        const time = {
-            ...timeArgs,
-        };
-
-        if ( level <= 0 ) {
-            msg.linesIn = msgArgs.linesIn ?? 2;
-        }
-
-        if ( level > 0 ) {
-            msg.linesIn = msgArgs.linesIn ?? 1;
-        }
-
-        // if ( level > 1 ) {
-        // }
-
-        if ( level > 2 ) {
-            msg.italic = msgArgs.italic ?? true;
-            msg.linesIn = msgArgs.linesIn ?? 0;
-        }
-
-        if ( level > 3 ) {
-            msg.clr = msgArgs.clr ?? 'grey';
-        }
-
-        return { msg, time };
-    }
-
-    public progressLog(
-        msg: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 0 ],
-        level: number,
-        _msgArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 1 ] = {},
-        _timeArgs: Parameters<cls.node.NodeConsole[ 'timestampLog' ]>[ 2 ] = {},
-    ): void {
-        if ( this.args[ 'progress' ] === false ) { return; }
-
-        const {
-            msg: msgArgs,
-            time: timeArgs,
-        } = this.msgArgs( level, _msgArgs, _timeArgs );
-
-        this.fns.nc.timestampLog( msg, msgArgs, timeArgs );
-    }
-
-    public abstract startEndNotice( which: "start" | "end" ): Promise<void>;
-
-    public verboseLog(
-        msg: string,
-        level: number,
-        msgArgs: Parameters<typeof this.progressLog>[ 2 ] = {},
-        timeArgs: Parameters<typeof this.progressLog>[ 3 ] = {},
-    ): void {
-        if ( !this.args[ 'verbose' ] ) { return; }
-        this.progressLog( msg, level, msgArgs, timeArgs );
-    }
 
     /**
      * Prints a notice message to the console to signal the start or end of a stage.
@@ -428,46 +229,6 @@ export abstract class AbstractStage<
             timeArgs,
         );
     }
-
-
-    /* RUNNING ===================================== */
-
-    public async run( args: Partial<Args> = {} ) {
-        args = {
-            ...this.args,
-            ...args,
-        };
-
-        /* start */
-        await this.startEndNotice( 'start' );
-
-        /* loop through the steps in order */
-        for ( const method of this.stages ) {
-
-            const include: boolean = Boolean(
-                !args.only
-                || args.only == method
-                || args.only.includes( method )
-            );
-
-            const exclude: boolean = Boolean(
-                args.without
-                && ( args.without == method || args.without.includes( method ) )
-            );
-
-            if ( include && !exclude && this[ method as keyof typeof this ] ) {
-                await this.runStage( method );
-            }
-        }
-
-        /* end */
-        await this.startEndNotice( 'end' );
-    }
-
-    /**
-     * Used to run a single stage within this class; used by `run()`.
-     */
-    protected abstract runStage( stage: Stages ): Promise<void>;
 
 
     /* UTILITIES ===================================== */
@@ -565,14 +326,19 @@ export abstract class AbstractStage<
     }
 
     protected replaceInFiles(
-        files: string | string[],
+        globs: string | string[],
         find: ( string | RegExp ) | ( string | RegExp )[],
         replace: string,
         logBaseLevel: number,
-        args: Partial<Omit<ReplaceInFilesArgs, "regex" | "replacement" | "string">> = {},
+        args: Partial<{ ignoreCase: boolean; }> = {},
     ): void {
+
+        const filesArr: string[] = this.glob( globs, { filesOnly: true } );
+
+        const findArr: ( string | RegExp )[] = Array.isArray( find ) ? find : [ find ];
+
         this.args.debug && this.progressLog(
-            `replacing '${ find }' => '${ replace }'`,
+            `replacing '${ findArr.join( "'|'" ) }' => '${ replace }'`,
             logBaseLevel,
             {
                 linesIn: 0,
@@ -581,36 +347,32 @@ export abstract class AbstractStage<
             },
         );
 
-        const cmdArgs: ReplaceInFilesArgs = {
-            replacement: replace,
-            'ignore-case': null,
-            'no-glob': null,
-            ...args,
-        };
+        for ( const path of filesArr ) {
 
-        const filesArr: ( string | RegExp )[] = Array.isArray( files ) ? files : [ files ];
+            const fileContent = this.fns.fs.readFile( path );
 
-        const findArr: ( string | RegExp )[] = Array.isArray( find ) ? find : [ find ];
+            for ( const find of findArr ) {
 
-        const findArgs: string = findArr.map( ( f ) => {
+                const regexp = find instanceof RegExp
+                    ? find
+                    : new RegExp(
+                        fns.escRegExp( find ),
+                        `g${ args.ignoreCase ? 'i' : '' }`
+                    );
 
-            if ( f instanceof RegExp ) {
-                f = f.source;
+                if ( fileContent.match( regexp ) !== null ) {
+
+                    this.fns.fs.writeFile(
+                        path,
+                        fileContent.replace(
+                            regexp,
+                            fns.escRegExpReplace( replace )
+                        ),
+                        { force: true }
+                    );
+                }
             }
-            return `--regex='${ f }'`;
-        } ).join( ' ' );
-
-        const cmd: string = `replace-in-files ${ findArgs } ${ this.fns.nc.cmdArgs( cmdArgs ) } '${ filesArr.join( "' '" ) }'`;
-
-        this.args.debug && this.fns.nc.timestampVarDump( { cmd }, {
-            clr: this.clr,
-            depth: ( this.args.verbose ? 1 : 0 ) + logBaseLevel + ( this.args[ 'log-base-level' ] ?? 0 ),
-            linesIn: 0,
-            linesOut: 0,
-            maxWidth: null,
-        } );
-
-        this.fns.nc.cmd( cmd );
+        }
     }
 
 
@@ -624,7 +386,7 @@ export abstract class AbstractStage<
      * @param _source       Optional. Source directory. Default `'.'`.
      * @param _opts         
      */
-    public copyFiles(
+    protected copyFiles(
         _glob: string | string[],
         _destination: string,
         _source: string = '.',
@@ -635,11 +397,7 @@ export abstract class AbstractStage<
         // I prefer them as constants
         const [ glob, destination, source ] = [ _glob, _destination, _source ];
 
-        const fullArgs = this.mergeArgs<
-            any,
-            CopyFilesArgs,
-            Partial<CopyFilesArgs>
-        >(
+        const fullArgs = this.mergeArgs(
             {
                 ignoreGlobs: [],
                 includeDefaultIgnoreGlobs: false,
@@ -668,13 +426,10 @@ export abstract class AbstractStage<
             }
         );
 
-        // const ignoreFiles = this.glob( fullArgs.ignoreGlobs, { root: resolved.source, ignore: [], } );
-
         /**
          * Write the files.
          */
         for ( const file of globbedFiles ) {
-            // if ( ignoreFiles.includes( file ) ) { continue; }
 
             const destFile = file
                 .replace(
@@ -690,11 +445,7 @@ export abstract class AbstractStage<
             if ( stats.isDirectory() ) {
 
                 NodeFS.mkdirSync( destDirectory, { recursive: true } );
-                // this.copyFiles(
-                //     '*',
-                //     destFile,
-                //     file,
-                // );
+                this.copyFiles( '*', destFile, file, { ignoreGlobs } );
 
             } else {
                 NodeFS.mkdirSync( destDirectory, { recursive: true } );
@@ -710,10 +461,10 @@ export abstract class AbstractStage<
      */
     public glob(
         globs: string | string[],
-        args: GlobOptions & { filesOnly?: boolean; } = {},
+        args: GlobArgs & { filesOnly?: boolean; } = {},
         relative: boolean = false,
     ): string[] {
-        const DEFAULT_GlobOptions: GlobOptions = {
+        const DEFAULT_GlobOptions: GlobArgs = {
             absolute: true,
             dot: true,
             ignore: [
@@ -726,15 +477,11 @@ export abstract class AbstractStage<
             realpath: true,
         };
 
-        const globResult = globSync( globs, this.mergeArgs<
-            any,
-            GlobOptions,
-            Partial<GlobOptions>
-        >(
+        const globResult = globSync( globs, this.mergeArgs(
             DEFAULT_GlobOptions,
             args,
             false
-        ) ) as string | string[];
+        ) as GlobArgs ) as string | string[];
 
         let filepaths: string[] = (
             Array.isArray( globResult )

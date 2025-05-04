@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -18,7 +18,9 @@ import { escRegExp, escRegExpReplace, slugify, timestamp, toTitleCase, typeOf } 
  * Can be extended, but probably best as a (static) property instead.
  */
 export declare class Functions extends AbstractConfigurableClass<Functions.Args> {
-    get ARGS_DEFAULT(): Functions.Args;
+    get ARGS_DEFAULT(): {
+        readonly argsRecursive: false;
+    };
     /**
      * Build a complete args object.
      *
@@ -81,8 +83,6 @@ export declare class Functions extends AbstractConfigurableClass<Functions.Args>
 export declare namespace Functions {
     /**
      * Optional configuration for {@link Functions}.
-     *
-     * @interface
      */
     type Args = AbstractConfigurableClass.Args & {};
 }

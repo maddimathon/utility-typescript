@@ -4,14 +4,15 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { typeOf } from '../functions/index.js';
+import { LangLocaleCode } from '../types/string-literals/html.js';
 /**
  * Inspects the value of a variable for debugging.
  *
@@ -104,9 +105,6 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      * @returns  An example, constructed instance for a sample object.
      */
     static sample(_args?: Partial<VariableInspector.Args>): VariableInspector<typeof VariableInspector.sampleComplexObject>;
-    /**
-     * @source
-     */
     get ARGS_DEFAULT(): VariableInspector.Args;
     /**
      * Build a complete args object.
@@ -279,21 +277,23 @@ export declare namespace VariableInspector {
     type StageKeys = "_" | "prefix" | "type" | "value" | "via";
     /**
      * Optional configuration for {@link VariableInspector}.
-     *
-     * @interface
      */
     type Args = AbstractConfigurableClass.Args & {
+        /**
+         * These args should never be recursive.
+         */
+        argsRecursive: false;
         /**
          * Arguments to use as an override for child inspections (i.e., of the
          * property values).
          *
          * Useful to change things like the
-         * {@link VariableInspector.Args.formatter} functions.
+         * {@link VariableInspector.Args['formatter']} functions.
          *
          * @default
          * { includeValue: true }
          */
-        childArgs: Partial<Args>;
+        childArgs: Partial<Omit<Args, "argsRecursive" | "childArgs" | "debug" | "locale" | "localizeDateOptions">>;
         /**
          * Outputs some var dumps to the console.
          *
@@ -375,7 +375,7 @@ export declare namespace VariableInspector {
          *
          * @default 'en-CA'
          */
-        locale: undefined | Intl.LocalesArgument;
+        locale: undefined | LangLocaleCode;
         /**
          * Whether to format dates according to locale.
          *
@@ -423,19 +423,17 @@ export declare namespace VariableInspector {
     /**
      * The shape used for {@link VariableInspector._properties}.
      */
-    interface Child {
+    type Child = {
         key: {
             name: number | string | symbol;
             type: "number" | "string" | "symbol";
         };
         vi: VariableInspector;
-    }
+    };
     /**
      * The shape used when converting this object to JSON.
      *
      * @expandType ReturnType
-     *
-     * @expand
      */
     interface JSON<Type extends typeOf.TestType = typeOf.TestType> {
         /**
@@ -455,8 +453,6 @@ export declare namespace VariableInspector {
          * here.
          *
          * @see {@link VariableInspector._properties}
-         *
-         * @interface
          */
         properties?: {
             [key: number | string | symbol]: JSON_Child;
@@ -471,12 +467,12 @@ export declare namespace VariableInspector {
     /**
      * The shape used when converting this object to JSON.
      */
-    interface JSON_Child {
+    type JSON_Child = {
         key: {
             name: number | string | symbol;
             type: "number" | "string" | "symbol";
         };
         value: JSON;
-    }
+    };
 }
 //# sourceMappingURL=VariableInspector.d.ts.map

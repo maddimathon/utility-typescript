@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -176,9 +176,10 @@ export class VariableInspector extends AbstractConfigurableClass {
     static sample(_args = {}) {
         console.log('\nVariableInspector.sample() @ ' + timestamp(null, { date: true, time: true }));
         console.log('\n');
-        const args = VariableInspector.prototype.buildArgs(mergeArgs({
+        const args = VariableInspector.prototype.buildArgs({
             debug: true,
-        }, _args));
+            ...(_args !== null && _args !== void 0 ? _args : {})
+        });
         /**
          * Calls `VariableInspector.dump() with args.`.
          */
@@ -197,9 +198,6 @@ export class VariableInspector extends AbstractConfigurableClass {
     }
     /* LOCAL PROPERTIES
      * ====================================================================== */
-    /**
-     * @source
-     */
     get ARGS_DEFAULT() {
         return {
             childArgs: {
@@ -225,7 +223,7 @@ export class VariableInspector extends AbstractConfigurableClass {
             localizeNumberOptions: {},
             // multilineBreakVisualizers: false,
             // multilineBreakVisualizerString: '⠀',
-            optsRecursive: false,
+            argsRecursive: false,
             stringQuoteCharacter: '"',
         };
     }
@@ -238,7 +236,8 @@ export class VariableInspector extends AbstractConfigurableClass {
         const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        return mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        // UPGRADE - this could probably use better typing
+        return mergeArgs(mergedDefault, args, false);
     }
     /* CONSTRUCTOR
      * ====================================================================== */
@@ -639,9 +638,13 @@ export class VariableInspector extends AbstractConfigurableClass {
      */
     _new(variable, args = {}) {
         var _a, _b, _c;
-        args = mergeArgs(this.args, mergeArgs(this.args.childArgs, args));
-        args.formatter = mergeArgs((_a = this.args.formatter) !== null && _a !== void 0 ? _a : {}, mergeArgs((_b = this.args.childArgs.formatter) !== null && _b !== void 0 ? _b : {}, (_c = args.formatter) !== null && _c !== void 0 ? _c : {}));
-        return new VariableInspector(variable, args);
+        const fullArgs = this.buildArgs({
+            ...this.args,
+            ...this.args.childArgs,
+            ...args,
+        });
+        fullArgs.formatter = this.mergeArgs((_a = this.args.formatter) !== null && _a !== void 0 ? _a : {}, this.mergeArgs((_b = this.args.childArgs.formatter) !== null && _b !== void 0 ? _b : {}, (_c = args.formatter) !== null && _c !== void 0 ? _c : {}));
+        return new VariableInspector(variable, fullArgs);
     }
     /* Translators ===================================== */
     /**

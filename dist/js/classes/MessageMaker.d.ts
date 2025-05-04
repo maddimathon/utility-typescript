@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import type { RecursivePartial } from '../types/objects/index.js';
@@ -35,9 +35,86 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      *                   avoid building complete arguments multiple times.
      */
     protected static defaultPainter(classArgs: MessageMaker.Args): MessageMaker.Args['painter'];
-    get ARGS_DEFAULT(): MessageMaker.Args & {
-        ansiColours: MessageMaker.Args['ansiColours'];
-        msg: MessageMaker.MsgArgs;
+    get ARGS_DEFAULT(): {
+        readonly ansiColours: {
+            readonly 4: {
+                readonly fg: {
+                    readonly black: "30";
+                    readonly grey: "30";
+                    readonly 'light-grey': "37";
+                    readonly white: "37";
+                    readonly red: "31";
+                    readonly orange: "33";
+                    readonly yellow: "33";
+                    readonly green: "32";
+                    readonly turquoise: "36";
+                    readonly blue: "34";
+                    readonly purple: "35";
+                    readonly pink: "35";
+                };
+                readonly bg: {
+                    readonly black: "40";
+                    readonly grey: "40";
+                    readonly 'light-grey': "47";
+                    readonly white: "47";
+                    readonly red: "41";
+                    readonly orange: "43";
+                    readonly yellow: "43";
+                    readonly green: "42";
+                    readonly turquoise: "46";
+                    readonly blue: "44";
+                    readonly purple: "45";
+                    readonly pink: "45";
+                };
+            };
+            readonly 8: {
+                readonly black: "5;232";
+                readonly grey: "5;241";
+                readonly 'light-grey': "5;247";
+                readonly white: "5;255";
+                readonly red: "5;124";
+                readonly orange: "5;166";
+                readonly yellow: "5;208";
+                readonly green: "5;28";
+                readonly turquoise: "5;30";
+                readonly blue: "5;20";
+                readonly purple: "5;55";
+                readonly pink: "5;162";
+            };
+            readonly 24: {
+                readonly black: "2;26;26;26";
+                readonly grey: "2;108;108;108";
+                readonly 'light-grey': "2;208;208;208";
+                readonly white: "2;248;248;248";
+                readonly red: "2;168;36;36";
+                readonly orange: "2;174;84;4";
+                readonly yellow: "2;204;182;0";
+                readonly green: "2;24;118;10";
+                readonly turquoise: "2;0;128;98";
+                readonly blue: "2;60;84;157";
+                readonly purple: "2;129;75;155";
+                readonly pink: "2;179;77;145";
+            };
+        };
+        readonly msg: {
+            readonly bold: false;
+            readonly clr: null;
+            readonly depth: 0;
+            readonly flag: false;
+            readonly fullWidth: false;
+            readonly hangingIndent: "";
+            readonly indent: "";
+            readonly italic: false;
+            readonly linesIn: 0;
+            readonly linesOut: 1;
+            readonly minWidth: 20;
+            readonly maxWidth: null;
+            readonly tab: "    ";
+        };
+        readonly argsRecursive: true;
+        readonly painter: null;
+        readonly paintFormat: null;
+        readonly paintIfEmpty: false;
     };
     /**
      * Build a complete args object.
@@ -50,7 +127,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      *
      * @category Args
      */
-    msgArgs(args?: RecursivePartial<MessageMaker.MsgArgs>): MessageMaker.MsgArgs;
+    msgArgs<InputArgs extends RecursivePartial<MessageMaker.MsgArgs>>(args?: InputArgs): MessageMaker.MsgArgs & InputArgs;
     constructor(args?: RecursivePartial<MessageMaker.Args>);
     /**
      * Joins string arrays with a single new line and adds an indent to the
@@ -107,10 +184,10 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      * @category  Messagers
      *
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param _args     Optional. Overrides for default arguments in {@link MessageMaker.args}. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker.args}. Used only for the timestamp.
+     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
+     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
      */
-    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, _args?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: RecursivePartial<MessageMaker.MsgArgs> & Partial<{
+    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, msgArgs?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: RecursivePartial<MessageMaker.MsgArgs> & Partial<{
         date: Date;
         stamp: timestamp.Args_Input;
     }>): string;
@@ -120,9 +197,8 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
  */
 export declare namespace MessageMaker {
     /**
-     * Ansi colour codes for the default node {@link MessageMaker.Args.painter} function.
-     *
-     * @interface
+     * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter`
+     * function.
      */
     type AnsiColours = {
         /**
@@ -159,15 +235,13 @@ export declare namespace MessageMaker {
     };
     /**
      * Optional configuration for {@link MessageMaker}.
-     *
-     * @interface
      */
     type Args = AbstractConfigurableClass.Args & {
         /**
-         * Ansi colour codes for the default node {@link MessageMaker.Args.painter} function.
+         * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter` function.
          *
          * @see {@link MessageMaker.ARGS_DEFAULT}  For default values.
-         * @see {@link MessageMaker.buildArgs}  For default node {@link MessageMaker.Args.painter}.
+         * @see {@link MessageMaker.buildArgs}  For default node `{@link MessageMaker.Args}.painter`.
          */
         ansiColours: AnsiColours;
         /**
@@ -177,7 +251,7 @@ export declare namespace MessageMaker {
          * @see {@link MessageMaker.buildArgs}  For default value.
          */
         msg: MsgArgs;
-        optsRecursive: true;
+        argsRecursive: true;
         /**
          * Function used to apply formatting to the messages.
          *
@@ -185,7 +259,7 @@ export declare namespace MessageMaker {
          */
         painter: null | ((line: string, args?: Partial<PainterArgs>) => string);
         /**
-         * Defines the default {@link MessageMaker.Args.painter} value.
+         * Defines the default `{@link MessageMaker.Args}.painter` value.
          *
          * @default null
          */
@@ -202,8 +276,8 @@ export declare namespace MessageMaker {
      * Input value for multiple individually-formatted messages.  Used by
      * {@link MessageMaker.msg}.
      *
-     * {@link MessageMaker.MsgArgs.linesIn} and
-     * {@link MessageMaker.MsgArgs.linesOut} are omitted from args because in
+     * `{@link MessageMaker.MsgArgs}.linesIn` and
+     * `{@link MessageMaker.MsgArgs}.linesOut` are omitted from args because in
      * bulk messages, they should just be a string in the `messages` param array.
      *
      * @expandType RecursivePartial
@@ -218,14 +292,12 @@ export declare namespace MessageMaker {
     type Colour = "red" | "orange" | "yellow" | "green" | "turquoise" | "blue" | "purple" | "pink" | "grey" | "black";
     /**
      * Optional configuration for {@link MessageMaker.msg}.
-     *
-     * @interface
      */
     type MsgArgs = PainterArgs & {
         /**
          * If defined, an indent is added to every line.  This is best for
          * creating visual hierarchies.  Indents count towards the
-         * {@link MessageMaker.MsgArgs.maxWidth}.
+         * `{@link MessageMaker.MsgArgs}.maxWidth`.
          *
          * Starts at zero (no indent).
          *
@@ -234,7 +306,7 @@ export declare namespace MessageMaker {
         depth: number;
         /**
          * Pads each line to be at least equal to
-         * {@link MessageMaker.MsgArgs.maxWidth}.
+         * `{@link MessageMaker.MsgArgs}.maxWidth`.
          *
          * Useful for flags that you want to take up a certain width.
          *
@@ -281,7 +353,7 @@ export declare namespace MessageMaker {
         minWidth: number;
         /**
          * String used to represent a tab (e.g., with
-         * {@link MessageMaker.MsgArgs.depth}).
+         * `{@link MessageMaker.MsgArgs}.depth`).
          *
          * @default '    '
          */
@@ -289,8 +361,6 @@ export declare namespace MessageMaker {
     };
     /**
      * Optional configuration for {@link MessageMaker.msgs}.
-     *
-     * @interface
      */
     type BulkMsgArgs = MsgArgs & {
         /**
@@ -302,8 +372,6 @@ export declare namespace MessageMaker {
     };
     /**
      * Optional configuration for {@link MessageMaker.painter}.
-     *
-     * @interface
      */
     type PainterArgs = {
         /**
@@ -315,10 +383,10 @@ export declare namespace MessageMaker {
         /**
          * Applies the given colour to the text.
          *
-         * Default painter function for {@link MessageMaker.Args.paintFormat}
+         * Default painter function for `{@link MessageMaker.Args}.paintFormat`
          * options `"html"` and `"markdown"` do not currently support colours.
          * To use colour with those outputs formats, you must provide your own
-         * {@link MessageMaker.Args.painter} argument.
+         * `{@link MessageMaker.Args}.painter` argument.
          *
          * @default null
          */

@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { mergeArgs } from '../../functions/index.js';
@@ -21,11 +21,11 @@ import { mergeArgs } from '../../functions/index.js';
  *     /* PROPERTIES
  *      * ====================================================================== *\/
  *
- *     public get ARGS_DEFAULT(): ExampleClassArgs {
+ *     public get ARGS_DEFAULT() {
  *
  *         return {
- *             optsRecursive: false,
- *         };
+ *             argsRecursive: false,
+ *         } as const satisfies ExampleClassArgs;
  *     }
  *
  *     /**
@@ -41,8 +41,8 @@ import { mergeArgs } from '../../functions/index.js';
  *          // sometimes called from the prototype
  *          return mergeArgs(
  *              mergedDefault,
- *              args,
- *              this.ARGS_DEFAULT.optsRecursive
+ *              args ?? {},
+ *              this.ARGS_DEFAULT.argsRecursive
  *          );
  *     }
  *
@@ -67,11 +67,11 @@ export class AbstractConfigurableClass {
     static abstractArgs(args = {}) {
         var _a;
         const ARGS_DEFAULT = {
-            optsRecursive: false,
+            argsRecursive: false,
         };
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        return mergeArgs(ARGS_DEFAULT, args, (_a = args.optsRecursive) !== null && _a !== void 0 ? _a : ARGS_DEFAULT.optsRecursive);
+        return mergeArgs(ARGS_DEFAULT, args, (_a = args.argsRecursive) !== null && _a !== void 0 ? _a : ARGS_DEFAULT.argsRecursive);
     }
     /* PROPERTIES
      * ====================================================================== */

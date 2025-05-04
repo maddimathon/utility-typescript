@@ -11,6 +11,9 @@
  * @license MIT
  */
 
+import type { AnyClass } from '../types/functions/basics.js';
+import type { LangLocaleCode } from '../types/string-literals/index.js';
+
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 
 import {
@@ -19,8 +22,6 @@ import {
     timestamp,
     typeOf,
 } from '../functions/index.js';
-
-import { AnyClass } from '../types/functions/basics.js';
 
 
 /**
@@ -255,9 +256,10 @@ export class VariableInspector<
         console.log( '\nVariableInspector.sample() @ ' + timestamp( null, { date: true, time: true } ) );
         console.log( '\n' );
 
-        const args = VariableInspector.prototype.buildArgs( mergeArgs( {
+        const args: VariableInspector.Args = VariableInspector.prototype.buildArgs( {
             debug: true,
-        } as Partial<VariableInspector.Args>, _args ) );
+            ...( _args ?? {} )
+        } );
 
         /**
          * Calls `VariableInspector.dump() with args.`.
@@ -286,9 +288,6 @@ export class VariableInspector<
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    /**
-     * @source
-     */
     public get ARGS_DEFAULT(): VariableInspector.Args {
 
         return {
@@ -309,10 +308,6 @@ export class VariableInspector<
             includeType: true,
             includeValue: true,
 
-            // includePrototypeDescriptors: true,
-            // includeDefaultPrototypeDescriptors: false,
-            // includePrototypeInspection: false,
-
             indent: '    ',
 
             inspectClasses: false,
@@ -324,13 +319,10 @@ export class VariableInspector<
             localizeNumbers: false,
             localizeNumberOptions: {},
 
-            // multilineBreakVisualizers: false,
-            // multilineBreakVisualizerString: '⠀',
-
-            optsRecursive: false,
+            argsRecursive: false,
 
             stringQuoteCharacter: '"',
-        };
+        } as const satisfies VariableInspector.Args;
     }
 
     /**
@@ -346,11 +338,12 @@ export class VariableInspector<
 
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
+        // UPGRADE - this could probably use better typing
         return mergeArgs(
-            mergedDefault,
-            args,
-            this.ARGS_DEFAULT.optsRecursive
-        );
+            mergedDefault as mergeArgs.Obj & VariableInspector.Args,
+            args as Partial<mergeArgs.Obj & VariableInspector.Args>,
+            false
+        ) as VariableInspector.Args;
     }
 
     /**
@@ -916,17 +909,21 @@ export class VariableInspector<
         args: Partial<VariableInspector.Args> = {},
     ): VariableInspector {
 
-        args = mergeArgs( this.args, mergeArgs( this.args.childArgs, args ) );
+        const fullArgs = this.buildArgs( {
+            ...this.args,
+            ...this.args.childArgs,
+            ...args,
+        } );
 
-        args.formatter = mergeArgs(
+        fullArgs.formatter = this.mergeArgs(
             this.args.formatter ?? {},
-            mergeArgs(
+            this.mergeArgs(
                 this.args.childArgs.formatter ?? {},
                 args.formatter ?? {}
             )
         );
 
-        return new VariableInspector( variable, args );
+        return new VariableInspector( variable, fullArgs );
     }
 
 
@@ -996,22 +993,25 @@ export namespace VariableInspector {
 
     /**
      * Optional configuration for {@link VariableInspector}.
-     * 
-     * @interface
      */
     export type Args = AbstractConfigurableClass.Args & {
+
+        /**
+         * These args should never be recursive.
+         */
+        argsRecursive: false;
 
         /**
          * Arguments to use as an override for child inspections (i.e., of the
          * property values).
          *
          * Useful to change things like the
-         * {@link VariableInspector.Args.formatter} functions.
+         * {@link VariableInspector.Args['formatter']} functions.
          * 
          * @default
          * { includeValue: true }
          */
-        childArgs: Partial<Args>;
+        childArgs: Partial<Omit<Args, "argsRecursive" | "childArgs" | "debug" | "locale" | "localizeDateOptions">>;
 
         /**
          * Outputs some var dumps to the console.
@@ -1074,10 +1074,6 @@ export namespace VariableInspector {
          */
         includeValue: boolean;
 
-        // includePrototypeDescriptors: boolean;
-        // includeDefaultPrototypeDescriptors: boolean;
-        // includePrototypeInspection: boolean;
-
         /**
          * Text used to indent text.
          * 
@@ -1108,7 +1104,7 @@ export namespace VariableInspector {
          * 
          * @default 'en-CA'
          */
-        locale: undefined | Intl.LocalesArgument;
+        locale: undefined | LangLocaleCode;
 
         /**
          * Whether to format dates according to locale.
@@ -1151,12 +1147,6 @@ export namespace VariableInspector {
          */
         localizeNumberOptions: Intl.NumberFormatOptions & BigIntToLocaleStringOptions;
 
-        // /**
-        //  * Adds this.multilineBreakVisualizerString to the start & end of multiline line breaks( multiline strings have a hanging indent added for display).
-        //  */
-        // multilineBreakVisualizers: boolean;
-        // multilineBreakVisualizerString: string;
-
         /**
          * Character used to represent strings.
          * 
@@ -1168,7 +1158,7 @@ export namespace VariableInspector {
     /**
      * The shape used for {@link VariableInspector._properties}.
      */
-    export interface Child {
+    export type Child = {
 
         key: {
             name: number | string | symbol;
@@ -1176,14 +1166,12 @@ export namespace VariableInspector {
         };
 
         vi: VariableInspector;
-    }
+    };
 
     /**
      * The shape used when converting this object to JSON.
      * 
      * @expandType ReturnType
-     * 
-     * @expand
      */
     export interface JSON<
         Type extends typeOf.TestType = typeOf.TestType,
@@ -1208,8 +1196,6 @@ export namespace VariableInspector {
          * here.
          * 
          * @see {@link VariableInspector._properties}
-         * 
-         * @interface
          */
         properties?: {
             [ key: number | string | symbol ]: JSON_Child;
@@ -1221,21 +1207,12 @@ export namespace VariableInspector {
          * @see {@link VariableInspector._typeOf}
          */
         type: VariableInspector<Type>[ '_typeOf' ];
-
-        // /**
-        //  * The value of the inspected object.
-        //  * 
-        //  * Some types, like BigInt, have to be converted to export to JSON.
-        //  * 
-        //  * @see {@link VariableInspector._rawValue}
-        //  */
-        // value: Type | number | string;
     }
 
     /**
      * The shape used when converting this object to JSON.
      */
-    export interface JSON_Child {
+    export type JSON_Child = {
 
         key: {
             name: number | string | symbol;
@@ -1243,5 +1220,5 @@ export namespace VariableInspector {
         };
 
         value: JSON;
-    }
+    };
 }

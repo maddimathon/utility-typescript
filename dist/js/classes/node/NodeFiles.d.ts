@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
@@ -26,7 +26,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @category Args
      */
     get ARGS_DEFAULT(): {
-        readonly optsRecursive: false;
+        readonly argsRecursive: false;
         readonly root: "./";
         readonly writeFileArgs: {
             readonly force: false;
@@ -123,7 +123,7 @@ export declare namespace NodeFiles {
     /**
      * Optional configuration for {@link NodeFiles}.
      */
-    interface Args extends AbstractConfigurableClass.Args {
+    type Args = AbstractConfigurableClass.Args & {
         /**
          * Path to the root directory (relative to node's cwd).
          *
@@ -134,18 +134,18 @@ export declare namespace NodeFiles {
          * Default configuration for {@link NodeFiles.writeFile}.
          */
         writeFileArgs: WriteFileArgs;
-    }
+    };
     /**
      * Optional configuration for {@link NodeFiles.readFile}.
      */
-    interface ReadFileArgs {
+    type ReadFileArgs = {
         encoding: BufferEncoding;
         flag?: string | undefined;
-    }
+    };
     /**
      * Optional configuration for {@link NodeFiles.writeFile}.
      */
-    interface WriteFileArgs extends Partial<ReadFileArgs> {
+    type WriteFileArgs = Partial<ReadFileArgs> & {
         /**
          * Overwrite file at destination if it exists.
          *
@@ -159,6 +159,6 @@ export declare namespace NodeFiles {
          * @default false
          */
         rename: boolean;
-    }
+    };
 }
 //# sourceMappingURL=NodeFiles.d.ts.map

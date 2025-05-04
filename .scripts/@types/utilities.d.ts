@@ -1,9 +1,8 @@
 /**
  * Utility types for build process scripts.
  * 
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  */
 
 import { GlobOptions } from 'glob';

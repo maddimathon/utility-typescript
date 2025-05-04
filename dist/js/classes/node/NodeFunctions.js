@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { mergeArgs } from '../../functions/index.js';
@@ -23,7 +23,7 @@ import { NodeFiles } from './NodeFiles.js';
 export class NodeFunctions extends AbstractConfigurableClass {
     get ARGS_DEFAULT() {
         return {
-            optsRecursive: false,
+            argsRecursive: false,
         };
     }
     /**
@@ -33,7 +33,7 @@ export class NodeFunctions extends AbstractConfigurableClass {
         const mergedDefault = Functions.prototype.buildArgs(this.ARGS_DEFAULT);
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        return mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        return mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
     }
     /* CONSTRUCTOR
      * ====================================================================== */

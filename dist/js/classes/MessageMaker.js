@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -254,7 +254,7 @@ export class MessageMaker extends AbstractConfigurableClass {
                 maxWidth: null,
                 tab: '    ',
             },
-            optsRecursive: true,
+            argsRecursive: true,
             painter: null,
             paintFormat: null,
             paintIfEmpty: false,
@@ -269,7 +269,7 @@ export class MessageMaker extends AbstractConfigurableClass {
         const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        const built = mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        const built = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
         if ((args === null || args === void 0 ? void 0 : args.msg) && typeof args.msg !== 'function') {
             // be should merge these defaults better
             if (typeof mergedDefault.msg !== 'function') {
@@ -294,15 +294,15 @@ export class MessageMaker extends AbstractConfigurableClass {
      */
     msgArgs(args) {
         var _a, _b, _c;
-        const built = mergeArgs(this.args.msg, args, true);
-        if (built.maxWidth !== null) {
-            const indentWidth = built.maxWidth - (((_b = (_a = args === null || args === void 0 ? void 0 : args.tab) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) * ((_c = args === null || args === void 0 ? void 0 : args.depth) !== null && _c !== void 0 ? _c : 0));
-            built.maxWidth = Math.max(10, built.minWidth, indentWidth);
-            if (built.flag) {
-                built.maxWidth = built.maxWidth - 2;
+        const merged = mergeArgs(this.args.msg, args !== null && args !== void 0 ? args : {}, true);
+        if (merged.maxWidth !== null) {
+            const indentWidth = merged.maxWidth - (((_b = (_a = args === null || args === void 0 ? void 0 : args.tab) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) * ((_c = args === null || args === void 0 ? void 0 : args.depth) !== null && _c !== void 0 ? _c : 0));
+            merged.maxWidth = Math.max(10, merged.minWidth, indentWidth);
+            if (merged.flag) {
+                merged.maxWidth = merged.maxWidth - 2;
             }
         }
-        return built;
+        return merged;
     }
     /* CONSTRUCTOR
      * ====================================================================== */
@@ -406,7 +406,7 @@ export class MessageMaker extends AbstractConfigurableClass {
         const ret = [];
         messages.forEach(([msg, args], index) => {
             var _a, _b;
-            args = this.mergeArgs(defaultUniversalArgs, args, true);
+            args = this.mergeArgs(defaultUniversalArgs, args !== null && args !== void 0 ? args : {}, true);
             if (index > 0 && universalArgs.hangingIndent && ((_a = defaultUniversalArgs.joiner) === null || _a === void 0 ? void 0 : _a.match(/\n/g))) {
                 const indent = (_b = universalArgs.hangingIndent) !== null && _b !== void 0 ? _b : this.ARGS_DEFAULT.msg.hangingIndent;
                 args = {
@@ -445,60 +445,71 @@ export class MessageMaker extends AbstractConfigurableClass {
      * @category  Messagers
      *
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param _args     Optional. Overrides for default arguments in {@link MessageMaker.args}. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker.args}. Used only for the timestamp.
+     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
+     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
      */
-    timestampMsg(msg, _args = {}, timeArgs = {}) {
-        // VariableInspector.dump( { 'MessageMaker.timestampMsg() _args': _args } );
-        // VariableInspector.dump( { 'MessageMaker.timestampMsg() timeArgs': timeArgs } );
+    timestampMsg(msg, msgArgs = {}, timeArgs = {}) {
         var _a, _b;
-        let args = this.msgArgs({
+        /** A complete version of the base message arguments. */
+        const args_full = this.msgArgs({
             joiner: '\n\n',
-            ..._args,
+            ...msgArgs,
         });
+        // we want to accept a variety of inputs, but we need to normalize it to
+        // be MessageMaker.BulkMsgs
         if (typeof msg === 'string') {
             msg = msg ? [[msg]] : [];
-            args.joiner = (_a = args.joiner) !== null && _a !== void 0 ? _a : '\n';
+            args_full.joiner = (_a = args_full.joiner) !== null && _a !== void 0 ? _a : '\n';
         }
         else {
+            // = is an array
             msg = msg.map((m) => {
                 var _a;
-                // returns
                 if (typeof m === 'string') {
-                    args.joiner = (_a = args.joiner) !== null && _a !== void 0 ? _a : '\n';
-                    return [m];
+                    args_full.joiner = (_a = args_full.joiner) !== null && _a !== void 0 ? _a : '\n';
+                    m = [m];
                 }
-                return m;
+                const m_arr = m;
+                return m_arr;
             });
         }
+        /** Properly formatted as bulk messages. */
         const messages = msg;
-        const time = timestamp((_b = timeArgs.date) !== null && _b !== void 0 ? _b : null, {
+        // the actual values to be used for the whole message, but ignore when
+        // formatting the message parts
+        const { depth, linesIn, linesOut, } = args_full;
+        /** This is the unpainted string used for the timestamp. */
+        const timePrefix = `[${timestamp((_b = timeArgs.date) !== null && _b !== void 0 ? _b : null, {
             date: false,
             time: true,
             ...timeArgs.stamp,
-        });
-        const depth = args.depth;
-        const linesIn = args.linesIn;
-        const linesOut = args.linesOut;
-        const timePrefix = `[${time}]`;
-        args = {
-            ...args,
+        })}]`;
+        /** Base arguments to use for each individual message part. */
+        const args_parts = {
+            ...args_full,
             depth: 0,
             linesIn: 0,
             linesOut: 0,
-            hangingIndent: args.hangingIndent + ' '.repeat(timePrefix.length + 1) + args.tab.repeat(depth),
+            hangingIndent: (args_full.hangingIndent
+                + ' '.repeat(timePrefix.length + 1)
+                + args_full.tab.repeat(depth)),
         };
-        return ('\n'.repeat(linesIn !== null && linesIn !== void 0 ? linesIn : 0)
-            + this.msg(timePrefix, this.mergeArgs(args, {
+        /** Compiled strings for each message part. */
+        const compiledMessages = {
+            message: (messages.length ? ((args_parts.flag ? this.msg(' ', args_parts) : ' ')
+                + this.msgs(messages, args_parts)) : ''),
+            timestamp: this.msg(timePrefix, this.mergeArgs(args_parts, {
                 flag: false,
                 italic: false,
                 ...timeArgs,
                 depth,
                 linesIn: 0,
                 linesOut: 0,
-            }, true))
-            + (messages.length ? ((args.flag ? this.msg(' ', args) : ' ')
-                + this.msgs(messages, args)) : '')
+            }, false)),
+        };
+        return ('\n'.repeat(linesIn !== null && linesIn !== void 0 ? linesIn : 0)
+            + compiledMessages.timestamp
+            + compiledMessages.message
             + '\n'.repeat(linesOut !== null && linesOut !== void 0 ? linesOut : 0));
     }
 }

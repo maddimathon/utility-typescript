@@ -1,7 +1,6 @@
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -34,7 +33,7 @@ import { softWrapText } from 'src/ts/functions/index.js';
 /* # TYPES
  * ========================================================================== */
 
-export interface BuildArgs extends AbstractArgs<BuildStages> {
+export type BuildArgs = AbstractArgs<BuildStages> & {
 
     'only-compile'?: CompileStages | CompileStages[];
     'only-document'?: DocumentStages | DocumentStages[];
@@ -43,7 +42,7 @@ export interface BuildArgs extends AbstractArgs<BuildStages> {
     'without-compile'?: CompileStages | CompileStages[];
     'without-document'?: DocumentStages | DocumentStages[];
     'without-test'?: TestStages | TestStages[];
-}
+};
 
 export type BuildStages = typeof buildStages[ number ];
 
@@ -73,11 +72,11 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
     public stages = buildStages;
 
-    public get ARGS_DEFAULT(): BuildArgs {
-        // @ts-expect-error
+    public get ARGS_DEFAULT() {
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as BuildArgs;
     }
 
 

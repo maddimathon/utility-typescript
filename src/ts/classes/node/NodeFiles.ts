@@ -51,21 +51,14 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      */
     public get ARGS_DEFAULT() {
 
-        const defaults = {
-            optsRecursive: false,
+        return {
+            argsRecursive: false,
             root: './',
             writeFileArgs: {
                 force: false,
                 rename: false,
             },
-        } as const;
-
-        // this lets the types work a bit better by letting us export the
-        // default as const but ensure that it is the same shape as the args
-        const testType: NodeFiles.Args = defaults;
-        testType;
-
-        return defaults;
+        } as const satisfies NodeFiles.Args;
     }
 
     /**
@@ -75,16 +68,16 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      */
     public buildArgs( args?: Partial<NodeFiles.Args> ): NodeFiles.Args {
 
-        const mergedDefault: NodeFiles.Args = AbstractConfigurableClass.abstractArgs(
+        const mergedDefault = AbstractConfigurableClass.abstractArgs(
             this.ARGS_DEFAULT
         ) as NodeFiles.Args;
 
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        const merged = mergeArgs<any, NodeFiles.Args, Partial<NodeFiles.Args>>(
+        const merged: NodeFiles.Args = mergeArgs(
             mergedDefault,
-            args,
-            this.ARGS_DEFAULT.optsRecursive
+            args ?? {},
+            this.ARGS_DEFAULT.argsRecursive
         );
 
         return merged;
@@ -201,11 +194,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
             ? content.join( '\n' )
             : content;
 
-        args = this.mergeArgs<
-            any,
-            NodeFiles.WriteFileArgs,
-            Partial<NodeFiles.WriteFileArgs>
-        >(
+        args = this.mergeArgs(
             this.args.writeFileArgs,
             args,
             false
@@ -339,7 +328,7 @@ export namespace NodeFiles {
     /**
      * Optional configuration for {@link NodeFiles}.
      */
-    export interface Args extends AbstractConfigurableClass.Args {
+    export type Args = AbstractConfigurableClass.Args & {
 
         /**
          * Path to the root directory (relative to node's cwd).
@@ -352,20 +341,20 @@ export namespace NodeFiles {
          * Default configuration for {@link NodeFiles.writeFile}.
          */
         writeFileArgs: WriteFileArgs;
-    }
+    };
 
     /**
      * Optional configuration for {@link NodeFiles.readFile}.
      */
-    export interface ReadFileArgs {
+    export type ReadFileArgs = {
         encoding: BufferEncoding;
         flag?: string | undefined;
-    }
+    };
 
     /**
      * Optional configuration for {@link NodeFiles.writeFile}.
      */
-    export interface WriteFileArgs extends Partial<ReadFileArgs> {
+    export type WriteFileArgs = Partial<ReadFileArgs> & {
 
         /** 
          * Overwrite file at destination if it exists.
@@ -381,5 +370,5 @@ export namespace NodeFiles {
          * @default false
          */
         rename: boolean;
-    }
+    };
 }

@@ -52,11 +52,11 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
      */
     public readonly fs: NodeFiles;
 
-    public get ARGS_DEFAULT(): NodeFunctions.Args {
+    public get ARGS_DEFAULT() {
 
         return {
-            optsRecursive: false,
-        };
+            argsRecursive: false,
+        } as const satisfies NodeFunctions.Args;
     }
 
     /**
@@ -72,8 +72,8 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
         // sometimes called from the prototype
         return mergeArgs(
             mergedDefault,
-            args,
-            this.ARGS_DEFAULT.optsRecursive
+            args ?? {},
+            this.ARGS_DEFAULT.argsRecursive
         );
     }
 
@@ -116,8 +116,6 @@ export namespace NodeFunctions {
 
     /**
      * Optional configuration for {@link NodeFunctions}.
-     * 
-     * @interface
      */
     export type Args = Functions.Args & {
     };

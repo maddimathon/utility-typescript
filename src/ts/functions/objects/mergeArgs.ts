@@ -16,7 +16,8 @@ import type { RecursivePartial } from '../../types/objects/index.js';
 
 
 /**
- * Universal overload.
+ * Passing `recursive` as false means that the input type must be a
+ * `Partial` (not {@link RecursivePartial}).
  * 
  * @typeParam V  Args object values.
  * @typeParam D  Default object type.
@@ -31,22 +32,7 @@ import type { RecursivePartial } from '../../types/objects/index.js';
  *          either default values or input values, as appropriate.
  */
 export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
-    I extends Partial<D> | RecursivePartial<D>,
->(
-    defaults: D,
-    inputs?: I | undefined,
-    recursive?: boolean | undefined,
-): D & I;
-
-/**
- * Passing `recursive` as false means that the input type must be a
- * `Partial` (not {@link RecursivePartial}).
- */
-export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
+    D extends mergeArgs.Obj,
     I extends Partial<D>,
 >(
     defaults: D,
@@ -59,8 +45,7 @@ export function mergeArgs<
  * {@link RecursivePartial}.
  */
 export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
+    D extends mergeArgs.Obj,
     I extends RecursivePartial<D>,
 >(
     defaults: D,
@@ -72,13 +57,24 @@ export function mergeArgs<
  * If inputs is undefined, then the return is just the defaults.
  */
 export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
+    D extends mergeArgs.Obj,
 >(
     defaults: D,
     inputs?: undefined,
     recursive?: boolean | undefined,
 ): D;
+
+/**
+ * Universal overload.
+ */
+export function mergeArgs<
+    D extends mergeArgs.Obj,
+    I extends Partial<D> | RecursivePartial<D>,
+>(
+    defaults: D,
+    inputs: I,
+    recursive?: boolean | undefined,
+): D & I;
 
 
 /**
@@ -93,14 +89,13 @@ export function mergeArgs<
  * @category Arg Objects
  */
 export function mergeArgs<
-    V extends unknown,
-    D extends mergeArgs.Obj<V>,
+    D extends mergeArgs.Obj,
     I extends RecursivePartial<D>,
 >(
     defaults: D,
     inputs?: I | undefined,
     recursive: boolean = false,
-): D | D & I {
+) {
     // invalid default object becomes an empty object
     if ( typeof defaults !== 'object' || !defaults ) { defaults = {} as D; }
 
@@ -165,7 +160,7 @@ export function mergeArgs<
 
         // get deep
         result[ key ] = mergeArgs(
-            defaultValue as mergeArgs.Obj<V>,
+            defaultValue as mergeArgs.Obj,
             inputValue,
             recursive,
         ) as ( D & I )[ keyof D ];
@@ -181,34 +176,37 @@ export function mergeArgs<
 export namespace mergeArgs {
 
     /**
-     * Default allowed values for argument objects.
-     * 
-     * @source
+     * Single allowed values for argument objects (i.e., no objects, functions,
+     * or arrays).
      */
-    export type ArgsSingleValue = AnyClass | boolean | number | null | string;
+    export type ArgsSingleValue =
+        | AnyClass
+        | boolean
+        | number
+        | null
+        | string
+        | undefined;
 
     /**
-     * Default allowed values for {@link Obj | mergeArgs.Obj} properties.
-     * 
-     * @source
+     * All allowed values for argument objects.
      */
-    export type ObjProp<Value extends any = null> =
+    export type ArgsValue =
         | ArgsSingleValue
-        | Value
-        | ( ( ...p: any[] ) => ( ArgsSingleValue | Value ) );
+        | ( ( ...p: any[] ) => void | any | Promise<void | any> )
+        | ArgsSingleValue[];
 
     /**
      * Argument objects compatible with {@link mergeArgs | mergeArgs()}.
-     * 
-     * @source
      */
     export type Obj<
-        Values extends any = any,
-        Keys extends string = string,
+        Keys extends number | string = number | string,
+        ExtraValues extends any = never,
     > = {
             [ K in Keys ]:
-            | ObjProp<ArgsSingleValue | Values>
-            | ObjProp<ArgsSingleValue | Values>[]
-            | Obj<ArgsSingleValue | Values>;
+            | ArgsValue
+            | Obj
+            | Partial<Obj>
+            | ExtraValues
+            | ( ArgsValue | Obj | Partial<Obj> | ExtraValues )[];
         };
 }

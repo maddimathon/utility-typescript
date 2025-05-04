@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 // import type { WriteFileOptions } from 'node:fs';
@@ -26,19 +26,14 @@ export class NodeFiles extends AbstractConfigurableClass {
      * @category Args
      */
     get ARGS_DEFAULT() {
-        const defaults = {
-            optsRecursive: false,
+        return {
+            argsRecursive: false,
             root: './',
             writeFileArgs: {
                 force: false,
                 rename: false,
             },
         };
-        // this lets the types work a bit better by letting us export the
-        // default as const but ensure that it is the same shape as the args
-        const testType = defaults;
-        testType;
-        return defaults;
     }
     /**
      * Build a complete args object.
@@ -49,7 +44,7 @@ export class NodeFiles extends AbstractConfigurableClass {
         const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        const merged = mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        const merged = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
         return merged;
     }
     /* CONSTRUCTOR

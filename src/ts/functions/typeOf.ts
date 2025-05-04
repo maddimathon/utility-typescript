@@ -91,10 +91,8 @@ export namespace typeOf {
 
     /**
      * Optional configuation for {@link typeOf | typeOf()}.
-     * @interface
-     * @expand
      */
-    export interface Args {
+    export type Args = {
 
         /**
          * If true, arrays will return `'array'` instead of `'object'`.
@@ -102,7 +100,7 @@ export namespace typeOf {
          * @default true
          */
         distinguishArrays: boolean;
-    }
+    };
 
     type ObjectReturn<Type extends TestType> = Type extends (
         | ( () => any )
@@ -123,8 +121,6 @@ export namespace typeOf {
      * Return options for the {@link typeOf | typeOf()}.
      * 
      * @param Type  Type of variable being testing.
-     * 
-     * @expand
      */
     export type Return<Type extends TestType> =
         | ( Type extends any[] ? "array" : never )

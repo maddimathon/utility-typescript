@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { execSync as nodeExecSync, } from 'child_process';
@@ -17,7 +17,7 @@ import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
 import { escRegExpReplace, mergeArgs, } from '../../functions/index.js';
 /**
- * A configurable class for outputting to console within Node.
+ * A configurable class for outputting to console within node.
  *
  * Includes formatting and interactive utilities.
  *
@@ -327,7 +327,7 @@ export class NodeConsole extends AbstractConfigurableClass {
             this.log('Console error:' + output, { clr: 'red' });
             process.exit(1);
         };
-        const defaults = {
+        return {
             cmdErrorHandler,
             msgMaker: {
                 msg: {
@@ -336,7 +336,7 @@ export class NodeConsole extends AbstractConfigurableClass {
                 },
                 paintFormat: 'node',
             },
-            optsRecursive: true,
+            argsRecursive: true,
             separator: null,
             styleClrs: {
                 disabled: 'grey',
@@ -346,11 +346,6 @@ export class NodeConsole extends AbstractConfigurableClass {
             },
             varInspect: {},
         };
-        // this lets the types work a bit better by letting us export the
-        // default as const but ensure that it is the same shape as the args
-        const testType = defaults;
-        testType;
-        return defaults;
     }
     /**
      * Build a complete args object.
@@ -361,9 +356,9 @@ export class NodeConsole extends AbstractConfigurableClass {
         const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        const merged = mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        const merged = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
         if (args === null || args === void 0 ? void 0 : args.msgMaker) {
-            merged.msgMaker = MessageMaker.prototype.buildArgs(mergeArgs(mergedDefault.msgMaker, args.msgMaker, MessageMaker.prototype.ARGS_DEFAULT.optsRecursive));
+            merged.msgMaker = MessageMaker.prototype.buildArgs(mergeArgs(mergedDefault.msgMaker, args.msgMaker, MessageMaker.prototype.ARGS_DEFAULT.argsRecursive));
         }
         return merged;
     }
@@ -729,6 +724,8 @@ export class NodeConsole extends AbstractConfigurableClass {
      */
     async promptSelect(config) {
         const defaultConfig = {
+            choices: [],
+            msgArgs: {},
             pageSize: 10,
         };
         return await inquirer.select(this.mergeArgs(defaultConfig, config, true));
@@ -811,7 +808,6 @@ export class NodeConsole extends AbstractConfigurableClass {
  * @beta
  */
 (function (NodeConsole) {
-    ;
     ;
 })(NodeConsole || (NodeConsole = {}));
 //# sourceMappingURL=NodeConsole.js.map

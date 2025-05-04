@@ -26,6 +26,8 @@
  * @license MIT
  */
 
+export * from './abstracts/index.js';
+
 export * from './NodeConsole.js';
 export * from './NodeFiles.js';
 export * from './NodeFunctions.js';

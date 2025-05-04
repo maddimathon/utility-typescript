@@ -30,7 +30,7 @@ import {
 
 
 /**
- * A configurable class for outputting to console within Node.
+ * A configurable class for outputting to console within node.
  * 
  * Includes formatting and interactive utilities.
  *
@@ -425,7 +425,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
     /**
      * A local instance of {@link MessageMaker} initialized using 
-     * {@link NodeConsole.Args.msgMaker}.
+     * `{@link NodeConsole.Args}.msgMaker`.
      * 
      * @category  Utilities
      */
@@ -452,7 +452,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
             process.exit( 1 );
         };
 
-        const defaults = {
+        return {
 
             cmdErrorHandler,
 
@@ -464,7 +464,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
                 paintFormat: 'node',
             },
 
-            optsRecursive: true,
+            argsRecursive: true,
 
             separator: null,
 
@@ -476,14 +476,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
             },
 
             varInspect: {},
-        } as const;
-
-        // this lets the types work a bit better by letting us export the
-        // default as const but ensure that it is the same shape as the args
-        const testType: NodeConsole.Args = defaults;
-        testType;
-
-        return defaults;
+        } as const satisfies NodeConsole.Args;
     }
 
     /**
@@ -493,16 +486,16 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
      */
     public buildArgs( args?: RecursivePartial<NodeConsole.Args> ): NodeConsole.Args {
 
-        const mergedDefault: NodeConsole.Args = AbstractConfigurableClass.abstractArgs(
+        const mergedDefault = AbstractConfigurableClass.abstractArgs(
             this.ARGS_DEFAULT
         ) as NodeConsole.Args;
 
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        const merged = mergeArgs<any, NodeConsole.Args, RecursivePartial<NodeConsole.Args>>(
+        const merged = mergeArgs(
             mergedDefault,
-            args,
-            this.ARGS_DEFAULT.optsRecursive
+            args ?? {},
+            this.ARGS_DEFAULT.argsRecursive
         );
 
         if ( args?.msgMaker ) {
@@ -510,7 +503,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
             merged.msgMaker = MessageMaker.prototype.buildArgs( mergeArgs(
                 mergedDefault.msgMaker,
                 args.msgMaker,
-                MessageMaker.prototype.ARGS_DEFAULT.optsRecursive
+                MessageMaker.prototype.ARGS_DEFAULT.argsRecursive
             ) );
         }
 
@@ -869,13 +862,13 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
         _config?: Omit<NodeConsole.Prompt.Config<P, SelectValues>, "theme">,
     ): Promise<NodeConsole.Prompt.Return<P, SelectValues>> {
 
-        const config: NodeConsole.Prompt.Config<P, SelectValues> = this.mergeArgs(
+        const config = this.mergeArgs(
             {
                 msgArgs: {},
             },
             _config as NodeConsole.Prompt.Config<P, SelectValues>,
             false
-        );
+        ) as NodeConsole.Prompt.Config<P, SelectValues>;
 
         const {
             depth = 0,
@@ -1066,7 +1059,10 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
         config: NodeConsole.Prompt.Config<"input">,
     ): Promise<NodeConsole.Prompt.Return<"input">> {
 
-        const defaultConfig: Omit<NodeConsole.Prompt.Config<"input">, "message" | "msgArgs"> = {
+        const defaultConfig: Omit<
+            NodeConsole.Prompt.Config<"input">,
+            "message" | "msgArgs"
+        > = {
             required: true,
         };
 
@@ -1074,7 +1070,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
             defaultConfig,
             config,
             true
-        ) );
+        ) as NodeConsole.Prompt.Config<"input"> );
     }
 
     /**
@@ -1086,8 +1082,10 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
         const defaultConfig: Omit<
             NodeConsole.Prompt.Config<"select", SelectValues>,
-            "choices" | "message" | "msgArgs"
+            "message"
         > = {
+            choices: [],
+            msgArgs: {},
             pageSize: 10,
         };
 
@@ -1211,7 +1209,7 @@ export namespace NodeConsole {
     /**
      * Optional configuration for {@link NodeConsole}.
      */
-    export interface Args extends AbstractConfigurableClass.Args {
+    export type Args = AbstractConfigurableClass.Args & {
 
         /**
          * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
@@ -1226,7 +1224,9 @@ export namespace NodeConsole {
         /**
          * An override for the output of this
          */
-        separator: null | [ string | string[] ] | [ string | string[], undefined | Partial<MsgArgs> ];
+        separator: null
+        | [ string | string[] ]
+        | [ string | string[], undefined | Partial<MsgArgs> ];
 
         /**
          * Default colour slugs for formatting prompts.
@@ -1238,8 +1238,8 @@ export namespace NodeConsole {
         /**
          * Optional overrides used when initializing {@link VariableInspector}.
          */
-        varInspect: Partial<VariableInspector.Args>;
-    }
+        varInspect: Partial<VariableInspector.Args> & mergeArgs.Obj;
+    };
 
     /**
      * Error thrown from the terminal in {@link NodeConsole.cmd}.
@@ -1262,7 +1262,7 @@ export namespace NodeConsole {
     /**
      * Optional configuration for {@link NodeConsole.log}.
      */
-    export interface MsgArgs extends Partial<MessageMaker.MsgArgs> {
+    export type MsgArgs = Partial<MessageMaker.MsgArgs> & {
 
         /**
          * Console method to use for outputting to the console.
@@ -1285,6 +1285,8 @@ export namespace NodeConsole {
             P extends Slug = Slug,
             SelectValues extends number | string = number | string,
         > = {
+
+            default?: boolean | string | SelectValues;
 
             /**
              * Optional configuration for output messages while prompting.
@@ -1311,22 +1313,16 @@ export namespace NodeConsole {
 
             /**
              * Optional configuration for {@link NodeConsole.promptBool}.
-             * 
-             * @interface
              */
             export type Bool = Parameters<typeof inquirer.confirm>[ 0 ];
 
             /**
              * Optional configuration for {@link NodeConsole.promptInput}.
-             * 
-             * @interface
              */
             export type Input = Parameters<typeof inquirer.input>[ 0 ];
 
             /**
              * Optional configuration for {@link NodeConsole.promptSelect}.
-             * 
-             * @interface
              */
             export type Select<Values extends null | boolean | number | string | undefined> = Omit<Parameters<typeof inquirer.select>[ 0 ], "choices"> & {
 

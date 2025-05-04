@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -15,8 +15,9 @@ import type { RecursivePartial } from '../../types/objects/index.js';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
+import { mergeArgs } from '../../functions/index.js';
 /**
- * A configurable class for outputting to console within Node.
+ * A configurable class for outputting to console within node.
  *
  * Includes formatting and interactive utilities.
  *
@@ -47,7 +48,7 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
     }>): Promise<NodeConsole>;
     /**
      * A local instance of {@link MessageMaker} initialized using
-     * {@link NodeConsole.Args.msgMaker}.
+     * `{@link NodeConsole.Args}.msgMaker`.
      *
      * @category  Utilities
      */
@@ -64,7 +65,7 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
             };
             readonly paintFormat: "node";
         };
-        readonly optsRecursive: true;
+        readonly argsRecursive: true;
         readonly separator: null;
         readonly styleClrs: {
             readonly disabled: "grey";
@@ -268,7 +269,7 @@ export declare namespace NodeConsole {
     /**
      * Optional configuration for {@link NodeConsole}.
      */
-    interface Args extends AbstractConfigurableClass.Args {
+    type Args = AbstractConfigurableClass.Args & {
         /**
          * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
          */
@@ -290,8 +291,8 @@ export declare namespace NodeConsole {
         /**
          * Optional overrides used when initializing {@link VariableInspector}.
          */
-        varInspect: Partial<VariableInspector.Args>;
-    }
+        varInspect: Partial<VariableInspector.Args> & mergeArgs.Obj;
+    };
     /**
      * Error thrown from the terminal in {@link NodeConsole.cmd}.
      */
@@ -311,12 +312,12 @@ export declare namespace NodeConsole {
     /**
      * Optional configuration for {@link NodeConsole.log}.
      */
-    interface MsgArgs extends Partial<MessageMaker.MsgArgs> {
+    type MsgArgs = Partial<MessageMaker.MsgArgs> & {
         /**
          * Console method to use for outputting to the console.
          */
         via: "log" | "warn" | "debug";
-    }
+    };
     /**
      * Types used for {@link NodeConsole.prompt} and related functions.
      */
@@ -328,6 +329,7 @@ export declare namespace NodeConsole {
          * @see {@link Prompt.Slug}
          */
         type Config<P extends Slug = Slug, SelectValues extends number | string = number | string> = {
+            default?: boolean | string | SelectValues;
             /**
              * Optional configuration for output messages while prompting.
              */
@@ -345,20 +347,14 @@ export declare namespace NodeConsole {
         namespace Config {
             /**
              * Optional configuration for {@link NodeConsole.promptBool}.
-             *
-             * @interface
              */
             type Bool = Parameters<typeof inquirer.confirm>[0];
             /**
              * Optional configuration for {@link NodeConsole.promptInput}.
-             *
-             * @interface
              */
             type Input = Parameters<typeof inquirer.input>[0];
             /**
              * Optional configuration for {@link NodeConsole.promptSelect}.
-             *
-             * @interface
              */
             type Select<Values extends null | boolean | number | string | undefined> = Omit<Parameters<typeof inquirer.select>[0], "choices"> & {
                 choices: (string | {

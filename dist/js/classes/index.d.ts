@@ -12,14 +12,14 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 export * as abstracts from './abstracts/index.js';

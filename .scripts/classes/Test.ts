@@ -1,9 +1,8 @@
 #!/usr/bin/env tsx
 'use strict';
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -24,7 +23,7 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 /* # TYPES
  * ========================================================================== */
 
-export interface TestArgs extends AbstractArgs<TestStages> { }
+export type TestArgs = AbstractArgs<TestStages> & {};
 
 export type TestStages = typeof testStages[ number ];
 
@@ -51,11 +50,11 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
 
     public stages = testStages;
 
-    public get ARGS_DEFAULT(): TestArgs {
-        // @ts-expect-error
+    public get ARGS_DEFAULT() {
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as TestArgs;
     }
 
 

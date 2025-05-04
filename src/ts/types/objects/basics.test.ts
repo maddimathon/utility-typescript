@@ -14,8 +14,41 @@
 import type * as Test from '../test.js';
 
 import type {
+    MergeObjects,
     RecursivePartial,
 } from './basics.js';
+
+
+export type T_MergeObjects = [
+
+    Test.Expect<Test.Exactly<MergeObjects<{} & {}>, {}>>,
+
+    Test.Expect<Test.Exactly<MergeObjects<{
+        one: string;
+        two: number;
+        three: any[];
+        five: {
+            test: "one";
+        };
+    } & {
+        two?: number;
+        three: string[];
+        four: {};
+        five: {
+            test2: "two";
+        };
+    }>, {
+        one: string;
+        two: number;
+        three: ( string | any )[];
+        four: {};
+        five: {
+            test: "one";
+            test2: "two";
+        };
+    }>>,
+];
+
 
 class TestClass {
     public property: string = '';

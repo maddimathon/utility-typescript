@@ -1,9 +1,8 @@
 #!/usr/bin/env tsx
 'use strict';
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -31,11 +30,11 @@ import { softWrapText } from 'src/ts/functions/index.js';
 /* # TYPES
  * ========================================================================== */
 
-export interface ReleaseArgs extends AbstractArgs<ReleaseStages> {
+export type ReleaseArgs = AbstractArgs<ReleaseStages> & {
 
     'only-pkg'?: PackageStages | PackageStages[];
     'without-pkg'?: PackageStages | PackageStages[];
-}
+};
 
 export type ReleaseStages = typeof testStages[ number ];
 
@@ -67,11 +66,11 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
     public stages = testStages;
 
-    public get ARGS_DEFAULT(): ReleaseArgs {
-        // @ts-expect-error
+    public get ARGS_DEFAULT() {
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as ReleaseArgs;
     }
 
 

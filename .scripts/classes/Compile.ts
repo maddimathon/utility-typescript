@@ -1,7 +1,6 @@
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -22,7 +21,7 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 /* # TYPES
  * ========================================================================== */
 
-export interface CompileArgs extends AbstractArgs<CompileStages> { }
+export type CompileArgs = AbstractArgs<CompileStages> & {};
 
 export type CompileStages = typeof compileStages[ number ];
 
@@ -49,11 +48,11 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
 
     public stages = compileStages;
 
-    public get ARGS_DEFAULT(): CompileArgs {
-        // @ts-expect-error
+    public get ARGS_DEFAULT() {
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as CompileArgs;
     }
 
 

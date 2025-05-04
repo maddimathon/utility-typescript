@@ -30,11 +30,11 @@ describe( 'AbstractConfigurableClass', () => {
         /* PROPERTIES
          * ====================================================================== */
 
-        public get ARGS_DEFAULT(): ExampleClassArgs {
+        public get ARGS_DEFAULT() {
 
             return {
-                optsRecursive: false,
-            };
+                argsRecursive: false,
+            } as const satisfies ExampleClassArgs;
         }
 
         /**
@@ -50,8 +50,8 @@ describe( 'AbstractConfigurableClass', () => {
             // sometimes called from the prototype
             return mergeArgs(
                 mergedDefault,
-                args,
-                this.ARGS_DEFAULT.optsRecursive
+                args ?? {},
+                this.ARGS_DEFAULT.argsRecursive
             );
         }
 
@@ -66,11 +66,11 @@ describe( 'AbstractConfigurableClass', () => {
     }
 
     const inst_default = new ExampleClass();
-    const inst_override = new ExampleClass( { optsRecursive: true } );
+    const inst_override = new ExampleClass( { argsRecursive: true } );
 
     test( 'ExampleClass.args', () => {
 
-        expect( inst_default.args ).toEqual( { optsRecursive: false } );
-        expect( inst_override.args ).toEqual( { optsRecursive: true } );
+        expect( inst_default.args ).toEqual( { argsRecursive: false } );
+        expect( inst_override.args ).toEqual( { argsRecursive: true } );
     } );
 } );

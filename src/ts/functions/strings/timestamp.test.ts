@@ -14,6 +14,7 @@
 // import type { Test } from '../types/index.js';
 import { describe, expect, test } from '@jest/globals';
 import { timestamp } from './timestamp.js';
+import { mergeArgs } from '../objects/mergeArgs.js';
 
 describe( 'timestamp()', () => {
 
@@ -34,7 +35,7 @@ describe( 'timestamp()', () => {
     test( 'timestamp() - date formats', () => {
 
         const argifier = (
-            dateFormat: Intl.DateTimeFormatOptions,
+            dateFormat: Intl.DateTimeFormatOptions & mergeArgs.Obj,
             args: timestamp.Args_Input = {},
         ): timestamp.Args_Input => (
             {
@@ -82,7 +83,7 @@ describe( 'timestamp()', () => {
     test( 'timestamp() - time formats', () => {
 
         const argifier = (
-            timeFormat: Intl.DateTimeFormatOptions,
+            timeFormat: Intl.DateTimeFormatOptions & mergeArgs.Obj,
             args: timestamp.Args_Input = {},
         ): timestamp.Args_Input => (
             {

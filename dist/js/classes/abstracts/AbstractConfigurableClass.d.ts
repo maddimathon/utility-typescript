@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { mergeArgs } from '../../functions/index.js';
@@ -22,11 +22,11 @@ import { RecursivePartial } from '../../types/objects/basics.js';
  *     /* PROPERTIES
  *      * ====================================================================== *\/
  *
- *     public get ARGS_DEFAULT(): ExampleClassArgs {
+ *     public get ARGS_DEFAULT() {
  *
  *         return {
- *             optsRecursive: false,
- *         };
+ *             argsRecursive: false,
+ *         } as const satisfies ExampleClassArgs;
  *     }
  *
  *     /**
@@ -42,8 +42,8 @@ import { RecursivePartial } from '../../types/objects/basics.js';
  *          // sometimes called from the prototype
  *          return mergeArgs(
  *              mergedDefault,
- *              args,
- *              this.ARGS_DEFAULT.optsRecursive
+ *              args ?? {},
+ *              this.ARGS_DEFAULT.argsRecursive
  *          );
  *     }
  *
@@ -88,10 +88,10 @@ export declare abstract class AbstractConfigurableClass<Args extends AbstractCon
      *
      * @category Aliases
      */
-    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined): D & I;
-    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends Partial<D>>(defaults: D, inputs?: I | undefined, recursive?: false | undefined): D & I;
-    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>, I extends RecursivePartial<D>>(defaults: D, inputs: I | undefined, recursive: true): D & I;
-    mergeArgs<V extends unknown, D extends mergeArgs.Obj<V>>(defaults: D, inputs?: undefined, recursive?: boolean | undefined): D;
+    mergeArgs<D extends mergeArgs.Obj, I extends Partial<D>>(defaults: D, inputs: I, recursive?: false | undefined): D & I;
+    mergeArgs<D extends mergeArgs.Obj, I extends RecursivePartial<D>>(defaults: D, inputs: I, recursive: true): D & I;
+    mergeArgs<D extends mergeArgs.Obj>(defaults: D, inputs?: undefined, recursive?: boolean | undefined): D;
+    mergeArgs<D extends mergeArgs.Obj, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs: I, recursive?: boolean | undefined): D & I;
     /**
      * The object shape used when converting to JSON.
      *
@@ -118,14 +118,12 @@ export declare namespace AbstractConfigurableClass {
      * Optional configuration for {@link AbstractConfigurableClass}.
      *
      * @since 0.1.0
-     *
-     * @interface
      */
     type Args = {
         /**
          * Whether the arguments should be merged recursively.
          */
-        optsRecursive: boolean;
+        argsRecursive: boolean;
     };
 }
 //# sourceMappingURL=AbstractConfigurableClass.d.ts.map

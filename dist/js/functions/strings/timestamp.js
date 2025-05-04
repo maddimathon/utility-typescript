@@ -4,13 +4,12 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
-// import type {  } from '../../types/string-literals/index.js';
 import { mergeArgs } from '../objects/mergeArgs.js';
 /**
  * Formats a date in a predictable way.

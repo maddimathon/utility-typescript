@@ -1,7 +1,6 @@
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -29,8 +28,8 @@ import {
 /* # TYPES
  * ========================================================================== */
 
-export interface DocumentArgs extends AbstractArgs<DocumentStages> {
-}
+export type DocumentArgs = AbstractArgs<DocumentStages> & {
+};
 
 export type DocumentStages = typeof docStages[ number ];
 
@@ -58,7 +57,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
     public stages = docStages;
 
-    public get ARGS_DEFAULT(): DocumentArgs {
+    public get ARGS_DEFAULT() {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,

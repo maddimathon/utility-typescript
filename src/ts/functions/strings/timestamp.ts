@@ -11,7 +11,7 @@
  * @license MIT
  */
 
-// import type {  } from '../../types/string-literals/index.js';
+import type { LangLocaleCode } from '../../types/string-literals/index.js';
 
 import { mergeArgs } from '../objects/mergeArgs.js';
 
@@ -34,6 +34,7 @@ export function timestamp(
     date: Date | null = null,
     _args: timestamp.Args_Input = {},
 ): string {
+
     const DEFAULT_ARGS: timestamp.Args = {
         date: false,
         time: false,
@@ -97,9 +98,6 @@ export namespace timestamp {
 
     /**
      * Optional configuation for {@link timestamp | timestamp()}.
-     * 
-     * @interface
-     * @expand
      */
     export type Args = {
 
@@ -141,12 +139,12 @@ export namespace timestamp {
              * @default 
              * { year: 'numeric', month: '2-digit', day: '2-digit' }
              */
-            date: Intl.DateTimeFormatOptions;
+            date: Intl.DateTimeFormatOptions & mergeArgs.Obj;
 
             /**
              * @default { hour12: false, hour: '2-digit', minute: '2-digit' }
              */
-            time: Intl.DateTimeFormatOptions;
+            time: Intl.DateTimeFormatOptions & mergeArgs.Obj;
         };
 
         /**
@@ -158,7 +156,7 @@ export namespace timestamp {
          * 
          * @default 'en-CA'
          */
-        lang: Intl.LocalesArgument;
+        lang: LangLocaleCode;
 
         /**
          * String that joins the date and time stamps, if applicable.
@@ -171,9 +169,6 @@ export namespace timestamp {
     /**
      * A partial-ized version of {@link timestamp.Args}. Used for the
      * {@link timestamp | timestamp()} optional input args.
-     *
-     * @interface
-     * @expand
      * 
      * @expandType timestamp.Args
      * @expandType Partial

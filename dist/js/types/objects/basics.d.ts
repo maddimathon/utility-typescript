@@ -4,13 +4,26 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AnyClass } from '../functions/basics.js';
+/**
+ * Merges object shapes into one.
+ *
+ * @since 0.4.0-draft
+ *
+ * @example
+ * ```ts
+ * type ObjectAandB = MergeObjects<ObjectA & ObjectB>;
+ * ```
+ */
+export type MergeObjects<T> = T extends (...args: infer A) => infer R ? (...args: MergeObjects<A>) => MergeObjects<R> : (T extends object ? {
+    [K in keyof T]: MergeObjects<T[K]>;
+} : (T extends any ? T : never));
 /**
  * Similar to the default Partial, but this also makes any child objects
  * Partial.
@@ -21,8 +34,6 @@ type RecursivePartial_Inner<T> = T extends number | null | string | undefined | 
 /**
  * Similar to the default Partial, but this also makes any child objects
  * Partial.
- *
- * @interface
  *
  * @param T  Type to Partial-ize.
  */

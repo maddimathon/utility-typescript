@@ -1,7 +1,6 @@
 /**
- * @snapshot @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @snapshot @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -22,7 +21,7 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 /* # TYPES
  * ========================================================================== */
 
-export interface SnapshotArgs extends AbstractArgs<SnapshotStages> { }
+export type SnapshotArgs = AbstractArgs<SnapshotStages> & {};
 
 export type SnapshotStages = typeof snapshotStages[ number ];
 
@@ -49,11 +48,11 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
 
     public stages = snapshotStages;
 
-    public get ARGS_DEFAULT(): SnapshotArgs {
-        // @ts-expect-error
+    public get ARGS_DEFAULT() {
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as SnapshotArgs;
     }
 
 

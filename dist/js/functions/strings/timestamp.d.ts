@@ -4,12 +4,14 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
+import { LangLocaleCode } from 'src/ts/types/string-literals/html.js';
+import { mergeArgs } from '../objects/mergeArgs.js';
 /**
  * Formats a date in a predictable way.
  *
@@ -31,9 +33,6 @@ export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Inp
 export declare namespace timestamp {
     /**
      * Optional configuation for {@link timestamp | timestamp()}.
-     *
-     * @interface
-     * @expand
      */
     type Args = {
         /**
@@ -70,11 +69,11 @@ export declare namespace timestamp {
              * @default
              * { year: 'numeric', month: '2-digit', day: '2-digit' }
              */
-            date: Intl.DateTimeFormatOptions;
+            date: Intl.DateTimeFormatOptions & mergeArgs.Obj;
             /**
              * @default { hour12: false, hour: '2-digit', minute: '2-digit' }
              */
-            time: Intl.DateTimeFormatOptions;
+            time: Intl.DateTimeFormatOptions & mergeArgs.Obj;
         };
         /**
          * Language code used to localize the formatted date.
@@ -85,7 +84,7 @@ export declare namespace timestamp {
          *
          * @default 'en-CA'
          */
-        lang: Intl.LocalesArgument;
+        lang: LangLocaleCode;
         /**
          * String that joins the date and time stamps, if applicable.
          *
@@ -96,9 +95,6 @@ export declare namespace timestamp {
     /**
      * A partial-ized version of {@link timestamp.Args}. Used for the
      * {@link timestamp | timestamp()} optional input args.
-     *
-     * @interface
-     * @expand
      *
      * @expandType timestamp.Args
      * @expandType Partial

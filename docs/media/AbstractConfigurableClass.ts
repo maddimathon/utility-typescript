@@ -4,15 +4,18 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0-draft
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0-draft
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 
 import { mergeArgs } from '../../functions/index.js';
-import { RecursivePartial } from '../../types/objects/basics.js';
+import {
+    // MergeObjects,
+    RecursivePartial,
+} from '../../types/objects/basics.js';
 
 
 /**
@@ -25,11 +28,11 @@ import { RecursivePartial } from '../../types/objects/basics.js';
  *     /* PROPERTIES
  *      * ====================================================================== *\/
  *     
- *     public get ARGS_DEFAULT(): ExampleClassArgs {
+ *     public get ARGS_DEFAULT() {
  *     
  *         return {
- *             optsRecursive: false,
- *         };
+ *             argsRecursive: false,
+ *         } as const satisfies ExampleClassArgs;
  *     }
  * 
  *     /**
@@ -45,8 +48,8 @@ import { RecursivePartial } from '../../types/objects/basics.js';
  *          // sometimes called from the prototype
  *          return mergeArgs(
  *              mergedDefault,
- *              args,
- *              this.ARGS_DEFAULT.optsRecursive
+ *              args ?? {},
+ *              this.ARGS_DEFAULT.argsRecursive
  *          );
  *     }
  * 
@@ -75,7 +78,7 @@ export abstract class AbstractConfigurableClass<
     public static abstractArgs( args: Partial<AbstractConfigurableClass.Args> = {} ): AbstractConfigurableClass.Args {
 
         const ARGS_DEFAULT: AbstractConfigurableClass.Args = {
-            optsRecursive: false,
+            argsRecursive: false,
         };
 
         // using this.mergeArgs here can cause issues because this method is 
@@ -83,7 +86,7 @@ export abstract class AbstractConfigurableClass<
         return mergeArgs(
             ARGS_DEFAULT,
             args,
-            args.optsRecursive ?? ARGS_DEFAULT.optsRecursive
+            args.argsRecursive ?? ARGS_DEFAULT.argsRecursive
         );
     }
 
@@ -133,50 +136,46 @@ export abstract class AbstractConfigurableClass<
      * @category Aliases
      */
     public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
-        I extends Partial<D> | RecursivePartial<D>,
-    >(
-        defaults: D,
-        inputs?: I | undefined,
-        recursive?: boolean | undefined,
-    ): D & I;
-    public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
+        D extends mergeArgs.Obj,
         I extends Partial<D>,
     >(
         defaults: D,
-        inputs?: I | undefined,
+        inputs: I,
         recursive?: false | undefined,
     ): D & I;
     public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
+        D extends mergeArgs.Obj,
         I extends RecursivePartial<D>,
     >(
         defaults: D,
-        inputs: I | undefined,
+        inputs: I,
         recursive: true,
     ): D & I;
     public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
+        D extends mergeArgs.Obj,
     >(
         defaults: D,
         inputs?: undefined,
         recursive?: boolean | undefined,
     ): D;
     public mergeArgs<
-        V extends unknown,
-        D extends mergeArgs.Obj<V>,
+        D extends mergeArgs.Obj,
+        I extends Partial<D> | RecursivePartial<D>,
+    >(
+        defaults: D,
+        inputs: I,
+        recursive?: boolean | undefined,
+    ): D & I;
+
+    public mergeArgs<
+        D extends mergeArgs.Obj,
         I extends RecursivePartial<D>,
     >(
         defaults: D,
         inputs?: I | undefined,
         recursive: boolean = false,
-    ): D & I {
-        return mergeArgs( defaults, inputs, recursive );
+    ) {
+        return mergeArgs<D, I>( defaults, inputs as I, recursive );
     }
 
 
@@ -213,14 +212,12 @@ export namespace AbstractConfigurableClass {
      * Optional configuration for {@link AbstractConfigurableClass}.
      * 
      * @since 0.1.0
-     * 
-     * @interface
      */
     export type Args = {
 
         /**
          * Whether the arguments should be merged recursively.
          */
-        optsRecursive: boolean;
+        argsRecursive: boolean;
     };
 }

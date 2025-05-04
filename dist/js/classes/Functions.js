@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.3.0
+ * @package @maddimathon/utility-typescript@0.4.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@0.3.0
+ * @maddimathon/utility-typescript@0.4.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -22,7 +22,7 @@ export class Functions extends AbstractConfigurableClass {
      * ====================================================================== */
     get ARGS_DEFAULT() {
         return {
-            optsRecursive: false,
+            argsRecursive: false,
         };
     }
     /**
@@ -34,7 +34,7 @@ export class Functions extends AbstractConfigurableClass {
         const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
         // using this.mergeArgs here can cause issues because this method is 
         // sometimes called from the prototype
-        return mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.optsRecursive);
+        return mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
     }
     /* CONSTRUCTOR
      * ====================================================================== */

@@ -1,7 +1,6 @@
 /**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
+ * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
  * 
  * @license MIT
  */
@@ -32,14 +31,14 @@ import {
 /* # TYPES
  * ========================================================================== */
 
-export interface PackageArgs extends AbstractArgs<PackageStages> {
+export type PackageArgs = AbstractArgs<PackageStages> & {
 
     'only-build'?: BuildStages | BuildStages[];
     'only-snap'?: SnapshotStages | SnapshotStages[];
 
     'without-build'?: BuildStages | BuildStages[];
     'without-snap'?: SnapshotStages | SnapshotStages[];
-}
+};
 
 export type PackageStages = typeof packageStages[ number ];
 
@@ -69,11 +68,11 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
     public stages = packageStages;
 
-    public get ARGS_DEFAULT(): PackageArgs {
-        // @ts-expect-error
+    public get ARGS_DEFAULT() {
+
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        };
+        } as PackageArgs;
     }
 
 

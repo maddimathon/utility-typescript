@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 0.3.0
+# Utility TypeScript @ 0.4.0-draft
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -24,8 +24,8 @@ my personal needs/preferences rather than developers in general.
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@0.3.0
-npm i -D github:maddimathon/utility-typescript#0.3.0
+npm i -D @maddimathon/utility-typescript@0.4.0
+npm i -D github:maddimathon/utility-typescript#0.4.0
 ```
 <!--/README_INSTALL-->
 
@@ -122,7 +122,7 @@ but with `.test` added before the extension — e.g., `myFunction.ts` is tested 
 
 Every subdirectory should have its own `index.ts` that re-exports the contents
 of its files.  **Types should also be tested** using the utility types in 
-{@link Types.Test|`Types.Test`}.
+{@link Types.Test}.
 
 
 

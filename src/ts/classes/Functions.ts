@@ -35,11 +35,11 @@ export class Functions extends AbstractConfigurableClass<Functions.Args> {
     /* PROPERTIES
      * ====================================================================== */
 
-    public get ARGS_DEFAULT(): Functions.Args {
+    public get ARGS_DEFAULT() {
 
         return {
-            optsRecursive: false,
-        };
+            argsRecursive: false,
+        } as const satisfies Functions.Args;
     }
 
     /**
@@ -57,8 +57,8 @@ export class Functions extends AbstractConfigurableClass<Functions.Args> {
         // sometimes called from the prototype
         return mergeArgs(
             mergedDefault,
-            args,
-            this.ARGS_DEFAULT.optsRecursive
+            args ?? {},
+            this.ARGS_DEFAULT.argsRecursive
         );
     }
 
@@ -153,8 +153,6 @@ export namespace Functions {
 
     /**
      * Optional configuration for {@link Functions}.
-     * 
-     * @interface
      */
     export type Args = AbstractConfigurableClass.Args & {
     };

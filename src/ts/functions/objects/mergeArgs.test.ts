@@ -11,14 +11,27 @@
  * @license MIT
  */
 
-import type { Test } from '../../types/index.js';
+import type {
+    Objects,
+    Test,
+} from '../../types/index.js';
 import { describe, expect, test } from '@jest/globals';
 
 import { mergeArgs } from './mergeArgs.js';
 
 describe( 'mergeArgs()', () => {
 
-    const defaultObj = {
+    type DefaultObjType = {
+        a: string;
+        b: number;
+        child: {
+            1: string[];
+            2: boolean;
+            3: string;
+        };
+    };
+
+    const defaultObj: DefaultObjType = {
         a: 'default value',
         b: 6,
 
@@ -50,7 +63,7 @@ describe( 'mergeArgs()', () => {
             },
 
             extra: 'input-only property',
-        },
+        } as DefaultObjType,
 
         partial: {
 
@@ -66,7 +79,7 @@ describe( 'mergeArgs()', () => {
             },
 
             extra: 'input-only property',
-        },
+        } as Partial<DefaultObjType>,
 
         partialRecursive: {
 
@@ -80,7 +93,7 @@ describe( 'mergeArgs()', () => {
             },
 
             extra: 'input-only property',
-        },
+        } as Objects.RecursivePartial<DefaultObjType>,
     };
 
     const expected = {
