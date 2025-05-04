@@ -76,6 +76,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
+            building: true,
         } as BuildArgs;
     }
 

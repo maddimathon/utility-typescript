@@ -72,6 +72,8 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
+            building: true,
+            packaging: true,
         } as PackageArgs;
     }
 

@@ -70,6 +70,9 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
+            building: true,
+            packaging: true,
+            releasing: true,
         } as ReleaseArgs;
     }
 
