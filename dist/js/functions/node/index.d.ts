@@ -1,14 +1,18 @@
+export {};
 /**
- * Exports all the package's functions.
+ * Exports all the package's functions specific to the node/npm environment.
  *
- * @module functions
+ * @module node
  *
- * @since 0.1.0
+ * @since 0.4.3
  *
  * @example
  * ```ts
+ * // via functions.node
  * import { functions } from '@maddimathon/utility-typescript';
- * import { ... } from '@maddimathon/utility-typescript/functions';
+ *
+ * import { node } from '@maddimathon/utility-typescript/functions';
+ * import { ... } from '@maddimathon/utility-typescript/functions/node';
  * ```
  */
 /**
@@ -22,9 +26,4 @@
  * @maddimathon/utility-typescript@0.4.3
  * @license MIT
  */
-export * from './arrays/index.js';
-export * from './objects/index.js';
-export * from './strings/index.js';
-export * from './regex/index.js';
-export * from './typeOf.js';
 //# sourceMappingURL=index.d.ts.map

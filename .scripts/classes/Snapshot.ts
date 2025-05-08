@@ -5,41 +5,15 @@
  * @license MIT
  */
 
-
-/* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
-
-
-/* IMPORT EXTERNAL DEPENDENCIES */
-
-
-/* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
 
-
-
-/* # TYPES
- * ========================================================================== */
-
-export type SnapshotArgs = AbstractArgs<SnapshotStages> & {};
-
-export type SnapshotStages = typeof snapshotSubStages[ number ];
-
-
-
-/* # VARIABLES
- * ========================================================================== */
 
 const snapshotSubStages = [
     'snapshot',
 ] as const;
 
 
-
-/* # CLASS
- * ========================================================================== */
-
-export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
+export class Snapshot extends AbstractStage<Snapshot.Stages, Snapshot.Args> {
 
 
 
@@ -52,7 +26,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        } as SnapshotArgs;
+        } as Snapshot.Args;
     }
 
 
@@ -60,7 +34,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor ( args: SnapshotArgs ) {
+    constructor ( args: Snapshot.Args ) {
         super( args, 'orange' );
     }
 
@@ -69,7 +43,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: SnapshotStages ) {
+    protected async runStage( stage: Snapshot.Stages ) {
         await this[ stage ]();
     }
 
@@ -89,7 +63,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
      * ====================================================================== */
 
     protected async snapshot() {
-        // this.progressLog( 'making snapshot...', 1 );
+        this.verboseLog( 'getting included paths...', 1 );
 
         const snapdir = this.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
 
@@ -100,6 +74,7 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
         const includePaths: string[] = this.glob(
             [ '**/*', ],
             {
+                filesOnly: true,
                 ignore: [
                     '.git/**/*',
                     `${ snapdir }/**/*`,
@@ -113,15 +88,28 @@ export class Snapshot extends AbstractStage<SnapshotStages, SnapshotArgs> {
                 ],
             },
             true
-        ).map( path => path.replace( new RegExp( `^${ this.fns.fns.escRegExp( `${ snapdir }/` ) }`, 'gi' ), '' ) );
+        );
+        this.args.debug && this.fns.nc.timestampVarDump( { includePaths }, { depth: ( this.args.verbose ? 2 : 1 ) + ( this.args[ 'log-base-level' ] ?? 0 ) } );
 
+        this.verboseLog( 'copying files...', 1 );
         this.copyFiles( includePaths, exportPath );
 
 
+        this.verboseLog( 'zipping snapshot...', 1 );
         this.fns.nc.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
 
-        this.fns.nc.cmd( `rm -rf ${ exportPath }` );
+
+        this.verboseLog( 'tidying up...', 1 );
+        this.fns.fs.deleteFiles( [ exportPath ] );
+
 
         this.progressLog( `snapshot zipped: ${ exportPath }.zip`, 1, { maxWidth: null } );
     }
+}
+
+export namespace Snapshot {
+
+    export type Args = AbstractStage.Args<Snapshot.Stages> & {};
+
+    export type Stages = typeof snapshotSubStages[ number ];
 }

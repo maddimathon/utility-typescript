@@ -7,7 +7,6 @@
 
 
 /* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
 
 
 /* IMPORT EXTERNAL DEPENDENCIES */
@@ -15,15 +14,6 @@ import type { AbstractArgs } from './abstracts/AbstractStage.js';
 
 /* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
-
-
-
-/* # TYPES
- * ========================================================================== */
-
-export type CompileArgs = AbstractArgs<CompileStages> & {};
-
-export type CompileStages = typeof compileSubStages[ number ];
 
 
 
@@ -39,7 +29,7 @@ const compileSubStages = [
 /* # CLASS
  * ========================================================================== */
 
-export class Compile extends AbstractStage<CompileStages, CompileArgs> {
+export class Compile extends AbstractStage<Compile.Stages, Compile.Args> {
 
 
 
@@ -52,7 +42,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        } as CompileArgs;
+        } as Compile.Args;
     }
 
 
@@ -60,7 +50,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor ( args: CompileArgs ) {
+    constructor ( args: Compile.Args ) {
         super( args, 'green' );
     }
 
@@ -69,7 +59,7 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: CompileStages ) {
+    protected async runStage( stage: Compile.Stages ) {
         await this[ stage ]();
     }
 
@@ -120,4 +110,11 @@ export class Compile extends AbstractStage<CompileStages, CompileArgs> {
             ] ) );
         }
     }
+}
+
+export namespace Compile {
+
+    export type Args = AbstractStage.Args<Compile.Stages> & {};
+
+    export type Stages = typeof compileSubStages[ number ];
 }

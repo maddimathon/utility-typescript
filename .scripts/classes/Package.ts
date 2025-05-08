@@ -6,17 +6,9 @@
  */
 
 
-/* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
-import type { BuildArgs, BuildStages } from './Build.js';
-import type { SnapshotArgs, SnapshotStages } from './Snapshot.js';
-
-
-/* IMPORT EXTERNAL DEPENDENCIES */
 import NodeFS from 'node:fs';
 
 
-/* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
 import { Snapshot } from './Snapshot.js';
 import { Build } from './Build.js';
@@ -27,26 +19,6 @@ import {
 } from '../vars/replacements.js';
 
 
-
-/* # TYPES
- * ========================================================================== */
-
-export type PackageArgs = AbstractArgs<PackageStages> & {
-
-    'only-build'?: BuildStages | BuildStages[];
-    'only-snap'?: SnapshotStages | SnapshotStages[];
-
-    'without-build'?: BuildStages | BuildStages[];
-    'without-snap'?: SnapshotStages | SnapshotStages[];
-};
-
-export type PackageStages = typeof packageSubStages[ number ];
-
-
-
-/* # VARIABLES
- * ========================================================================== */
-
 const packageSubStages = [
     'snapshot',
     'build',
@@ -55,11 +27,7 @@ const packageSubStages = [
 ] as const;
 
 
-
-/* # CLASS
- * ========================================================================== */
-
-export class Package extends AbstractStage<PackageStages, PackageArgs> {
+export class Package extends AbstractStage<Package.Stages, Package.Args> {
 
 
 
@@ -74,7 +42,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
             ...AbstractStage.ARGS_ABSTRACT,
             building: true,
             packaging: true,
-        } as PackageArgs;
+        } as Package.Args;
     }
 
 
@@ -82,7 +50,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor ( args: PackageArgs ) {
+    constructor ( args: Package.Args ) {
         super( args, args.releasing ? 'yellow' : 'purple' );
         this.args.packaging = true;
     }
@@ -92,18 +60,46 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: PackageStages ) {
+    protected async runStage( stage: Package.Stages ) {
         await this[ stage ]();
     }
 
     public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
-        this.startEndNoticeLog(
-            which,
-            `PACKAGING: ${ this.pkgVersion }`,
-            `PACKAGE FINISHED`,
-            `${ which.toUpperCase() }ING PACKAGE`,
-        );
+        if ( which === 'start' ) {
+
+            this.progressLog(
+                [
+                    [
+                        'PACKAGING:',
+                        { flag: true },
+                    ],
+                    [
+                        this.pkgVersion,
+                        { flag: 'reverse' }
+                    ],
+                ],
+                0,
+                {
+                    bold: true,
+                    clr: this.clr,
+
+                    linesIn: 3,
+                    linesOut: 0,
+
+                    joiner: '',
+                },
+            );
+        } else {
+
+
+            this.startEndNoticeLog(
+                which,
+                `PACKAGING: ${ this.pkgVersion }`,
+                `PACKAGE FINISHED`,
+                `${ which.toUpperCase() }ING PACKAGE`,
+            );
+        }
 
         if ( which === 'start' && !this.args.releasing ) {
 
@@ -140,7 +136,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
     protected async snapshot() {
 
         const snap = new Snapshot( {
-            ...this.args as SnapshotArgs,
+            ...this.args as Snapshot.Args,
 
             'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
@@ -156,7 +152,7 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
     protected async build() {
 
         const build = new Build( {
-            ...this.args as BuildArgs,
+            ...this.args as Build.Args,
 
             'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
@@ -336,4 +332,18 @@ export class Package extends AbstractStage<PackageStages, PackageArgs> {
         const zipCMD: string = `cd "${ this.fns.fs.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
         this.fns.nc.cmd( zipCMD );
     }
+}
+
+export namespace Package {
+
+    export type Args = AbstractStage.Args<Package.Stages> & {
+
+        'only-build'?: Build.Stages | Build.Stages[];
+        'only-snap'?: Snapshot.Stages | Snapshot.Stages[];
+
+        'without-build'?: Build.Stages | Build.Stages[];
+        'without-snap'?: Snapshot.Stages | Snapshot.Stages[];
+    };
+
+    export type Stages = typeof packageSubStages[ number ];
 }

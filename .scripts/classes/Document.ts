@@ -5,16 +5,9 @@
  * @license MIT
  */
 
-
-/* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
-
-
-/* IMPORT EXTERNAL DEPENDENCIES */
 import * as typeDoc from "typedoc";
 
 
-/* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
 
 import {
@@ -24,31 +17,13 @@ import {
 // import { Doc_Project } from './doc/Doc_Project.js';
 
 
-
-/* # TYPES
- * ========================================================================== */
-
-export type DocumentArgs = AbstractArgs<DocumentStages> & {
-};
-
-export type DocumentStages = typeof docSubStages[ number ];
-
-
-
-/* # VARIABLES
- * ========================================================================== */
-
 const docSubStages = [
     'ts',
     'replace',
 ] as const;
 
 
-
-/* # CLASS
- * ========================================================================== */
-
-export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
+export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
 
 
@@ -61,7 +36,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        } as DocumentArgs;
+        } as Document.Args;
     }
 
 
@@ -69,7 +44,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor ( args: DocumentArgs ) {
+    constructor ( args: Document.Args ) {
         super( args, 'turquoise' );
     }
 
@@ -78,7 +53,7 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: DocumentStages ) {
+    protected async runStage( stage: Document.Stages ) {
         await this[ stage ]();
     }
 
@@ -274,4 +249,12 @@ export class Document extends AbstractStage<DocumentStages, DocumentArgs> {
 
         await app.generateOutputs( project );
     }
+}
+
+export namespace Document {
+
+    export type Args = AbstractStage.Args<Document.Stages> & {
+    };
+
+    export type Stages = typeof docSubStages[ number ];
 }

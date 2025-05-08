@@ -1,6 +1,6 @@
 {
     "name": "@maddimathon/utility-typescript",
-    "version": "0.4.2",
+    "version": "0.4.3",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
@@ -88,9 +88,9 @@
 
     },
     "dependencies": {
+        "@inquirer/prompts": "7.4.1"
     },
     "devDependencies": {
-        "@inquirer/prompts": "7.4.1",
         "@tsconfig/node20": "20.1.5",
         "@types/jest": "29.5.14",
         "@types/luxon": "3.6.2",

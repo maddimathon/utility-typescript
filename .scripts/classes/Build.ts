@@ -5,18 +5,6 @@
  * @license MIT
  */
 
-
-/* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
-import type { CompileArgs, CompileStages } from './Compile.js';
-import type { DocumentArgs, DocumentStages } from './Document.js';
-import type { TestArgs, TestStages } from './Test.js';
-
-
-/* IMPORT EXTERNAL DEPENDENCIES */
-
-
-/* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
 import { Compile } from './Compile.js';
 import { Document } from './Document.js';
@@ -26,30 +14,9 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
-import { softWrapText } from 'src/ts/functions/index.js';
+import { softWrapText } from '../../src/ts/functions/index.js';
 
 
-
-/* # TYPES
- * ========================================================================== */
-
-export type BuildArgs = AbstractArgs<BuildStages> & {
-
-    'only-compile'?: CompileStages | CompileStages[];
-    'only-document'?: DocumentStages | DocumentStages[];
-    'only-test'?: TestStages | TestStages[];
-
-    'without-compile'?: CompileStages | CompileStages[];
-    'without-document'?: DocumentStages | DocumentStages[];
-    'without-test'?: TestStages | TestStages[];
-};
-
-export type BuildStages = typeof buildSubStages[ number ];
-
-
-
-/* # VARIABLES
- * ========================================================================== */
 
 const buildSubStages = [
     'compile',
@@ -59,11 +26,7 @@ const buildSubStages = [
 ] as const;
 
 
-
-/* # CLASS
- * ========================================================================== */
-
-export class Build extends AbstractStage<BuildStages, BuildArgs> {
+export class Build extends AbstractStage<Build.Stages, Build.Args> {
 
 
 
@@ -77,7 +40,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
         return {
             ...AbstractStage.ARGS_ABSTRACT,
             building: true,
-        } as BuildArgs;
+        } as Build.Args;
     }
 
 
@@ -85,7 +48,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     /* CONSTRUCTOR
      * ====================================================================== */
 
-    constructor ( args: BuildArgs ) {
+    constructor ( args: Build.Args ) {
         super( args, 'blue' );
     }
 
@@ -94,7 +57,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: BuildStages ) {
+    protected async runStage( stage: Build.Stages ) {
         await this[ stage ]();
     }
 
@@ -126,7 +89,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async compile() {
 
         const cmpl = new Compile( {
-            ...this.args as CompileArgs & BuildArgs,
+            ...this.args as Compile.Args & Build.Args,
 
             'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
@@ -142,7 +105,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async document() {
 
         const doc = new Document( {
-            ...this.args as DocumentArgs & BuildArgs,
+            ...this.args as Document.Args & Build.Args,
 
             'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
@@ -210,7 +173,7 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
     protected async test() {
 
         const t = new Test( {
-            ...this.args as TestArgs & BuildArgs,
+            ...this.args as Test.Args & Build.Args,
 
             'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
@@ -222,4 +185,20 @@ export class Build extends AbstractStage<BuildStages, BuildArgs> {
 
         await t.run();
     }
+}
+
+export namespace Build {
+
+    export type Args = AbstractStage.Args<Build.Stages> & {
+
+        'only-compile'?: Compile.Stages | Compile.Stages[];
+        'only-document'?: Document.Stages | Document.Stages[];
+        'only-test'?: Test.Stages | Test.Stages[];
+
+        'without-compile'?: Compile.Stages | Compile.Stages[];
+        'without-document'?: Document.Stages | Document.Stages[];
+        'without-test'?: Test.Stages | Test.Stages[];
+    };
+
+    export type Stages = typeof buildSubStages[ number ];
 }

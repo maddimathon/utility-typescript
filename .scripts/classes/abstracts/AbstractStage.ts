@@ -5,24 +5,18 @@
  * @license MIT
  */
 
-
-/* IMPORT TYPES */
-// import type { ChildProcess } from 'node:child_process';
 import type { GlobOptions } from 'glob';
 
 import type * as TU from '../../@types/utilities.js';
 
 
-/* IMPORT EXTERNAL DEPENDENCIES */
 import NodeFS from 'node:fs';
 import NodePath from 'node:path';
 
 import { DateTime } from 'luxon';
-
 import { globSync } from 'glob';
 
 
-/* IMPORT LOCAL DEPENDENCIES */
 import { currentReplacements, pkgReplacements } from '../../vars/replacements.js';
 
 import {
@@ -33,66 +27,25 @@ import {
 
 
 
-/* # TYPES
- * ========================================================================== */
-
-export type AbstractArgs<
-    SubStage extends string | never,
-> = cls.node.AbstractBuildStage.Args<SubStage> & {
-
-    _: string[];
-
-    /**
-     * Passes --update param to sass when compiling; only compiles updates.
-     */
-    'css-update'?: boolean;
-
-    /**
-     * Passes --quiet param to sass when compiling; quiets output.
-     */
-    'sass-quiet'?: boolean;
-};
-
-/**
- * Optional configuration for {@link AbstractStage.copyFiles}.
- */
-export type CopyFilesArgs = {
-
-    /** 
-     * Default paths to ignore when dealing with files. Relative to root or
-     * absolute.
-     */
-    ignoreGlobs: string[],
-
-    /** 
-     * Whether to include the default ignoreGlobs with the input ignore
-     * paths.
-     */
-    includeDefaultIgnoreGlobs: boolean,
-};
-
 type CmdArgs = Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 0 ];
 
 type GlobArgs = fns.mergeArgs.Obj & GlobOptions;
 
 
 
-/* # CLASS
- * ========================================================================== */
-
 export abstract class AbstractStage<
     SubStage extends string | never,
-    Args extends AbstractArgs<SubStage>,
+    Args extends AbstractStage.Args<SubStage>,
 > extends cls.node.AbstractBuildStage<SubStage, Args> {
 
-    public static get ARGS_ABSTRACT(): AbstractArgs<string> {
+    public static get ARGS_ABSTRACT(): AbstractStage.Args<string> {
 
         return {
             _: [],
             ...cls.node.AbstractBuildStage.abstractArgs( {
                 argsRecursive: false,
             } )
-        } as AbstractArgs<string>;
+        } as AbstractStage.Args<string>;
     }
 
 
@@ -126,7 +79,39 @@ export abstract class AbstractStage<
      * The package version being prepared.
      */
     public get pkgVersion(): string {
-        return `${ this.pkg.version }${ ( this.args.dryrun || !this.args.packaging ) ? '-draft' : '' }`;
+
+        /** Checks for `-alpha` or `-beta` in the current version. */
+        const dashSuffixRegex = /(\-(alpha|beta)(\.\d+)?)(?=(\+[^\s]+)|$)/gi;
+
+        /** Checks for `+...` comments in the current version. */
+        const plusSuffixRegex = /(\+[^\s]+)$/gi;
+
+        /** Contents of `+...` comments in the current version. */
+        const plusSuffix: string = this.pkg.version.match( plusSuffixRegex )?.[ 0 ] ?? '';
+
+        /** Contents of `-...` version in the current version. */
+        const dashSuffix: string = this.pkg.version.match( dashSuffixRegex )?.[ 0 ] ?? '';
+
+        /** Base version, without prelease or comments. */
+        let pkgVersion: string = this.pkg.version;
+
+        /** Suffix indicating if this is a draft package/release. */
+        let draftSuffix: string = ( this.args.dryrun || !this.args.packaging ) ? '-draft' : '';
+
+        if ( plusSuffix ) {
+            pkgVersion = pkgVersion.replace( plusSuffixRegex, '' );
+        }
+
+        if ( dashSuffix ) {
+
+            if ( draftSuffix ) {
+                draftSuffix = '.draft';
+            }
+
+            pkgVersion = pkgVersion.replace( dashSuffixRegex, '' );
+        }
+
+        return pkgVersion + dashSuffix + draftSuffix + plusSuffix;
     }
 
     #releasePath: string | undefined = undefined;
@@ -139,7 +124,7 @@ export abstract class AbstractStage<
         if ( this.#releasePath === undefined ) {
 
             const name = this.pkg.name.replace( /^@([^\/]+)\//, '$1_' );
-            const version = this.pkgVersion.replace( /^(tpl|template)-/gi, '' ).replace( /\./gi, '-' );
+            const version = this.pkgVersion.replace( /\./gi, '-' );
 
             this.#releasePath = this.fns.fs.pathRelative( this.fns.fs.pathResolve(
                 this.pkg.config.paths.releases,
@@ -392,7 +377,7 @@ export abstract class AbstractStage<
         _glob: string | string[],
         _destination: string,
         _source: string = '.',
-        args: Partial<CopyFilesArgs> = {}
+        args: Partial<AbstractStage.CopyFilesArgs> = {}
     ): void {
         if ( !Array.isArray( _glob ) ) { _glob = [ _glob ]; }
 
@@ -403,9 +388,9 @@ export abstract class AbstractStage<
             {
                 ignoreGlobs: [],
                 includeDefaultIgnoreGlobs: false,
-            } as CopyFilesArgs,
+            } as AbstractStage.CopyFilesArgs,
             args
-        ) as CopyFilesArgs;
+        ) as AbstractStage.CopyFilesArgs;
 
         /** 
          * Resolved versions of the directory paths with trailing slashes.
@@ -550,4 +535,42 @@ export abstract class AbstractStage<
     ): string {
         return DateTime.fromJSDate( date ?? new Date() ).toFormat( format ?? 'hh:mm' );
     }
+}
+
+export namespace AbstractStage {
+
+    export type Args<
+        SubStage extends string | never,
+    > = cls.node.AbstractBuildStage.Args<SubStage> & {
+
+        _: string[];
+
+        /**
+         * Passes --update param to sass when compiling; only compiles updates.
+         */
+        'css-update'?: boolean;
+
+        /**
+         * Passes --quiet param to sass when compiling; quiets output.
+         */
+        'sass-quiet'?: boolean;
+    };
+
+    /**
+     * Optional configuration for {@link AbstractStage['copyFiles']}.
+     */
+    export type CopyFilesArgs = {
+
+        /** 
+         * Default paths to ignore when dealing with files. Relative to root or
+         * absolute.
+         */
+        ignoreGlobs: string[],
+
+        /** 
+         * Whether to include the default ignoreGlobs with the input ignore
+         * paths.
+         */
+        includeDefaultIgnoreGlobs: boolean,
+    };
 }

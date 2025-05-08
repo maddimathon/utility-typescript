@@ -7,16 +7,6 @@
  * @license MIT
  */
 
-
-/* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
-import type { PackageArgs, PackageStages } from './Package.js';
-
-
-/* IMPORT EXTERNAL DEPENDENCIES */
-
-
-/* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
 import { Package } from './Package.js';
 
@@ -25,23 +15,6 @@ import {
 } from '../vars/replacements.js';
 import { softWrapText } from 'src/ts/functions/index.js';
 
-
-
-/* # TYPES
- * ========================================================================== */
-
-export type ReleaseArgs = AbstractArgs<ReleaseStages> & {
-
-    'only-pkg'?: PackageStages | PackageStages[];
-    'without-pkg'?: PackageStages | PackageStages[];
-};
-
-export type ReleaseStages = typeof releaseSubStages[ number ];
-
-
-
-/* # VARIABLES
- * ========================================================================== */
 
 const releaseSubStages = [
     'changelog',
@@ -53,11 +26,7 @@ const releaseSubStages = [
 ] as const;
 
 
-
-/* # CLASS
- * ========================================================================== */
-
-export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
+export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
 
 
@@ -73,7 +42,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             building: true,
             packaging: true,
             releasing: true,
-        } as ReleaseArgs;
+        } as Release.Args;
     }
 
 
@@ -81,7 +50,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     /* CONSTRUCTOR
     * ====================================================================== */
 
-    constructor ( args: ReleaseArgs ) {
+    constructor ( args: Release.Args ) {
         args.releasing = true;
         super( args, 'purple' );
     }
@@ -91,7 +60,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     /* LOCAL METHODS
     * ====================================================================== */
 
-    protected async runStage( stage: ReleaseStages ) {
+    protected async runStage( stage: Release.Stages ) {
         await this[ stage ]();
     }
 
@@ -132,7 +101,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         this.progressLog(
             msg,
-            depth,
+            0,
             {
                 bold: true,
                 clr: this.clr,
@@ -194,7 +163,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
             if ( inputVersion !== this.pkg.version ) {
 
-                const currentPkgJson = this.fns.fs.readFile( 'package.json' );
+                const currentPkgJson: string = this.fns.fs.readFile( 'package.json' );
 
                 this.pkg.version = inputVersion;
 
@@ -238,7 +207,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
 
         const newChangeLogEntry =
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
-            + `## **${ this.pkgVersion }** -- ${ this.datestamp() }`
+            + `## **${ this.pkg.version }** -- ${ this.datestamp() }`
             + '\n\n'
             + this.fns.fs.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';
@@ -265,7 +234,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
     protected async package() {
 
         const pkg = new Package( {
-            ...this.args as PackageArgs,
+            ...this.args as Package.Args,
 
             'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
 
@@ -343,7 +312,7 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             } );
 
             this.fns.nc.cmd( gitCmd );
-            this.fns.nc.cmd( `git tag -a -f ${ this.pkgVersion } -m "release: ${ this.pkgVersion }"` );
+            this.fns.nc.cmd( `git tag -a -f ${ this.pkg.version } -m "release: ${ this.pkgVersion }"` );
             this.fns.nc.cmd( `git push --tags || echo ''` );
 
             this.verboseLog( 'pushing to origin...', 2 );
@@ -432,4 +401,15 @@ export class Release extends AbstractStage<ReleaseStages, ReleaseArgs> {
             ].join( '\n' ), { force: true } );
         }
     }
+}
+
+export namespace Release {
+
+    export type Args = AbstractStage.Args<Release.Stages> & {
+
+        'only-pkg'?: Package.Stages | Package.Stages[];
+        'without-pkg'?: Package.Stages | Package.Stages[];
+    };
+
+    export type Stages = typeof releaseSubStages[ number ];
 }

@@ -7,41 +7,15 @@
  * @license MIT
  */
 
-
-/* IMPORT TYPES */
-import type { AbstractArgs } from './abstracts/AbstractStage.js';
-
-
-/* IMPORT EXTERNAL DEPENDENCIES */
-
-
-/* IMPORT LOCAL DEPENDENCIES */
 import { AbstractStage } from './abstracts/AbstractStage.js';
 
-
-
-/* # TYPES
- * ========================================================================== */
-
-export type TestArgs = AbstractArgs<TestStages> & {};
-
-export type TestStages = typeof testSubStages[ number ];
-
-
-
-/* # VARIABLES
- * ========================================================================== */
 
 const testSubStages = [
     'js',
 ] as const;
 
 
-
-/* # CLASS
- * ========================================================================== */
-
-export class Test extends AbstractStage<TestStages, TestArgs> {
+export class Test extends AbstractStage<Test.Stages, Test.Args> {
 
 
 
@@ -54,7 +28,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
 
         return {
             ...AbstractStage.ARGS_ABSTRACT,
-        } as TestArgs;
+        } as Test.Args;
     }
 
 
@@ -62,7 +36,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     /* CONSTRUCTOR
     * ====================================================================== */
 
-    constructor ( args: TestArgs ) {
+    constructor ( args: Test.Args ) {
         super( args, 'red' );
     }
 
@@ -71,7 +45,7 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
     /* LOCAL METHODS
     * ====================================================================== */
 
-    protected async runStage( stage: TestStages ) {
+    protected async runStage( stage: Test.Stages ) {
         await this[ stage ]();
     }
 
@@ -106,4 +80,11 @@ export class Test extends AbstractStage<TestStages, TestArgs> {
             ] ) );
         }
     }
+}
+
+export namespace Test {
+
+    export type Args = AbstractStage.Args<Test.Stages> & {};
+
+    export type Stages = typeof testSubStages[ number ];
 }

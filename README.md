@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 0.4.2
+# Utility TypeScript @ 0.4.3
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -16,7 +16,7 @@ including only the required exports) to avoid bulk, inefficiency, and alpha/beta
 items.
 
 The library aims to be pretty configurable, but it's definitely targeted towards
-my personal needs/preferences rather than developers in general.
+my personal needs/preferences rather than (web) developers in general.
 
 
 
@@ -24,8 +24,8 @@ my personal needs/preferences rather than developers in general.
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@0.4.2
-npm i -D github:maddimathon/utility-typescript#0.4.2
+npm i -D @maddimathon/utility-typescript@0.4.3
+npm i -D github:maddimathon/utility-typescript#0.4.3
 ```
 <!--/README_INSTALL-->
 

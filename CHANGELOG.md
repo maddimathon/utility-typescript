@@ -19,13 +19,24 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **0.4.3** -- 2025-05-08
+
+### Changed
+- Minor build script improvements
+
+### Fixed
+- Fixed @inquirer/prompts dependency (was erroneously in devDependencies)
+- Snapshot stage's files weren't limited to files only, which slowed it
+  significantly
+
+
 ## **0.4.2** -- 2025-05-04
 
 ### Added
 - AbstractBuildStage new method - isSubStageIncluded()
 
 
-## **0.4.2** -- 2025-05-04
+## **0.4.0** -- 2025-05-04
 
 ### Added
 - Added AbstractBuildStage - and updated build scripts accordingly

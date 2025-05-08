@@ -9,11 +9,9 @@
 
 import minimist from 'minimist';
 
-import type { BuildArgs } from './classes/Build.js';
 import { Build } from './classes/Build.js';
 
-// @ts-expect-error
-const args: BuildArgs = minimist( process.argv.slice( 2 ) );
+const args = minimist( process.argv.slice( 2 ) ) as Build.Args;
 
 const bld = new Build( args );
 

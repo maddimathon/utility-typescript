@@ -9,11 +9,9 @@
 
 import minimist from 'minimist';
 
-import type { ReleaseArgs } from './classes/Release.js';
 import { Release } from './classes/Release.js';
 
-// @ts-expect-error
-const args: ReleaseArgs = minimist( process.argv.slice( 2 ) );
+const args = minimist( process.argv.slice( 2 ) ) as Release.Args;
 
 const rel = new Release( args );
 

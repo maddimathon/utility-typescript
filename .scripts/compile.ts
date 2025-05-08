@@ -9,11 +9,9 @@
 
 import minimist from 'minimist';
 
-import type { CompileArgs } from './classes/Compile.js';
 import { Compile } from './classes/Compile.js';
 
-// @ts-expect-error
-const args: CompileArgs = minimist( process.argv.slice( 2 ) );
+const args = minimist( process.argv.slice( 2 ) ) as Compile.Args;
 
 const cmpl = new Compile( args );
 

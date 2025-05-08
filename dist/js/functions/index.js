@@ -12,19 +12,20 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.2
+ * @package @maddimathon/utility-typescript@0.4.3
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.4.2
+ * @maddimathon/utility-typescript@0.4.3
  * @license MIT
  */
 // export * as node from './node/index.js';
 export * from './arrays/index.js';
 // export * from './html/index.js';
+// export * as node from './node/index.js';
 export * from './objects/index.js';
 export * from './strings/index.js';
 export * from './regex/index.js';

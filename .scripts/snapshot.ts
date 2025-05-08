@@ -9,11 +9,9 @@
 
 import minimist from 'minimist';
 
-import type { SnapshotArgs } from './classes/Snapshot.js';
 import { Snapshot } from './classes/Snapshot.js';
 
-// @ts-expect-error
-const args: SnapshotArgs = minimist( process.argv.slice( 2 ) );
+const args = minimist( process.argv.slice( 2 ) ) as Snapshot.Args;
 
 const snap = new Snapshot( args );
 
