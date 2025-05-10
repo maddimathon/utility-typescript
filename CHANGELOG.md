@@ -19,6 +19,14 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **1.0.0** -- 2025-05-10
+
+First full release!
+
+### Breaking
+- Changed ts output directory from `dist/js` to `dist`
+
+
 ## **0.4.4** -- 2025-05-10
 
 ### Fixed

@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.4
+ * @package @maddimathon/utility-typescript@1.0.0
  */
 /*!
- * @maddimathon/utility-typescript@0.4.4
+ * @maddimathon/utility-typescript@1.0.0
  * @license MIT
  */
 
