@@ -19,6 +19,13 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **0.4.4** -- 2025-05-10
+
+### Fixed
+- Some exports for subpaths were missing the `js/` subfolder in `dist/`
+- Release script was replacing the placeholders in the replacement script
+
+
 ## **0.4.3** -- 2025-05-08
 
 ### Changed

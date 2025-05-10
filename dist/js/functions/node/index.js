@@ -16,14 +16,14 @@ export {};
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@0.4.3
+ * @package @maddimathon/utility-typescript@0.4.4
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@0.4.3
+ * @maddimathon/utility-typescript@0.4.4
  * @license MIT
  */
 //# sourceMappingURL=index.js.map

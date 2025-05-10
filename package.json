@@ -1,6 +1,6 @@
 {
     "name": "@maddimathon/utility-typescript",
-    "version": "0.4.3",
+    "version": "0.4.4",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
@@ -42,20 +42,32 @@
 
     "exports": {
         ".": "./dist/js/index.js",
-        "./*": "./dist/js/*/index.js",
+        "./*": [
+            "./dist/js/*.js",
+            "./dist/js/*/index.js"
+        ],
         "./*.js": "./dist/js/*.js",
-        
-        "./classes": "./dist/classes/index.js",
-        "./classes/*": "./dist/classes/*.js",
-        "./classes/*.js": "./dist/classes/*.js",
-        
-        "./functions": "./dist/functions/index.js",
-        "./functions/*": "./dist/functions/*.js",
-        "./functions/*.js": "./dist/functions/*.js",
-        
-        "./types": "./dist/types/index.d.ts",
-        "./types/*": "./dist/types/*.d.ts",
-        "./types/*.d.ts": "./dist/types/*.d.ts"
+
+        "./classes": "./dist/js/classes/index.js",
+        "./classes/*": [
+            "./dist/js/classes/*.js",
+            "./dist/js/classes/*/index.js"
+        ],
+        "./classes/*.js": "./dist/js/classes/*.js",
+
+        "./functions": "./dist/js/functions/index.js",
+        "./functions/*": [
+            "./dist/js/functions/*.js",
+            "./dist/js/functions/*/index.js"
+        ],
+        "./functions/*.js": "./dist/js/functions/*.js",
+
+        "./types": "./dist/js/types/index.d.ts",
+        "./types/*": [
+            "./dist/js/types/*.d.ts",
+            "./dist/js/types/*/index.d.ts"
+        ],
+        "./types/*.d.ts": "./dist/js/types/*.d.ts"
     },
 
     "scripts": {
@@ -78,12 +90,12 @@
         "prewatch": "npm run --silent build -- --starting --without minimize,prettify,test",
         
         "watch": "run-p --silent watch:*",
-            "watch:js": "watch -p 'src/ts/**/*' -c 'npm run --silent quick-build -- --compile-only js --watchedWatcher \"watch:js\" --watchedChange --watchedFilename \"$FILENAME\" --watchedEvent \"$EVENT\" && npm run --silent reload'",
+            "watch:js": "watch -p 'src/ts/**/*' -c 'npm run --silent quick-build -- --compile-only js --watchedWatcher \"watch:js\" --watchedChange --watchedFilename \"$FILENAME\" --watchedEvent \"$EVENT\"'",
         
 
-        "package": "tsx --tsconfig .scripts/tsconfig.json .scripts/package.ts --packaging",
+        "package": "tsx --tsconfig .scripts/tsconfig.json .scripts/package.ts",
         
-        "dryrun":  "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts --packaging --dryrun",
+        "dryrun":  "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts --dryrun",
         "release": "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts"
 
     },

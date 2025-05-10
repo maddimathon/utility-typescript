@@ -13,7 +13,8 @@ import { Package } from './Package.js';
 import {
     pkgReplacements,
 } from '../vars/replacements.js';
-import { softWrapText } from 'src/ts/functions/index.js';
+
+import { softWrapText } from '../../src/ts/functions/index.js';
 
 
 const releaseSubStages = [
@@ -258,10 +259,6 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         const replacementGlobs: ( string | string[] )[] = [
             '.github/**/*',
-            [
-                '.scripts/**/*',
-                '!.scripts/vars/replacements.ts',
-            ],
             'src/**/*',
             [
                 'CHANGELOG.md',
@@ -331,7 +328,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         }, false, false ) }`;
 
         if ( this.args.dryrun ) {
-            this.verboseLog( 'skipping git commit during dryrun...', 3 );
+            this.verboseLog( 'skipping repo updates during dryrun...', 3 );
 
             this.args.debug && this.fns.nc.varDump( { repoUpdateCmd }, {
                 clr: this.clr,
@@ -405,7 +402,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
 export namespace Release {
 
-    export type Args = AbstractStage.Args<Release.Stages> & {
+    export type Args = AbstractStage.Args<Release.Stages> & Package.Args & {
 
         'only-pkg'?: Package.Stages | Package.Stages[];
         'without-pkg'?: Package.Stages | Package.Stages[];

@@ -85,7 +85,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
                     clr: this.clr,
 
                     linesIn: 3,
-                    linesOut: 0,
+                    linesOut: 1,
 
                     joiner: '',
                 },
