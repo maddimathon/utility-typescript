@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -22,15 +22,13 @@ import { arrayUnique, mergeArgs, timestamp, typeOf, } from '../functions/index.j
  * {@link VariableInspector.value}) or get a json-compatible object representing
  * the inspected value {@link VariableInspector.toJSON}.
  *
- * Not currently tested, marked beta.
- *
  * @example
  * ```ts
  * VariableInspector.dump( { mysteryVariable } );
  * // console: 'mysteryVariable = <type> ...'
  * ```
  *
- * @beta
+ * @experimental
  */
 export class VariableInspector extends AbstractConfigurableClass {
     /* STATIC METHODS
@@ -403,7 +401,7 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
      */
     type(skipFormatting = false) {
-        var _a;
+        var _a, _b;
         /** Filters the type value before return. */
         const typeFilter = (str) => {
             str = str.replace(/(^[\n\s]+|[\n\s]+$)/gi, '');
@@ -418,7 +416,7 @@ export class VariableInspector extends AbstractConfigurableClass {
             case 'NaN':
                 return typeFilter(typeof Number.NaN);
             case 'object':
-                const constructorName = (_a = this._rawValue.constructor) === null || _a === void 0 ? void 0 : _a.name;
+                const constructorName = (_b = (_a = this._rawValue.constructor) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : 'Object';
                 return typeFilter(constructorName === 'Object'
                     ? 'object'
                     : constructorName);
@@ -613,16 +611,6 @@ export class VariableInspector extends AbstractConfigurableClass {
         ];
         return strs.filter(v => v).join(' ');
     }
-    /**
-     * Overrides the default function to return a string representation of this
-     * object.
-     *
-     * @category Exporters
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
-     * @see {@link VariableInspector.toJSON | VariableInspector.toJSON()}
-     */
-    valueOf() { return this.toJSON(); }
     /* Recursion ===================================== */
     /**
      * Returns an instance of this class that inherits this instances’s args.

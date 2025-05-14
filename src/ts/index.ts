@@ -24,11 +24,8 @@
  * @license MIT
  */
 
-// /** @hidden - these modules are documented, I think including these references could create confusion */
 export type * as Types from './types/index.js';
 
-// /** @hidden - these modules are documented, I think including these references could create confusion */
 export * as classes from './classes/index.js';
 
-// /** @hidden - these modules are documented, I think including these references could create confusion */
 export * as functions from './functions/index.js';

@@ -4,28 +4,29 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { execSync as nodeExecSync, } from 'child_process';
-import * as inquirer from '@inquirer/prompts';
+import { escRegExpReplace, mergeArgs, } from '../../functions/index.js';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
-import { escRegExpReplace, mergeArgs, } from '../../functions/index.js';
+import { NodeConsole_Error, NodeConsole_Prompt, } from './NodeConsole/index.js';
 /**
  * A configurable class for outputting to console within node.
  *
  * Includes formatting and interactive utilities.
  *
- * Not currently tested, marked beta.
- *
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
- * @beta
+ * @since 0.1.1
+ * @since 2.0.0-draft  Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ *
+ * @experimental
  */
 export class NodeConsole extends AbstractConfigurableClass {
     /* STATIC METHODS
@@ -38,7 +39,14 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @returns  An example, constructed instance used for the sample.
      */
     static async sample(args = {}) {
-        const nc = new NodeConsole(args);
+        const nc = new NodeConsole(mergeArgs({
+            msgMaker: {
+                msg: { maxWidth: 80 },
+            },
+            prompt: {
+                timeout: 60000,
+            },
+        }, args, true));
         nc.h1('H1: Sample NodeConsole Output');
         nc.log('This is a completely default, single-line message.');
         nc.h2('H2: Multi-line Strings');
@@ -183,86 +191,121 @@ export class NodeConsole extends AbstractConfigurableClass {
      */
     static async sampleInteractivity(nc, args = {}) {
         if (!nc) {
-            nc = new NodeConsole(args);
+            nc = new NodeConsole(mergeArgs({
+                msgMaker: {
+                    msg: { maxWidth: 80 },
+                },
+                prompt: {
+                    timeout: 60000,
+                },
+            }, args, true));
         }
+        // nc.timestampVarDump( { 'nc.args': nc.args } );
+        // nc.timestampLog( '{ 'nc.args': nc.args }' );
+        const errorHandler = (error) => {
+            if (error instanceof NodeConsole_Error) {
+                nc.timestampLog(error.toString(), {
+                    clr: 'red',
+                    depth: 1,
+                    maxWidth: null,
+                });
+            }
+            else {
+                nc.timestampVarDump({ error }, {
+                    clr: 'red',
+                    depth: 1,
+                    maxWidth: null,
+                });
+            }
+            return undefined;
+        };
         /**
-         * For testing the prompt methods.
+         * Runs the function and vardumps the result.
+         *
+         * @param run        Function to run and whose return to dump.
+         * @param msgArgs    Message args passed to the variable inspector.
          */
-        const tester = async (prompt, basicMsg, config, extras = []) => {
-            var _a, _b;
-            nc.varDump({
-                result: await nc.prompt(prompt, {
-                    ...config !== null && config !== void 0 ? config : {},
-                    message: basicMsg,
-                })
-            });
-            if (args.debug) {
-                for (const extra of extras) {
-                    const inspectorVar = {
-                        result: await nc.prompt(prompt, {
-                            ...config !== null && config !== void 0 ? config : {},
-                            ...extra !== null && extra !== void 0 ? extra : {},
-                        })
-                    };
-                    const inspectorMsgArgs = {
-                        ...(_a = config.msgArgs) !== null && _a !== void 0 ? _a : {},
-                        ...(_b = extra.msgArgs) !== null && _b !== void 0 ? _b : {},
-                        bold: false,
-                        italic: false,
-                    };
-                    if (extra.timestamp) {
-                        nc.timestampVarDump(inspectorVar, inspectorMsgArgs);
-                    }
-                    else {
-                        nc.varDump(inspectorVar, inspectorMsgArgs);
-                    }
-                }
+        const runAndDump = async (run, msgArgs = {}) => {
+            try {
+                const inspectorVar = { result: await run({ msgArgs }).catch(errorHandler) };
+                const inspectorMsgArgs = {
+                    bold: false,
+                    italic: false,
+                    depth: 1,
+                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                };
+                nc.timestampVarDump(inspectorVar, inspectorMsgArgs);
+            }
+            catch (error) {
+                errorHandler(error);
             }
         };
         nc.h3('H3: Bool');
-        await tester('bool', 'This bool method should let you say yes or no:', {}, [
-            {
+        nc.timestampLog('');
+        await runAndDump(async (args) => nc.prompt.bool({
+            ...args,
+            message: 'This bool method should let you say yes or no:',
+        }));
+        if (args.debug) {
+            await runAndDump(async (args) => nc.prompt.bool({
+                ...args,
                 message: 'This method should have a depth level 1 and be red:',
-                msgArgs: {
-                    clr: 'red',
-                    depth: 1,
-                },
-            },
-            {
+            }), {
+                clr: 'red',
+                depth: 1,
+            });
+            await runAndDump(async (args) => nc.prompt.bool({
+                ...args,
                 message: 'This timestamped bool method should have a depth level 2 and be a yellow flag:',
-                msgArgs: {
-                    clr: 'yellow',
-                    depth: 2,
-                    flag: true,
-                    timestamp: true,
-                },
-            },
-        ]);
+            }), {
+                clr: 'yellow',
+                depth: 2,
+                flag: true,
+            });
+        }
         nc.h3('H3: Input');
-        await tester('input', 'This input method should let you input a custom string:', {
-            validate: (value) => value == 'I_AM_A_ERROR' ? 'Your string matched the test error string, pick something else' : true,
-        }, [
-            {
+        const stringValidator = (value) => value == 'I_AM_A_ERROR' ? 'Your string matched the test error string, pick something else' : true;
+        await runAndDump(async (args) => nc.prompt.input({
+            ...args,
+            message: 'This input method should let you input a custom string:',
+            validate: stringValidator,
+        }));
+        if (args.debug) {
+            await runAndDump(async (args) => nc.prompt.input({
+                ...args,
                 message: 'This input method should have a depth level 1 and be orange:',
-                msgArgs: {
-                    clr: 'orange',
-                    depth: 1,
-                },
-            },
-            {
+                validate: stringValidator,
+            }), {
+                clr: 'orange',
+                depth: 1,
+            });
+            await runAndDump(async (args) => nc.prompt.input({
+                ...args,
                 message: 'This timestamped input method should have a depth level 2 and be purple:',
-                msgArgs: {
-                    clr: 'purple',
-                    depth: 2,
-                    timestamp: true,
-                },
-            },
-        ]);
+                validate: stringValidator,
+            }), {
+                clr: 'purple',
+                depth: 2,
+            });
+        }
         nc.h3('H3: Select');
-        await tester('select', 'This select method should let you choose from a multiple-choice list:', {
+        await runAndDump(async (args) => nc.prompt.select({
+            ...args,
+            message: 'This select method should let you choose from a multiple-choice list of simple strings:',
             choices: [
-                'Simple Option 1',
-                'Simple Option 2',
+                'Option 1',
+                'Option 2',
+                'Option 3',
+            ],
+        }));
+        if (args.debug) {
+            const choices = [
+                {
+                    value: 'Simple Option 1',
+                },
+                {
+                    value: 'Simple Option 2',
+                },
                 {
                     value: 'example hidden value',
                     description: 'Option description',
@@ -282,35 +325,42 @@ export class NodeConsole extends AbstractConfigurableClass {
                     description: 'This option returns a number',
                     name: 'Detailed Option 4',
                 },
-            ],
-        }, [
-            {
+            ];
+            await runAndDump(async (args) => nc.prompt.select({
+                ...args,
+                message: 'This select method should let you choose from a multiple-choice list with complex choices:',
+                choices,
+            }));
+            await runAndDump(async (args) => nc.prompt.select({
+                ...args,
                 message: 'This timestamped select method should have a depth level 3 and be turquoise:',
-                msgArgs: {
-                    clr: 'turquoise',
-                    depth: 3,
-                    timestamp: true,
-                },
-            },
-            {
+                choices,
+            }), {
+                clr: 'turquoise',
+                depth: 3,
+            });
+            await runAndDump(async (args) => nc.prompt.select({
+                ...args,
                 message: 'This select method should have a depth level 1:',
-                msgArgs: {
-                    depth: 1,
-                },
-            },
-            {
+                choices,
+            }), {
+                depth: 1,
+            });
+            await runAndDump(async (args) => nc.prompt.select({
+                ...args,
                 message: 'This select method should have a depth level 2:',
-                msgArgs: {
-                    depth: 2,
-                },
-            },
-            {
+                choices,
+            }), {
+                depth: 2,
+            });
+            await runAndDump(async (args) => nc.prompt.select({
+                ...args,
                 message: 'This select method should have a depth level 3:',
-                msgArgs: {
-                    depth: 3,
-                },
-            },
-        ]);
+                choices,
+            }), {
+                depth: 3,
+            });
+        }
         return nc;
     }
     /* Args ===================================== */
@@ -318,16 +368,36 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @category Args
      */
     get ARGS_DEFAULT() {
-        const cmdErrorHandler = (err) => {
-            const output = err.output
-                ? this.msg.implodeWithIndent(err.output.filter((l) => l !== null))
-                : Object.keys(err)
-                    .map((key) => `${key}: ${err[key]}`)
-                    .join('\n');
-            this.log('Console error:' + output, { clr: 'red' });
+        const cmdErrorHandler = (error) => {
+            if (error instanceof Error) {
+                this.timestampVarDump({ error }, {
+                    clr: 'red',
+                });
+            }
+            else if (typeof error === 'object') {
+                this.timestampLog([
+                    ['Error:', { bold: true }],
+                    [(error.output
+                            ? this.msg.implodeWithIndent(error.output.filter((l) => l !== null))
+                            : Object.keys(error)
+                                .map((key) => `${key}: ${error[key]}`)
+                                .join('\n'))]
+                ], {
+                    clr: 'red',
+                });
+            }
+            else {
+                this.timestampLog([
+                    ['Error:', { bold: true }],
+                    [error]
+                ], {
+                    clr: 'red',
+                });
+            }
             process.exit(1);
         };
         return {
+            argsRecursive: true,
             cmdErrorHandler,
             msgMaker: {
                 msg: {
@@ -336,7 +406,10 @@ export class NodeConsole extends AbstractConfigurableClass {
                 },
                 paintFormat: 'node',
             },
-            argsRecursive: true,
+            prompt: {
+                throwError: 'auto',
+                timeout: 300000,
+            },
             separator: null,
             styleClrs: {
                 disabled: 'grey',
@@ -378,6 +451,7 @@ export class NodeConsole extends AbstractConfigurableClass {
     constructor(args = {}) {
         super(args);
         this.msg = new MessageMaker(this.args.msgMaker);
+        this.prompt = new NodeConsole_Prompt(this.msg, this.args);
     }
     /* METHODS
      * ====================================================================== */
@@ -398,8 +472,8 @@ export class NodeConsole extends AbstractConfigurableClass {
                 encoding: 'utf-8',
             });
         }
-        catch (err) {
-            this.args.cmdErrorHandler(err);
+        catch (error) {
+            this.args.cmdErrorHandler(error);
         }
     }
     /**
@@ -590,146 +664,6 @@ export class NodeConsole extends AbstractConfigurableClass {
             '',
         ], { ...defaultArgs, ...args }));
     }
-    /* Prompters ===================================== */
-    /**
-     * Public alias for internal prompting methods.
-     *
-     * @category  Interactivity
-     *
-     * @param prompter  Which prompting method to use.
-     * @param _config   Optional partial configuration for the prompting method.
-     *
-     * @see {@link NodeConsole.promptBool}  Used if `prompter` param is `"bool"`.
-     * @see {@link NodeConsole.promptInput}  Used if `prompter` param is `"input"`.
-     */
-    async prompt(prompter, _config) {
-        var _a, _b, _c, _d, _e;
-        const config = this.mergeArgs({
-            msgArgs: {},
-        }, _config, false);
-        const { depth = 0, indent = '', hangingIndent = '', linesIn = 0, linesOut = 0, timestamp = false, } = (_a = config.msgArgs) !== null && _a !== void 0 ? _a : {};
-        const msgArgs = {
-            bold: true,
-            ...(_b = config.msgArgs) !== null && _b !== void 0 ? _b : {},
-            linesIn: 0,
-            linesOut: 0,
-            depth: 0,
-            hangingIndent: '',
-            indent: '',
-        };
-        const styleClrs = {
-            ...this.args.styleClrs,
-            ...(_c = config.styleClrs) !== null && _c !== void 0 ? _c : {},
-            highlight: (_e = (_d = config.styleClrs) === null || _d === void 0 ? void 0 : _d.highlight) !== null && _e !== void 0 ? _e : ((msgArgs.clr && msgArgs.clr != 'black' && msgArgs.clr != 'grey')
-                ? msgArgs.clr
-                : this.args.styleClrs.highlight),
-        };
-        const prefixIndent = this.msg.args.msg.tab.repeat(depth)
-            + ' '.repeat(hangingIndent.length + indent.length);
-        const prefixTimestamp = timestamp ? this.msg.timestampMsg('', msgArgs) : '';
-        const prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestampMsg('').length) : '';
-        const selectCursorIndent = prompter == 'select' ? '  ' : '';
-        config.theme = {
-            helpMode: 'always',
-            icon: {
-                cursor: '→',
-            },
-            prefix: {
-                done: prefixIndent + (timestamp ? prefixTimestamp : this.msg.msg('✓', {
-                    clr: styleClrs.highlight,
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: true,
-                })),
-                idle: prefixIndent + (timestamp ? prefixTimestamp : this.msg.msg('?', {
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: true,
-                })),
-            },
-            style: {
-                answer: (text) => text,
-                description: (text) => '\n' + selectCursorIndent + this.msg.msg(text, {
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: false,
-                    clr: styleClrs.highlight,
-                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
-                }),
-                disabled: (text) => selectCursorIndent + this.msg.msg(text, {
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: false,
-                    clr: styleClrs.disabled,
-                }),
-                error: (text) => prefixIndent + prefixTimestampIndent + ' '.repeat(config.message.length + (timestamp ? 1 : 3)) + this.msg.msg(text, {
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: false,
-                    clr: styleClrs.error,
-                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
-                }),
-                help: (text) => this.msg.msg(text, {
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: false,
-                    clr: styleClrs.help,
-                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
-                }),
-                highlight: (text) => this.msg.msg(text, {
-                    clr: styleClrs.highlight,
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
-                    bold: true,
-                    italic: !(msgArgs === null || msgArgs === void 0 ? void 0 : msgArgs.italic),
-                }),
-                key: (text) => 'KEY: (' + text + ')',
-                message: (text, status) => this.msg.msg(text, msgArgs),
-            },
-            validationFailureMode: 'keep',
-        };
-        if (linesIn) {
-            this.log('\n'.repeat(linesIn));
-        }
-        let result;
-        switch (prompter) {
-            case 'bool':
-                result = await this.promptBool(config);
-                break;
-            case 'input':
-                result = await this.promptInput(config);
-                break;
-            case 'select':
-                result = await this.promptSelect(config);
-                break;
-        }
-        if (linesOut) {
-            this.log('\n'.repeat(linesOut));
-        }
-        return result;
-    }
-    /**
-     * @category  Interactivity
-     */
-    async promptBool(config) {
-        const defaultConfig = {
-            default: false,
-        };
-        return await inquirer.confirm(this.mergeArgs(defaultConfig, config, true));
-    }
-    /**
-     * @category  Interactivity
-     */
-    async promptInput(config) {
-        const defaultConfig = {
-            required: true,
-        };
-        return await inquirer.input(this.mergeArgs(defaultConfig, config, true));
-    }
-    /**
-     * @category  Interactivity
-     */
-    async promptSelect(config) {
-        const defaultConfig = {
-            choices: [],
-            msgArgs: {},
-            pageSize: 10,
-        };
-        return await inquirer.select(this.mergeArgs(defaultConfig, config, true));
-    }
     /* Aliases ===================================== */
     /**
      * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
@@ -802,12 +736,4 @@ export class NodeConsole extends AbstractConfigurableClass {
         this.logs(msgs, { ...args, via: 'warn' });
     }
 }
-/**
- * Used only for {@link NodeConsole}.
- *
- * @beta
- */
-(function (NodeConsole) {
-    ;
-})(NodeConsole || (NodeConsole = {}));
 //# sourceMappingURL=NodeConsole.js.map

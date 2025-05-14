@@ -13,18 +13,16 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
-// /** @hidden - these modules are documented, I think including these references could create confusion */
 export * as classes from './classes/index.js';
-// /** @hidden - these modules are documented, I think including these references could create confusion */
 export * as functions from './functions/index.js';
 //# sourceMappingURL=index.js.map

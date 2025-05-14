@@ -25,10 +25,8 @@ import {
 
 /**
  * A configurable class for formatting message strings for various outputs.
- *
- * Not currently tested, marked beta.
  * 
- * @beta
+ * @experimental
  */
 export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
@@ -115,7 +113,9 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                     if ( args.clr || args.flag ) {
 
                         /** Colour depth available in this console. */
-                        const clrDepth = process.stdout.getColorDepth() as 1 | 4 | 8 | 24;
+                        const clrDepth = typeof process.stdout.getColorDepth === 'function'
+                            ? process.stdout.getColorDepth() as 1 | 4 | 8 | 24
+                            : 1;
 
                         // start by assuming it's the foreground
 

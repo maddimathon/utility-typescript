@@ -24,6 +24,8 @@ import { NodeFiles } from './NodeFiles.js';
  * A configurable class of utility functions.
  * 
  * Can be extended, but probably best as a (static) property instead.
+ * 
+ * @experimental
  */
 export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args> {
 
@@ -99,7 +101,7 @@ export class NodeFunctions extends AbstractConfigurableClass<NodeFunctions.Args>
         super( args );
 
         this.fns = utils.fns ?? new Functions( this.ARGS_DEFAULT );
-        this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT );
+        this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT as NodeConsole.Args );
         this.fs = utils.fs ?? new NodeFiles( this.ARGS_DEFAULT, { nc: this.nc } );
     }
 

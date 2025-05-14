@@ -16,6 +16,7 @@ import type * as Test from '../test.js';
 import type {
     MergeObjects,
     RecursivePartial,
+    RecursiveRequired,
 } from './basics.js';
 
 
@@ -26,7 +27,7 @@ export type T_MergeObjects = [
     Test.Expect<Test.Exactly<MergeObjects<{
         one: string;
         two: number;
-        three: any[];
+        three: ( number | string )[];
         five: {
             test: "one";
         };
@@ -56,15 +57,15 @@ class TestClass {
 
 type FullObj = {
     a: string;
-    b: any[];
+    b: ( number | string )[];
     c: number;
 
     child: {
-        1: any[];
+        1: ( number | string )[];
         2: boolean;
         3: {
             a: string;
-            b: any[];
+            b: ( number | string )[];
             c: number;
         };
 
@@ -76,15 +77,15 @@ type PartialObj = Partial<FullObj>;
 
 type RecursivePartialTestObj = {
     a?: string;
-    b?: any[];
+    b?: ( number | string )[];
     c?: number;
 
     child?: {
-        1?: any[];
+        1?: ( number | string )[];
         2?: boolean;
         3?: {
             a?: string;
-            b?: any[];
+            b?: ( number | string )[];
             c?: number;
         };
 
@@ -104,4 +105,12 @@ export type T_RecursivePartial = [
     // Test.ExpectNot<Test.Satisfies<typeof emptyObj, PartialObj>>,
     Test.ExpectNot<Test.Exactly<FullObj, RecursivePartial<FullObj>>>,
     Test.ExpectNot<Test.Exactly<PartialObj, RecursivePartial<FullObj>>>,
+];
+
+// type Test1 = RecursiveRequired<RecursivePartialTestObj>;
+// type Test2 = FullObj;
+
+export type T_RecursiveRequired = [
+    Test.Expect<Test.Exactly<RecursiveRequired<RecursivePartialTestObj>, FullObj>>,
+    Test.Expect<Test.Satisfies<RecursiveRequired<RecursivePartialTestObj>, FullObj>>,
 ];

@@ -57,7 +57,40 @@ type RecursivePartial_Inner<T> = T extends number | null | string | undefined | 
  */
 export type RecursivePartial<T extends Record<number | string, any>> = {
     [ K in keyof T ]?:
-    T[ K ] extends ( infer V )[]
-    ? RecursivePartial_Inner<V>[]
+    T[ K ] extends ( infer I )[]
+    ? RecursivePartial_Inner<I>[]
     : RecursivePartial_Inner<T[ K ]>;
 };
+
+/**
+ * Similar to the default Required, but this also makes any child objects
+ * Required.
+ * 
+ * @param T  Type to require.
+ */
+export type RecursiveRequired<T> = {
+    [ K in keyof T ]-?: Required<T>[ K ] extends number | null | string | undefined | AnyClass | Function | Date
+    ? Required<T>[ K ]
+    : Required<T>[ K ] extends ( infer I )[]
+    ? ( object extends I ? RecursiveRequired<I>[] : I[] )
+    : Required<T>[ K ] extends object
+    // this weird-ish approach to recursion gives us better output types without
+    // using TypeDump
+    ? { [ S in keyof Required<T>[ K ] ]-?: RecursiveRequired<Required<T>[ K ]>[ S ] }
+    : Required<T>[ K ];
+};
+
+/**
+ * Converts an object into a class-compatible type that requires all properties
+ * to be present, even if their values are undefined.
+ * 
+ * @param T             Type or interface to convert to a class.
+ * @param RequiredKeys  Optional. Keys that cannot be undefined. Default `never`.
+ * 
+ * @experimental
+ * @expand
+ */
+export type RequirePartial<
+    T,
+    RequiredKeys extends keyof T = never,
+> = RecursiveRequired<Pick<T, RequiredKeys>> & Omit<T, RequiredKeys>;

@@ -96,7 +96,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
     ) {
         super( args );
 
-        this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT );
+        this.nc = utils.nc ?? new NodeConsole( this.ARGS_DEFAULT as unknown as NodeConsole.Args );
     }
 
 
@@ -124,7 +124,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
 
         for ( const path of paths ) {
             // continues
-            if ( !NodeFS.existsSync( path ) ) { continue; }
+            if ( !this.exists( path ) ) { continue; }
 
             const stat = NodeFS.statSync( path );
 
@@ -201,7 +201,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
         );
 
         // returns if we aren't forcing or renaming
-        if ( NodeFS.existsSync( path ) ) {
+        if ( this.exists( path ) ) {
 
             // returns
             if ( !args.force && !args.rename ) {
@@ -217,7 +217,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
 
         NodeFS.writeFileSync( path, content, args );
 
-        return NodeFS.existsSync( path ) && path;
+        return this.exists( path ) && path;
     }
 
 
@@ -246,6 +246,13 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
         );
 
         return isRelative ? this.pathRelative( newPath ) : newPath;
+    }
+
+    /**
+     * Checks whether a file, directory, or link exists at the given path.
+     */
+    public exists( path: string ): boolean {
+        return NodeFS.existsSync( this.pathResolve( path ) );
     }
 
     /**
@@ -286,7 +293,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      */
     public uniquePath( inputPath: string ): string {
         inputPath = this.pathResolve( inputPath );
-        if ( !NodeFS.existsSync( inputPath ) ) { return inputPath; }
+        if ( !this.exists( inputPath ) ) { return inputPath; }
 
         /** Used to iterate until we have a unique path. */
         const inputBaseName: string = NodePath.basename(
@@ -306,7 +313,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
         let uniqueFullPath = inputPath;
 
         // Iterate the index until the inputPath is unique
-        while ( NodeFS.existsSync( uniqueFullPath ) ) {
+        while ( this.exists( uniqueFullPath ) ) {
             // increments here because the index starts at 0
             copyIndex++;
 

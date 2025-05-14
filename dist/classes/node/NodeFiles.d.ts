@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
@@ -86,6 +86,10 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @return  Full path with updated basename.
      */
     changeBaseName(path: string, newName: string): string;
+    /**
+     * Checks whether a file, directory, or link exists at the given path.
+     */
+    exists(path: string): boolean;
     /**
      * Returns relative paths, based on the root defined the the opts.
      *

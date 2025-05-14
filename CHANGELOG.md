@@ -19,7 +19,7 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
-## **1.0.0** -- 2025-05-10
+## **1.0.0** — 2025-05-10
 
 First full release!
 
@@ -27,14 +27,14 @@ First full release!
 - Changed ts output directory from `dist/js` to `dist`
 
 
-## **0.4.4** -- 2025-05-10
+## **0.4.4** — 2025-05-10
 
 ### Fixed
 - Some exports for subpaths were missing the `js/` subfolder in `dist/`
 - Release script was replacing the placeholders in the replacement script
 
 
-## **0.4.3** -- 2025-05-08
+## **0.4.3** — 2025-05-08
 
 ### Changed
 - Minor build script improvements
@@ -45,13 +45,13 @@ First full release!
   significantly
 
 
-## **0.4.2** -- 2025-05-04
+## **0.4.2** — 2025-05-04
 
 ### Added
 - AbstractBuildStage new method - isSubStageIncluded()
 
 
-## **0.4.0** -- 2025-05-04
+## **0.4.0** — 2025-05-04
 
 ### Added
 - Added AbstractBuildStage - and updated build scripts accordingly
@@ -75,7 +75,7 @@ First full release!
 - Removed browser-sync dev dependency
 
 
-## **0.3.0** -- 2025-05-04
+## **0.3.0** — 2025-05-04
 
 ### Breaking
 - Removed BuildFunctions
@@ -103,27 +103,27 @@ First full release!
   protected
 
 
-## **0.2.0** -- 2025-05-02
+## **0.2.0** — 2025-05-02
 
 ### Added
 - NodeFiles class for paths & files within node
 - NodeFiles methods - changeBaseName(), pathRelative(), pathResolve(), uniquePath()
 
 ### Changed
-- Removed minimize in Build script -- seemed to be causing occasaional issues
+- Removed minimize in Build script — seemed to be causing occasaional issues
 
 
-## **0.1.2** -- 2025-05-02
+## **0.1.2** — 2025-05-02
 
 Final quick fix and test to package publishing.
 
 
-## **0.1.1** -- 2025-05-02
+## **0.1.1** — 2025-05-02
 
 Trying to fix npm publish workflow.
 
 
-## **0.1.0** -- 2025-05-02
+## **0.1.0** — 2025-05-02
 
 **Initial release; everything is new!**
 - Set up the template from

@@ -103,7 +103,7 @@ export class Snapshot extends AbstractStage<Snapshot.Stages, Snapshot.Args> {
         this.fns.fs.deleteFiles( [ exportPath ] );
 
 
-        this.progressLog( `snapshot zipped: ${ exportPath }.zip`, 1, { maxWidth: null } );
+        this.progressLog( `snapshot zipped: ${ this.fns.fs.pathRelative( exportPath ) }.zip`, 1, { maxWidth: null } );
     }
 }
 

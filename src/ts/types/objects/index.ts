@@ -24,3 +24,4 @@
  */
 
 export type * from './basics.js';
+export type * from './classes.js';

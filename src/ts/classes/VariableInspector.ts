@@ -34,15 +34,13 @@ import {
  * {@link VariableInspector.value}) or get a json-compatible object representing 
  * the inspected value {@link VariableInspector.toJSON}.
  *
- * Not currently tested, marked beta.
- *
  * @example
  * ```ts
  * VariableInspector.dump( { mysteryVariable } );
  * // console: 'mysteryVariable = <type> ...'
  * ```
  *
- * @beta
+ * @experimental
  */
 export class VariableInspector<
     Type extends typeOf.TestType = typeOf.TestType,
@@ -489,7 +487,7 @@ export class VariableInspector<
 
             case 'array':
             case 'object':
-                const constructorName = ( this._rawValue as object ).constructor?.name;
+                const constructorName = ( this._rawValue as object | any[] ).constructor?.name;
 
                 // returns on match
                 switch ( constructorName ) {
@@ -628,7 +626,7 @@ export class VariableInspector<
                 return typeFilter( typeof Number.NaN );
 
             case 'object':
-                const constructorName = ( this._rawValue as object ).constructor?.name;
+                const constructorName = ( this._rawValue as object ).constructor?.name ?? 'Object';
 
                 return typeFilter(
                     constructorName === 'Object'
@@ -882,17 +880,6 @@ export class VariableInspector<
 
         return strs.filter( v => v ).join( ' ' );
     }
-
-    /**
-     * Overrides the default function to return a string representation of this
-     * object.
-     * 
-     * @category Exporters
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
-     * @see {@link VariableInspector.toJSON | VariableInspector.toJSON()}
-     */
-    public override valueOf(): VariableInspector.JSON<Type> { return this.toJSON(); }
 
 
     /* Recursion ===================================== */

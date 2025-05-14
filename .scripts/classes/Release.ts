@@ -15,6 +15,7 @@ import {
 } from '../vars/replacements.js';
 
 import { softWrapText } from '../../src/ts/functions/index.js';
+import { NodeConsole_Prompt } from 'src/ts/classes/node/index.js';
 
 
 const releaseSubStages = [
@@ -116,7 +117,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         if ( which === 'start' ) {
 
-            const promptArgs: Omit<Parameters<typeof this.fns.nc.prompt>[ 1 ], "message"> = {
+            const promptArgs: Omit<NodeConsole_Prompt.Config, "message"> = {
 
                 default: false,
 
@@ -129,9 +130,11 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
                 styleClrs: {
                     highlight: this.clr,
                 },
+
+                timeout: 3600000, // an hour?
             };
 
-            this.args.dryrun = await this.fns.nc.prompt( 'bool', {
+            this.args.dryrun = await this.fns.nc.prompt.bool( {
                 ...promptArgs,
 
                 message: `Is this a dry run?`,
@@ -147,7 +150,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
                 + 11
             );
 
-            const inputVersion = ( await this.fns.nc.prompt( 'input', {
+            const inputVersion = ( await this.fns.nc.prompt.input( {
                 ...promptArgs,
                 message: inputVersionMessage,
 
@@ -160,7 +163,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
                             Math.max( 20, ( this.fns.nc.msg.args.msg.maxWidth ?? 80 ) - inputVersionIndent.length )
                         ).split( /\n/g ).join( '\n' + inputVersionIndent )
                 ),
-            } ) ).trim();
+            } ) ?? '' ).trim();
 
             if ( inputVersion !== this.pkg.version ) {
 
@@ -183,8 +186,8 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
                 // returns
                 if (
-                    ! await this.fns.nc.prompt( 'bool', {
-                        ...promptArgs,
+                    ! await this.fns.nc.prompt.bool( {
+                        ...promptArgs as NodeConsole_Prompt.BoolConfig,
                         message: `Is .releasenotes.md updated?`,
                     } )
                 ) {
@@ -208,7 +211,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         const newChangeLogEntry =
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
-            + `## **${ this.pkg.version }** -- ${ this.datestamp() }`
+            + `## **${ this.pkg.version }** — ${ this.datestamp() }`
             + '\n\n'
             + this.fns.fs.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';

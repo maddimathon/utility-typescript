@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { AnyClass } from '../types/functions/index.js';

@@ -15,30 +15,34 @@ import {
     execSync as nodeExecSync,
 } from 'child_process';
 
-import * as inquirer from '@inquirer/prompts';
-
 import type { RecursivePartial } from '../../types/objects/index.js';
-
-import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
-import { MessageMaker } from '../MessageMaker.js';
-import { VariableInspector } from '../VariableInspector.js';
 
 import {
     escRegExpReplace,
     mergeArgs,
 } from '../../functions/index.js';
 
+import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
+import { MessageMaker } from '../MessageMaker.js';
+import { VariableInspector } from '../VariableInspector.js';
+
+import {
+    NodeConsole_Error,
+    NodeConsole_Prompt,
+} from './NodeConsole/index.js';
+
 
 /**
  * A configurable class for outputting to console within node.
  * 
  * Includes formatting and interactive utilities.
- *
- * Not currently tested, marked beta.
  * 
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  * 
- * @beta
+ * @since 0.1.1
+ * @since ___PKG_VERSION___  Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * 
+ * @experimental
  */
 export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
@@ -57,7 +61,16 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
     public static async sample(
         args: RecursivePartial<NodeConsole.Args & { debug: boolean; }> = {},
     ): Promise<NodeConsole> {
-        const nc = new NodeConsole( args );
+        const nc = new NodeConsole( mergeArgs( {
+
+            msgMaker: {
+                msg: { maxWidth: 80 },
+            },
+
+            prompt: {
+                timeout: 60000,
+            },
+        } as RecursivePartial<NodeConsole.Args>, args, true ) );
 
         nc.h1( 'H1: Sample NodeConsole Output' );
 
@@ -250,170 +263,210 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
         args: RecursivePartial<NodeConsole.Args & { debug: boolean; }> = {},
     ) {
         if ( !nc ) {
-            nc = new NodeConsole( args );
+            nc = new NodeConsole( mergeArgs( {
+
+                msgMaker: {
+                    msg: { maxWidth: 80 },
+                },
+
+                prompt: {
+                    timeout: 60000,
+                },
+            } as RecursivePartial<NodeConsole.Args>, args, true ) );
         }
+        // nc.timestampVarDump( { 'nc.args': nc.args } );
+        // nc.timestampLog( '{ 'nc.args': nc.args }' );
+
+        const errorHandler = ( error: any ) => {
+
+            if ( error instanceof NodeConsole_Error ) {
+                nc.timestampLog( error.toString(), {
+                    clr: 'red',
+                    depth: 1,
+                    maxWidth: null,
+                } );
+            } else {
+                nc.timestampVarDump( { error }, {
+                    clr: 'red',
+                    depth: 1,
+                    maxWidth: null,
+                } );
+            }
+
+            return undefined;
+        };
 
         /**
-         * For testing the prompt methods.
+         * Runs the function and vardumps the result.
+         * 
+         * @param run        Function to run and whose return to dump.
+         * @param msgArgs    Message args passed to the variable inspector.
          */
-        const tester = async <P extends NodeConsole.Prompt.Slug>(
-            prompt: P,
-            basicMsg: string,
-            config: Omit<NodeConsole.Prompt.Config<P>, "message">,
-            extras: ( Omit<NodeConsole.Prompt.Config<P>, "choices"> & { timestamp?: boolean; } )[] = [],
+        const runAndDump = async <T>(
+            run: ( args: Partial<NodeConsole_Prompt.Config> ) => Promise<T>,
+            msgArgs: Partial<NodeConsole.MsgArgs> = {},
         ) => {
+            try {
+                const inspectorVar = { result: await run( { msgArgs } ).catch( errorHandler ) };
 
-            nc.varDump( {
-                result: await nc.prompt( prompt, {
-                    ...config ?? {},
-                    message: basicMsg,
-                } as NodeConsole.Prompt.Config<P> )
-            } );
+                const inspectorMsgArgs: Partial<NodeConsole.MsgArgs> = {
+                    bold: false,
+                    italic: false,
 
-            if ( args.debug ) {
+                    depth: 1,
 
-                for ( const extra of extras ) {
+                    ...msgArgs ?? {},
+                };
 
-                    const inspectorVar = {
-                        result: await nc.prompt( prompt, {
-                            ...config ?? {},
-                            ...extra ?? {},
-                        } as NodeConsole.Prompt.Config<P> )
-                    };
-
-                    const inspectorMsgArgs: Partial<NodeConsole.MsgArgs> = {
-                        ...config.msgArgs ?? {},
-                        ...extra.msgArgs ?? {},
-
-                        bold: false,
-                        italic: false,
-                    };
-
-                    if ( extra.timestamp ) {
-                        nc.timestampVarDump( inspectorVar, inspectorMsgArgs );
-                    } else {
-                        nc.varDump( inspectorVar, inspectorMsgArgs );
-                    }
-                }
+                nc.timestampVarDump( inspectorVar, inspectorMsgArgs );
+            } catch ( error ) {
+                errorHandler( error );
             }
         };
 
+
         nc.h3( 'H3: Bool' );
-        await tester(
-            'bool',
-            'This bool method should let you say yes or no:',
-            {},
-            [
-                {
-                    message: 'This method should have a depth level 1 and be red:',
-                    msgArgs: {
-                        clr: 'red',
-                        depth: 1,
-                    },
-                },
-                {
-                    message: 'This timestamped bool method should have a depth level 2 and be a yellow flag:',
-                    msgArgs: {
-                        clr: 'yellow',
-                        depth: 2,
-                        flag: true,
-                        timestamp: true,
-                    },
-                },
-            ],
-        );
+        nc.timestampLog( '' );
+        await runAndDump( async ( args ) => nc.prompt.bool( {
+            ...args as NodeConsole_Prompt.BoolConfig,
+            message: 'This bool method should let you say yes or no:',
+        } ) );
+
+        if ( args.debug ) {
+
+            await runAndDump( async ( args ) => nc.prompt.bool( {
+                ...args as NodeConsole_Prompt.BoolConfig,
+                message: 'This method should have a depth level 1 and be red:',
+            } ), {
+                clr: 'red',
+                depth: 1,
+            } );
+
+            await runAndDump( async ( args ) => nc.prompt.bool( {
+                ...args as NodeConsole_Prompt.BoolConfig,
+                message: 'This timestamped bool method should have a depth level 2 and be a yellow flag:',
+            } ), {
+                clr: 'yellow',
+                depth: 2,
+                flag: true,
+            } );
+        }
 
 
         nc.h3( 'H3: Input' );
-        await tester(
-            'input',
-            'This input method should let you input a custom string:',
-            {
-                validate: ( value: string ) => value == 'I_AM_A_ERROR' ? 'Your string matched the test error string, pick something else' : true,
-            },
-            [
-                {
-                    message: 'This input method should have a depth level 1 and be orange:',
-                    msgArgs: {
-                        clr: 'orange',
-                        depth: 1,
-                    },
-                },
-                {
-                    message: 'This timestamped input method should have a depth level 2 and be purple:',
-                    msgArgs: {
-                        clr: 'purple',
-                        depth: 2,
-                        timestamp: true,
-                    },
-                },
-            ],
-        );
+        const stringValidator = ( value: string ) => value == 'I_AM_A_ERROR' ? 'Your string matched the test error string, pick something else' : true;
+        await runAndDump( async ( args ) => nc.prompt.input( {
+            ...args as NodeConsole_Prompt.InputConfig,
+            message: 'This input method should let you input a custom string:',
+            validate: stringValidator,
+        } ) );
+
+        if ( args.debug ) {
+
+            await runAndDump( async ( args ) => nc.prompt.input( {
+                ...args as NodeConsole_Prompt.InputConfig,
+                message: 'This input method should have a depth level 1 and be orange:',
+                validate: stringValidator,
+            } ), {
+                clr: 'orange',
+                depth: 1,
+            } );
+
+            await runAndDump( async ( args ) => nc.prompt.input( {
+                ...args as NodeConsole_Prompt.InputConfig,
+                message: 'This timestamped input method should have a depth level 2 and be purple:',
+                validate: stringValidator,
+            } ), {
+                clr: 'purple',
+                depth: 2,
+            } );
+        }
 
 
         nc.h3( 'H3: Select' );
-        await tester(
-            'select',
-            'This select method should let you choose from a multiple-choice list:',
-            {
-                choices: [
-                    'Simple Option 1',
-                    'Simple Option 2',
-                    {
-                        value: 'example hidden value',
+        await runAndDump( async ( args ) => nc.prompt.select( {
+            ...args as NodeConsole_Prompt.SelectConfig<any>,
+            message: 'This select method should let you choose from a multiple-choice list of simple strings:',
+            choices: [
+                'Option 1',
+                'Option 2',
+                'Option 3',
+            ],
+        } ) );
 
-                        description: 'Option description',
-                        name: 'Detailed Option 1',
-                    },
-                    {
-                        value: 'Detailed Option 2',
+        if ( args.debug ) {
 
-                        description: 'Option description',
-                        disabled: true,
-                    },
-                    {
-                        value: 'Detailed Option 3',
-
-                        disabled: '(this option is disabled with a message)',
-                    },
-                    {
-                        value: 4,
-
-                        description: 'This option returns a number',
-                        name: 'Detailed Option 4',
-                    },
-                ],
-            },
-            [
+            const choices: NodeConsole_Prompt.SelectConfig<string | 4>[ 'choices' ] = [
                 {
-                    message: 'This timestamped select method should have a depth level 3 and be turquoise:',
-                    msgArgs: {
-                        clr: 'turquoise',
-                        depth: 3,
-                        timestamp: true,
-                    },
+                    value: 'Simple Option 1',
                 },
                 {
-                    message: 'This select method should have a depth level 1:',
-                    msgArgs: {
-                        depth: 1,
-                    },
+                    value: 'Simple Option 2',
                 },
                 {
-                    message: 'This select method should have a depth level 2:',
-                    msgArgs: {
-                        depth: 2,
-                    },
-                },
-                {
-                    message: 'This select method should have a depth level 3:',
-                    msgArgs: {
-                        depth: 3,
-                    },
-                },
-            ]
-        );
+                    value: 'example hidden value',
 
+                    description: 'Option description',
+                    name: 'Detailed Option 1',
+                },
+                {
+                    value: 'Detailed Option 2',
+
+                    description: 'Option description',
+                    disabled: true,
+                },
+                {
+                    value: 'Detailed Option 3',
+
+                    disabled: '(this option is disabled with a message)',
+                },
+                {
+                    value: 4,
+
+                    description: 'This option returns a number',
+                    name: 'Detailed Option 4',
+                },
+            ];
+
+            await runAndDump( async ( args ) => nc.prompt.select( {
+                ...args as NodeConsole_Prompt.SelectConfig<any>,
+                message: 'This select method should let you choose from a multiple-choice list with complex choices:',
+                choices,
+            } ) );
+
+            await runAndDump( async ( args ) => nc.prompt.select( {
+                ...args as NodeConsole_Prompt.SelectConfig<any>,
+                message: 'This timestamped select method should have a depth level 3 and be turquoise:',
+                choices,
+            } ), {
+                clr: 'turquoise',
+                depth: 3,
+            } );
+
+            await runAndDump( async ( args ) => nc.prompt.select( {
+                ...args as NodeConsole_Prompt.SelectConfig<any>,
+                message: 'This select method should have a depth level 1:',
+                choices,
+            } ), {
+                depth: 1,
+            } );
+
+            await runAndDump( async ( args ) => nc.prompt.select( {
+                ...args as NodeConsole_Prompt.SelectConfig<any>,
+                message: 'This select method should have a depth level 2:',
+                choices,
+            } ), {
+                depth: 2,
+            } );
+
+            await runAndDump( async ( args ) => nc.prompt.select( {
+                ...args as NodeConsole_Prompt.SelectConfig<any>,
+                message: 'This select method should have a depth level 3:',
+                choices,
+            } ), {
+                depth: 3,
+            } );
+        }
 
         return nc;
     }
@@ -431,6 +484,13 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
      */
     public readonly msg: MessageMaker;
 
+    /**
+     * Public alias for internal prompting methods.
+     * 
+     * @category Interactive
+     */
+    public readonly prompt: NodeConsole_Prompt;
+
 
     /* Args ===================================== */
 
@@ -439,20 +499,51 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
      */
     public get ARGS_DEFAULT() {
 
-        const cmdErrorHandler: NodeConsole.CmdErrorHandler = ( err ) => {
+        const cmdErrorHandler: NodeConsole.CmdErrorHandler = ( error ) => {
 
-            const output: string =
-                err.output
-                    ? this.msg.implodeWithIndent( err.output.filter( ( l ) => l !== null ) )
-                    : Object.keys( err )
-                        .map( ( key ) => `${ key }: ${ err[ key as keyof typeof err ] }` )
-                        .join( '\n' );
+            if ( error instanceof Error ) {
 
-            this.log( 'Console error:' + output, { clr: 'red' } );
+                this.timestampVarDump( { error }, {
+                    clr: 'red',
+                } );
+
+            } else if ( typeof error === 'object' ) {
+
+                this.timestampLog(
+                    [
+                        [ 'Error:', { bold: true } ],
+                        [ (
+                            error.output
+                                ? this.msg.implodeWithIndent( error.output.filter( ( l ) => l !== null ) )
+                                : Object.keys( error )
+                                    .map( ( key ) => `${ key }: ${ error[ key as keyof typeof error ] }` )
+                                    .join( '\n' )
+                        ) ]
+                    ],
+                    {
+                        clr: 'red',
+                    }
+                );
+
+            } else {
+
+                this.timestampLog(
+                    [
+                        [ 'Error:', { bold: true } ],
+                        [ error ]
+                    ],
+                    {
+                        clr: 'red',
+                    }
+                );
+            }
+
             process.exit( 1 );
         };
 
         return {
+
+            argsRecursive: true,
 
             cmdErrorHandler,
 
@@ -464,7 +555,10 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
                 paintFormat: 'node',
             },
 
-            argsRecursive: true,
+            prompt: {
+                throwError: 'auto',
+                timeout: 300000,
+            },
 
             separator: null,
 
@@ -530,8 +624,8 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
     public constructor ( args: RecursivePartial<NodeConsole.Args> = {} ) {
         super( args );
-
         this.msg = new MessageMaker( this.args.msgMaker );
+        this.prompt = new NodeConsole_Prompt( this.msg, this.args );
     }
 
 
@@ -566,8 +660,8 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
                     encoding: 'utf-8',
                 },
             );
-        } catch ( err ) {
-            this.args.cmdErrorHandler( err as NodeConsole.CmdError );
+        } catch ( error ) {
+            this.args.cmdErrorHandler( error as string | Error | NodeConsole.CmdError );
         }
     }
 
@@ -841,262 +935,6 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
     }
 
 
-    /* Prompters ===================================== */
-
-    /**
-     * Public alias for internal prompting methods.
-     * 
-     * @category  Interactivity
-     * 
-     * @param prompter  Which prompting method to use.
-     * @param _config   Optional partial configuration for the prompting method.
-     * 
-     * @see {@link NodeConsole.promptBool}  Used if `prompter` param is `"bool"`.
-     * @see {@link NodeConsole.promptInput}  Used if `prompter` param is `"input"`.
-     */
-    public async prompt<
-        P extends NodeConsole.Prompt.Slug,
-        SelectValues extends number | string,
-    >(
-        prompter: P,
-        _config?: Omit<NodeConsole.Prompt.Config<P, SelectValues>, "theme">,
-    ): Promise<NodeConsole.Prompt.Return<P, SelectValues>> {
-
-        const config = this.mergeArgs(
-            {
-                msgArgs: {},
-            },
-            _config as NodeConsole.Prompt.Config<P, SelectValues>,
-            false
-        ) as NodeConsole.Prompt.Config<P, SelectValues>;
-
-        const {
-            depth = 0,
-
-            indent = '',
-            hangingIndent = '',
-
-            linesIn = 0,
-            linesOut = 0,
-
-            timestamp = false,
-        } = config.msgArgs ?? {};
-
-        const msgArgs: NonNullable<NodeConsole.Prompt.Config[ 'msgArgs' ]> = {
-            bold: true,
-
-            ...config.msgArgs ?? {},
-
-            linesIn: 0,
-            linesOut: 0,
-
-            depth: 0,
-            hangingIndent: '',
-            indent: '',
-        };
-
-        const styleClrs: Required<NonNullable<NonNullable<NodeConsole.Prompt.Config>[ 'styleClrs' ]>> = {
-            ...this.args.styleClrs,
-
-            ...config.styleClrs ?? {},
-
-            highlight: config.styleClrs?.highlight
-                ?? (
-                    ( msgArgs.clr && msgArgs.clr != 'black' && msgArgs.clr != 'grey' )
-                        ? msgArgs.clr
-                        : this.args.styleClrs.highlight
-                ),
-        };
-
-        const prefixIndent = this.msg.args.msg.tab.repeat( depth )
-            + ' '.repeat( hangingIndent.length + indent.length );
-
-        const prefixTimestamp = timestamp ? this.msg.timestampMsg( '', msgArgs ) : '';
-
-        const prefixTimestampIndent = timestamp ? ' '.repeat( this.msg.timestampMsg( '' ).length ) : '';
-
-        const selectCursorIndent = prompter == 'select' ? '  ' : '';
-
-        config.theme = {
-
-            helpMode: 'always',
-
-            icon: {
-                cursor: '→',
-            },
-
-            prefix: {
-
-                done: prefixIndent + ( timestamp ? prefixTimestamp : this.msg.msg(
-                    '✓',
-                    {
-                        clr: styleClrs.highlight,
-                        ...msgArgs ?? {},
-                        bold: true,
-                    }
-                ) ),
-
-                idle: prefixIndent + ( timestamp ? prefixTimestamp : this.msg.msg(
-                    '?',
-                    {
-                        ...msgArgs ?? {},
-                        bold: true,
-                    }
-                ) ),
-            },
-
-            style: {
-
-                answer: ( text: string ) => text,
-
-                description: ( text: string ) => '\n' + selectCursorIndent + this.msg.msg( text, {
-                    ...msgArgs ?? {},
-
-                    bold: false,
-                    clr: styleClrs.highlight,
-                    italic: !msgArgs?.italic,
-                } ),
-
-                disabled: ( text: string ) => selectCursorIndent + this.msg.msg( text, {
-                    ...msgArgs ?? {},
-
-                    bold: false,
-                    clr: styleClrs.disabled,
-                } ),
-
-                error: ( text: string ) => prefixIndent + prefixTimestampIndent + ' '.repeat( config.message.length + ( timestamp ? 1 : 3 ) ) + this.msg.msg( text, {
-                    ...msgArgs ?? {},
-
-                    bold: false,
-                    clr: styleClrs.error,
-                    italic: !msgArgs?.italic,
-                } ),
-
-                help: ( text: string ) => this.msg.msg( text, {
-                    ...msgArgs ?? {},
-
-                    bold: false,
-                    clr: styleClrs.help,
-                    italic: !msgArgs?.italic,
-                } ),
-
-                highlight: ( text: string ) => this.msg.msg( text, {
-                    clr: styleClrs.highlight,
-
-                    ...msgArgs ?? {},
-
-                    bold: true,
-                    italic: !msgArgs?.italic,
-                } ),
-
-                key: ( text: string ) => 'KEY: (' + text + ')',
-
-                message: (
-                    text: string,
-                    status: 'idle' | 'done' | 'loading',
-                ) => this.msg.msg( text, msgArgs ),
-            },
-
-            validationFailureMode: 'keep',
-        };
-
-        if ( linesIn ) {
-            this.log( '\n'.repeat( linesIn ) );
-        }
-
-        let result: NodeConsole.Prompt.Return<P, SelectValues>;
-
-        switch ( prompter ) {
-
-            case 'bool':
-                result = await this.promptBool(
-                    config as NodeConsole.Prompt.Config<"bool">,
-                ) as NodeConsole.Prompt.Return<P, SelectValues>;
-                break;
-
-            case 'input':
-                result = await this.promptInput(
-                    config as NodeConsole.Prompt.Config<"input">,
-                ) as NodeConsole.Prompt.Return<P, SelectValues>;
-                break;
-
-            case 'select':
-                result = await this.promptSelect(
-                    config as NodeConsole.Prompt.Config<"select", SelectValues>,
-                ) as NodeConsole.Prompt.Return<P, SelectValues>;
-                break;
-        }
-
-        if ( linesOut ) {
-            this.log( '\n'.repeat( linesOut ) );
-        }
-
-        return result;
-    }
-
-    /**
-     * @category  Interactivity
-     */
-    protected async promptBool(
-        config: NodeConsole.Prompt.Config<"bool">,
-    ): Promise<NodeConsole.Prompt.Return<"bool">> {
-
-        const defaultConfig: Omit<NodeConsole.Prompt.Config<"bool">, "message" | "msgArgs"> = {
-            default: false,
-        };
-
-        return await inquirer.confirm( this.mergeArgs(
-            defaultConfig,
-            config,
-            true
-        ) );
-    }
-
-    /**
-     * @category  Interactivity
-     */
-    protected async promptInput(
-        config: NodeConsole.Prompt.Config<"input">,
-    ): Promise<NodeConsole.Prompt.Return<"input">> {
-
-        const defaultConfig: Omit<
-            NodeConsole.Prompt.Config<"input">,
-            "message" | "msgArgs"
-        > = {
-            required: true,
-        };
-
-        return await inquirer.input( this.mergeArgs(
-            defaultConfig,
-            config,
-            true
-        ) as NodeConsole.Prompt.Config<"input"> );
-    }
-
-    /**
-     * @category  Interactivity
-     */
-    protected async promptSelect<SelectValues extends number | string>(
-        config: NodeConsole.Prompt.Config<"select", SelectValues>,
-    ): Promise<NodeConsole.Prompt.Return<"select", SelectValues>> {
-
-        const defaultConfig: Omit<
-            NodeConsole.Prompt.Config<"select", SelectValues>,
-            "message"
-        > = {
-            choices: [],
-            msgArgs: {},
-            pageSize: 10,
-        };
-
-        return await inquirer.select( this.mergeArgs(
-            defaultConfig,
-            config,
-            true
-        ) as Parameters<typeof inquirer.select>[ 0 ] ) as SelectValues;
-    }
-
-
     /* Aliases ===================================== */
 
     /**
@@ -1201,8 +1039,6 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
 /**
  * Used only for {@link NodeConsole}.
- * 
- * @beta
  */
 export namespace NodeConsole {
 
@@ -1210,6 +1046,8 @@ export namespace NodeConsole {
      * Optional configuration for {@link NodeConsole}.
      */
     export type Args = AbstractConfigurableClass.Args & {
+
+        argsRecursive: true;
 
         /**
          * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
@@ -1220,6 +1058,8 @@ export namespace NodeConsole {
          * Optional overrides used when initializing {@link MessageMaker}.
          */
         msgMaker: RecursivePartial<MessageMaker.Args>;
+
+        prompt: NodeConsole_Prompt.Args,
 
         /**
          * An override for the output of this
@@ -1257,7 +1097,7 @@ export namespace NodeConsole {
      * Function used to handle errors from the terminal in
      * {@link NodeConsole.cmd}.
      */
-    export type CmdErrorHandler = ( err: CmdError ) => void;
+    export type CmdErrorHandler = ( err: string | Error | CmdError ) => void;
 
     /**
      * Optional configuration for {@link NodeConsole.log}.
@@ -1268,91 +1108,5 @@ export namespace NodeConsole {
          * Console method to use for outputting to the console.
          */
         via: "log" | "warn" | "debug";
-    };
-
-    /**
-     * Types used for {@link NodeConsole.prompt} and related functions.
-     */
-    export namespace Prompt {
-
-        /**
-         * Param type for prompt method config, optionally restricted by prompt
-         * slug.
-         *
-         * @see {@link Prompt.Slug}
-         */
-        export type Config<
-            P extends Slug = Slug,
-            SelectValues extends number | string = number | string,
-        > = {
-
-            default?: boolean | string | SelectValues;
-
-            /**
-             * Optional configuration for output messages while prompting.
-             */
-            msgArgs?: Partial<MessageMaker.MsgArgs & {
-                timestamp: boolean;
-            }>;
-
-            /**
-             * Colours used to style output.
-             */
-            styleClrs?: Partial<Args[ 'styleClrs' ]>;
-
-        } & (
-                | ( P extends "bool" ? Config.Bool : never )
-                | ( P extends "input" ? Config.Input : never )
-                | ( P extends "select" ? Config.Select<SelectValues> : never )
-            );
-
-        /**
-         * Individual config types for prompting methods.
-         */
-        export namespace Config {
-
-            /**
-             * Optional configuration for {@link NodeConsole.promptBool}.
-             */
-            export type Bool = Parameters<typeof inquirer.confirm>[ 0 ];
-
-            /**
-             * Optional configuration for {@link NodeConsole.promptInput}.
-             */
-            export type Input = Parameters<typeof inquirer.input>[ 0 ];
-
-            /**
-             * Optional configuration for {@link NodeConsole.promptSelect}.
-             */
-            export type Select<Values extends null | boolean | number | string | undefined> = Omit<Parameters<typeof inquirer.select>[ 0 ], "choices"> & {
-
-                choices: ( string | {
-                    value: Values;
-
-                    name?: string;
-                    description?: string;
-                    short?: string;
-                    disabled?: boolean | string;
-                } )[];
-            };
-        }
-
-        /**
-         * Return type for prompt methods, optionally restricted by prompt slug.
-         * 
-         * @see {@link Prompt.Slug}
-         */
-        export type Return<
-            P extends Slug = Slug,
-            SelectValues extends number | string = number | string,
-        > =
-            | ( P extends "bool" ? boolean : never )
-            | ( P extends "input" ? string : never )
-            | ( P extends "select" ? SelectValues : never );
-
-        /**
-         * Method names for interactivity in the console.
-         */
-        export type Slug = "bool" | "input" | "select";
     };
 }

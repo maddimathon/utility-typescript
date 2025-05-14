@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from '../../abstracts/AbstractConfigurableClass.js';
@@ -25,12 +25,8 @@ import { NodeFunctions } from '../NodeFunctions.js';
  * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
  *
  * @typeParam SubStage  String literal of substage names to be run during this
- *                       stage.
- * @typeParam Args
- *
- * @example
- * ```ts
- * ```
+ *                      stage.
+ * @typeParam Args      Argument object type for the build stage.
  */
 export declare abstract class AbstractBuildStage<SubStage extends string | never, Args extends AbstractBuildStage.Args<SubStage>> extends AbstractConfigurableClass<Args> {
     /**

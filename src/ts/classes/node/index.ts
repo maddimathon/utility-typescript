@@ -27,6 +27,7 @@
  */
 
 export * from './abstracts/index.js';
+export * from './NodeConsole/index.js';
 
 export * from './NodeConsole.js';
 export * from './NodeFiles.js';

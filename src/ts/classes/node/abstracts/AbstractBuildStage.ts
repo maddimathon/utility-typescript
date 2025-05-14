@@ -35,12 +35,8 @@ import { NodeFunctions } from '../NodeFunctions.js';
  * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
  *
  * @typeParam SubStage  String literal of substage names to be run during this
- *                       stage.
- * @typeParam Args    
- *
- * @example
- * ```ts
- * ```
+ *                      stage.
+ * @typeParam Args      Argument object type for the build stage.
  */
 export abstract class AbstractBuildStage<
     SubStage extends string | never,

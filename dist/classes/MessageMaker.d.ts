@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import type { RecursivePartial } from '../types/objects/index.js';
@@ -16,9 +16,7 @@ import { timestamp } from '../functions/index.js';
 /**
  * A configurable class for formatting message strings for various outputs.
  *
- * Not currently tested, marked beta.
- *
- * @beta
+ * @experimental
  */
 export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /**

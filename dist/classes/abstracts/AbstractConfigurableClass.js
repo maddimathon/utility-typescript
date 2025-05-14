@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { mergeArgs } from '../../functions/index.js';
@@ -105,5 +105,15 @@ export class AbstractConfigurableClass {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     toString() { return JSON.stringify(this, null, 4); }
+    /**
+     * Overrides the default function to return an object representation of this
+     * object.
+     *
+     * @category Exporters
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
+     * @see {@link AbstractConfigurableClass.toJSON | AbstractConfigurableClass.toJSON()}
+     */
+    valueOf() { return this.toJSON(); }
 }
 //# sourceMappingURL=AbstractConfigurableClass.js.map

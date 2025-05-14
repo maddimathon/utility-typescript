@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 1.0.0
+# Utility TypeScript @ 2.0.0-draft
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -19,13 +19,20 @@ The library aims to be pretty configurable, but it's definitely targeted towards
 my personal needs/preferences rather than (web) developers in general.
 
 
+## Changelog
+
+<!--README_DOCS_CHANGELOG-->
+Read it from [the source](./CHANGELOG.md) or 
+[the docs site](https://maddimathon.github.io/utility-typescript/Changelog.html).
+<!--/README_DOCS_CHANGELOG-->
+
 
 ## Install
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@1.0.0
-npm i -D github:maddimathon/utility-typescript#1.0.0
+npm i -D @maddimathon/utility-typescript@2.0.0
+npm i -D github:maddimathon/utility-typescript#2.0.0
 ```
 <!--/README_INSTALL-->
 
@@ -36,7 +43,7 @@ For an overview of all exported items, including types, see the documentation
 below.
 
 <!--README_DOCS_CTA-->
-<a href="https://maddimathon.github.io/utility-typescript" class="button">Read Documentation</a>
+[Read Documentation](https://maddimathon.github.io/utility-typescript)
 <!--/README_DOCS_CTA-->
 
 

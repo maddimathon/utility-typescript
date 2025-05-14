@@ -4,28 +4,29 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
-import * as inquirer from '@inquirer/prompts';
 import type { RecursivePartial } from '../../types/objects/index.js';
+import { mergeArgs } from '../../functions/index.js';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
-import { mergeArgs } from '../../functions/index.js';
+import { NodeConsole_Prompt } from './NodeConsole/index.js';
 /**
  * A configurable class for outputting to console within node.
  *
  * Includes formatting and interactive utilities.
  *
- * Not currently tested, marked beta.
- *
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
- * @beta
+ * @since 0.1.1
+ * @since 2.0.0-draft  Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ *
+ * @experimental
  */
 export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
     /**
@@ -54,9 +55,16 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
      */
     readonly msg: MessageMaker;
     /**
+     * Public alias for internal prompting methods.
+     *
+     * @category Interactive
+     */
+    readonly prompt: NodeConsole_Prompt;
+    /**
      * @category Args
      */
     get ARGS_DEFAULT(): {
+        readonly argsRecursive: true;
         readonly cmdErrorHandler: NodeConsole.CmdErrorHandler;
         readonly msgMaker: {
             readonly msg: {
@@ -65,7 +73,10 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
             };
             readonly paintFormat: "node";
         };
-        readonly argsRecursive: true;
+        readonly prompt: {
+            readonly throwError: "auto";
+            readonly timeout: 300000;
+        };
         readonly separator: null;
         readonly styleClrs: {
             readonly disabled: "grey";
@@ -182,30 +193,6 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
      */
     separator(args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
-     * Public alias for internal prompting methods.
-     *
-     * @category  Interactivity
-     *
-     * @param prompter  Which prompting method to use.
-     * @param _config   Optional partial configuration for the prompting method.
-     *
-     * @see {@link NodeConsole.promptBool}  Used if `prompter` param is `"bool"`.
-     * @see {@link NodeConsole.promptInput}  Used if `prompter` param is `"input"`.
-     */
-    prompt<P extends NodeConsole.Prompt.Slug, SelectValues extends number | string>(prompter: P, _config?: Omit<NodeConsole.Prompt.Config<P, SelectValues>, "theme">): Promise<NodeConsole.Prompt.Return<P, SelectValues>>;
-    /**
-     * @category  Interactivity
-     */
-    protected promptBool(config: NodeConsole.Prompt.Config<"bool">): Promise<NodeConsole.Prompt.Return<"bool">>;
-    /**
-     * @category  Interactivity
-     */
-    protected promptInput(config: NodeConsole.Prompt.Config<"input">): Promise<NodeConsole.Prompt.Return<"input">>;
-    /**
-     * @category  Interactivity
-     */
-    protected promptSelect<SelectValues extends number | string>(config: NodeConsole.Prompt.Config<"select", SelectValues>): Promise<NodeConsole.Prompt.Return<"select", SelectValues>>;
-    /**
      * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
      *
      * @category  Aliases
@@ -262,14 +249,13 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
 }
 /**
  * Used only for {@link NodeConsole}.
- *
- * @beta
  */
 export declare namespace NodeConsole {
     /**
      * Optional configuration for {@link NodeConsole}.
      */
     type Args = AbstractConfigurableClass.Args & {
+        argsRecursive: true;
         /**
          * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
          */
@@ -278,6 +264,7 @@ export declare namespace NodeConsole {
          * Optional overrides used when initializing {@link MessageMaker}.
          */
         msgMaker: RecursivePartial<MessageMaker.Args>;
+        prompt: NodeConsole_Prompt.Args;
         /**
          * An override for the output of this
          */
@@ -308,7 +295,7 @@ export declare namespace NodeConsole {
      * Function used to handle errors from the terminal in
      * {@link NodeConsole.cmd}.
      */
-    type CmdErrorHandler = (err: CmdError) => void;
+    type CmdErrorHandler = (err: string | Error | CmdError) => void;
     /**
      * Optional configuration for {@link NodeConsole.log}.
      */
@@ -318,64 +305,5 @@ export declare namespace NodeConsole {
          */
         via: "log" | "warn" | "debug";
     };
-    /**
-     * Types used for {@link NodeConsole.prompt} and related functions.
-     */
-    namespace Prompt {
-        /**
-         * Param type for prompt method config, optionally restricted by prompt
-         * slug.
-         *
-         * @see {@link Prompt.Slug}
-         */
-        type Config<P extends Slug = Slug, SelectValues extends number | string = number | string> = {
-            default?: boolean | string | SelectValues;
-            /**
-             * Optional configuration for output messages while prompting.
-             */
-            msgArgs?: Partial<MessageMaker.MsgArgs & {
-                timestamp: boolean;
-            }>;
-            /**
-             * Colours used to style output.
-             */
-            styleClrs?: Partial<Args['styleClrs']>;
-        } & ((P extends "bool" ? Config.Bool : never) | (P extends "input" ? Config.Input : never) | (P extends "select" ? Config.Select<SelectValues> : never));
-        /**
-         * Individual config types for prompting methods.
-         */
-        namespace Config {
-            /**
-             * Optional configuration for {@link NodeConsole.promptBool}.
-             */
-            type Bool = Parameters<typeof inquirer.confirm>[0];
-            /**
-             * Optional configuration for {@link NodeConsole.promptInput}.
-             */
-            type Input = Parameters<typeof inquirer.input>[0];
-            /**
-             * Optional configuration for {@link NodeConsole.promptSelect}.
-             */
-            type Select<Values extends null | boolean | number | string | undefined> = Omit<Parameters<typeof inquirer.select>[0], "choices"> & {
-                choices: (string | {
-                    value: Values;
-                    name?: string;
-                    description?: string;
-                    short?: string;
-                    disabled?: boolean | string;
-                })[];
-            };
-        }
-        /**
-         * Return type for prompt methods, optionally restricted by prompt slug.
-         *
-         * @see {@link Prompt.Slug}
-         */
-        type Return<P extends Slug = Slug, SelectValues extends number | string = number | string> = (P extends "bool" ? boolean : never) | (P extends "input" ? string : never) | (P extends "select" ? SelectValues : never);
-        /**
-         * Method names for interactivity in the console.
-         */
-        type Slug = "bool" | "input" | "select";
-    }
 }
 //# sourceMappingURL=NodeConsole.d.ts.map

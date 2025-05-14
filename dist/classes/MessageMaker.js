@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
@@ -15,9 +15,7 @@ import { mergeArgs, softWrapText, timestamp, typeOf, } from '../functions/index.
 /**
  * A configurable class for formatting message strings for various outputs.
  *
- * Not currently tested, marked beta.
- *
- * @beta
+ * @experimental
  */
 export class MessageMaker extends AbstractConfigurableClass {
     /* STATIC
@@ -79,7 +77,9 @@ export class MessageMaker extends AbstractConfigurableClass {
                     // paint colour
                     if (args.clr || args.flag) {
                         /** Colour depth available in this console. */
-                        const clrDepth = process.stdout.getColorDepth();
+                        const clrDepth = typeof process.stdout.getColorDepth === 'function'
+                            ? process.stdout.getColorDepth()
+                            : 1;
                         // start by assuming it's the foreground
                         /** Background colour slug for this text. */
                         let bg = null;

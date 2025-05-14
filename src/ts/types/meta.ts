@@ -24,11 +24,15 @@
  * @license MIT
  */
 
+import { AnyClass } from './functions/basics.js';
+
 /**
  * For debugging types with intellisense/etc. Should only be used temporarily.
  */
 export type TypeDump<T> =
-    T extends ( ...args: infer A ) => infer R
+    T extends number | null | string | undefined | AnyClass | Date
+    ? T
+    : T extends ( ...args: infer A ) => infer R
     ? ( ...args: TypeDump<A> ) => TypeDump<R>
     : T extends any ? { [ K in keyof T ]: T[ K ] } : never;
 
@@ -36,6 +40,8 @@ export type TypeDump<T> =
  * For debugging types with intellisense/etc. Should only be used temporarily.
  */
 export type TypeDumpRecursive<T> =
-    T extends ( ...args: infer A ) => infer R
+    T extends number | null | string | undefined | AnyClass | Date
+    ? T
+    : T extends ( ...args: infer A ) => infer R
     ? ( ...args: TypeDump<A> ) => TypeDumpRecursive<R>
     : T extends any ? { [ K in keyof T ]: TypeDumpRecursive<T[ K ]> } : never;

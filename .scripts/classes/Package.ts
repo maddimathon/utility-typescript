@@ -17,6 +17,7 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
+import { NodeConsole_Prompt } from '../../src/ts/classes/node/index.js';
 
 
 const packageSubStages = [
@@ -105,7 +106,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
 
             const depth = this.args[ 'log-base-level' ] ?? 0;
 
-            const promptArgs: Omit<Parameters<typeof this.fns.nc.prompt>[ 1 ], "message"> = {
+            const promptArgs: Omit<NodeConsole_Prompt.Config, "message"> = {
 
                 default: false,
 
@@ -120,7 +121,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
                 },
             };
 
-            this.args.dryrun = await this.fns.nc.prompt( 'bool', {
+            this.args.dryrun = await this.fns.nc.prompt.bool( {
                 ...promptArgs,
                 message: `Is this a dry run?`,
                 default: !!this.args.dryrun,
@@ -226,8 +227,11 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
 
             try {
                 this.fns.fs.deleteFiles( [ outDir ] );
-            } catch ( err ) {
-                // nodeErrorCLI( err as NodeError, ( this.args.verbose ? 4 : 3 ) );
+            } catch ( error ) {
+                this.fns.nc.timestampVarDump( { error }, {
+                    clr: 'red',
+                    depth: ( this.args.verbose ? 4 : 3 ),
+                } );
             }
         }
 

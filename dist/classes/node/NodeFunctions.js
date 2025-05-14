@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import { mergeArgs } from '../../functions/index.js';
@@ -19,6 +19,8 @@ import { NodeFiles } from './NodeFiles.js';
  * A configurable class of utility functions.
  *
  * Can be extended, but probably best as a (static) property instead.
+ *
+ * @experimental
  */
 export class NodeFunctions extends AbstractConfigurableClass {
     get ARGS_DEFAULT() {

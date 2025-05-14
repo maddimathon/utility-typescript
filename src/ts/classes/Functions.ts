@@ -28,6 +28,8 @@ import {
  * A configurable class of utility functions.
  * 
  * Can be extended, but probably best as a (static) property instead.
+ * 
+ * @experimental
  */
 export class Functions extends AbstractConfigurableClass<Functions.Args> {
 

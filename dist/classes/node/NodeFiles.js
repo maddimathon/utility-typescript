@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 // import type { WriteFileOptions } from 'node:fs';
@@ -69,7 +69,7 @@ export class NodeFiles extends AbstractConfigurableClass {
     deleteFiles(paths, dryRun = false, logBaseLevel = 0) {
         for (const path of paths) {
             // continues
-            if (!NodeFS.existsSync(path)) {
+            if (!this.exists(path)) {
                 continue;
             }
             const stat = NodeFS.statSync(path);
@@ -125,7 +125,7 @@ export class NodeFiles extends AbstractConfigurableClass {
             : content;
         args = this.mergeArgs(this.args.writeFileArgs, args, false);
         // returns if we aren't forcing or renaming
-        if (NodeFS.existsSync(path)) {
+        if (this.exists(path)) {
             // returns
             if (!args.force && !args.rename) {
                 return false;
@@ -136,7 +136,7 @@ export class NodeFiles extends AbstractConfigurableClass {
         }
         NodeFS.mkdirSync(NodePath.dirname(path), { recursive: true });
         NodeFS.writeFileSync(path, content, args);
-        return NodeFS.existsSync(path) && path;
+        return this.exists(path) && path;
     }
     /* Paths ===================================== */
     /**
@@ -153,6 +153,12 @@ export class NodeFiles extends AbstractConfigurableClass {
         const isRelative = !path.match(/^\//g);
         const newPath = this.pathResolve(NodePath.dirname(path), newName + NodePath.extname(path));
         return isRelative ? this.pathRelative(newPath) : newPath;
+    }
+    /**
+     * Checks whether a file, directory, or link exists at the given path.
+     */
+    exists(path) {
+        return NodeFS.existsSync(this.pathResolve(path));
     }
     /**
      * Returns relative paths, based on the root defined the the opts.
@@ -189,7 +195,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      */
     uniquePath(inputPath) {
         inputPath = this.pathResolve(inputPath);
-        if (!NodeFS.existsSync(inputPath)) {
+        if (!this.exists(inputPath)) {
             return inputPath;
         }
         /** Used to iterate until we have a unique path. */
@@ -201,7 +207,7 @@ export class NodeFiles extends AbstractConfigurableClass {
         /** Full path with the updated unique basename. */
         let uniqueFullPath = inputPath;
         // Iterate the index until the inputPath is unique
-        while (NodeFS.existsSync(uniqueFullPath)) {
+        while (this.exists(uniqueFullPath)) {
             // increments here because the index starts at 0
             copyIndex++;
             uniqueFullPath = this.changeBaseName(inputPath, inputBaseNameWithoutNumber + `-${copyIndex}`);

@@ -99,7 +99,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
         // TODO - generate entryPoints from pkg.main and pkg.exports
         const config: Partial<typeDoc.TypeDocOptions> = {
 
-            tsconfig: 'src/ts/tsconfig.json',
+            alwaysCreateEntryPointModule: true,
 
             basePath: 'src/ts',
 
@@ -115,12 +115,12 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             categoryOrder: [
                 '*',
+                // 'Functions',
+                // 'Classes',
+                // 'Namespaces',
+                // 'Modules',
+                // 'Entry Points',
                 'Misc.',
-                'Functions',
-                'Classes',
-                'Namespaces',
-                'Modules',
-                'Entry Points',
             ],
 
             // compilerOptions,
@@ -139,18 +139,37 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 'src/ts/types/index.ts',
             ],
 
-            excludeInternal: true,
+            entryPointStrategy: 'expand',
+
+            excludeInternal: false,
             excludeNotDocumented: false,
             excludePrivate: false,
             excludeProtected: false,
             excludeReferences: false,
 
+            externalSymbolLinkMappings: {
+
+                '@maddimathon/utility-typescript': {
+                    'Objects': 'https://maddimathon.github.io/utility-typescript/Types/Objects.html',
+                    'Classify': 'https://maddimathon.github.io/utility-typescript/Types/Objects/Classify.html',
+                    'RecursivePartial': 'https://maddimathon.github.io/utility-typescript/Types/Objects/RecursivePartial.html',
+                    'RecursiveRequired': 'https://maddimathon.github.io/utility-typescript/Types/Objects/RecursiveRequired.html',
+                },
+            },
+
             githubPages: true,
 
             groupOrder: [
                 '*',
+                'Documents',
+                'Constructors',
+                'Properties',
+                'Accessors',
                 'Functions',
+                'Methods',
                 'Classes',
+                'Interfaces',
+                'Type Aliases',
                 'Namespaces',
                 'Modules',
             ],
@@ -165,7 +184,33 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             includeHierarchySummary: true,
             includeVersion: false,
 
-            // json: './dist/docs/javascript.TypeDoc.json',
+            kindSortOrder: [
+                'Module',
+                'Constructor',
+                'Property',
+                'Variable',
+                'Function',
+                'Accessor',
+                'Method',
+                'Enum',
+                'EnumMember',
+                'Class',
+                'Interface',
+                'TypeAlias',
+                'TypeLiteral',
+                'Namespace',
+
+                'Reference',
+                'Project',
+
+                'Parameter',
+                'TypeParameter',
+                'CallSignature',
+                'ConstructorSignature',
+                'IndexSignature',
+                'GetSignature',
+                'SetSignature',
+            ],
 
             markdownLinkExternal: true,
 
@@ -174,8 +219,16 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 this.pkgVersion,
             ].filter( v => v ).join( ' @ ' ),
 
+            // navigation: {
+            //     includeCategories: true,
+            //     includeGroups: false,
+            //     includeFolders: true,
+            //     compactFolders: false,
+            //     excludeReferences: true,
+            // },
+
             navigationLinks: {
-                'About': `${ homepage }/ReadMe.html`,
+                // 'About': `${ homepage }/ReadMe.html`,
                 'GitHub': repository,
                 'by Maddi Mathon': 'https://www.maddimathon.com',
             },
@@ -194,16 +247,23 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             readme: 'none',
             router: 'structure',
 
-
             searchInComments: true,
             searchInDocuments: true,
 
-            sidebarLinks: {
-                // 'Class Hierarchy': `${ homepage }/hierarchy.html`,
-            },
+            sourceLinkExternal: true,
+            sourceLinkTemplate: `${ repository }/blob/main/${ ( this.args.packaging && !this.args.dryrun ) ? encodeURI( this.pkg.version ) + '/' : '' }{path}#L{line}`,
 
-            sourceLinkTemplate: `${ repository }/blob/main/${ ( this.args.packaging && !this.args.dryrun ) ? this.pkg.version + '/' : '' }{path}#L{line}`,
+            sort: [
+                'documents-first',
+                'static-first',
+                'required-first',
+                'kind',
+                'visibility',
+                'alphabetical',
+            ],
             sortEntryPoints: false,
+
+            tsconfig: 'src/ts/tsconfig.json',
 
             useFirstParagraphOfCommentAsSummary: true,
 

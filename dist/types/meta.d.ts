@@ -13,26 +13,27 @@
  * ```
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  * @author Maddi Mathon (www.maddimathon.com)
  * @homepage https://maddimathon.github.io/utility-typescript
  *
  * @license MIT
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
+import { AnyClass } from './functions/basics.js';
 /**
  * For debugging types with intellisense/etc. Should only be used temporarily.
  */
-export type TypeDump<T> = T extends (...args: infer A) => infer R ? (...args: TypeDump<A>) => TypeDump<R> : T extends any ? {
+export type TypeDump<T> = T extends number | null | string | undefined | AnyClass | Date ? T : T extends (...args: infer A) => infer R ? (...args: TypeDump<A>) => TypeDump<R> : T extends any ? {
     [K in keyof T]: T[K];
 } : never;
 /**
  * For debugging types with intellisense/etc. Should only be used temporarily.
  */
-export type TypeDumpRecursive<T> = T extends (...args: infer A) => infer R ? (...args: TypeDump<A>) => TypeDumpRecursive<R> : T extends any ? {
+export type TypeDumpRecursive<T> = T extends number | null | string | undefined | AnyClass | Date ? T : T extends (...args: infer A) => infer R ? (...args: TypeDump<A>) => TypeDumpRecursive<R> : T extends any ? {
     [K in keyof T]: TypeDumpRecursive<T[K]>;
 } : never;
 //# sourceMappingURL=meta.d.ts.map

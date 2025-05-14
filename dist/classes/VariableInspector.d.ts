@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /**
- * @package @maddimathon/utility-typescript@1.0.0
+ * @package @maddimathon/utility-typescript@2.0.0-draft
  */
 /*!
- * @maddimathon/utility-typescript@1.0.0
+ * @maddimathon/utility-typescript@2.0.0-draft
  * @license MIT
  */
 import type { LangLocaleCode } from '../types/string-literals/index.js';
@@ -23,15 +23,13 @@ import { typeOf } from '../functions/index.js';
  * {@link VariableInspector.value}) or get a json-compatible object representing
  * the inspected value {@link VariableInspector.toJSON}.
  *
- * Not currently tested, marked beta.
- *
  * @example
  * ```ts
  * VariableInspector.dump( { mysteryVariable } );
  * // console: 'mysteryVariable = <type> ...'
  * ```
  *
- * @beta
+ * @experimental
  */
 export declare class VariableInspector<Type extends typeOf.TestType = typeOf.TestType> extends AbstractConfigurableClass<VariableInspector.Args> {
     /**
@@ -231,16 +229,6 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     toString(): string;
-    /**
-     * Overrides the default function to return a string representation of this
-     * object.
-     *
-     * @category Exporters
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
-     * @see {@link VariableInspector.toJSON | VariableInspector.toJSON()}
-     */
-    valueOf(): VariableInspector.JSON<Type>;
     /**
      * Returns an instance of this class that inherits this instances’s args.
      *

@@ -1,16 +1,19 @@
 {
     "name": "@maddimathon/utility-typescript",
-    "version": "1.0.0",
+    "version": "2.0.0",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
     "description": "TypeScript utilities (types, functions, classes) to use in various node/npm projects.",
     "keywords": [
+        "javascript-library",
         "javascript-utilities",
         "javascript-utility",
-        "npm-package-typescript",
         "npm-package",
+        "npm-package-typescript",
         "typescript-library",
-        "typescript-utilities"
+        "typescript-utilities",
+        "typescript-utility",
+        "typescript-utility-types"
     ],
 
     "homepage": "https://maddimathon.github.io/utility-typescript",

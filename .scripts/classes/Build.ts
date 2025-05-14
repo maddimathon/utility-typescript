@@ -147,11 +147,14 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
 
         const ctaRegex = /(<!--README_DOCS_CTA-->).*?(<!--\/README_DOCS_CTA-->)/gs;
 
+        const changelogRegex = /(<!--README_DOCS_CHANGELOG-->).*?(<!--\/README_DOCS_CHANGELOG-->)/gs;
+
         this.fns.fs.writeFile( 'README.md', (
             this.fns.fs.readFile( 'README.md' )
                 .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.pkg.config.title } @ ${ this.pkgVersion }` ) + '\n$2' )
                 .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.pkg.description, 80 ) ) + '\n$2' )
-                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `<a href="${ this.pkg.homepage }" class="button">Read Documentation</a>` ) + '\n$2' )
+                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `[Read Documentation](${ this.pkg.homepage })` ) + '\n$2' )
+                .replace( changelogRegex, '$1\n' + this.fns.fns.escRegExpReplace( `Read it from [the source](./CHANGELOG.md) or \n[the docs site](${ this.pkg.homepage }/Changelog.html).` ) + '\n$2' )
         ), { force: true } );
 
         if ( this.args.releasing ) {
