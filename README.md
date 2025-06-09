@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-alpha.draft
+# Utility TypeScript @ 2.0.0-alpha
 <!--/README_HEADER-->
 
 <!--README_DESC-->

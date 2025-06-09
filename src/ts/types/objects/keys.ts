@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -14,7 +14,7 @@
  * 
  * @param T_Object  Type with keys.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export type KeysOptional<T_Object> = Exclude<
     keyof T_Object,
@@ -27,7 +27,7 @@ export type KeysOptional<T_Object> = Exclude<
  * 
  * @param T_Object  Type with keys.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export type KeysRequired<T_Object> = {
     [ _Key in keyof T_Object ]-?: {} extends Pick<T_Object, _Key> ? never : _Key;

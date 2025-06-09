@@ -3,7 +3,7 @@
  *
  * @module Json
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @example
  * ```ts
@@ -12,7 +12,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 export * from './PackageJson.js';

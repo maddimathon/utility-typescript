@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 // import type { WriteFileOptions } from 'node:fs';
@@ -95,7 +95,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @return  Path to file if written, or false on failure.
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -143,7 +143,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
      * @param logLevel  Base depth for console messages (via NodeConsole).
      *
-     * @since 2.0.0-alpha.draft — Renamed to delete from deleteFiles.
+     * @since 2.0.0-alpha — Renamed to delete from deleteFiles.
      */
     delete(paths, logLevel = 0, dryRun = false) {
         for (const path of paths) {
@@ -179,7 +179,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -191,7 +191,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Meta
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -206,7 +206,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -218,7 +218,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -230,7 +230,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -242,7 +242,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Filers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -259,7 +259,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @return  Paths within the given directory.
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -299,7 +299,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @return  Path to file if written, or false on failure.
      *
-     * @since 2.0.0-alpha.draft — Renamed to write from writeFiles.
+     * @since 2.0.0-alpha — Renamed to write from writeFiles.
      */
     write(path, content, args = {}) {
         path = this.pathResolve(path);
@@ -342,7 +342,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -360,7 +360,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import type { RecursivePartial } from '../../types/objects/index.js';
@@ -20,7 +20,7 @@ import { NodeConsole_Prompt } from './NodeConsole/index.js';
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
  * @since 0.1.1
- * @since 2.0.0-alpha.draft — Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * @since 2.0.0-alpha — Prompters moved to a {@link NodeConsole_Prompt} property instead.
  *
  * @experimental
  */
@@ -246,7 +246,7 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
  * Used only for {@link NodeConsole}.
  *
  * @since 0.1.1
- * @since 2.0.0-alpha.draft — Removed CmdErrorHandler type.
+ * @since 2.0.0-alpha — Removed CmdErrorHandler type.
  */
 export declare namespace NodeConsole {
     /**

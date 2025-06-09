@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -16,7 +16,7 @@ import type { NodeConsole } from '../NodeConsole.js';
  * 
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error | Error}
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @experimental
  * @internal

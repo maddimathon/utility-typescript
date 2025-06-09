@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import NodeFS from 'node:fs';
@@ -60,7 +60,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @return  Path to file if written, or false on failure.
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -74,7 +74,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
      * @param logLevel  Base depth for console messages (via NodeConsole).
      *
-     * @since 2.0.0-alpha.draft — Renamed to delete from deleteFiles.
+     * @since 2.0.0-alpha — Renamed to delete from deleteFiles.
      */
     delete(paths: string[], logLevel?: number, dryRun?: boolean): void;
     /**
@@ -82,7 +82,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -92,7 +92,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Meta
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -102,7 +102,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -112,7 +112,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -122,7 +122,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -132,7 +132,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Filers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -149,7 +149,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @return  Paths within the given directory.
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -176,7 +176,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @return  Path to file if written, or false on failure.
      *
-     * @since 2.0.0-alpha.draft — Renamed to write from writeFiles.
+     * @since 2.0.0-alpha — Renamed to write from writeFiles.
      */
     write(path: string, content: string | string[], args?: Partial<NodeFiles.WriteFileArgs>): string | false;
     /**
@@ -195,7 +195,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -205,7 +205,7 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @category Path-makers
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      *
      * @experimental
      */
@@ -256,19 +256,19 @@ export declare namespace NodeFiles {
         /**
          * Default configuration for {@link NodeFiles.copy}.
          *
-         * @since 2.0.0-alpha.draft — Renamed to copyFile from copyFileArgs.
+         * @since 2.0.0-alpha — Renamed to copyFile from copyFileArgs.
          */
         copyFile: CopyFileArgs;
         /**
          * Default configuration for {@link NodeFiles.readDir}.
          *
-         * @since 2.0.0-alpha.draft — Renamed to readDir from readDirArgs.
+         * @since 2.0.0-alpha — Renamed to readDir from readDirArgs.
          */
         readDir: ReadDirArgs;
         /**
          * Default configuration for {@link NodeFiles.readFile}.
          *
-         * @since 2.0.0-alpha.draft — Renamed to readFile from readFileArgs.
+         * @since 2.0.0-alpha — Renamed to readFile from readFileArgs.
          */
         readFile: ReadFileArgs;
         /**
@@ -280,7 +280,7 @@ export declare namespace NodeFiles {
         /**
          * Default configuration for {@link NodeFiles.write}.
          *
-         * @since 2.0.0-alpha.draft — Renamed to write from writeArgs.
+         * @since 2.0.0-alpha — Renamed to write from writeArgs.
          */
         write: WriteFileArgs;
     }

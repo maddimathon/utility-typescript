@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 /**
@@ -13,7 +13,7 @@
  * @param T_Array  Array with the items to type.
  *
  * @since 0.1.0
- * @since 2.0.0-alpha.draft — Is now global rather than being the only member
+ * @since 2.0.0-alpha — Is now global rather than being the only member
  *                            of the Arrays namespace.
  */
 export type ArrayItem<T_Array extends readonly unknown[]> = T_Array extends readonly (infer I)[] ? I : never;

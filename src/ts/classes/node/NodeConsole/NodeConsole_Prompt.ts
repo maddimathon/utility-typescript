@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -25,7 +25,7 @@ import { NodeConsole_Error } from './NodeConsole_Error.js';
 /**
  * Only used by {@link NodeConsole}.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @experimental
  */

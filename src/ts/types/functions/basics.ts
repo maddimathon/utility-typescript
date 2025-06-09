@@ -17,7 +17,7 @@
  * @param T_ConstructParams  Optionally restrict the constructor params.
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Is now global rather than being the only member 
+ * @since 2.0.0-alpha — Is now global rather than being the only member 
  *                            of the Functions namespace.
  */
 export type AnyClass<

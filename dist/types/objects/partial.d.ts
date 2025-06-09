@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import type { AnyClass } from '../functions/index.js';
@@ -17,7 +17,7 @@ import type { AnyClass } from '../functions/index.js';
  * @param T_Object        Type or interface to transform.
  * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  */
 export type PartialExcept<T_Object, T_KeysRequired extends keyof T_Object = never> = Partial<Omit<T_Object, T_KeysRequired>> & Pick<Required<T_Object>, T_KeysRequired>;
 /**
@@ -27,7 +27,7 @@ export type PartialExcept<T_Object, T_KeysRequired extends keyof T_Object = neve
  * @param T_Object        Type or interface to transform.
  * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  */
 export type RecursivePartialExcept<T_Object, T_KeysRequired extends keyof T_Object = never> = RecursivePartial<Omit<T_Object, T_KeysRequired>> & Pick<Required<T_Object>, T_KeysRequired>;
 /**

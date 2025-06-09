@@ -4,7 +4,7 @@
  * @module Debug
  *
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Renamed from Meta (meta) to Debug.
+ * @since 2.0.0-alpha — Renamed from Meta (meta) to Debug.
  *
  * @example
  * ```ts

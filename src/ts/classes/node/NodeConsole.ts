@@ -38,7 +38,7 @@ import {
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  * 
  * @since 0.1.1
- * @since ___PKG_VERSION___ — Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * @since 2.0.0-alpha — Prompters moved to a {@link NodeConsole_Prompt} property instead.
  * 
  * @experimental
  */
@@ -1003,7 +1003,7 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
  * Used only for {@link NodeConsole}.
  * 
  * @since 0.1.1
- * @since ___PKG_VERSION___ — Removed CmdErrorHandler type.
+ * @since 2.0.0-alpha — Removed CmdErrorHandler type.
  */
 export namespace NodeConsole {
 

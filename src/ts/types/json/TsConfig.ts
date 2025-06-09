@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -13,7 +13,7 @@
  * 
  * Updated 2024-02-11 from {@link https://www.typescriptlang.org/tsconfig | TS docs}.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export interface TsConfig {
 
@@ -51,7 +51,7 @@ export interface TsConfig {
 /**
  * Utility types used by {@link TsConfig} interface.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export namespace TsConfig {
 
@@ -60,7 +60,7 @@ export namespace TsConfig {
      * 
      * @see {@link https://www.typescriptlang.org/tsconfig#compiler-options | TS docs}
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      */
     export interface CompilerOpts {
 
@@ -252,14 +252,14 @@ export namespace TsConfig {
     /**
      * Utility types used in the {@link Compiler} interface.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      */
     export namespace CompilerOpts {
 
         /**
          * Library strings.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-alpha
          */
         export type Lib =
             | "ES5" | "ES2015" | "ES6" | "ES2016" | "ES7" | "ES2017" | "ES2018"
@@ -269,7 +269,7 @@ export namespace TsConfig {
         /**
          * Module strings.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-alpha
          */
         export type Module =
             | "none" | "CommonJs" | "AMD" | "UMD" | "System" | "ES2015" | "ES6"
@@ -278,7 +278,7 @@ export namespace TsConfig {
         /**
          * Module resolution strings.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-alpha
          */
         export type ModuleResolution =
             | "Classic" | "Node10" | "Node" | "Node16" | "NodeNext" | "Bundler";
@@ -286,7 +286,7 @@ export namespace TsConfig {
         /**
          * Target strings.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-alpha
          */
         export type Target =
             | "ES3" | "ES5" | "ES2015" | "ES6" | "ES2016" | "ES2017" | "ES2018"

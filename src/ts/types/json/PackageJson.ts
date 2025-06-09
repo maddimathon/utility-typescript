@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -21,7 +21,7 @@ export interface PackageJson_Overrides {
  * Taken from {@link https://docs.npmjs.com/cli/v11/configuring-npm/package-json | NPM docs}.
  * Last updated 2025-05-14.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @UPGRADE  Add in proper doc blocks for more of the properties.
  */

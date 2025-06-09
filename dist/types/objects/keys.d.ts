@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 /**
@@ -12,7 +12,7 @@
  *
  * @param T_Object  Type with keys.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  */
 export type KeysOptional<T_Object> = Exclude<keyof T_Object, KeysRequired<T_Object>>;
 /**
@@ -20,7 +20,7 @@ export type KeysOptional<T_Object> = Exclude<keyof T_Object, KeysRequired<T_Obje
  *
  * @param T_Object  Type with keys.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  */
 export type KeysRequired<T_Object> = {
     [_Key in keyof T_Object]-?: {} extends Pick<T_Object, _Key> ? never : _Key;

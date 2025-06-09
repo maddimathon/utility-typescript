@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 /**
@@ -12,7 +12,7 @@
  *
  * Updated 2024-02-11 from {@link https://www.typescriptlang.org/tsconfig | TS docs}.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  */
 export interface TsConfig {
     extends?: string | string[];
@@ -45,7 +45,7 @@ export interface TsConfig {
 /**
  * Utility types used by {@link TsConfig} interface.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  */
 export declare namespace TsConfig {
     /**
@@ -53,7 +53,7 @@ export declare namespace TsConfig {
      *
      * @see {@link https://www.typescriptlang.org/tsconfig#compiler-options | TS docs}
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      */
     interface CompilerOpts {
         allowUnreachableCode?: boolean | undefined;
@@ -167,31 +167,31 @@ export declare namespace TsConfig {
     /**
      * Utility types used in the {@link Compiler} interface.
      *
-     * @since 2.0.0-alpha.draft
+     * @since 2.0.0-alpha
      */
     namespace CompilerOpts {
         /**
          * Library strings.
          *
-         * @since 2.0.0-alpha.draft
+         * @since 2.0.0-alpha
          */
         type Lib = "ES5" | "ES2015" | "ES6" | "ES2016" | "ES7" | "ES2017" | "ES2018" | "ES2019" | "ES2020" | "ES2021" | "ES2022" | "ESNext" | "DOM" | "WebWorker" | "ScriptHost";
         /**
          * Module strings.
          *
-         * @since 2.0.0-alpha.draft
+         * @since 2.0.0-alpha
          */
         type Module = "none" | "CommonJs" | "AMD" | "UMD" | "System" | "ES2015" | "ES6" | "ES2020" | "ES2022" | "ESNext" | "Node16" | "Node18" | "NodeNext";
         /**
          * Module resolution strings.
          *
-         * @since 2.0.0-alpha.draft
+         * @since 2.0.0-alpha
          */
         type ModuleResolution = "Classic" | "Node10" | "Node" | "Node16" | "NodeNext" | "Bundler";
         /**
          * Target strings.
          *
-         * @since 2.0.0-alpha.draft
+         * @since 2.0.0-alpha
          */
         type Target = "ES3" | "ES5" | "ES2015" | "ES6" | "ES2016" | "ES2017" | "ES2018" | "ES2019" | "ES2020" | "ES2021" | "ES2022" | "ESNext";
     }

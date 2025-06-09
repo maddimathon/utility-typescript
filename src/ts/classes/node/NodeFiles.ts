@@ -143,7 +143,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @return  Path to file if written, or false on failure.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -206,7 +206,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
      * @param logLevel  Base depth for console messages (via NodeConsole).
      * 
-     * @since ___PKG_VERSION___ — Renamed to delete from deleteFiles.
+     * @since 2.0.0-alpha — Renamed to delete from deleteFiles.
      */
     public delete(
         paths: string[],
@@ -247,7 +247,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -260,7 +260,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Meta
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -276,7 +276,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -289,7 +289,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -302,7 +302,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -315,7 +315,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Filers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -335,7 +335,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @return  Paths within the given directory.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -393,7 +393,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @return  Path to file if written, or false on failure.
      * 
-     * @since ___PKG_VERSION___ — Renamed to write from writeFiles.
+     * @since 2.0.0-alpha — Renamed to write from writeFiles.
      */
     public write(
         path: string,
@@ -466,7 +466,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -489,7 +489,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * 
      * @category Path-makers
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-alpha
      * 
      * @experimental
      */
@@ -587,21 +587,21 @@ export namespace NodeFiles {
         /**
          * Default configuration for {@link NodeFiles.copy}.
          * 
-         * @since ___PKG_VERSION___ — Renamed to copyFile from copyFileArgs.
+         * @since 2.0.0-alpha — Renamed to copyFile from copyFileArgs.
          */
         copyFile: CopyFileArgs;
 
         /**
          * Default configuration for {@link NodeFiles.readDir}.
          * 
-         * @since ___PKG_VERSION___ — Renamed to readDir from readDirArgs.
+         * @since 2.0.0-alpha — Renamed to readDir from readDirArgs.
          */
         readDir: ReadDirArgs;
 
         /**
          * Default configuration for {@link NodeFiles.readFile}.
          * 
-         * @since ___PKG_VERSION___ — Renamed to readFile from readFileArgs.
+         * @since 2.0.0-alpha — Renamed to readFile from readFileArgs.
          */
         readFile: ReadFileArgs;
 
@@ -615,7 +615,7 @@ export namespace NodeFiles {
         /**
          * Default configuration for {@link NodeFiles.write}.
          * 
-         * @since ___PKG_VERSION___ — Renamed to write from writeArgs.
+         * @since 2.0.0-alpha — Renamed to write from writeArgs.
          */
         write: WriteFileArgs;
     };

@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -14,7 +14,7 @@
  * 
  * @param T_Object  Type or interface to convert.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export type Classify<T_Object> = {
     // this exclude means that optional properties are required but their value

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import { execSync as nodeExecSync, } from 'child_process';
@@ -21,7 +21,7 @@ import { NodeConsole_Error, NodeConsole_Prompt, } from './NodeConsole/index.js';
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
  * @since 0.1.1
- * @since 2.0.0-alpha.draft — Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * @since 2.0.0-alpha — Prompters moved to a {@link NodeConsole_Prompt} property instead.
  *
  * @experimental
  */

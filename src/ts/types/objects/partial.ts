@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  * 
  * @packageDocumentation
  */
@@ -22,7 +22,7 @@ import type {
  * @param T_Object        Type or interface to transform.
  * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export type PartialExcept<
     T_Object,
@@ -38,7 +38,7 @@ export type PartialExcept<
  * @param T_Object        Type or interface to transform.
  * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-alpha
  */
 export type RecursivePartialExcept<
     T_Object,

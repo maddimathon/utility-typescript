@@ -19,6 +19,78 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-alpha** — 2025-06-09
+
+### Renamed & Moved
+- AbstractBuildStage.runStage() changed name to runSubStage()
+- Meta type namespace was changed to Debug
+- NodeFiles methods:
+    - deleteFiles() → delete()
+    - writeFiles() → write()
+- NodeFiles types:
+    - NodeFiles.Args.copyFileArgs → NodeFiles.Args.copyFile
+    - NodeFiles.Args.readDirArgs → NodeFiles.Args.readDir
+    - NodeFiles.Args.readFileArgs → NodeFiles.Args.readFile
+    - NodeFiles.Args.writeFileArgs → NodeFiles.Args.writeFile
+- The following type namespaces’ contents are now global: 
+    - Arrays, Functions, Node, StringLiterals
+
+### Removed
+- Removed distinguishArrays option from typeOf() and removed typeOf args
+  completely (now empty)
+- compileTypescript() method from AbstractStage (in build scripts)
+- abstractArgs() static method from AbstractConfigurableClass
+- abstractArgs() static method from AbstractBuildStage
+- NodeFunctions class removed
+- Functions class removed
+- Types:
+    - mergeArgs namespace
+    - MergeObjects
+    - Node namespace (now had no contents)
+    - NodeConsole.CmdErrorHandler
+
+### Misc. Breaking
+- NodeConsole.prompt is now an instance of NodeConsole_Prompt and not a method
+
+### Added
+- AbstractConfigurableClass method - valueOf()
+- NodeFiles methods (untested):
+    - basename()
+    - copyFile()
+    - dirname()
+    - exists()
+    - getStats()
+    - isDirectory()
+    - isFile()
+    - isSymLink()
+    - mkdir()
+    - readDir()
+- Additional NodeConsole_Prompt and NodeConsole_Error classes
+- Basic testing for NodeConsole.prompt (including types)
+- Added cmd method to AbstractStage (in build scripts) - better error handling
+- Types:
+    - Json namespace with common schemas - TsConfig, PackageJson
+    - Classify (with tests)
+    - RecursiveRequired (with tests)
+    - KeysOptional & KeysRequired (with tests)
+    - PartialExcept & RecursivePartialExcept (with tests)
+    - RequiredPartially & RecursiveRequiredPartially (with tests)
+
+### Changed
+- NodeConsole - Better errors and error handling (incluing prompt timeouts and
+  <kbd>cntl<kbd> + <kbd>C<kbd>)
+- Added constructor params optional param to AnyClass type
+- Improved documentation
+- Improved Classify type
+
+### Fixed
+- Corrected vulnerable outdated inherited dependencies — cross-spawn, lodash,
+  minimatch
+- MessageMaker - default node painter now checks for the existance of
+  process.stdout.getColorDepth function
+- Added tests Test types namespace
+
+
 ## **1.0.0** — 2025-05-10
 
 First full release!

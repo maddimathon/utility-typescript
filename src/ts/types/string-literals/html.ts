@@ -14,7 +14,7 @@
  * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_country_codes.asp | W3 Schools}.
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Is now global rather than being a member of the 
+ * @since 2.0.0-alpha — Is now global rather than being a member of the 
  *                            StringLiterals namespace.
  */
 export type CountryCode = "AF" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AQ" | "AG"
@@ -46,7 +46,7 @@ export type CountryCode = "AF" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AQ" | "AG"
  * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_language_codes.asp | W3 Schools}.
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Is now global rather than being a member of the 
+ * @since 2.0.0-alpha — Is now global rather than being a member of the 
  *                            StringLiterals namespace.
  */
 export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an"
@@ -83,7 +83,7 @@ export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an"
  * @param Lang  Optionally restrict the languages to return.
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Is now global rather than being a member of the 
+ * @since 2.0.0-alpha — Is now global rather than being a member of the 
  *                            StringLiterals namespace.
  * 
  * @UPGRADE  Add better compatibility -- this is still a limited range and does 

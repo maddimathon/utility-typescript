@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -15,7 +15,7 @@ import { NodeConsole_Error } from './NodeConsole_Error.js';
 /**
  * Only used by {@link NodeConsole}.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @experimental
  */

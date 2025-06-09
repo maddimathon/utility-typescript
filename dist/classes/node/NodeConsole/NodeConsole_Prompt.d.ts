@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import type { RecursivePartial } from '../../../types/objects/index.js';
@@ -13,7 +13,7 @@ import { MessageMaker } from '../../MessageMaker.js';
 /**
  * Only used by {@link NodeConsole}.
  *
- * @since 2.0.0-alpha.draft
+ * @since 2.0.0-alpha
  *
  * @experimental
  */

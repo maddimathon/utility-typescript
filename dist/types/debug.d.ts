@@ -4,7 +4,7 @@
  * @module Debug
  *
  * @since 0.1.0
- * @since 2.0.0-alpha.draft — Renamed from Meta (meta) to Debug.
+ * @since 2.0.0-alpha — Renamed from Meta (meta) to Debug.
  *
  * @example
  * ```ts
@@ -13,7 +13,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha.draft
+ * @maddimathon/utility-typescript@2.0.0-alpha
  * @license MIT
  */
 import { AnyClass } from './functions/index.js';
