@@ -3,72 +3,56 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 // import type { RecursivePartial } from '../../types/objects/index.js';
 import { AbstractConfigurableClass } from '../../abstracts/AbstractConfigurableClass.js';
-import { mergeArgs, } from '../../../functions/index.js';
-import { NodeFunctions } from '../NodeFunctions.js';
+import { NodeConsole } from '../NodeConsole.js';
+import { NodeFiles } from '../NodeFiles.js';
 /**
  * A configurable class for a single stage of a build system run via npm.
  *
  * To run a build stage, an instance of the class should be constructed.  Then,
- * call the async {@link AbstractBuildStage['run'] | `run` method}.  The
- * {@link AbstractBuildStage['run'] | `run` method} iterates through the
- * {@link AbstractBuildStage['subStages'] | `subStages` property} and calls each
+ * call the async {@link AbstractBuildStage.run | `run` method}.  The
+ * {@link AbstractBuildStage.run | `run` method} iterates through the
+ * {@link AbstractBuildStage.subStages | `subStages` property} and calls each
  * substage as a method of this class (via the
- * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
+ * {@link AbstractBuildStage.runSubStage | abstract `runSubStage` method}).
  *
  * @typeParam SubStage  String literal of substage names to be run during this
  *                      stage.
  * @typeParam Args      Argument object type for the build stage.
+ *
+ * @since 0.4.2
  */
 export class AbstractBuildStage extends AbstractConfigurableClass {
-    /* STATIC
+    /* LOCAL PROPERTIES
      * ====================================================================== */
     /**
-     * Default arguments for new objects.
-     *
-     * @category Args
+     * Colour used for colour-coding this class.
      */
-    static abstractArgs(args) {
-        var _a;
-        const ARGS_DEFAULT = {
-            debug: false,
-            'log-base-level': 0,
-            notice: true,
-            progress: true,
-            verbose: false,
-            argsRecursive: false,
-        };
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        return mergeArgs(ARGS_DEFAULT, args, (_a = args === null || args === void 0 ? void 0 : args.argsRecursive) !== null && _a !== void 0 ? _a : ARGS_DEFAULT.argsRecursive);
-    }
-    /* Args ===================================== */
+    clr;
     /**
-     * Build a complete args object.
+     * The instance of {@link NodeFiles} used within this class.
      *
-     * @category Args
+     * @category Classes
      */
-    buildArgs(args) {
-        const mergedDefault = AbstractBuildStage.abstractArgs(this.ARGS_DEFAULT);
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const merged = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
-        return merged;
-    }
+    fs;
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     *
+     * @category Classes
+     */
+    nc;
     /* CONSTRUCTOR
      * ====================================================================== */
-    constructor(args = {}, clr = 'black') {
+    constructor(args = {}, clr = 'black', utils = {}) {
         super(args);
         this.clr = clr;
-        this.fns = new NodeFunctions();
+        this.nc = utils.nc ?? new NodeConsole();
+        this.fs = utils.fs ?? new NodeFiles({}, { nc: this.nc });
     }
     /* METHODS
      * ====================================================================== */
@@ -101,16 +85,14 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
      *
      * @see {@link AbstractBuildStage.clr}  Default colour for the message.
      *
-     * @param level     Depth level for this message (above the value of
-     *                  {@link AbstractBuildStage.Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     * @param level     Depth level for this message.
      * @param msgArgs   Optional. Argument overrides for the message.
      * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      *
      * @return  An object with arguments separated by message (`msg`) and time.
      */
     msgArgs(level = 0, msgArgs = {}, timeArgs = {}) {
-        var _a, _b, _c, _d, _e, _f;
-        const depth = level + Number((_a = this.args['log-base-level']) !== null && _a !== void 0 ? _a : 0);
+        const depth = level + Number(this.args['log-base-level'] ?? 0);
         const msg = {
             bold: depth == 0 || level <= 1,
             clr: this.clr,
@@ -123,19 +105,19 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
             ...timeArgs,
         };
         if (level <= 0) {
-            msg.linesIn = (_b = msgArgs.linesIn) !== null && _b !== void 0 ? _b : 2;
+            msg.linesIn = msgArgs.linesIn ?? 2;
         }
         if (level > 0) {
-            msg.linesIn = (_c = msgArgs.linesIn) !== null && _c !== void 0 ? _c : 1;
+            msg.linesIn = msgArgs.linesIn ?? 1;
         }
         // if ( level > 1 ) {
         // }
         if (level > 2) {
-            msg.italic = (_d = msgArgs.italic) !== null && _d !== void 0 ? _d : true;
-            msg.linesIn = (_e = msgArgs.linesIn) !== null && _e !== void 0 ? _e : 0;
+            msg.italic = msgArgs.italic ?? true;
+            msg.linesIn = msgArgs.linesIn ?? 0;
         }
         if (level > 3) {
-            msg.clr = (_f = msgArgs.clr) !== null && _f !== void 0 ? _f : 'grey';
+            msg.clr = msgArgs.clr ?? 'grey';
         }
         return { msg, time };
     }
@@ -158,7 +140,7 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
             return;
         }
         const args = this.msgArgs(level, msgArgs, timeArgs);
-        this.fns.nc.timestampLog(msg, args.msg, args.time);
+        this.nc.timestampLog(msg, args.msg, args.time);
     }
     /**
      * Method for printing a log message to the console. Only if
@@ -185,7 +167,7 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
      * This method should probably not be overwritten.
      *
      * Cycles through each substage and runs
-     * {@link AbstractBuildStage['runStage']} if the stage is not excluded or
+     * {@link AbstractBuildStage['runSubStage']} if the stage is not excluded or
      * all sub-stages are included.
      */
     async run() {
@@ -194,11 +176,19 @@ export class AbstractBuildStage extends AbstractConfigurableClass {
         /* loop through the steps in order */
         for (const method of this.subStages) {
             if (this.isSubStageIncluded(method)) {
-                await this.runStage(method);
+                await this.runSubStage(method);
             }
         }
         /* end */
         await this.startEndNotice('end');
     }
 }
+/**
+ * Used only for {@link AbstractBuildStage}.
+ *
+ * @since 0.4.2
+ */
+(function (AbstractBuildStage) {
+    ;
+})(AbstractBuildStage || (AbstractBuildStage = {}));
 //# sourceMappingURL=AbstractBuildStage.js.map

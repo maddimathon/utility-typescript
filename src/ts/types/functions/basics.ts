@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -15,6 +12,15 @@
 /**
  * Refines the function type to only apply to classes.
  * 
- * @param O  Optionally restrict the type of object for the class instances.
+ * @param T_Object           Optionally restrict the type of object for the 
+ *                           class instances.
+ * @param T_ConstructParams  Optionally restrict the constructor params.
+ * 
+ * @since 0.1.0
+ * @since ___PKG_VERSION___ — Is now global rather than being the only member 
+ *                            of the Functions namespace.
  */
-export type AnyClass<O extends Object = Object> = new ( ...args: any[] ) => O;
+export type AnyClass<
+    T_Object extends any = any,
+    T_ConstructParams extends ( any | never )[] = ( any | never )[]
+> = new ( ...args: T_ConstructParams ) => T_Object;

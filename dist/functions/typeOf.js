@@ -3,34 +3,25 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-import { mergeArgs } from './objects/mergeArgs.js';
 /**
  * An alias for the typeof keyword that returns additional options.
  *
  * @category  Debuggers
  *
- * @see {@link typeOf.Args}
- * @see {@link typeOf.TestType}
- * @see {@link typeOf.Return}
+ * @typeParam T_Type  The possible types for the variable being tested. (This
+ *                    helps restrict the results as applicable.)
  *
- * @typeParam T  Type of the variable being checked.
+ * @param variable  To test for type.
  *
- * @param variable  To test for value type.
- * @param _args     Optional configuration. See {@link typeOf.Args}.
+ * @return  Expanded type options.
  *
- * @return Expanded type string.
+ * @since 0.1.0
  */
-export function typeOf(variable, _args = {}) {
-    const args = mergeArgs({
-        distinguishArrays: true,
-    }, _args, false);
+export function typeOf(variable) {
     /*
      * BY VALUE
      */
@@ -57,7 +48,7 @@ export function typeOf(variable, _args = {}) {
             return 'number';
         case 'object':
             // returns
-            if (args.distinguishArrays && Array.isArray(variable)) {
+            if (Array.isArray(variable)) {
                 return 'array';
             }
             return 'object';

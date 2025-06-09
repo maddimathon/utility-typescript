@@ -3,16 +3,12 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import type { RecursivePartial } from '../../types/objects/index.js';
-import { mergeArgs } from '../../functions/index.js';
-import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
+import { AbstractConfigurableClass } from '../abstracts/index.js';
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
 import { NodeConsole_Prompt } from './NodeConsole/index.js';
@@ -24,7 +20,7 @@ import { NodeConsole_Prompt } from './NodeConsole/index.js';
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
  * @since 0.1.1
- * @since 2.0.0-draft  Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * @since 2.0.0-alpha.draft — Prompters moved to a {@link NodeConsole_Prompt} property instead.
  *
  * @experimental
  */
@@ -65,7 +61,6 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
      */
     get ARGS_DEFAULT(): {
         readonly argsRecursive: true;
-        readonly cmdErrorHandler: NodeConsole.CmdErrorHandler;
         readonly msgMaker: {
             readonly msg: {
                 readonly maxWidth: 100;
@@ -249,17 +244,18 @@ export declare class NodeConsole extends AbstractConfigurableClass<NodeConsole.A
 }
 /**
  * Used only for {@link NodeConsole}.
+ *
+ * @since 0.1.1
+ * @since 2.0.0-alpha.draft — Removed CmdErrorHandler type.
  */
 export declare namespace NodeConsole {
     /**
      * Optional configuration for {@link NodeConsole}.
+     *
+     * @since 0.1.1
      */
     type Args = AbstractConfigurableClass.Args & {
         argsRecursive: true;
-        /**
-         * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
-         */
-        cmdErrorHandler: CmdErrorHandler;
         /**
          * Optional overrides used when initializing {@link MessageMaker}.
          */
@@ -278,10 +274,12 @@ export declare namespace NodeConsole {
         /**
          * Optional overrides used when initializing {@link VariableInspector}.
          */
-        varInspect: Partial<VariableInspector.Args> & mergeArgs.Obj;
+        varInspect: Partial<VariableInspector.Args>;
     };
     /**
      * Error thrown from the terminal in {@link NodeConsole.cmd}.
+     *
+     * @since 0.1.1
      */
     type CmdError = {
         status: number;
@@ -292,12 +290,9 @@ export declare namespace NodeConsole {
         stderr?: string;
     };
     /**
-     * Function used to handle errors from the terminal in
-     * {@link NodeConsole.cmd}.
-     */
-    type CmdErrorHandler = (err: string | Error | CmdError) => void;
-    /**
      * Optional configuration for {@link NodeConsole.log}.
+     *
+     * @since 0.1.1
      */
     type MsgArgs = Partial<MessageMaker.MsgArgs> & {
         /**

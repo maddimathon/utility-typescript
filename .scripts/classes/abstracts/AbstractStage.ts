@@ -1,4 +1,4 @@
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -29,7 +29,7 @@ import {
 
 type CmdArgs = Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 0 ];
 
-type GlobArgs = fns.mergeArgs.Obj & GlobOptions;
+type GlobArgs = GlobOptions;
 
 
 
@@ -41,10 +41,17 @@ export abstract class AbstractStage<
     public static get ARGS_ABSTRACT(): AbstractStage.Args<string> {
 
         return {
+
             _: [],
-            ...cls.node.AbstractBuildStage.abstractArgs( {
-                argsRecursive: false,
-            } )
+
+            debug: false,
+            'log-base-level': 0,
+            notice: true,
+            progress: true,
+            verbose: false,
+
+            argsRecursive: false,
+
         } as AbstractStage.Args<string>;
     }
 
@@ -68,7 +75,7 @@ export abstract class AbstractStage<
 
         if ( this.#pkg === undefined ) {
             this.#pkg = JSON.parse(
-                this.fns.fs.readFile( 'package.json' )
+                this.fs.readFile( 'package.json' )
             ) as TU.PackageJson;
         }
 
@@ -126,7 +133,7 @@ export abstract class AbstractStage<
             const name = this.pkg.name.replace( /^@([^\/]+)\//, '$1_' );
             const version = this.pkgVersion.replace( /\./gi, '-' );
 
-            this.#releasePath = this.fns.fs.pathRelative( this.fns.fs.pathResolve(
+            this.#releasePath = this.fs.pathRelative( this.fs.pathResolve(
                 this.pkg.config.paths.releases,
                 `${ name }@${ version }`
             ) );
@@ -220,18 +227,79 @@ export abstract class AbstractStage<
 
     /* UTILITIES ===================================== */
 
+    /**
+     * Runs given string as a terminal command, optional with arguments.
+     * 
+     * @param cmd           Command to run in the terminal.
+     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
+     */
+    public cmd(
+        cmd: string,
+        args: Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
+        literalFalse?: Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 1 ],
+        equals?: Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 2 ],
+    ) {
+
+        // exits process on error
+        try {
+            this.nc.cmd( cmd, args, literalFalse, equals );
+        } catch ( error ) {
+
+            const msgArgs: Partial<cls.MessageMaker.MsgArgs> = {
+                bold: false,
+                clr: 'black',
+                italic: false,
+                maxWidth: null,
+            };
+
+            // exits process
+            if ( typeof error !== 'object' ) {
+                this.nc.timestampLog( 'ERROR caught:\n\n' + String( error ).trim(), msgArgs );
+                process.exit();
+            }
+
+            // returns
+            if (
+                error
+                && typeof error === 'object'
+                && 'message' in error
+                && String( error.message )?.match( /^\s*ENOTEMPTY\b/g )
+            ) {
+                this.nc.timestampLog( 'Error (ENOTEMPTY) caught and ignored during AbstractStage.cmd()', msgArgs );
+                return;
+            }
+
+            const _typedError = error as {
+                message?: string | string[];
+                output?: string | string[];
+                stdout?: string | string[];
+            } | null;
+
+            let _output = _typedError?.output || _typedError?.stdout || _typedError?.message || '[no message found]';
+
+            if ( Array.isArray( _output ) ) {
+                _output = _output.join( '\n' );
+            }
+
+            this.nc.timestampLog( 'ERROR caught:\n\n' + _output.trim(), msgArgs );
+            process.exit();
+        }
+    }
+
 
     /* Building Tools ------------------ */
 
     protected async compileScss(
         input: string,
         output: string,
-        logBaseLevel: number,
+        logLevel: number,
         params: CmdArgs = {},
     ): Promise<void> {
 
         if ( !this.args[ 'css-update' ] ) {
-            this.fns.fs.deleteFiles( this.glob( output ) );
+            this.fs.delete( this.glob( output ) );
         }
 
         const packaging: boolean | null = this.args.packaging || null;
@@ -252,71 +320,24 @@ export abstract class AbstractStage<
             ...params,
         };
 
-        this.verboseLog( `compiling ${ input } to ${ output }...`, 0 + logBaseLevel );
-        this.fns.nc.cmd( `sass ${ input }:${ output }`, args );
+        this.verboseLog( `compiling ${ input } to ${ output }...`, 0 + logLevel );
+        this.cmd( `sass ${ input }:${ output }`, args );
 
         for ( const o of currentReplacements( this ).concat( pkgReplacements( this ) ) ) {
             this.replaceInFiles(
                 output,
                 o.find,
                 o.replace,
-                1 + logBaseLevel,
+                1 + logLevel,
             );
         }
-    }
-
-    protected async compileTypescript(
-        tsconfigPath: string,
-        logBaseLevel: number,
-        params: CmdArgs = {},
-    ): Promise<void> {
-        this.verboseLog( `compiling typescript project ${ tsconfigPath }...`, 0 + logBaseLevel );
-
-        const tsconfig: Partial<{
-            exclude: string | string[];
-            include: string | string[];
-
-            compilerOptions: Partial<{
-                baseUrl: string;
-                noEmit: boolean;
-                outDir: string;
-            }>;
-        }> = JSON.parse( this.fns.fs.readFile( tsconfigPath ) );
-
-        // deleting current files
-        if ( !this.args.watchedEvent && tsconfig.compilerOptions?.noEmit !== true ) {
-
-            const outDir = tsconfig.compilerOptions?.outDir;
-
-            if ( outDir ) {
-
-                const tsconfigDir = tsconfigPath.replace( /\/[^\/]+\.json$/, '/' ).replace( /^[^\/]+\.json$/, './' );
-                this.args.debug && this.progressLog( `tsconfigDir = ${ tsconfigDir }`, ( this.args.verbose ? 1 : 0 ) + logBaseLevel );
-
-                const outDirGlobs = this.fns.fs.pathRelative( this.fns.fs.pathResolve( tsconfigDir, outDir.replace( /(\/+\**)?$/, '' ) ) ) + '/**/*';
-
-                this.verboseLog( `deleting current contents (${ outDirGlobs })...`, 1 + logBaseLevel );
-                this.fns.fs.deleteFiles( this.glob( outDirGlobs ) );
-            }
-        }
-
-        const cmdParams: CmdArgs = {
-            ...params,
-            project: tsconfigPath,
-        };
-
-        this.verboseLog( 'running tsc...', 2 + logBaseLevel );
-        const tscCmd = `tsc ${ this.fns.nc.cmdArgs( cmdParams, true, false ) }`;
-
-        this.args.debug && this.progressLog( tscCmd, ( this.args.verbose ? 3 : 2 ) + logBaseLevel );
-        this.fns.nc.cmd( tscCmd );
     }
 
     protected replaceInFiles(
         globs: string | string[],
         find: ( string | RegExp ) | ( string | RegExp )[],
         replace: string,
-        logBaseLevel: number,
+        logLevel: number,
         args: Partial<{ ignoreCase: boolean; }> = {},
     ): void {
 
@@ -326,7 +347,7 @@ export abstract class AbstractStage<
 
         this.args.debug && this.progressLog(
             `replacing '${ findArr.join( "'|'" ) }' => '${ replace }'`,
-            logBaseLevel,
+            logLevel,
             {
                 linesIn: 0,
                 linesOut: 0,
@@ -336,7 +357,7 @@ export abstract class AbstractStage<
 
         for ( const path of filesArr ) {
 
-            const fileContent = this.fns.fs.readFile( path );
+            const fileContent = this.fs.readFile( path );
 
             for ( const find of findArr ) {
 
@@ -349,7 +370,7 @@ export abstract class AbstractStage<
 
                 if ( fileContent.match( regexp ) !== null ) {
 
-                    this.fns.fs.writeFile(
+                    this.fs.write(
                         path,
                         fileContent.replace(
                             regexp,
@@ -396,8 +417,8 @@ export abstract class AbstractStage<
          * Resolved versions of the directory paths with trailing slashes.
          */
         const resolved = {
-            destination: this.fns.fs.pathResolve( destination ).replace( /\/*$/gi, '/' ),
-            source: this.fns.fs.pathResolve( source ).replace( /\/*$/gi, '/' ),
+            destination: this.fs.pathResolve( destination ).replace( /\/*$/gi, '/' ),
+            source: this.fs.pathResolve( source ).replace( /\/*$/gi, '/' ),
         };
 
         const ignoreGlobs: string[] = fullArgs.includeDefaultIgnoreGlobs ? [
@@ -405,7 +426,7 @@ export abstract class AbstractStage<
         ] : fullArgs.ignoreGlobs;
         ignoreGlobs.push( '**/._*' );
 
-        // Uses NodePath because the resolved paths have already gone through this.fns.fs.pathResolve()
+        // Uses NodePath because the resolved paths have already gone through this.fs.pathResolve()
         const globbedFiles: string[] = this.glob(
             glob.map( g => NodePath.resolve( resolved.source, g ) ),
             {
@@ -479,12 +500,12 @@ export abstract class AbstractStage<
         if ( args.filesOnly ) {
 
             filepaths = filepaths.filter(
-                path => NodeFS.lstatSync( this.fns.fs.pathResolve( path ) ).isFile()
+                path => NodeFS.lstatSync( this.fs.pathResolve( path ) ).isFile()
             );
         }
 
         return relative ? filepaths.map(
-            ( path ) => this.fns.fs.pathRelative( path )
+            ( path ) => this.fs.pathRelative( path )
         ) : filepaths;
     }
 

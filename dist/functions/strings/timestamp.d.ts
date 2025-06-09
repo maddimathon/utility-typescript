@@ -3,15 +3,11 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import type { LangLocaleCode } from '../../types/string-literals/index.js';
-import { mergeArgs } from '../objects/mergeArgs.js';
 /**
  * Formats a date in a predictable way.
  *
@@ -25,14 +21,20 @@ import { mergeArgs } from '../objects/mergeArgs.js';
  * @param _args  Optional.
  *
  * @return  Formatted date string.
+ *
+ * @since 0.1.0
  */
 export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Input): string;
 /**
  * Used only for {@link timestamp | timestamp()}.
+ *
+ * @since 0.1.0
  */
 export declare namespace timestamp {
     /**
      * Optional configuation for {@link timestamp | timestamp()}.
+     *
+     * @since 0.1.0
      */
     type Args = {
         /**
@@ -69,11 +71,11 @@ export declare namespace timestamp {
              * @default
              * { year: 'numeric', month: '2-digit', day: '2-digit' }
              */
-            date: Intl.DateTimeFormatOptions & mergeArgs.Obj;
+            date: Intl.DateTimeFormatOptions;
             /**
              * @default { hour12: false, hour: '2-digit', minute: '2-digit' }
              */
-            time: Intl.DateTimeFormatOptions & mergeArgs.Obj;
+            time: Intl.DateTimeFormatOptions;
         };
         /**
          * Language code used to localize the formatted date.
@@ -96,8 +98,7 @@ export declare namespace timestamp {
      * A partial-ized version of {@link timestamp.Args}. Used for the
      * {@link timestamp | timestamp()} optional input args.
      *
-     * @expandType timestamp.Args
-     * @expandType Partial
+     * @since 0.1.0
      */
     type Args_Input = Partial<Omit<Args, "format">> & {
         format?: Partial<Args['format']>;

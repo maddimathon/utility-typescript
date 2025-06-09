@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -26,6 +23,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<string[]>, "array">>,
             Test.Expect<Test.Exactly<typeof result, "array">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<string[]>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'array' );
@@ -41,6 +62,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<BigInt>, "bigint">>,
             Test.Expect<Test.Exactly<typeof result, "bigint">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<BigInt>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'bigint' );
@@ -56,6 +101,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<boolean>, "boolean">>,
             Test.Expect<Test.Exactly<typeof result, "boolean">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<boolean>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'boolean' );
@@ -73,6 +142,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<typeof _TestClass>, "class">>,
             Test.Expect<Test.Exactly<typeof result, "class">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<typeof _TestClass>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'class' );
@@ -88,6 +181,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<( () => string )>, "function">>,
             Test.Expect<Test.Exactly<typeof result, "function">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<( () => string )>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'function' );
@@ -103,6 +220,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<null>, "null">>,
             Test.Expect<Test.Exactly<typeof result, "null">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<null>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'null' );
@@ -118,6 +259,33 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<number>, "NaN" | "number">>,
             Test.Expect<Test.Exactly<typeof result, "NaN" | "number">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<number>>>,
+
+            Test.Expect<Test.Satisfies<"NaN", typeof result>>,
+            Test.Expect<Test.Satisfies<"number", typeof result>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'number' );
@@ -133,6 +301,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<{ hello: string; }>, "object">>,
             Test.Expect<Test.Exactly<typeof result, "object">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<{ hello: string; }>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'object' );
@@ -148,6 +340,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<string>, "string">>,
             Test.Expect<Test.Exactly<typeof result, "string">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<string>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'string' );
@@ -163,6 +379,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<Symbol>, "symbol">>,
             Test.Expect<Test.Exactly<typeof result, "symbol">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<Symbol>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'symbol' );
@@ -178,6 +418,33 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<typeof Number.NaN>, "NaN" | "number">>,
             Test.Expect<Test.Exactly<typeof result, "NaN" | "number">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<typeof Number.NaN>>>,
+
+            Test.Expect<Test.Satisfies<"NaN", typeof result>>,
+            Test.Expect<Test.Satisfies<"number", typeof result>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "undefined">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"undefined", typeof result>>,
         ];
 
         expect( result ).toBe( 'NaN' );
@@ -193,6 +460,30 @@ describe( 'typeOf()', () => {
             Test.Expect<Test.Exactly<typeOf.Return<undefined>, "undefined">>,
             Test.Expect<Test.Exactly<typeof result, "undefined">>,
             Test.Expect<Test.Exactly<typeof result, typeOf.Return<undefined>>>,
+
+            Test.ExpectNot<Test.Exactly<typeof result, "array">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "bigint">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "boolean">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "class">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "function">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "NaN">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "null">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "number">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "object">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "string">>,
+            Test.ExpectNot<Test.Exactly<typeof result, "symbol">>,
+
+            Test.ExpectNot<Test.Satisfies<"array", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"bigint", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"boolean", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"class", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"function", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"NaN", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"null", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"number", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"object", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"string", typeof result>>,
+            Test.ExpectNot<Test.Satisfies<"symbol", typeof result>>,
         ];
 
         expect( result ).toBe( 'undefined' );

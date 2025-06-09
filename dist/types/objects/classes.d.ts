@@ -1,27 +1,21 @@
 /**
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-import { RequirePartial } from './basics.js';
 /**
  * Converts an object into a class-compatible type that requires all properties
  * to be present, even if their values are undefined.
  *
- * @param T             Type or interface to convert to a class.
- * @param RequiredKeys  Optional. Keys that cannot be undefined. Default `never`.
+ * @param T_Object  Type or interface to convert.
  *
- * @experimental
- * @expand
+ * @since 2.0.0-alpha.draft
  */
-export type Classify<T, RequiredKeys extends keyof T = never> = RequirePartial<T, RequiredKeys> & {
-    [K in Exclude<keyof T, RequiredKeys>]: (T[K] extends undefined ? (T[K] | undefined) : T[K]);
+export type Classify<T_Object> = {
+    [_Key in Exclude<keyof T_Object, never>]: T_Object[_Key];
 };
 //# sourceMappingURL=classes.d.ts.map

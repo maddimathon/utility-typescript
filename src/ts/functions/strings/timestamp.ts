@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -29,6 +26,8 @@ import { mergeArgs } from '../objects/mergeArgs.js';
  * @param _args  Optional.
  * 
  * @return  Formatted date string.
+ * 
+ * @since 0.1.0
  */
 export function timestamp(
     date: Date | null = null,
@@ -93,11 +92,15 @@ export function timestamp(
 
 /**
  * Used only for {@link timestamp | timestamp()}.
+ * 
+ * @since 0.1.0
  */
 export namespace timestamp {
 
     /**
      * Optional configuation for {@link timestamp | timestamp()}.
+     * 
+     * @since 0.1.0
      */
     export type Args = {
 
@@ -139,12 +142,12 @@ export namespace timestamp {
              * @default 
              * { year: 'numeric', month: '2-digit', day: '2-digit' }
              */
-            date: Intl.DateTimeFormatOptions & mergeArgs.Obj;
+            date: Intl.DateTimeFormatOptions;
 
             /**
              * @default { hour12: false, hour: '2-digit', minute: '2-digit' }
              */
-            time: Intl.DateTimeFormatOptions & mergeArgs.Obj;
+            time: Intl.DateTimeFormatOptions;
         };
 
         /**
@@ -170,8 +173,7 @@ export namespace timestamp {
      * A partial-ized version of {@link timestamp.Args}. Used for the
      * {@link timestamp | timestamp()} optional input args.
      * 
-     * @expandType timestamp.Args
-     * @expandType Partial
+     * @since 0.1.0
      */
     export type Args_Input = Partial<Omit<Args, "format">> & {
         format?: Partial<Args[ 'format' ]>;

@@ -1,36 +1,34 @@
 /**
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-// import {
-//     mergeArgs,
-//     timeout,
-// } from '../../../functions/index.js';
 /**
  * Only used by {@link NodeConsole}.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error | Error}
  *
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @experimental
  * @internal
+ * @private
  */
 export class NodeConsole_Error extends Error {
-    // /**
-    //  * A completed args object.
-    //  * 
-    //  * @category Args
-    //  */
-    // protected readonly args: NodeConsole_Error.Args;
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * Represents the name for the type of error.
+     */
+    cause;
+    /**
+     * Represents the name for the type of error.
+     */
+    name = 'NodeConsole_Error';
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -38,10 +36,6 @@ export class NodeConsole_Error extends Error {
      */
     constructor(msg, args) {
         super(msg);
-        /**
-         * Represents the name for the type of error.
-         */
-        this.name = 'NodeConsole_Error';
         this.cause = args.cause;
     }
     /* LOCAL METHODS
@@ -97,12 +91,4 @@ export class NodeConsole_Error extends Error {
      */
     valueOf() { return this.toJSON(); }
 }
-/**
- * Used only for {@link NodeConsole_Error}.
- *
- * @experimental
- */
-(function (NodeConsole_Error) {
-    ;
-})(NodeConsole_Error || (NodeConsole_Error = {}));
 //# sourceMappingURL=NodeConsole_Error.js.map

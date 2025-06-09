@@ -1,6 +1,4 @@
-#!/usr/bin/env tsx
-'use strict';
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -14,7 +12,7 @@ import {
     pkgReplacements,
 } from '../vars/replacements.js';
 
-import { softWrapText } from '../../src/ts/functions/index.js';
+import { escRegExpReplace, softWrapText } from '../../src/ts/functions/index.js';
 import { NodeConsole_Prompt } from 'src/ts/classes/node/index.js';
 
 
@@ -62,7 +60,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
     /* LOCAL METHODS
     * ====================================================================== */
 
-    protected async runStage( stage: Release.Stages ) {
+    protected async runSubStage( stage: Release.Stages ) {
         await this[ stage ]();
     }
 
@@ -134,7 +132,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
                 timeout: 3600000, // an hour?
             };
 
-            this.args.dryrun = await this.fns.nc.prompt.bool( {
+            this.args.dryrun = await this.nc.prompt.bool( {
                 ...promptArgs,
 
                 message: `Is this a dry run?`,
@@ -145,12 +143,12 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
             const inputVersionMessage = 'What version is being released?';
 
             const inputVersionIndent: string = ' '.repeat(
-                ( depth * this.fns.nc.msg.args.msg.tab.length )
+                ( depth * this.nc.msg.args.msg.tab.length )
                 + inputVersionMessage.length
                 + 11
             );
 
-            const inputVersion = ( await this.fns.nc.prompt.input( {
+            const inputVersion = ( await this.nc.prompt.input( {
                 ...promptArgs,
                 message: inputVersionMessage,
 
@@ -160,22 +158,22 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
                         ? true
                         : softWrapText(
                             'The version should be in [MAJOR].[MINOR].[PATCH] format, optionally suffixed with `-alpha[.#]`, `-beta[.#]`, another valid version code, or metadata prefixed with `+`.',
-                            Math.max( 20, ( this.fns.nc.msg.args.msg.maxWidth ?? 80 ) - inputVersionIndent.length )
+                            Math.max( 20, ( this.nc.msg.args.msg.maxWidth ?? 80 ) - inputVersionIndent.length )
                         ).split( /\n/g ).join( '\n' + inputVersionIndent )
                 ),
             } ) ?? '' ).trim();
 
             if ( inputVersion !== this.pkg.version ) {
 
-                const currentPkgJson: string = this.fns.fs.readFile( 'package.json' );
+                const currentPkgJson: string = this.fs.readFile( 'package.json' );
 
                 this.pkg.version = inputVersion;
 
-                this.fns.fs.writeFile(
+                this.fs.write(
                     'package.json',
                     currentPkgJson.replace(
                         /"version":\s*"[^"]*"/gi,
-                        this.fns.fns.escRegExpReplace( `"version": "${ inputVersion }"` )
+                        escRegExpReplace( `"version": "${ inputVersion }"` )
                     ),
                     { force: true }
                 );
@@ -186,7 +184,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
                 // returns
                 if (
-                    ! await this.fns.nc.prompt.bool( {
+                    ! await this.nc.prompt.bool( {
                         ...promptArgs as NodeConsole_Prompt.BoolConfig,
                         message: `Is .releasenotes.md updated?`,
                     } )
@@ -213,14 +211,14 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
             '\n\n\n<!--CHANGELOG_NEW-->\n\n\n'
             + `## **${ this.pkg.version }** — ${ this.datestamp() }`
             + '\n\n'
-            + this.fns.fs.readFile( '.releasenotes.md' ).trim()
+            + this.fs.readFile( '.releasenotes.md' ).trim()
             + '\n\n\n';
 
         // returns
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping changelog updates during dryrun...', 1 );
 
-            this.args.debug && this.fns.nc.varDump( { newChangeLogEntry }, {
+            this.args.debug && this.nc.varDump( { newChangeLogEntry }, {
                 clr: this.clr,
                 depth: 2 + ( this.args[ 'log-base-level' ] ?? 0 ),
                 maxWidth: null,
@@ -229,9 +227,9 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
             return;
         }
 
-        this.fns.fs.writeFile( 'CHANGELOG.md', (
-            this.fns.fs.readFile( 'CHANGELOG.md' )
-                .replace( newEntryRegex, this.fns.fns.escRegExpReplace( newChangeLogEntry ) )
+        this.fs.write( 'CHANGELOG.md', (
+            this.fs.readFile( 'CHANGELOG.md' )
+                .replace( newEntryRegex, escRegExpReplace( newChangeLogEntry ) )
         ), { force: true } );
     }
 
@@ -297,7 +295,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping git commit during dryrun...', 2 );
 
-            this.args.debug && this.fns.nc.varDump( { gitCmd }, {
+            this.args.debug && this.nc.varDump( { gitCmd }, {
                 clr: this.clr,
                 depth: ( this.args.verbose ? 3 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
                 maxWidth: null,
@@ -305,18 +303,18 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         } else {
 
-            this.args.debug && this.fns.nc.varDump( { gitCmd }, {
+            this.args.debug && this.nc.varDump( { gitCmd }, {
                 clr: this.clr,
                 depth: 2 + ( this.args[ 'log-base-level' ] ?? 0 ),
                 maxWidth: null,
             } );
 
-            this.fns.nc.cmd( gitCmd );
-            this.fns.nc.cmd( `git tag -a -f ${ this.pkg.version } -m "release: ${ this.pkgVersion }"` );
-            this.fns.nc.cmd( `git push --tags || echo ''` );
+            this.cmd( gitCmd );
+            this.cmd( `git tag -a -f ${ this.pkg.version } -m "release: ${ this.pkgVersion }"` );
+            this.cmd( `git push --tags || echo ''` );
 
             this.verboseLog( 'pushing to origin...', 2 );
-            this.fns.nc.cmd( 'git push' );
+            this.cmd( 'git push' );
         }
     }
 
@@ -325,7 +323,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
 
         this.verboseLog( 'updating repo metadata...', 2 );
-        const repoUpdateCmd = `gh repo edit ${ this.fns.nc.cmdArgs( {
+        const repoUpdateCmd = `gh repo edit ${ this.nc.cmdArgs( {
             description: this.pkg.description,
             homepage: this.pkg.homepage,
         }, false, false ) }`;
@@ -333,14 +331,14 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping repo updates during dryrun...', 3 );
 
-            this.args.debug && this.fns.nc.varDump( { repoUpdateCmd }, {
+            this.args.debug && this.nc.varDump( { repoUpdateCmd }, {
                 clr: this.clr,
                 depth: ( this.args.verbose ? 4 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
                 maxWidth: null,
             } );
 
         } else {
-            this.fns.nc.cmd( repoUpdateCmd );
+            this.cmd( repoUpdateCmd );
         }
 
 
@@ -348,7 +346,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         const releaseAttachment = `"${ this.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }"`;
 
-        const releaseCmd = `gh release create ${ this.pkgVersion } ${ releaseAttachment } ${ this.fns.nc.cmdArgs( {
+        const releaseCmd = `gh release create ${ this.pkgVersion } ${ releaseAttachment } ${ this.nc.cmdArgs( {
             draft: true,
             'notes-file': '.releasenotes.md',
             title: `${ this.pkgVersion } — ${ this.datestamp() }`,
@@ -357,7 +355,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping github release during dryrun...', 3 );
 
-            this.args.debug && this.fns.nc.varDump( { releaseCmd }, {
+            this.args.debug && this.nc.varDump( { releaseCmd }, {
                 clr: this.clr,
                 depth: ( this.args.verbose ? 4 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
                 maxWidth: null,
@@ -365,13 +363,13 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         } else {
 
-            this.args.debug && this.fns.nc.varDump( { releaseCmd }, {
+            this.args.debug && this.nc.varDump( { releaseCmd }, {
                 clr: this.clr,
                 depth: ( this.args.verbose ? 3 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
                 maxWidth: null,
             } );
 
-            this.fns.nc.cmd( releaseCmd );
+            this.cmd( releaseCmd );
         }
     }
 
@@ -380,7 +378,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         if ( !this.args.dryrun ) {
             this.verboseLog( 'resetting release notes...', 2 );
-            this.fns.fs.writeFile( '.releasenotes.md', [
+            this.fs.write( '.releasenotes.md', [
                 '',
                 '### Breaking',
                 '- ',

@@ -1,13 +1,10 @@
 /**
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import type { RecursivePartial } from '../../../types/objects/index.js';
@@ -16,10 +13,9 @@ import { MessageMaker } from '../../MessageMaker.js';
 /**
  * Only used by {@link NodeConsole}.
  *
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @experimental
- * @internal
  */
 export declare class NodeConsole_Prompt {
     /**

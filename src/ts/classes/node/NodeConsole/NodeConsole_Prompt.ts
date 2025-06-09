@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -31,7 +28,6 @@ import { NodeConsole_Error } from './NodeConsole_Error.js';
  * @since ___PKG_VERSION___
  * 
  * @experimental
- * @internal
  */
 export class NodeConsole_Prompt {
 
@@ -238,7 +234,7 @@ export class NodeConsole_Prompt {
         const timeout = config.timeout ?? this.args.prompt.timeout;
 
 
-        linesIn && console.log( '\n'.repeat( linesIn ) );
+        linesIn && console.log( ' ' + '\n'.repeat( linesIn - 1 ) );
 
         const result: Return | undefined = await run(
             config as Config,
@@ -310,7 +306,10 @@ export class NodeConsole_Prompt {
 
         return this.prompt(
             'bool',
-            inquirer.confirm,
+            ( args, context ) => inquirer.confirm( {
+                default: false,
+                ...args,
+            }, context ),
             mergeArgs( defaultConfig, config, true )
         );
     }
@@ -685,7 +684,7 @@ export namespace NodeConsole_Prompt {
     export type SelectConfig<
         Value extends SelectValue = SelectValue,
     > = Omit<Config<"select", Value>, "default"> & {
-        // these are in Config<"bool"> already
+        // these are in Config<"select"> already
         // message: string;
 
         default?: Value;

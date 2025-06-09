@@ -3,15 +3,12 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-import { arrayUnique, mergeArgs, timestamp, typeOf, } from '../functions/index.js';
+import { arrayUnique, timestamp, typeOf, } from '../functions/index.js';
 /**
  * Inspects the value of a variable for debugging.
  *
@@ -21,6 +18,8 @@ import { arrayUnique, mergeArgs, timestamp, typeOf, } from '../functions/index.j
  * inspection ({@link VariableInspector.prefix}, {@link VariableInspector.type},
  * {@link VariableInspector.value}) or get a json-compatible object representing
  * the inspected value {@link VariableInspector.toJSON}.
+ *
+ * @since 0.1.1
  *
  * @example
  * ```ts
@@ -80,11 +79,10 @@ export class VariableInspector extends AbstractConfigurableClass {
      */
     static get _testClass() {
         class TestClass {
-            constructor() {
-                this.property = 'property sample value';
-                this._getSet = '_getSet sample value';
-            }
+            undefinedProperty;
+            property = 'property sample value';
             static methodName(param) { return param; }
+            _getSet = '_getSet sample value';
             get getSetProp() { return this._getSet; }
             set getSetProp(param) { this._getSet = param; }
         }
@@ -108,7 +106,13 @@ export class VariableInspector extends AbstractConfigurableClass {
             number: Number(207),
             'NaN': Number.NaN,
             string: 'string sample value',
-            stringMultiline: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in\njusto vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper\ninterdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales\naliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero\ndolor faucibus lacus, in tempus metus elit non ante.`,
+            stringMultiline: [
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in',
+                'justo vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper',
+                'interdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales',
+                'aliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero',
+                'dolor faucibus lacus, in tempus metus elit non ante.'
+            ].join('\n'),
             array: ['string sample value', Number(207), {},],
             objectEmpty: {},
             objectSimple: {
@@ -176,7 +180,7 @@ export class VariableInspector extends AbstractConfigurableClass {
         console.log('\n');
         const args = VariableInspector.prototype.buildArgs({
             debug: true,
-            ...(_args !== null && _args !== void 0 ? _args : {})
+            ...(_args ?? {})
         });
         /**
          * Calls `VariableInspector.dump() with args.`.
@@ -221,17 +225,33 @@ export class VariableInspector extends AbstractConfigurableClass {
         };
     }
     /**
-     * Build a complete args object.
+     * Value’s name, used in output.
      *
-     * @category Args
+     * @category Inputs
      */
-    buildArgs(args) {
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        // UPGRADE - this could probably use better typing
-        return mergeArgs(mergedDefault, args, false);
-    }
+    _name;
+    /**
+     * Value to inspect.
+     *
+     * @category Inputs
+     *
+     * @expandType Type
+     */
+    _rawValue;
+    /**
+     * Alias for this.typeOf( this._rawValue ).
+     *
+     * @category Inputs
+     *
+     * @expandType typeOf.Return
+     */
+    _typeOf;
+    /**
+     * These are the properties of the input object, if any.
+     *
+     * @category Inputs
+     */
+    _properties;
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -288,7 +308,7 @@ export class VariableInspector extends AbstractConfigurableClass {
             Object.keys(this._rawValue),
             Object.getOwnPropertyNames(this._rawValue),
             Object.getOwnPropertySymbols(this._rawValue),
-            // Object.getOwnPropertyDescriptors( this._rawValue as object ) as PropName[],
+            // Object.getOwnPropertyDescriptors( this._rawValue as object ),
         ].flat().filter(name => name !== '_getSet');
         return arrayUnique(propertyNames);
     }
@@ -298,7 +318,6 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @category Inputs
      */
     indexProperties() {
-        var _a;
         const properties = [];
         // returns
         if (!this._rawValue) {
@@ -308,7 +327,7 @@ export class VariableInspector extends AbstractConfigurableClass {
         switch (this._typeOf) {
             case 'array':
             case 'object':
-                const constructorName = (_a = this._rawValue.constructor) === null || _a === void 0 ? void 0 : _a.name;
+                const constructorName = this._rawValue.constructor?.name;
                 // returns on match
                 switch (constructorName) {
                     case 'Date':
@@ -401,7 +420,6 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
      */
     type(skipFormatting = false) {
-        var _a, _b;
         /** Filters the type value before return. */
         const typeFilter = (str) => {
             str = str.replace(/(^[\n\s]+|[\n\s]+$)/gi, '');
@@ -416,7 +434,7 @@ export class VariableInspector extends AbstractConfigurableClass {
             case 'NaN':
                 return typeFilter(typeof Number.NaN);
             case 'object':
-                const constructorName = (_b = (_a = this._rawValue.constructor) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : 'Object';
+                const constructorName = this._rawValue.constructor?.name ?? 'Object';
                 return typeFilter(constructorName === 'Object'
                     ? 'object'
                     : constructorName);
@@ -432,7 +450,6 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
      */
     value(skipFormatting = false) {
-        var _a;
         /**
          * Returns a string formatted to represent the
          * value-getting method. (e.g., when using a fallback)
@@ -456,10 +473,10 @@ export class VariableInspector extends AbstractConfigurableClass {
                 }
             }
             if (skipFormatting) {
-                ret.push(str !== null && str !== void 0 ? str : '');
+                ret.push(str ?? '');
             }
             else {
-                ret.push(this.formatter('value', str !== null && str !== void 0 ? str : ''));
+                ret.push(this.formatter('value', str ?? ''));
             }
             return ret.join(' ');
         };
@@ -502,7 +519,7 @@ export class VariableInspector extends AbstractConfigurableClass {
                 return valueFilter(this._rawValue.toString());
             case 'array':
             case 'object':
-                switch ((_a = this._rawValue.constructor) === null || _a === void 0 ? void 0 : _a.name) {
+                switch (this._rawValue.constructor?.name) {
                     /**
                      * DATE
                      */
@@ -620,13 +637,12 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @category Recursion
      */
     _new(variable, args = {}) {
-        var _a, _b, _c;
         const fullArgs = this.buildArgs({
             ...this.args,
             ...this.args.childArgs,
             ...args,
         });
-        fullArgs.formatter = this.mergeArgs((_a = this.args.formatter) !== null && _a !== void 0 ? _a : {}, this.mergeArgs((_b = this.args.childArgs.formatter) !== null && _b !== void 0 ? _b : {}, (_c = args.formatter) !== null && _c !== void 0 ? _c : {}));
+        fullArgs.formatter = this.mergeArgs(this.args.formatter ?? {}, this.mergeArgs(this.args.childArgs.formatter ?? {}, args.formatter ?? {}));
         return new VariableInspector(variable, fullArgs);
     }
     /* Translators ===================================== */
@@ -663,4 +679,14 @@ export class VariableInspector extends AbstractConfigurableClass {
         ].join('\n');
     }
 }
+/**
+ * Used only for {@link VariableInspector}.
+ *
+ * @since 0.1.1
+ */
+(function (VariableInspector) {
+    ;
+    ;
+    ;
+})(VariableInspector || (VariableInspector = {}));
 //# sourceMappingURL=VariableInspector.js.map

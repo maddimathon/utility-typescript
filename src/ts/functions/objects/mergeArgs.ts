@@ -3,21 +3,16 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 
-import type { AnyClass } from '../../types/functions/index.js';
 import type { RecursivePartial } from '../../types/objects/index.js';
 
 
 /**
- * Passing `recursive` as false means that the input type must be a
- * `Partial` (not {@link RecursivePartial}).
+ * Inputs can be undefined, and if so, the default is returned.
  * 
  * @typeParam V  Args object values.
  * @typeParam D  Default object type.
@@ -32,7 +27,19 @@ import type { RecursivePartial } from '../../types/objects/index.js';
  *          either default values or input values, as appropriate.
  */
 export function mergeArgs<
-    D extends mergeArgs.Obj,
+    D extends object,
+>(
+    defaults: D,
+    inputs?: undefined,
+    recursive?: boolean | undefined,
+): D;
+
+/**
+ * Passing `recursive` as false means that the input type must be a `Partial`
+ * (not {@link RecursivePartial}).
+ */
+export function mergeArgs<
+    D extends object,
     I extends Partial<D>,
 >(
     defaults: D,
@@ -41,12 +48,12 @@ export function mergeArgs<
 ): D & I;
 
 /**
- * Passing `recursive` as true means that the input type must actually be a 
+ * Passing `recursive` as true means that the input type may actually be a 
  * {@link RecursivePartial}.
  */
 export function mergeArgs<
-    D extends mergeArgs.Obj,
-    I extends RecursivePartial<D>,
+    D extends object,
+    I extends Partial<D> | RecursivePartial<D>,
 >(
     defaults: D,
     inputs: I,
@@ -54,27 +61,16 @@ export function mergeArgs<
 ): D & I;
 
 /**
- * If inputs is undefined, then the return is just the defaults.
- */
-export function mergeArgs<
-    D extends mergeArgs.Obj,
->(
-    defaults: D,
-    inputs?: undefined,
-    recursive?: boolean | undefined,
-): D;
-
-/**
  * Universal overload.
  */
 export function mergeArgs<
-    D extends mergeArgs.Obj,
+    D extends object,
     I extends Partial<D> | RecursivePartial<D>,
 >(
     defaults: D,
-    inputs: I,
+    inputs?: I | undefined,
     recursive?: boolean | undefined,
-): D & I;
+): D | D & I;
 
 
 /**
@@ -87,9 +83,11 @@ export function mergeArgs<
  * Overloaded for better typing dependent on recursion.
  * 
  * @category Arg Objects
+ * 
+ * @since 0.1.0
  */
 export function mergeArgs<
-    D extends mergeArgs.Obj,
+    D extends object,
     I extends RecursivePartial<D>,
 >(
     defaults: D,
@@ -115,7 +113,7 @@ export function mergeArgs<
     // no need to get any deeper than that
     if ( !recursive ) { return result; }
 
-    const defaultKeys: ( keyof D )[] = Object.keys( defaults );
+    const defaultKeys: ( keyof D )[] = Object.keys( defaults ) as ( keyof D )[];
 
     for ( const key of defaultKeys ) {
         // continues
@@ -160,53 +158,11 @@ export function mergeArgs<
 
         // get deep
         result[ key ] = mergeArgs(
-            defaultValue as mergeArgs.Obj,
+            defaultValue,
             inputValue,
             recursive,
         ) as ( D & I )[ keyof D ];
     }
 
     return result;
-}
-
-
-/**
- * Used only for {@link mergeArgs | mergeArgs()}.
- */
-export namespace mergeArgs {
-
-    /**
-     * Single allowed values for argument objects (i.e., no objects, functions,
-     * or arrays).
-     */
-    export type ArgsSingleValue =
-        | AnyClass
-        | boolean
-        | number
-        | null
-        | string
-        | undefined;
-
-    /**
-     * All allowed values for argument objects.
-     */
-    export type ArgsValue =
-        | ArgsSingleValue
-        | ( ( ...p: any[] ) => void | any | Promise<void | any> )
-        | ArgsSingleValue[];
-
-    /**
-     * Argument objects compatible with {@link mergeArgs | mergeArgs()}.
-     */
-    export type Obj<
-        Keys extends number | string = number | string,
-        ExtraValues extends any = never,
-    > = {
-            [ K in Keys ]:
-            | ArgsValue
-            | Obj
-            | Partial<Obj>
-            | ExtraValues
-            | ( ArgsValue | Obj | Partial<Obj> | ExtraValues )[];
-        };
 }

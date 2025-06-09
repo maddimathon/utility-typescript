@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -14,7 +11,11 @@
 /**
  * All valid ISO country codes.
  * 
- * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_country_codes.asp}
+ * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_country_codes.asp | W3 Schools}.
+ * 
+ * @since 0.1.0
+ * @since ___PKG_VERSION___ — Is now global rather than being a member of the 
+ *                            StringLiterals namespace.
  */
 export type CountryCode = "AF" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AQ" | "AG"
     | "AR" | "AM" | "AW" | "AU" | "AT" | "AZ" | "BS" | "BH" | "BD" | "BB" | "BY"
@@ -40,9 +41,13 @@ export type CountryCode = "AF" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AQ" | "AG"
     | "UZ" | "VU" | "VE" | "VN" | "VG" | "VI" | "WF" | "EH" | "YE" | "ZM" | "ZW";
 
 /**
- * All valid ISO language codes (without locales).
+ * All valid ISO language codes (without locales or script identifiers).
  * 
- * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_language_codes.asp}
+ * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_language_codes.asp | W3 Schools}.
+ * 
+ * @since 0.1.0
+ * @since ___PKG_VERSION___ — Is now global rather than being a member of the 
+ *                            StringLiterals namespace.
  */
 export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an"
     | "hy" | "as" | "av" | "ae" | "ay" | "az" | "bm" | "ba" | "eu" | "be" | "bn"
@@ -64,22 +69,30 @@ export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an"
     | "vo" | "wa" | "cy" | "wo" | "fy" | "xh" | "yi" | "ji" | "yo" | "za" | "zu";
 
 /**
- * A BCP 47 language tag.
+ * A BCP 47 language tag (without any script identifiers).
  * 
- * Updated 2024-09-22 from {@link https://gist.github.com/typpo/b2b828a35e683b9bf8db91b5404f1bd1}
+ * Updated 2024-09-22 from {@link https://gist.github.com/typpo/b2b828a35e683b9bf8db91b5404f1bd1 | typpo on GitHub}.
  * 
  * @example
  * ```ts
  * type EnglishLangLocaleCode = LangLocaleCode<"en">;
- * // evaluates to: "en" | "en-AU" | "en-AU" | "en-CA" | "en-GB" | "en-IE" | "en-IN"
- * //                | "en-IN" | "en-NZ" | "en-US" | "en-ZA"
+ * // evaluates to: "en" | "en-AU" | "en-AU" | "en-CA" | "en-GB" | "en-IE" | 
+ * //               "en-IN" | "en-NZ" | "en-US" | "en-ZA"
  * ```
  * 
  * @param Lang  Optionally restrict the languages to return.
+ * 
+ * @since 0.1.0
+ * @since ___PKG_VERSION___ — Is now global rather than being a member of the 
+ *                            StringLiterals namespace.
+ * 
+ * @UPGRADE  Add better compatibility -- this is still a limited range and does 
+ *           not include script subtag options.
  */
-export type LangLocaleCode<Lang extends LangCode = LangCode> = Lang
-    | ( ( LangCode extends Lang ? string : `${ Lang }-${ string }` ) & (
-        "ar-SA" | "bn-BD" | "bn-IN" | "cs-CZ" | "da-DK" | "de-AT" | "de-CH"
+export type LangLocaleCode<Lang extends LangCode = LangCode> =
+    | Lang
+    | ( LangCode extends Lang ? string : `${ Lang }-${ string }` ) & (
+        | "ar-SA" | "bn-BD" | "bn-IN" | "cs-CZ" | "da-DK" | "de-AT" | "de-CH"
         | "de-DE" | "de-DE" | "el-GR" | "en-AU" | "en-AU" | "en-CA" | "en-GB"
         | "en-IE" | "en-IN" | "en-IN" | "en-NZ" | "en-US" | "en-ZA" | "es-AR"
         | "es-CL" | "es-CO" | "es-ES" | "es-MX" | "es-MX" | "es-US" | "fi-FI"
@@ -88,4 +101,4 @@ export type LangLocaleCode<Lang extends LangCode = LangCode> = Lang
         | "no-NO" | "pl-PL" | "pt-BR" | "pt-PT" | "ro-RO" | "ru-RU" | "sk-SK"
         | "sv-SE" | "ta-IN" | "ta-LK" | "th-TH" | "tr-TR" | "zh-CN" | "zh-HK"
         | "zh-TW"
-    ) );
+    );

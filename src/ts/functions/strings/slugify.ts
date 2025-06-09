@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -19,6 +16,8 @@
  * @param input  String to convert.
  *
  * @return  Slug version of the input string.
+ * 
+ * @since 0.1.0
  * 
  * @source
  */

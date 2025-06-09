@@ -3,17 +3,12 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 
-import { AnyClass } from '../types/functions/index.js';
-
-import { mergeArgs } from './objects/mergeArgs.js';
+import type { AnyClass } from '../types/functions/index.js';
 
 
 /**
@@ -21,36 +16,22 @@ import { mergeArgs } from './objects/mergeArgs.js';
  * 
  * @category  Debuggers
  * 
- * @see {@link typeOf.Args}
- * @see {@link typeOf.TestType}
- * @see {@link typeOf.Return}
+ * @typeParam T_Type  The possible types for the variable being tested. (This 
+ *                    helps restrict the results as applicable.)
  * 
- * @typeParam T  Type of the variable being checked.
+ * @param variable  To test for type.
  * 
- * @param variable  To test for value type.
- * @param _args     Optional configuration. See {@link typeOf.Args}.
+ * @return  Expanded type options.
  * 
- * @return Expanded type string.
+ * @since 0.1.0
  */
-export function typeOf<T extends typeOf.TestType>(
-    variable: T,
-    _args: Partial<typeOf.Args> = {},
-): string & typeOf.Return<T> {
-
-    const args: typeOf.Args = mergeArgs(
-        {
-            distinguishArrays: true,
-        } as typeOf.Args & mergeArgs.Obj,
-        _args,
-        false
-    );
-
+export function typeOf<T_Type extends typeOf.TestType>( variable: T_Type ) {
 
     /*
      * BY VALUE
      */
-    if ( variable === null ) { return 'null' as typeOf.Return<T>; }
-    if ( variable === undefined ) { return 'undefined' as typeOf.Return<T>; }
+    if ( variable === null ) { return 'null' as typeOf.Return<T_Type>; }
+    if ( variable === undefined ) { return 'undefined' as typeOf.Return<T_Type>; }
 
 
     /*
@@ -63,47 +44,67 @@ export function typeOf<T extends typeOf.TestType>(
 
         case 'function':
             return typeof ( variable as Function ).prototype === 'undefined'
-                ? 'function' as typeOf.Return<T>
-                : 'class' as typeOf.Return<T>;
+                ? 'function' as typeOf.Return<T_Type>
+                : 'class' as typeOf.Return<T_Type>;
 
         case 'number':
             // returns
             if ( Number.isNaN( variable as number ) ) {
-                return 'NaN' as typeOf.Return<T>;
+                return 'NaN' as typeOf.Return<T_Type>;
             }
-            return 'number' as typeOf.Return<T>;
+            return 'number' as typeOf.Return<T_Type>;
 
         case 'object':
             // returns
-            if ( args.distinguishArrays && Array.isArray( variable ) ) {
-                return 'array' as typeOf.Return<T>;
+            if ( Array.isArray( variable ) ) {
+                return 'array' as typeOf.Return<T_Type>;
             }
-            return 'object' as typeOf.Return<T>;
+            return 'object' as typeOf.Return<T_Type>;
     }
 
-    return typeOf as typeOf.Return<T>;
+    return typeOf as typeOf.Return<T_Type>;
 }
 
 /**
  * Used only for {@link typeOf | typeOf()}.
+ * 
+ * @since 0.1.0
  */
 export namespace typeOf {
 
     /**
-     * Optional configuation for {@link typeOf | typeOf()}.
+     * Return options for the {@link typeOf | typeOf()}.
+     *
+     * The complete options for return are: `array`, `bigint`, `boolean`,
+     * `class`, `function`, `NaN`, `null`, `number`, `object`, `string`,
+     * `symbol`, `undefined`.
+     *
+     * @param T_Type  Type of variable being tested.
+     * 
+     * @since 0.1.0
      */
-    export type Args = {
+    export type Return<T_Type extends TestType> =
+        | ( T_Type extends any[] ? "array" : never )
+        | ( T_Type extends BigInt ? "bigint" : never )
+        | ( T_Type extends boolean ? "boolean" : never )
+        | ( T_Type extends AnyClass ? "class" : never )
+        | ( T_Type extends ( ( () => any ) | Function ) ? ( T_Type extends AnyClass ? never : "function" ) : never )
+        | ( T_Type extends null ? "null" : never )
+        | ( T_Type extends number ? ( "number" | "NaN" ) : never )
+        | ( T_Type extends ( object | Object ) ? ( Exclude<T_Type & object, Return_NotObject> extends never ? never : "object" ) : never )
+        | ( T_Type extends string ? "string" : never )
+        | ( T_Type extends ( symbol | Symbol ) ? "symbol" : never )
+        | ( T_Type extends undefined ? "undefined" : never );
 
-        /**
-         * If true, arrays will return `'array'` instead of `'object'`.
-         * 
-         * @default true
-         */
-        distinguishArrays: boolean;
-    };
-
-    type ObjectReturn<Type extends TestType> = Type extends (
-        | ( () => any )
+    /**
+     * Types that _are_ objects, but are not actually evaluated as such in the
+     * {@link typeOf | typeOf()} function.
+     * 
+     * @since 0.1.0
+     */
+    export type Return_NotObject =
+        | ( () => any | void )
+        | []
         | any[]
         | AnyClass
         | BigInt
@@ -114,32 +115,16 @@ export namespace typeOf {
         | string
         | symbol
         | Symbol
-        | undefined
-    ) ? never : "object";
-
-    /**
-     * Return options for the {@link typeOf | typeOf()}.
-     * 
-     * @param Type  Type of variable being testing.
-     */
-    export type Return<Type extends TestType> =
-        | ( Type extends any[] ? "array" : never )
-        | ( Type extends BigInt ? "bigint" : never )
-        | ( Type extends boolean ? "boolean" : never )
-        | ( Type extends AnyClass ? "class" : never )
-        | ( Type extends ( ( () => any ) | Function ) ? ( Type extends AnyClass ? never : "function" ) : never )
-        | ( Type extends null ? "null" : never )
-        | ( Type extends number ? ( "number" | "NaN" ) : never )
-        | ( Type extends ( object | Object ) ? ObjectReturn<Type> : never )
-        | ( Type extends string ? "string" : never )
-        | ( Type extends ( symbol | Symbol ) ? "symbol" : never )
-        | ( Type extends undefined ? "undefined" : never );
+        | undefined;
 
     /**
      * Input variable types for the {@link typeOf | typeOf()}.
+     * 
+     * @since 0.1.0
      */
     export type TestType =
-        | ( () => any )
+        | undefined
+        | ( () => any | void )
         | any[]
         | AnyClass
         | BigInt
@@ -151,6 +136,5 @@ export namespace typeOf {
         | Object
         | string
         | symbol
-        | Symbol
-        | undefined;
+        | Symbol;
 }

@@ -14,20 +14,12 @@
  * import { ... } from '@maddimathon/utility-typescript/classes/node';
  * ```
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- * @author Maddi Mathon (www.maddimathon.com)
- * @homepage https://maddimathon.github.io/utility-typescript
- *
- * @license MIT
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 export * from './abstracts/index.js';
 export * from './NodeConsole/index.js';
 export * from './NodeConsole.js';
 export * from './NodeFiles.js';
-export * from './NodeFunctions.js';
 //# sourceMappingURL=index.d.ts.map

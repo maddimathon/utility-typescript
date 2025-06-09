@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -21,12 +18,16 @@
  * 
  * @source
  *
- * @typeParam I  Array item type.
+ * @typeParam T_ArrayItem  Array item type.
  *
  * @param arr  To simplify.
+ * 
  * @return  Unique array.
+ * 
+ * @since 0.1.0
  */
-export function arrayUnique<I>( arr: I[] ): I[] {
+export function arrayUnique<T_ArrayItem>( arr: T_ArrayItem[] ): T_ArrayItem[] {
+
     // returns
     if ( !Array.isArray( arr ) ) { return arr; }
 

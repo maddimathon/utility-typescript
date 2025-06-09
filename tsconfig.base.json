@@ -5,6 +5,7 @@
         "esModuleInterop": true,
         "exactOptionalPropertyTypes": false,
         "forceConsistentCasingInFileNames": true,
+        "lib": [ "ES2020" ],
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,

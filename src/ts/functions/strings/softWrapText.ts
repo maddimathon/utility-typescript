@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -18,6 +15,10 @@
  * 
  * @param text      Text to wrap.
  * @param maxWidth  Optional. Max number of characters per line.
+ * 
+ * @return  Wrapped text.
+ * 
+ * @since 0.1.0
  */
 export function softWrapText(
     text: string,

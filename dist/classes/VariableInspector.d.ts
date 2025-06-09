@@ -3,14 +3,11 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-import type { LangLocaleCode } from '../types/string-literals/index.js';
+import type { LangLocaleCode } from '../types/index.js';
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { typeOf } from '../functions/index.js';
 /**
@@ -22,6 +19,8 @@ import { typeOf } from '../functions/index.js';
  * inspection ({@link VariableInspector.prefix}, {@link VariableInspector.type},
  * {@link VariableInspector.value}) or get a json-compatible object representing
  * the inspected value {@link VariableInspector.toJSON}.
+ *
+ * @since 0.1.1
  *
  * @example
  * ```ts
@@ -103,13 +102,28 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      * @returns  An example, constructed instance for a sample object.
      */
     static sample(_args?: Partial<VariableInspector.Args>): VariableInspector<typeof VariableInspector.sampleComplexObject>;
-    get ARGS_DEFAULT(): VariableInspector.Args;
-    /**
-     * Build a complete args object.
-     *
-     * @category Args
-     */
-    buildArgs(args?: Partial<VariableInspector.Args>): VariableInspector.Args;
+    get ARGS_DEFAULT(): {
+        readonly childArgs: {
+            readonly includeValue: true;
+        };
+        readonly debug: false;
+        readonly equalString: " =";
+        readonly fallbackToJSON: true;
+        readonly formatter: null;
+        readonly includePrefix: true;
+        readonly includeType: true;
+        readonly includeValue: true;
+        readonly indent: "    ";
+        readonly inspectClasses: false;
+        readonly inspectFunctions: false;
+        readonly locale: "en-CA";
+        readonly localizeDates: true;
+        readonly localizeDateOptions: {};
+        readonly localizeNumbers: false;
+        readonly localizeNumberOptions: {};
+        readonly argsRecursive: false;
+        readonly stringQuoteCharacter: "\"";
+    };
     /**
      * Value’s name, used in output.
      *
@@ -247,12 +261,14 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
 }
 /**
  * Used only for {@link VariableInspector}.
+ *
+ * @since 0.1.1
  */
 export declare namespace VariableInspector {
     /**
      * A function for formatting inspection output strings.
      *
-     * @expand
+     * @since 0.1.1
      */
     type Formatter = (str: string) => string;
     /**
@@ -260,13 +276,17 @@ export declare namespace VariableInspector {
      *
      * `_` is used if the applicable formatter is not present.
      *
+     * @since 0.1.1
+     *
      * @expand
      */
     type StageKeys = "_" | "prefix" | "type" | "value" | "via";
     /**
      * Optional configuration for {@link VariableInspector}.
+     *
+     * @since 0.1.1
      */
-    type Args = AbstractConfigurableClass.Args & {
+    interface Args extends AbstractConfigurableClass.Args {
         /**
          * These args should never be recursive.
          */
@@ -407,21 +427,23 @@ export declare namespace VariableInspector {
          * @default '"'
          */
         stringQuoteCharacter: string;
-    };
+    }
     /**
      * The shape used for {@link VariableInspector._properties}.
+     *
+     * @since 0.1.1
      */
-    type Child = {
+    interface Child {
         key: {
             name: number | string | symbol;
             type: "number" | "string" | "symbol";
         };
         vi: VariableInspector;
-    };
+    }
     /**
      * The shape used when converting this object to JSON.
      *
-     * @expandType ReturnType
+     * @since 0.1.1
      */
     interface JSON<Type extends typeOf.TestType = typeOf.TestType> {
         /**
@@ -454,13 +476,15 @@ export declare namespace VariableInspector {
     }
     /**
      * The shape used when converting this object to JSON.
+     *
+     * @since 0.1.1
      */
-    type JSON_Child = {
+    interface JSON_Child {
         key: {
             name: number | string | symbol;
             type: "number" | "string" | "symbol";
         };
         value: JSON;
-    };
+    }
 }
 //# sourceMappingURL=VariableInspector.d.ts.map

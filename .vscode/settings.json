@@ -9,5 +9,8 @@
         "dist/**",
         "docs/**",
         "public/**",
+        
+        ".releasenotes.md",
+        "CHANGELOG.md",
     ],
 }

@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -25,6 +22,10 @@
  * ```
  * 
  * @param str To convert.
+ * 
+ * @return  Escaped string.
+ * 
+ * @since 0.1.0
  */
 export function escRegExpReplace( str: string ): string {
     return str.replace( /\$/g, '$$$$' );

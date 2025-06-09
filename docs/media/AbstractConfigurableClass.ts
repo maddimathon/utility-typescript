@@ -3,90 +3,31 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 
-import { mergeArgs } from '../../functions/index.js';
-import { RecursivePartial } from '../../types/objects/basics.js';
+import type {
+    RecursivePartial,
+} from '../../types/objects/index.js';
+
+import {
+    mergeArgs,
+} from '../../functions/index.js';
 
 
 /**
  * Classes with configurable options set in the constructor.
  * 
+ * @since 0.1.0
+ * 
  * @example
- * class ExampleClass extends AbstractConfigurableClass<ExampleClassArgs> {
- * 
- * 
- *     /* PROPERTIES
- *      * ====================================================================== *\/
- *     
- *     public get ARGS_DEFAULT() {
- *     
- *         return {
- *             argsRecursive: false,
- *         } as const satisfies ExampleClassArgs;
- *     }
- * 
- *     /**
- *      * Build a complete args object.
- *      *\/
- *     public buildArgs( args?: Partial<ExampleClassArgs> ): ExampleClassArgs {
- * 
- *          const mergedDefault = AbstractConfigurableClass.abstractArgs(
- *              this.ARGS_DEFAULT
- *          ) as ExampleClassArgs;
- * 
- *          // using this.mergeArgs here can cause issues because this method is 
- *          // sometimes called from the prototype
- *          return mergeArgs(
- *              mergedDefault,
- *              args ?? {},
- *              this.ARGS_DEFAULT.argsRecursive
- *          );
- *     }
- * 
- * 
- * 
- *     /* CONSTRUCTOR
- *      * ====================================================================== *\/
- * 
- *     public constructor ( args: Partial<ExampleClassArgs> = {} ) {
- *         super( args );
- *     }
- * }
+ * {@includeCode ./AbstractConfigurableClass.example.docs.ts#Example}
  */
 export abstract class AbstractConfigurableClass<
     Args extends AbstractConfigurableClass.Args,
 > {
-
-    /* STATIC
-     * ====================================================================== */
-
-    /**
-     * Default arguments for new objects.
-     * 
-     * @category Args
-     */
-    public static abstractArgs( args: Partial<AbstractConfigurableClass.Args> = {} ): AbstractConfigurableClass.Args {
-
-        const ARGS_DEFAULT: AbstractConfigurableClass.Args = {
-            argsRecursive: false,
-        };
-
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        return mergeArgs(
-            ARGS_DEFAULT,
-            args,
-            args.argsRecursive ?? ARGS_DEFAULT.argsRecursive
-        );
-    }
-
 
 
     /* PROPERTIES
@@ -106,7 +47,14 @@ export abstract class AbstractConfigurableClass<
      * 
      * @category Args
      */
-    public abstract buildArgs( args?: Partial<Args> | RecursivePartial<Args> ): Args;
+    public buildArgs( args?: Partial<Args> | RecursivePartial<Args> ): Args {
+
+        const mergedDefault = this.ARGS_DEFAULT as Args;
+
+        // using this.mergeArgs here can cause issues because 
+        // this method is sometimes called from the prototype
+        return mergeArgs( mergedDefault, args, this.ARGS_DEFAULT.argsRecursive );
+    }
 
 
 
@@ -127,67 +75,19 @@ export abstract class AbstractConfigurableClass<
     /* METHODS
      * ====================================================================== */
 
-    /** 
+    /**
      * An alias for this package's {@link mergeArgs | mergeArgs()}.
      * 
      * @category Aliases
+     * 
+     * @function
      */
-    public mergeArgs<
-        D extends mergeArgs.Obj,
-        I extends Partial<D>,
-    >(
-        defaults: D,
-        inputs: I,
-        recursive?: false | undefined,
-    ): D & I;
-    public mergeArgs<
-        D extends mergeArgs.Obj,
-        I extends RecursivePartial<D>,
-    >(
-        defaults: D,
-        inputs: I,
-        recursive: true,
-    ): D & I;
-    public mergeArgs<
-        D extends mergeArgs.Obj,
-    >(
-        defaults: D,
-        inputs?: undefined,
-        recursive?: boolean | undefined,
-    ): D;
-    public mergeArgs<
-        D extends mergeArgs.Obj,
-        I extends Partial<D> | RecursivePartial<D>,
-    >(
-        defaults: D,
-        inputs: I,
-        recursive?: boolean | undefined,
-    ): D & I;
-
-    public mergeArgs<
-        D extends mergeArgs.Obj,
-        I extends RecursivePartial<D>,
-    >(
-        defaults: D,
-        inputs?: I | undefined,
-        recursive: boolean = false,
-    ) {
-        return mergeArgs<D, I>( defaults, inputs as I, recursive );
-    }
+    public mergeArgs = mergeArgs;
 
 
 
     /* DEFAULT METHODS
      * ====================================================================== */
-
-    /**
-     * The object shape used when converting to JSON.
-     * 
-     * @category Exporters
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
-     */
-    public toJSON(): any { return this; }
 
     /**
      * Overrides the default function to return a string representation of this
@@ -198,21 +98,12 @@ export abstract class AbstractConfigurableClass<
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     public toString(): string { return JSON.stringify( this, null, 4 ); }
-
-    /**
-     * Overrides the default function to return an object representation of this
-     * object.
-     * 
-     * @category Exporters
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
-     * @see {@link AbstractConfigurableClass.toJSON | AbstractConfigurableClass.toJSON()}
-     */
-    public valueOf() { return this.toJSON(); }
 }
 
 /**
  * Used only for {@link AbstractConfigurableClass}.
+ * 
+ * @since 0.1.0
  */
 export namespace AbstractConfigurableClass {
 
@@ -221,7 +112,7 @@ export namespace AbstractConfigurableClass {
      * 
      * @since 0.1.0
      */
-    export type Args = {
+    export interface Args {
 
         /**
          * Whether the arguments should be merged recursively.

@@ -3,11 +3,8 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import { mergeArgs } from '../objects/mergeArgs.js';
@@ -24,9 +21,10 @@ import { mergeArgs } from '../objects/mergeArgs.js';
  * @param _args  Optional.
  *
  * @return  Formatted date string.
+ *
+ * @since 0.1.0
  */
 export function timestamp(date = null, _args = {}) {
-    var _a;
     const DEFAULT_ARGS = {
         date: false,
         time: false,
@@ -43,7 +41,7 @@ export function timestamp(date = null, _args = {}) {
                 minute: '2-digit',
                 // second: '2-digit',
             },
-        }, (_a = _args.format) !== null && _a !== void 0 ? _a : {}),
+        }, _args.format ?? {}),
         lang: 'en-CA',
         separator: ' @ ',
     };

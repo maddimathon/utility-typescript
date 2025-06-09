@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 'use strict';
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 

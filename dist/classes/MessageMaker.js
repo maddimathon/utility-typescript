@@ -3,17 +3,16 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 import { mergeArgs, softWrapText, timestamp, typeOf, } from '../functions/index.js';
 /**
  * A configurable class for formatting message strings for various outputs.
+ *
+ * @since 0.1.1 — Experimental
  *
  * @experimental
  */
@@ -66,7 +65,6 @@ export class MessageMaker extends AbstractConfigurableClass {
                 };
             case 'node':
                 return (line, args = {}) => {
-                    var _a, _b;
                     // returns
                     // if no styling is to be applied, then we can return early
                     if (!args.bold && !args.clr && !args.flag && !args.italic) {
@@ -84,7 +82,7 @@ export class MessageMaker extends AbstractConfigurableClass {
                         /** Background colour slug for this text. */
                         let bg = null;
                         /** Foreground colour slug for this text. */
-                        let fg = (_a = args.clr) !== null && _a !== void 0 ? _a : 'black';
+                        let fg = args.clr ?? 'black';
                         if (args.flag) {
                             if (args.flag == 'reverse' && clrDepth > 4) {
                                 switch (fg) {
@@ -106,7 +104,7 @@ export class MessageMaker extends AbstractConfigurableClass {
                                 }
                             }
                             else {
-                                bg = (_b = args.clr) !== null && _b !== void 0 ? _b : 'black';
+                                bg = args.clr ?? 'black';
                                 fg = clrDepth > 4 ? 'white' : null;
                             }
                         }
@@ -266,11 +264,11 @@ export class MessageMaker extends AbstractConfigurableClass {
      * @category Args
      */
     buildArgs(args) {
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const built = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
-        if ((args === null || args === void 0 ? void 0 : args.msg) && typeof args.msg !== 'function') {
+        const mergedDefault = this.ARGS_DEFAULT;
+        // using this.mergeArgs here can cause issues because 
+        // this method is sometimes called from the prototype
+        const built = mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.argsRecursive);
+        if (args?.msg && typeof args.msg !== 'function') {
             // be should merge these defaults better
             if (typeof mergedDefault.msg !== 'function') {
                 built.msg = mergeArgs(mergedDefault.msg, args.msg, true);
@@ -293,10 +291,9 @@ export class MessageMaker extends AbstractConfigurableClass {
      * @category Args
      */
     msgArgs(args) {
-        var _a, _b, _c;
-        const merged = mergeArgs(this.args.msg, args !== null && args !== void 0 ? args : {}, true);
+        const merged = mergeArgs(this.args.msg, args, false);
         if (merged.maxWidth !== null) {
-            const indentWidth = merged.maxWidth - (((_b = (_a = args === null || args === void 0 ? void 0 : args.tab) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) * ((_c = args === null || args === void 0 ? void 0 : args.depth) !== null && _c !== void 0 ? _c : 0));
+            const indentWidth = merged.maxWidth - ((args?.tab?.length ?? 0) * (args?.depth ?? 0));
             merged.maxWidth = Math.max(10, merged.minWidth, indentWidth);
             if (merged.flag) {
                 merged.maxWidth = merged.maxWidth - 2;
@@ -324,7 +321,7 @@ export class MessageMaker extends AbstractConfigurableClass {
      */
     implodeWithIndent(lines, indent = this.args.msg.tab) {
         return lines.map((line) => {
-            switch (typeOf(line, { distinguishArrays: true, })) {
+            switch (typeOf(line)) {
                 case 'array':
                     return this.implodeWithIndent(line, indent + this.args.msg.tab);
                 case 'string':
@@ -352,7 +349,9 @@ export class MessageMaker extends AbstractConfigurableClass {
                 line = line + ' '.repeat(args.maxWidth - line.length);
             }
         }
-        if (args.flag && this.args.paintFormat === 'node') {
+        if (args.flag
+            && this.args.paintFormat === 'node'
+            && line.match(/^[\s\n]*$/gi) === null) {
             line = ' ' + line + ' ';
         }
         return args.tab.repeat(args.depth) + args.indent + prefix + this.painter(line, args);
@@ -366,7 +365,6 @@ export class MessageMaker extends AbstractConfigurableClass {
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
      */
     msg(msg, _args = {}) {
-        var _a, _b;
         // VariableInspector.dump( { 'MessageMaker.msg() _args': _args } );
         const args = this.msgArgs(_args);
         // if it's an array, we want to join them and then split them again
@@ -377,11 +375,11 @@ export class MessageMaker extends AbstractConfigurableClass {
             msg = softWrapText(msg, args.maxWidth);
         }
         const lines = msg.split(/\n/g);
-        return ('\n'.repeat((_a = args.linesIn) !== null && _a !== void 0 ? _a : 0)
+        return ('\n'.repeat(args.linesIn ?? 0)
             + lines.map((line, index) => {
                 return this.lineMapper(line, args, index > 0 ? args.hangingIndent : '');
             }).join('\n')
-            + '\n'.repeat((_b = args.linesOut) !== null && _b !== void 0 ? _b : 0));
+            + '\n'.repeat(args.linesOut ?? 0));
     }
     /**
      * Formats given messages individually and then joins them on return.
@@ -392,7 +390,6 @@ export class MessageMaker extends AbstractConfigurableClass {
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
      */
     msgs(messages, universalArgs = {}) {
-        var _a, _b, _c;
         // VariableInspector.dump( { 'MessageMaker.msgs() _auniversalArgsrgs': universalArgs } );
         if (!Array.isArray(messages)) {
             messages = [messages];
@@ -404,22 +401,22 @@ export class MessageMaker extends AbstractConfigurableClass {
             linesOut: 0,
         };
         const ret = [];
-        messages.forEach(([msg, args], index) => {
-            var _a, _b;
-            args = this.mergeArgs(defaultUniversalArgs, args !== null && args !== void 0 ? args : {}, true);
-            if (index > 0 && universalArgs.hangingIndent && ((_a = defaultUniversalArgs.joiner) === null || _a === void 0 ? void 0 : _a.match(/\n/g))) {
-                const indent = (_b = universalArgs.hangingIndent) !== null && _b !== void 0 ? _b : this.ARGS_DEFAULT.msg.hangingIndent;
-                args = {
-                    ...args,
+        messages.forEach(([_msg, _args], index) => {
+            _args = this.mergeArgs(defaultUniversalArgs, _args ?? {}, true);
+            if (index > 0
+                && universalArgs.hangingIndent
+                && defaultUniversalArgs.joiner?.match(/\n/g)) {
+                _args = {
+                    ..._args,
                     hangingIndent: '',
-                    indent,
+                    indent: universalArgs.hangingIndent ?? this.ARGS_DEFAULT.msg.hangingIndent,
                 };
             }
-            ret.push(this.msg(msg, args));
+            ret.push(this.msg(_msg, _args));
         });
-        return ('\n'.repeat((_a = universalArgs.linesIn) !== null && _a !== void 0 ? _a : 0)
-            + ret.join((_b = universalArgs.joiner) !== null && _b !== void 0 ? _b : '\n\n')
-            + '\n'.repeat((_c = universalArgs.linesOut) !== null && _c !== void 0 ? _c : 0));
+        return ('\n'.repeat(universalArgs.linesIn ?? 0)
+            + ret.join(universalArgs.joiner ?? '\n\n')
+            + '\n'.repeat(universalArgs.linesOut ?? 0));
     }
     /**
      * Applies colour and font styles to an message for output.
@@ -449,7 +446,6 @@ export class MessageMaker extends AbstractConfigurableClass {
      * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
      */
     timestampMsg(msg, msgArgs = {}, timeArgs = {}) {
-        var _a, _b;
         /** A complete version of the base message arguments. */
         const args_full = this.msgArgs({
             joiner: '\n\n',
@@ -459,27 +455,24 @@ export class MessageMaker extends AbstractConfigurableClass {
         // be MessageMaker.BulkMsgs
         if (typeof msg === 'string') {
             msg = msg ? [[msg]] : [];
-            args_full.joiner = (_a = args_full.joiner) !== null && _a !== void 0 ? _a : '\n';
+            args_full.joiner = args_full.joiner ?? '\n';
         }
         else {
             // = is an array
             msg = msg.map((m) => {
-                var _a;
                 if (typeof m === 'string') {
-                    args_full.joiner = (_a = args_full.joiner) !== null && _a !== void 0 ? _a : '\n';
+                    args_full.joiner = args_full.joiner ?? '\n';
                     m = [m];
                 }
                 const m_arr = m;
                 return m_arr;
             });
         }
-        /** Properly formatted as bulk messages. */
-        const messages = msg;
         // the actual values to be used for the whole message, but ignore when
         // formatting the message parts
         const { depth, linesIn, linesOut, } = args_full;
         /** This is the unpainted string used for the timestamp. */
-        const timePrefix = `[${timestamp((_b = timeArgs.date) !== null && _b !== void 0 ? _b : null, {
+        const timePrefix = `[${timestamp(timeArgs.date ?? null, {
             date: false,
             time: true,
             ...timeArgs.stamp,
@@ -494,6 +487,8 @@ export class MessageMaker extends AbstractConfigurableClass {
                 + ' '.repeat(timePrefix.length + 1)
                 + args_full.tab.repeat(depth)),
         };
+        /** Properly formatted as bulk messages. */
+        const messages = msg;
         /** Compiled strings for each message part. */
         const compiledMessages = {
             message: (messages.length ? ((args_parts.flag ? this.msg(' ', args_parts) : ' ')
@@ -507,10 +502,22 @@ export class MessageMaker extends AbstractConfigurableClass {
                 linesOut: 0,
             }, false)),
         };
-        return ('\n'.repeat(linesIn !== null && linesIn !== void 0 ? linesIn : 0)
+        return ('\n'.repeat(linesIn ?? 0)
             + compiledMessages.timestamp
             + compiledMessages.message
-            + '\n'.repeat(linesOut !== null && linesOut !== void 0 ? linesOut : 0));
+            + '\n'.repeat(linesOut ?? 0));
     }
 }
+/**
+ * Used only for {@link MessageMaker}.
+ *
+ * @since 0.1.1
+ */
+(function (MessageMaker) {
+    ;
+    ;
+    ;
+    ;
+    ;
+})(MessageMaker || (MessageMaker = {}));
 //# sourceMappingURL=MessageMaker.js.map

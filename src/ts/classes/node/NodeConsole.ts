@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -22,7 +19,8 @@ import {
     mergeArgs,
 } from '../../functions/index.js';
 
-import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
+import { AbstractConfigurableClass } from '../abstracts/index.js';
+
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
 
@@ -40,7 +38,7 @@ import {
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  * 
  * @since 0.1.1
- * @since ___PKG_VERSION___  Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * @since ___PKG_VERSION___ — Prompters moved to a {@link NodeConsole_Prompt} property instead.
  * 
  * @experimental
  */
@@ -499,53 +497,9 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
      */
     public get ARGS_DEFAULT() {
 
-        const cmdErrorHandler: NodeConsole.CmdErrorHandler = ( error ) => {
-
-            if ( error instanceof Error ) {
-
-                this.timestampVarDump( { error }, {
-                    clr: 'red',
-                } );
-
-            } else if ( typeof error === 'object' ) {
-
-                this.timestampLog(
-                    [
-                        [ 'Error:', { bold: true } ],
-                        [ (
-                            error.output
-                                ? this.msg.implodeWithIndent( error.output.filter( ( l ) => l !== null ) )
-                                : Object.keys( error )
-                                    .map( ( key ) => `${ key }: ${ error[ key as keyof typeof error ] }` )
-                                    .join( '\n' )
-                        ) ]
-                    ],
-                    {
-                        clr: 'red',
-                    }
-                );
-
-            } else {
-
-                this.timestampLog(
-                    [
-                        [ 'Error:', { bold: true } ],
-                        [ error ]
-                    ],
-                    {
-                        clr: 'red',
-                    }
-                );
-            }
-
-            process.exit( 1 );
-        };
-
         return {
 
             argsRecursive: true,
-
-            cmdErrorHandler,
 
             msgMaker: {
                 msg: {
@@ -578,19 +532,13 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
      * 
      * @category Args
      */
-    public buildArgs( args?: RecursivePartial<NodeConsole.Args> ): NodeConsole.Args {
+    public override buildArgs( args?: RecursivePartial<NodeConsole.Args> ): NodeConsole.Args {
 
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(
-            this.ARGS_DEFAULT
-        ) as NodeConsole.Args;
+        const mergedDefault = this.ARGS_DEFAULT as NodeConsole.Args;
 
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const merged = mergeArgs(
-            mergedDefault,
-            args ?? {},
-            this.ARGS_DEFAULT.argsRecursive
-        );
+        // using this.mergeArgs here can cause issues because 
+        // this method is sometimes called from the prototype
+        const merged = mergeArgs( mergedDefault, args, this.ARGS_DEFAULT.argsRecursive );
 
         if ( args?.msgMaker ) {
 
@@ -626,6 +574,24 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
         super( args );
         this.msg = new MessageMaker( this.args.msgMaker );
         this.prompt = new NodeConsole_Prompt( this.msg, this.args );
+
+        this.cmd = this.cmd.bind( this );
+        this.cmdArgs = this.cmdArgs.bind( this );
+        this.debug = this.debug.bind( this );
+        this.debugs = this.debugs.bind( this );
+        this.h1 = this.h1.bind( this );
+        this.h2 = this.h2.bind( this );
+        this.h3 = this.h3.bind( this );
+        this.heading = this.heading.bind( this );
+        this.log = this.log.bind( this );
+        this.logs = this.logs.bind( this );
+        this.sep = this.sep.bind( this );
+        this.separator = this.separator.bind( this );
+        this.timestampLog = this.timestampLog.bind( this );
+        this.timestampVarDump = this.timestampVarDump.bind( this );
+        this.varDump = this.varDump.bind( this );
+        this.warn = this.warn.bind( this );
+        this.warns = this.warns.bind( this );
     }
 
 
@@ -653,16 +619,12 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
         equals?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 2 ],
     ): void {
 
-        try {
-            nodeExecSync(
-                `${ cmd } ${ this.cmdArgs( args, literalFalse, equals ) }`,
-                {
-                    encoding: 'utf-8',
-                },
-            );
-        } catch ( error ) {
-            this.args.cmdErrorHandler( error as string | Error | NodeConsole.CmdError );
-        }
+        nodeExecSync(
+            `${ cmd } ${ this.cmdArgs( args, literalFalse, equals ) }`,
+            {
+                encoding: 'utf-8',
+            },
+        );
     }
 
     /**
@@ -1039,20 +1001,20 @@ export class NodeConsole extends AbstractConfigurableClass<NodeConsole.Args> {
 
 /**
  * Used only for {@link NodeConsole}.
+ * 
+ * @since 0.1.1
+ * @since ___PKG_VERSION___ — Removed CmdErrorHandler type.
  */
 export namespace NodeConsole {
 
     /**
      * Optional configuration for {@link NodeConsole}.
+     * 
+     * @since 0.1.1
      */
     export type Args = AbstractConfigurableClass.Args & {
 
         argsRecursive: true;
-
-        /**
-         * Error handler to use for terminal commands in {@link NodeConsole.cmd}.
-         */
-        cmdErrorHandler: CmdErrorHandler;
 
         /**
          * Optional overrides used when initializing {@link MessageMaker}.
@@ -1078,11 +1040,13 @@ export namespace NodeConsole {
         /**
          * Optional overrides used when initializing {@link VariableInspector}.
          */
-        varInspect: Partial<VariableInspector.Args> & mergeArgs.Obj;
+        varInspect: Partial<VariableInspector.Args>;
     };
 
     /**
      * Error thrown from the terminal in {@link NodeConsole.cmd}.
+     * 
+     * @since 0.1.1
      */
     export type CmdError = {
         status: number;
@@ -1094,13 +1058,9 @@ export namespace NodeConsole {
     };
 
     /**
-     * Function used to handle errors from the terminal in
-     * {@link NodeConsole.cmd}.
-     */
-    export type CmdErrorHandler = ( err: string | Error | CmdError ) => void;
-
-    /**
      * Optional configuration for {@link NodeConsole.log}.
+     * 
+     * @since 0.1.1
      */
     export type MsgArgs = Partial<MessageMaker.MsgArgs> & {
 

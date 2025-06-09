@@ -3,16 +3,13 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import { execSync as nodeExecSync, } from 'child_process';
 import { escRegExpReplace, mergeArgs, } from '../../functions/index.js';
-import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
+import { AbstractConfigurableClass } from '../abstracts/index.js';
 import { MessageMaker } from '../MessageMaker.js';
 import { VariableInspector } from '../VariableInspector.js';
 import { NodeConsole_Error, NodeConsole_Prompt, } from './NodeConsole/index.js';
@@ -24,7 +21,7 @@ import { NodeConsole_Error, NodeConsole_Prompt, } from './NodeConsole/index.js';
  * @see {@link MessageMaker}  Used to format strings for output.  Initialized in the constructor.
  *
  * @since 0.1.1
- * @since 2.0.0-draft  Prompters moved to a {@link NodeConsole_Prompt} property instead.
+ * @since 2.0.0-alpha.draft — Prompters moved to a {@link NodeConsole_Prompt} property instead.
  *
  * @experimental
  */
@@ -232,7 +229,7 @@ export class NodeConsole extends AbstractConfigurableClass {
                     bold: false,
                     italic: false,
                     depth: 1,
-                    ...msgArgs !== null && msgArgs !== void 0 ? msgArgs : {},
+                    ...msgArgs ?? {},
                 };
                 nc.timestampVarDump(inspectorVar, inspectorMsgArgs);
             }
@@ -363,42 +360,28 @@ export class NodeConsole extends AbstractConfigurableClass {
         }
         return nc;
     }
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * A local instance of {@link MessageMaker} initialized using
+     * `{@link NodeConsole.Args}.msgMaker`.
+     *
+     * @category  Utilities
+     */
+    msg;
+    /**
+     * Public alias for internal prompting methods.
+     *
+     * @category Interactive
+     */
+    prompt;
     /* Args ===================================== */
     /**
      * @category Args
      */
     get ARGS_DEFAULT() {
-        const cmdErrorHandler = (error) => {
-            if (error instanceof Error) {
-                this.timestampVarDump({ error }, {
-                    clr: 'red',
-                });
-            }
-            else if (typeof error === 'object') {
-                this.timestampLog([
-                    ['Error:', { bold: true }],
-                    [(error.output
-                            ? this.msg.implodeWithIndent(error.output.filter((l) => l !== null))
-                            : Object.keys(error)
-                                .map((key) => `${key}: ${error[key]}`)
-                                .join('\n'))]
-                ], {
-                    clr: 'red',
-                });
-            }
-            else {
-                this.timestampLog([
-                    ['Error:', { bold: true }],
-                    [error]
-                ], {
-                    clr: 'red',
-                });
-            }
-            process.exit(1);
-        };
         return {
             argsRecursive: true,
-            cmdErrorHandler,
             msgMaker: {
                 msg: {
                     maxWidth: 100,
@@ -426,11 +409,11 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @category Args
      */
     buildArgs(args) {
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const merged = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
-        if (args === null || args === void 0 ? void 0 : args.msgMaker) {
+        const mergedDefault = this.ARGS_DEFAULT;
+        // using this.mergeArgs here can cause issues because 
+        // this method is sometimes called from the prototype
+        const merged = mergeArgs(mergedDefault, args, this.ARGS_DEFAULT.argsRecursive);
+        if (args?.msgMaker) {
             merged.msgMaker = MessageMaker.prototype.buildArgs(mergeArgs(mergedDefault.msgMaker, args.msgMaker, MessageMaker.prototype.ARGS_DEFAULT.argsRecursive));
         }
         return merged;
@@ -443,8 +426,7 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @category Args
      */
     get maxWidth() {
-        var _a, _b, _c;
-        return (_c = (_b = (_a = this.args.msgMaker) === null || _a === void 0 ? void 0 : _a.msg) === null || _b === void 0 ? void 0 : _b.maxWidth) !== null && _c !== void 0 ? _c : 120;
+        return this.args.msgMaker?.msg?.maxWidth ?? 120;
     }
     /* CONSTRUCTOR
      * ====================================================================== */
@@ -452,6 +434,23 @@ export class NodeConsole extends AbstractConfigurableClass {
         super(args);
         this.msg = new MessageMaker(this.args.msgMaker);
         this.prompt = new NodeConsole_Prompt(this.msg, this.args);
+        this.cmd = this.cmd.bind(this);
+        this.cmdArgs = this.cmdArgs.bind(this);
+        this.debug = this.debug.bind(this);
+        this.debugs = this.debugs.bind(this);
+        this.h1 = this.h1.bind(this);
+        this.h2 = this.h2.bind(this);
+        this.h3 = this.h3.bind(this);
+        this.heading = this.heading.bind(this);
+        this.log = this.log.bind(this);
+        this.logs = this.logs.bind(this);
+        this.sep = this.sep.bind(this);
+        this.separator = this.separator.bind(this);
+        this.timestampLog = this.timestampLog.bind(this);
+        this.timestampVarDump = this.timestampVarDump.bind(this);
+        this.varDump = this.varDump.bind(this);
+        this.warn = this.warn.bind(this);
+        this.warns = this.warns.bind(this);
     }
     /* METHODS
      * ====================================================================== */
@@ -467,14 +466,9 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      */
     cmd(cmd, args = {}, literalFalse, equals) {
-        try {
-            nodeExecSync(`${cmd} ${this.cmdArgs(args, literalFalse, equals)}`, {
-                encoding: 'utf-8',
-            });
-        }
-        catch (error) {
-            this.args.cmdErrorHandler(error);
-        }
+        nodeExecSync(`${cmd} ${this.cmdArgs(args, literalFalse, equals)}`, {
+            encoding: 'utf-8',
+        });
     }
     /**
      * Formats an arguments object into a command-line string of arguments.
@@ -528,8 +522,7 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @see {@link MessageMaker.msg}  Used to format the message.
      */
     log(msg, args = {}) {
-        var _a;
-        console[(_a = args.via) !== null && _a !== void 0 ? _a : 'log'](this.msg.msg(msg, args));
+        console[args.via ?? 'log'](this.msg.msg(msg, args));
     }
     /**
      * Outputs the given message to the console.
@@ -539,11 +532,10 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @see {@link MessageMaker.msg}  Used to format the message.
      */
     logs(msgs, args = {}) {
-        var _a;
         if (!Array.isArray(msgs)) {
             msgs = [msgs];
         }
-        console[(_a = args.via) !== null && _a !== void 0 ? _a : 'log'](this.msg.msgs(msgs, args));
+        console[args.via ?? 'log'](this.msg.msgs(msgs, args));
     }
     /**
      * Outputs the given message to the console prefixed with a timestamp.
@@ -557,8 +549,7 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @param timeArgs  Optional. Overrides for default message arguments. Used only for the timestamp.
      */
     timestampLog(msg, args = {}, timeArgs = {}) {
-        var _a;
-        console[(_a = args.via) !== null && _a !== void 0 ? _a : 'log'](this.msg.timestampMsg(msg, args, timeArgs));
+        console[args.via ?? 'log'](this.msg.timestampMsg(msg, args, timeArgs));
     }
     /**
      * Outputs the given message to the console prefixed with a timestamp.
@@ -595,21 +586,20 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @see {@link MessageMaker.msg}  Used to format the message.
      */
     heading(heading, level, _args = {}) {
-        var _a, _b, _c, _d, _e, _f;
         const args = {
             bold: true,
             joiner: '\n',
             ..._args,
             linesIn: 2,
             linesOut: 1,
-            maxWidth: (_a = _args.maxWidth) !== null && _a !== void 0 ? _a : this.maxWidth,
+            maxWidth: _args.maxWidth ?? this.maxWidth,
         };
         let messages = [
             [heading],
         ];
         switch (level) {
             case 1:
-                args.clr = (_b = args.clr) !== null && _b !== void 0 ? _b : null;
+                args.clr = args.clr ?? null;
                 args.linesIn = 3;
                 messages = [
                     [heading.toUpperCase(), { flag: true, fullWidth: true }],
@@ -617,7 +607,7 @@ export class NodeConsole extends AbstractConfigurableClass {
                 ];
                 break;
             case 2:
-                args.clr = (_c = args.clr) !== null && _c !== void 0 ? _c : 'purple';
+                args.clr = args.clr ?? 'purple';
                 args.maxWidth = this.maxWidth * 2 / 3;
                 messages = [
                     [heading, { flag: true, fullWidth: true }],
@@ -625,7 +615,7 @@ export class NodeConsole extends AbstractConfigurableClass {
                 ];
                 break;
             case 3:
-                args.clr = (_d = args.clr) !== null && _d !== void 0 ? _d : 'turquoise';
+                args.clr = args.clr ?? 'turquoise';
                 args.maxWidth = this.maxWidth / 3;
                 messages = [
                     [heading, { flag: true, fullWidth: true }],
@@ -633,14 +623,14 @@ export class NodeConsole extends AbstractConfigurableClass {
                 ];
                 break;
             default:
-                args.clr = (_e = args.clr) !== null && _e !== void 0 ? _e : 'green';
+                args.clr = args.clr ?? 'green';
                 messages = [
                     [heading, { flag: true }],
                     ['- '.repeat(Math.ceil(Math.min(heading.length, args.maxWidth / 2) / 2 + 1.5)).trim()],
                 ];
                 break;
         }
-        console[(_f = args.via) !== null && _f !== void 0 ? _f : 'log'](this.msg.msgs(messages, args));
+        console[args.via ?? 'log'](this.msg.msgs(messages, args));
     }
     /**
      * Outputs a separator string to the console.
@@ -650,15 +640,14 @@ export class NodeConsole extends AbstractConfigurableClass {
      * @see {@link MessageMaker.msg}  Used to format the message.
      */
     separator(args = {}) {
-        var _a, _b, _c, _d, _e;
         const quarterWidth = this.maxWidth / 4;
         const padding = ' '.repeat(quarterWidth);
         const defaultArgs = {
             bold: true,
             clr: 'grey',
-            ...((_b = (_a = this.args.separator) === null || _a === void 0 ? void 0 : _a[1]) !== null && _b !== void 0 ? _b : {}),
+            ...(this.args.separator?.[1] ?? {}),
         };
-        console[(_c = args.via) !== null && _c !== void 0 ? _c : 'log'](this.msg.msg((_e = (_d = this.args.separator) === null || _d === void 0 ? void 0 : _d[0]) !== null && _e !== void 0 ? _e : [
+        console[args.via ?? 'log'](this.msg.msg(this.args.separator?.[0] ?? [
             '',
             padding + '- '.repeat(quarterWidth).trim() + padding,
             '',

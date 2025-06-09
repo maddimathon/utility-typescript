@@ -3,11 +3,8 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 import type { RecursivePartial } from '../types/objects/index.js';
@@ -15,6 +12,8 @@ import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass
 import { timestamp } from '../functions/index.js';
 /**
  * A configurable class for formatting message strings for various outputs.
+ *
+ * @since 0.1.1 — Experimental
  *
  * @experimental
  */
@@ -125,7 +124,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      *
      * @category Args
      */
-    msgArgs<InputArgs extends RecursivePartial<MessageMaker.MsgArgs>>(args?: InputArgs): MessageMaker.MsgArgs & InputArgs;
+    msgArgs<InputArgs extends Partial<MessageMaker.MsgArgs>>(args?: InputArgs): MessageMaker.MsgArgs & InputArgs;
     constructor(args?: RecursivePartial<MessageMaker.Args>);
     /**
      * Joins string arrays with a single new line and adds an indent to the
@@ -160,7 +159,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
      */
-    msg(msg: string | string[], _args?: RecursivePartial<MessageMaker.MsgArgs>): string;
+    msg(msg: string | string[], _args?: Partial<MessageMaker.MsgArgs>): string;
     /**
      * Formats given messages individually and then joins them on return.
      *
@@ -185,20 +184,24 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
      * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
      */
-    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, msgArgs?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: RecursivePartial<MessageMaker.MsgArgs> & Partial<{
+    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, msgArgs?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: Partial<MessageMaker.MsgArgs> & Partial<{
         date: Date;
         stamp: timestamp.Args_Input;
     }>): string;
 }
 /**
  * Used only for {@link MessageMaker}.
+ *
+ * @since 0.1.1
  */
 export declare namespace MessageMaker {
     /**
      * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter`
      * function.
+     *
+     * @since 0.1.1
      */
-    type AnsiColours = {
+    interface AnsiColours {
         /**
          * 4-bit colours to be used.
          *
@@ -230,11 +233,13 @@ export declare namespace MessageMaker {
         24: {
             [C in Colour | "light-grey" | "white"]: string;
         };
-    };
+    }
     /**
      * Optional configuration for {@link MessageMaker}.
+     *
+     * @since 0.1.1
      */
-    type Args = AbstractConfigurableClass.Args & {
+    interface Args extends AbstractConfigurableClass.Args {
         /**
          * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter` function.
          *
@@ -269,29 +274,31 @@ export declare namespace MessageMaker {
          * @default false
          */
         paintIfEmpty: boolean;
-    };
+    }
     /**
      * Input value for multiple individually-formatted messages.  Used by
      * {@link MessageMaker.msg}.
      *
      * `{@link MessageMaker.MsgArgs}.linesIn` and
      * `{@link MessageMaker.MsgArgs}.linesOut` are omitted from args because in
-     * bulk messages, they should just be a string in the `messages` param array.
+     * bulk messages, they should just be a string in the `messages` param
+     * array.
      *
-     * @expandType RecursivePartial
+     * @since 0.1.1
      */
     type BulkMsgs = ([string | string[], RecursivePartial<Omit<MessageMaker.MsgArgs, "linesIn" | "linesOut">> | undefined] | [string | string[]])[];
     /**
      * Colour slugs that can be used for formatting.
      *
-     * @see {@link MessageMaker.painter}
-     * @see {@link MessageMaker.PainterArgs}
+     * @since 0.1.1
      */
     type Colour = "red" | "orange" | "yellow" | "green" | "turquoise" | "blue" | "purple" | "pink" | "grey" | "black";
     /**
      * Optional configuration for {@link MessageMaker.msg}.
+     *
+     * @since 0.1.1
      */
-    type MsgArgs = PainterArgs & {
+    interface MsgArgs extends PainterArgs {
         /**
          * If defined, an indent is added to every line.  This is best for
          * creating visual hierarchies.  Indents count towards the
@@ -356,22 +363,26 @@ export declare namespace MessageMaker {
          * @default '    '
          */
         tab: string;
-    };
+    }
     /**
      * Optional configuration for {@link MessageMaker.msgs}.
+     *
+     * @since 0.1.1
      */
-    type BulkMsgArgs = MsgArgs & {
+    interface BulkMsgArgs extends MsgArgs {
         /**
          * Used to join bulk strings together.
          *
          * @default '\n\n'
          */
         joiner: string;
-    };
+    }
     /**
      * Optional configuration for {@link MessageMaker.painter}.
+     *
+     * @since 0.1.1
      */
-    type PainterArgs = {
+    interface PainterArgs {
         /**
          * If true, applies bold font styles.
          *
@@ -403,6 +414,6 @@ export declare namespace MessageMaker {
          * @default false
          */
         italic: boolean;
-    };
+    }
 }
 //# sourceMappingURL=MessageMaker.d.ts.map

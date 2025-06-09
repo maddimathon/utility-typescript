@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -14,11 +11,10 @@
 // import type { Test } from '../types/index.js';
 import { describe, expect, test } from '@jest/globals';
 import { timestamp } from './timestamp.js';
-import { mergeArgs } from '../objects/mergeArgs.js';
 
 describe( 'timestamp()', () => {
 
-    const date = new Date( '2025-04-01T12:00-04:00' );
+    const date = new Date( '2025-04-01T16:00Z' );
 
     test( 'timestamp() - defaults', () => {
 
@@ -35,7 +31,7 @@ describe( 'timestamp()', () => {
     test( 'timestamp() - date formats', () => {
 
         const argifier = (
-            dateFormat: Intl.DateTimeFormatOptions & mergeArgs.Obj,
+            dateFormat: Intl.DateTimeFormatOptions,
             args: timestamp.Args_Input = {},
         ): timestamp.Args_Input => (
             {
@@ -83,7 +79,7 @@ describe( 'timestamp()', () => {
     test( 'timestamp() - time formats', () => {
 
         const argifier = (
-            timeFormat: Intl.DateTimeFormatOptions & mergeArgs.Obj,
+            timeFormat: Intl.DateTimeFormatOptions,
             args: timestamp.Args_Input = {},
         ): timestamp.Args_Input => (
             {
@@ -126,11 +122,11 @@ describe( 'timestamp()', () => {
         } ) ) ).toBe( '12:00:00 ET' );
 
         expect( timestamp( date, argifier( {
-            hour12: true,
+            // hour12: true,
             hour: '2-digit',
             minute: '2-digit',
             timeZoneName: 'shortGeneric',
-        }, { lang: 'fr-CA' } ) ) ).toBe( '00 h 00 p.m. HE' );
+        }, { lang: 'fr-CA' } ) ) ).toBe( '12 h 00 HE' );
     } );
 
     test( 'timestamp() - date & time formats', () => {

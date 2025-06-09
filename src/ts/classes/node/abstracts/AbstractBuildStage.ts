@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -15,67 +12,31 @@
 
 import { AbstractConfigurableClass } from '../../abstracts/AbstractConfigurableClass.js';
 
-import {
-    mergeArgs,
-} from '../../../functions/index.js';
-
 import { MessageMaker } from '../../MessageMaker.js';
 import { NodeConsole } from '../NodeConsole.js';
-import { NodeFunctions } from '../NodeFunctions.js';
+import { NodeFiles } from '../NodeFiles.js';
 
 
 /**
  * A configurable class for a single stage of a build system run via npm.
  *
  * To run a build stage, an instance of the class should be constructed.  Then,
- * call the async {@link AbstractBuildStage['run'] | `run` method}.  The
- * {@link AbstractBuildStage['run'] | `run` method} iterates through the
- * {@link AbstractBuildStage['subStages'] | `subStages` property} and calls each
+ * call the async {@link AbstractBuildStage.run | `run` method}.  The
+ * {@link AbstractBuildStage.run | `run` method} iterates through the
+ * {@link AbstractBuildStage.subStages | `subStages` property} and calls each
  * substage as a method of this class (via the
- * {@link AbstractBuildStage['runStage'] | abstract `runStage` method}).
+ * {@link AbstractBuildStage.runSubStage | abstract `runSubStage` method}).
  *
  * @typeParam SubStage  String literal of substage names to be run during this
  *                      stage.
  * @typeParam Args      Argument object type for the build stage.
+ *
+ * @since 0.4.2
  */
 export abstract class AbstractBuildStage<
     SubStage extends string | never,
     Args extends AbstractBuildStage.Args<SubStage>,
 > extends AbstractConfigurableClass<Args> {
-
-
-
-    /* STATIC
-     * ====================================================================== */
-
-    /**
-     * Default arguments for new objects.
-     * 
-     * @category Args
-     */
-    public static override abstractArgs<I extends Partial<AbstractBuildStage.Args<string>>>(
-        args: I,
-    ): AbstractBuildStage.Args<string> & I {
-
-        const ARGS_DEFAULT: AbstractBuildStage.Args<string> = {
-
-            debug: false,
-            'log-base-level': 0,
-            notice: true,
-            progress: true,
-            verbose: false,
-
-            argsRecursive: false,
-        };
-
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        return mergeArgs(
-            ARGS_DEFAULT,
-            args,
-            args?.argsRecursive ?? ARGS_DEFAULT.argsRecursive
-        ) as AbstractBuildStage.Args<string> & I;
-    }
 
 
 
@@ -88,42 +49,24 @@ export abstract class AbstractBuildStage<
     public readonly clr: MessageMaker.Colour;
 
     /**
-     * The instance of {@link NodeFunctions} used within this class.
+     * The instance of {@link NodeFiles} used within this class.
      * 
      * @category Classes
      */
-    public readonly fns: NodeFunctions;
+    public readonly fs: NodeFiles;
+
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     * 
+     * @category Classes
+     */
+    public readonly nc: NodeConsole;
 
     /**
      * The substages for this class' build. There must be methods for each
      * stage.
      */
     public readonly abstract subStages: readonly SubStage[];
-
-
-    /* Args ===================================== */
-
-    /**
-     * Build a complete args object.
-     * 
-     * @category Args
-     */
-    public buildArgs( args?: Partial<Args> ): Args {
-
-        const mergedDefault: Args = AbstractBuildStage.abstractArgs(
-            this.ARGS_DEFAULT
-        );
-
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const merged = mergeArgs(
-            mergedDefault,
-            args ?? {},
-            this.ARGS_DEFAULT.argsRecursive
-        ) as Args;
-
-        return merged;
-    }
 
 
 
@@ -133,11 +76,17 @@ export abstract class AbstractBuildStage<
     public constructor (
         args: Partial<Args> = {},
         clr: MessageMaker.Colour = 'black',
+        utils: {
+            fs?: NodeFiles;
+            nc?: NodeConsole;
+        } = {},
     ) {
         super( args );
 
         this.clr = clr;
-        this.fns = new NodeFunctions();
+
+        this.nc = utils.nc ?? new NodeConsole();
+        this.fs = utils.fs ?? new NodeFiles( {}, { nc: this.nc } );
     }
 
 
@@ -188,8 +137,7 @@ export abstract class AbstractBuildStage<
      * 
      * @see {@link AbstractBuildStage.clr}  Default colour for the message.
      * 
-     * @param level     Depth level for this message (above the value of 
-     *                  {@link AbstractBuildStage.Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     * @param level     Depth level for this message.
      * @param msgArgs   Optional. Argument overrides for the message.
      * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      * 
@@ -269,7 +217,7 @@ export abstract class AbstractBuildStage<
 
         const args = this.msgArgs( level, msgArgs, timeArgs );
 
-        this.fns.nc.timestampLog( msg, args.msg, args.time );
+        this.nc.timestampLog( msg, args.msg, args.time );
     }
 
     /**
@@ -311,7 +259,7 @@ export abstract class AbstractBuildStage<
      * This method should probably not be overwritten.
      *
      * Cycles through each substage and runs
-     * {@link AbstractBuildStage['runStage']} if the stage is not excluded or
+     * {@link AbstractBuildStage['runSubStage']} if the stage is not excluded or
      * all sub-stages are included.
      */
     public async run() {
@@ -323,7 +271,7 @@ export abstract class AbstractBuildStage<
         for ( const method of this.subStages ) {
 
             if ( this.isSubStageIncluded( method ) ) {
-                await this.runStage( method );
+                await this.runSubStage( method );
             }
         }
 
@@ -334,18 +282,24 @@ export abstract class AbstractBuildStage<
     /**
      * Used to run a single stage within this class; used by `run()`.
      */
-    protected abstract runStage( stage: SubStage ): Promise<void>;
+    protected abstract runSubStage( stage: SubStage ): Promise<void>;
 }
 
 /**
  * Used only for {@link AbstractBuildStage}.
+ * 
+ * @since 0.4.2
  */
 export namespace AbstractBuildStage {
 
     /**
      * Optional configuration for {@link AbstractBuildStage}.
+     * 
+     * @since 0.4.2
      */
-    export type Args<SubStage extends string | never> = AbstractConfigurableClass.Args & {
+    export interface Args<SubStage extends string | never> extends AbstractConfigurableClass.Args {
+
+        argsRecursive: false;
 
         /**
          * Only run this stage(s), else runs them all.
@@ -380,8 +334,6 @@ export namespace AbstractBuildStage {
          * @default true
          */
         notice: boolean;
-
-        argsRecursive: false;
 
         /**
          * Display progress update messages after initial notice.

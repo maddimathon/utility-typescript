@@ -3,57 +3,56 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-import { AnyClass } from '../types/functions/index.js';
+import type { AnyClass } from '../types/functions/index.js';
 /**
  * An alias for the typeof keyword that returns additional options.
  *
  * @category  Debuggers
  *
- * @see {@link typeOf.Args}
- * @see {@link typeOf.TestType}
- * @see {@link typeOf.Return}
+ * @typeParam T_Type  The possible types for the variable being tested. (This
+ *                    helps restrict the results as applicable.)
  *
- * @typeParam T  Type of the variable being checked.
+ * @param variable  To test for type.
  *
- * @param variable  To test for value type.
- * @param _args     Optional configuration. See {@link typeOf.Args}.
+ * @return  Expanded type options.
  *
- * @return Expanded type string.
+ * @since 0.1.0
  */
-export declare function typeOf<T extends typeOf.TestType>(variable: T, _args?: Partial<typeOf.Args>): string & typeOf.Return<T>;
+export declare function typeOf<T_Type extends typeOf.TestType>(variable: T_Type): typeOf.Return<T_Type>;
 /**
  * Used only for {@link typeOf | typeOf()}.
+ *
+ * @since 0.1.0
  */
 export declare namespace typeOf {
     /**
-     * Optional configuation for {@link typeOf | typeOf()}.
-     */
-    export type Args = {
-        /**
-         * If true, arrays will return `'array'` instead of `'object'`.
-         *
-         * @default true
-         */
-        distinguishArrays: boolean;
-    };
-    type ObjectReturn<Type extends TestType> = Type extends ((() => any) | any[] | AnyClass | BigInt | boolean | Function | null | number | string | symbol | Symbol | undefined) ? never : "object";
-    /**
      * Return options for the {@link typeOf | typeOf()}.
      *
-     * @param Type  Type of variable being testing.
+     * The complete options for return are: `array`, `bigint`, `boolean`,
+     * `class`, `function`, `NaN`, `null`, `number`, `object`, `string`,
+     * `symbol`, `undefined`.
+     *
+     * @param T_Type  Type of variable being tested.
+     *
+     * @since 0.1.0
      */
-    export type Return<Type extends TestType> = (Type extends any[] ? "array" : never) | (Type extends BigInt ? "bigint" : never) | (Type extends boolean ? "boolean" : never) | (Type extends AnyClass ? "class" : never) | (Type extends ((() => any) | Function) ? (Type extends AnyClass ? never : "function") : never) | (Type extends null ? "null" : never) | (Type extends number ? ("number" | "NaN") : never) | (Type extends (object | Object) ? ObjectReturn<Type> : never) | (Type extends string ? "string" : never) | (Type extends (symbol | Symbol) ? "symbol" : never) | (Type extends undefined ? "undefined" : never);
+    type Return<T_Type extends TestType> = (T_Type extends any[] ? "array" : never) | (T_Type extends BigInt ? "bigint" : never) | (T_Type extends boolean ? "boolean" : never) | (T_Type extends AnyClass ? "class" : never) | (T_Type extends ((() => any) | Function) ? (T_Type extends AnyClass ? never : "function") : never) | (T_Type extends null ? "null" : never) | (T_Type extends number ? ("number" | "NaN") : never) | (T_Type extends (object | Object) ? (Exclude<T_Type & object, Return_NotObject> extends never ? never : "object") : never) | (T_Type extends string ? "string" : never) | (T_Type extends (symbol | Symbol) ? "symbol" : never) | (T_Type extends undefined ? "undefined" : never);
+    /**
+     * Types that _are_ objects, but are not actually evaluated as such in the
+     * {@link typeOf | typeOf()} function.
+     *
+     * @since 0.1.0
+     */
+    type Return_NotObject = (() => any | void) | [] | any[] | AnyClass | BigInt | boolean | Function | null | number | string | symbol | Symbol | undefined;
     /**
      * Input variable types for the {@link typeOf | typeOf()}.
+     *
+     * @since 0.1.0
      */
-    export type TestType = (() => any) | any[] | AnyClass | BigInt | boolean | Function | null | number | object | Object | string | symbol | Symbol | undefined;
-    export {};
+    type TestType = undefined | (() => any | void) | any[] | AnyClass | BigInt | boolean | Function | null | number | object | Object | string | symbol | Symbol;
 }
 //# sourceMappingURL=typeOf.d.ts.map

@@ -3,11 +3,8 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 /**
@@ -20,6 +17,8 @@
  * Overloaded for better typing dependent on recursion.
  *
  * @category Arg Objects
+ *
+ * @since 0.1.0
  */
 export function mergeArgs(defaults, inputs, recursive = false) {
     // invalid default object becomes an empty object

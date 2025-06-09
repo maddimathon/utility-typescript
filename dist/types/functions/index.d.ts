@@ -11,15 +11,8 @@
  * import { ... } from '@maddimathon/utility-typescript/types/functions';
  * ```
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- * @author Maddi Mathon (www.maddimathon.com)
- * @homepage https://maddimathon.github.io/utility-typescript
- *
- * @license MIT
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 export type * from './basics.js';

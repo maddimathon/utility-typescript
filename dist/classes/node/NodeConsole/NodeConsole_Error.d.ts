@@ -1,31 +1,28 @@
 /**
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-import type { Classify } from '../../../types/objects/classes.js';
 /**
  * Only used by {@link NodeConsole}.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error | Error}
  *
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @experimental
  * @internal
+ * @private
  */
-export declare class NodeConsole_Error extends Error implements Classify<NodeConsole_Error.JSON> {
+export declare class NodeConsole_Error extends Error {
     /**
      * Represents the name for the type of error.
      */
-    readonly cause: Error | undefined;
+    readonly cause: unknown;
     /**
      * Represents the name for the type of error.
      */
@@ -33,7 +30,9 @@ export declare class NodeConsole_Error extends Error implements Classify<NodeCon
     /**
      * @param args  Optional configuration.
      */
-    constructor(msg: string, args: NodeConsole_Error.Args);
+    constructor(msg: string, args: {
+        cause?: unknown;
+    });
     /**
      * The object shape used when converting to JSON.
      *
@@ -41,7 +40,11 @@ export declare class NodeConsole_Error extends Error implements Classify<NodeCon
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    toJSON(): Classify<NodeConsole_Error.JSON>;
+    toJSON(): {
+        cause: unknown;
+        message: string;
+        name: string;
+    };
     /**
      * Overrides the default function to return a string representation of this
      * object.
@@ -61,27 +64,10 @@ export declare class NodeConsole_Error extends Error implements Classify<NodeCon
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
      * @see {@link NodeConsole_Error.toJSON | NodeConsole_Error.toJSON()}
      */
-    valueOf(): Classify<NodeConsole_Error.JSON>;
-}
-/**
- * Used only for {@link NodeConsole_Error}.
- *
- * @experimental
- */
-export declare namespace NodeConsole_Error {
-    /**
-     * Optional configuration for {@link NodeConsole_Error}.
-     */
-    type Args = Omit<ErrorOptions, "cause"> & {
-        cause?: Error | undefined;
-    };
-    /**
-     * Optional configuration for {@link NodeConsole_Error}.
-     */
-    interface JSON {
+    valueOf(): {
+        cause: unknown;
         message: string;
         name: string;
-        cause?: Error;
-    }
+    };
 }
 //# sourceMappingURL=NodeConsole_Error.d.ts.map

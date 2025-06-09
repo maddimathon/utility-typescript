@@ -3,11 +3,8 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 /**
@@ -20,10 +17,13 @@
  *
  * @source
  *
- * @typeParam I  Array item type.
+ * @typeParam T_ArrayItem  Array item type.
  *
  * @param arr  To simplify.
+ *
  * @return  Unique array.
+ *
+ * @since 0.1.0
  */
-export declare function arrayUnique<I>(arr: I[]): I[];
+export declare function arrayUnique<T_ArrayItem>(arr: T_ArrayItem[]): T_ArrayItem[];
 //# sourceMappingURL=arrayUnique.d.ts.map

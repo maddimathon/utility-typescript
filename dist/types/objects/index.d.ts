@@ -11,17 +11,12 @@
  * import { ... } from '@maddimathon/utility-typescript/types/objects';
  * ```
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- * @author Maddi Mathon (www.maddimathon.com)
- * @homepage https://maddimathon.github.io/utility-typescript
- *
- * @license MIT
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
-export type * from './basics.js';
 export type * from './classes.js';
+export type * from './keys.js';
+export type * from './partial.js';
+export type * from './required.js';
 //# sourceMappingURL=index.d.ts.map

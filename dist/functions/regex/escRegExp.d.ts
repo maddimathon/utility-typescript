@@ -3,11 +3,8 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 /**
@@ -23,6 +20,10 @@
  * ```
  *
  * @param str To convert.
+ *
+ * @return  Escaped string.
+ *
+ * @since 0.1.0
  */
 export declare function escRegExp(str: string): string;
 //# sourceMappingURL=escRegExp.d.ts.map

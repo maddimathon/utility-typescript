@@ -1,4 +1,4 @@
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -18,6 +18,7 @@ import {
     pkgReplacements,
 } from '../vars/replacements.js';
 import { NodeConsole_Prompt } from '../../src/ts/classes/node/index.js';
+import { escRegExp } from 'src/ts/functions/index.js';
 
 
 const packageSubStages = [
@@ -61,7 +62,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: Package.Stages ) {
+    protected async runSubStage( stage: Package.Stages ) {
         await this[ stage ]();
     }
 
@@ -121,7 +122,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
                 },
             };
 
-            this.args.dryrun = await this.fns.nc.prompt.bool( {
+            this.args.dryrun = await this.nc.prompt.bool( {
                 ...promptArgs,
                 message: `Is this a dry run?`,
                 default: !!this.args.dryrun,
@@ -222,13 +223,13 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
         ignoreGlobs: string[] = [],
     ) {
 
-        if ( NodeFS.existsSync( this.fns.fs.pathResolve( outDir, '../' ) ) ) {
+        if ( NodeFS.existsSync( this.fs.pathResolve( outDir, '../' ) ) ) {
             this.verboseLog( 'deleting current contents...', 3 );
 
             try {
-                this.fns.fs.deleteFiles( [ outDir ] );
+                this.fs.delete( [ outDir ] );
             } catch ( error ) {
-                this.fns.nc.timestampVarDump( { error }, {
+                this.nc.timestampVarDump( { error }, {
                     clr: 'red',
                     depth: ( this.args.verbose ? 4 : 3 ),
                 } );
@@ -295,17 +296,17 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
          * Directory to use as working dir when zipping the project.
          * With a trailing slash.
          */
-        const zippingPWD: string = this.fns.fs.pathResolve( sourceDir, '..' ).replace( /\/*$/g, '' ) + '/';
+        const zippingPWD: string = this.fs.pathResolve( sourceDir, '..' ).replace( /\/*$/g, '' ) + '/';
 
         /**
          * Regex that matches the path to the working directory to zip from.
          */
-        const zippingPWD_regex: RegExp = new RegExp( '^' + this.fns.fns.escRegExp( zippingPWD ), 'g' );
+        const zippingPWD_regex: RegExp = new RegExp( '^' + escRegExp( zippingPWD ), 'g' );
 
         /*
          * Correcting and formatting the output zip path. 
          */
-        zipPath = this.fns.fs.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
+        zipPath = this.fs.pathResolve( zipPath ).replace( /(\/*|\.zip)?$/g, '' ) + '.zip';
 
         while ( NodeFS.existsSync( zipPath ) ) {
             zipPath = zipPath.replace( /(\/*|\.zip)?$/g, '' ) + `-${ this.timestamp( null, 'yyyy_MM_dd-HH_mm' ).replace( /_/g, '' ) }.zip`;
@@ -333,8 +334,8 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
         /*
          * Running the command. 
          */
-        const zipCMD: string = `cd "${ this.fns.fs.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
-        this.fns.nc.cmd( zipCMD );
+        const zipCMD: string = `cd "${ this.fs.pathRelative( zippingPWD ) }" && zip "${ zipPath.replace( zippingPWD_regex, '' ) }" '${ files.join( "' '" ) }'`;
+        this.cmd( zipCMD );
     }
 }
 

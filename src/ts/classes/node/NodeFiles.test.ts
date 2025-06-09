@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -105,30 +102,30 @@ describe( 'NodeFiles', () => {
     const writeAndDeletePath = '.scripts/tmp/test-written-file.ts';
     const writeAndDeleteAbsolutePath = nf_inst.pathResolve( writeAndDeletePath );
 
-    describe( 'NodeFiles.writeFile()', () => {
+    describe( 'NodeFiles.write()', () => {
 
         const fileContent = '// this is a file to test writing and deleting files';
 
         test( 'simple file writing', () => {
-            expect( nf_inst.writeFile( writeAndDeletePath, fileContent ) ).toBe( writeAndDeleteAbsolutePath );
+            expect( nf_inst.write( writeAndDeletePath, fileContent ) ).toBe( writeAndDeleteAbsolutePath );
             expect( nf_inst.readFile( writeAndDeletePath ) ).toBe( fileContent );
         } );
 
         test( 'by default, do not overwrite or rename files that already exist', () => {
-            expect( nf_inst.writeFile( writeAndDeletePath, fileContent ) ).toBe( false );
+            expect( nf_inst.write( writeAndDeletePath, fileContent ) ).toBe( false );
         } );
 
         test( 'if forced, overwrite the file', () => {
 
             const fileContentOverwrite = '// this is a file to test writing and deleting files (OVERWRITTEN)';
 
-            expect( nf_inst.writeFile( writeAndDeletePath, fileContentOverwrite, { force: true } ) ).toBe( writeAndDeleteAbsolutePath );
+            expect( nf_inst.write( writeAndDeletePath, fileContentOverwrite, { force: true } ) ).toBe( writeAndDeleteAbsolutePath );
             expect( nf_inst.readFile( writeAndDeletePath ) ).toBe( fileContentOverwrite );
         } );
 
         test( 'if rename is true, create a unique path for the new file', () => {
 
-            expect( nf_inst.writeFile(
+            expect( nf_inst.write(
                 '.scripts/tmp/test-12.ts',
                 test12FileContent,
                 { rename: true }
@@ -136,9 +133,9 @@ describe( 'NodeFiles', () => {
         } );
     } );
 
-    test( 'NodeFiles.deleteFiles()', () => {
+    test( 'NodeFiles.delete()', () => {
 
-        nf_inst.deleteFiles( [ writeAndDeletePath, '.scripts/tmp/test-13.ts' ] );
+        nf_inst.delete( [ writeAndDeletePath, '.scripts/tmp/test-13.ts' ] );
 
         expect( NodeFS.existsSync( writeAndDeletePath ) ).toBe( false );
         expect( NodeFS.existsSync( '.scripts/tmp/test-13.ts' ) ).toBe( false );

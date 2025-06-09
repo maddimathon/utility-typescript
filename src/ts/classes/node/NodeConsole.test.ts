@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -137,6 +134,6 @@ describe( 'NodeConsole', () => {
         expect( selectPrompter.strings ).toBe( undefined );
     } );
 
-    // as tests[0] only so that type is used
+    // as Tests[0] only so that type is used
     true as Tests[ 0 ];
 } );

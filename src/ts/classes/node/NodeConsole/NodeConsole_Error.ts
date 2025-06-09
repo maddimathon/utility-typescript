@@ -3,21 +3,12 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 
-import type { Classify } from '../../../types/objects/classes.js';
 import type { NodeConsole } from '../NodeConsole.js';
-
-// import {
-//     mergeArgs,
-//     timeout,
-// } from '../../../functions/index.js';
 
 
 /**
@@ -29,8 +20,9 @@ import type { NodeConsole } from '../NodeConsole.js';
  * 
  * @experimental
  * @internal
+ * @private
  */
-export class NodeConsole_Error extends Error implements Classify<NodeConsole_Error.JSON> {
+export class NodeConsole_Error extends Error {
 
 
 
@@ -40,19 +32,12 @@ export class NodeConsole_Error extends Error implements Classify<NodeConsole_Err
     /**
      * Represents the name for the type of error.
      */
-    public override readonly cause: Error | undefined;
+    public override readonly cause: unknown;
 
     /**
      * Represents the name for the type of error.
      */
     public override readonly name: string = 'NodeConsole_Error';
-
-    // /**
-    //  * A completed args object.
-    //  * 
-    //  * @category Args
-    //  */
-    // protected readonly args: NodeConsole_Error.Args;
 
 
 
@@ -62,7 +47,7 @@ export class NodeConsole_Error extends Error implements Classify<NodeConsole_Err
     /**
      * @param args  Optional configuration.
      */
-    public constructor ( msg: string, args: NodeConsole_Error.Args ) {
+    public constructor ( msg: string, args: { cause?: unknown; } ) {
         super( msg );
         this.cause = args.cause;
     }
@@ -84,7 +69,7 @@ export class NodeConsole_Error extends Error implements Classify<NodeConsole_Err
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    public toJSON(): Classify<NodeConsole_Error.JSON> {
+    public toJSON() {
 
         return {
             cause: this.cause,
@@ -129,30 +114,4 @@ export class NodeConsole_Error extends Error implements Classify<NodeConsole_Err
      * @see {@link NodeConsole_Error.toJSON | NodeConsole_Error.toJSON()}
      */
     public override valueOf() { return this.toJSON(); }
-}
-
-/**
- * Used only for {@link NodeConsole_Error}.
- * 
- * @experimental
- */
-export namespace NodeConsole_Error {
-
-    /**
-     * Optional configuration for {@link NodeConsole_Error}.
-     */
-    export type Args = Omit<ErrorOptions, "cause"> & {
-        cause?: Error | undefined;
-    };
-
-    /**
-     * Optional configuration for {@link NodeConsole_Error}.
-     */
-    export interface JSON {
-
-        message: string;
-        name: string;
-
-        cause?: Error;
-    };
 }

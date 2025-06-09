@@ -1,4 +1,4 @@
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -53,7 +53,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: Document.Stages ) {
+    protected async runSubStage( stage: Document.Stages ) {
         await this[ stage ]();
     }
 
@@ -96,7 +96,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
         /** URL to repository, without trailing slash or `.git`. */
         const repository = this.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' );
 
-        // TODO - generate entryPoints from pkg.main and pkg.exports
+        // UPGRADE - generate entryPoints from pkg.main and pkg.exports
         const config: Partial<typeDoc.TypeDocOptions> = {
 
             alwaysCreateEntryPointModule: true,
@@ -106,21 +106,27 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             blockTags: [
                 ...typeDoc.OptionDefaults.blockTags,
 
-                '@homepage',
-                '@package',
                 '@source',
+                '@TODO',
+                '@UPGRADE',
+            ],
+
+            cascadedModifierTags: [
+                ...typeDoc.OptionDefaults.cascadedModifierTags,
+
+                '@alpha',
+                '@beta',
+                '@experimental',
+                '@internal',
             ],
 
             categorizeByGroup: true,
 
             categoryOrder: [
                 '*',
-                // 'Functions',
-                // 'Classes',
-                // 'Namespaces',
-                // 'Modules',
-                // 'Entry Points',
+                'Other',
                 'Misc.',
+                'Deprecated',
             ],
 
             // compilerOptions,
@@ -149,11 +155,36 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             externalSymbolLinkMappings: {
 
-                '@maddimathon/utility-typescript': {
-                    'Objects': 'https://maddimathon.github.io/utility-typescript/Types/Objects.html',
-                    'Classify': 'https://maddimathon.github.io/utility-typescript/Types/Objects/Classify.html',
-                    'RecursivePartial': 'https://maddimathon.github.io/utility-typescript/Types/Objects/RecursivePartial.html',
-                    'RecursiveRequired': 'https://maddimathon.github.io/utility-typescript/Types/Objects/RecursiveRequired.html',
+                typescript: {
+
+                    Error: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error',
+                    'Error.cause': 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause',
+                    'Error.name': 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/name',
+
+                    Promise: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+                    RegExp: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp',
+
+                    Awaited: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#awaitedtype',
+                    Capitalize: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
+                    ConstructorParameters: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#constructorparameterstype',
+                    Exclude: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#excludeuniontype-excludedmembers',
+                    Extract: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union',
+                    InstanceType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#instancetypetype',
+                    Lowercase: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
+                    NoInfer: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#noinfertype',
+                    NonNullable: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype',
+                    Omit: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys',
+                    OmitThisParameter: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#omitthisparametertype',
+                    Parameters: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#parameterstype',
+                    Partial: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype',
+                    Pick: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys',
+                    Record: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type',
+                    Required: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#requiredtype',
+                    ReturnType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype',
+                    ThisParameterType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#thisparametertypetype',
+                    ThisType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#thistypetype',
+                    Uncapitalize: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
+                    Uppercase: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
                 },
             },
 
@@ -183,6 +214,10 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             includeHierarchySummary: true,
             includeVersion: false,
+
+            jsDocCompatibility: {
+                exampleTag: false,
+            },
 
             kindSortOrder: [
                 'Module',
@@ -219,19 +254,17 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 this.pkgVersion,
             ].filter( v => v ).join( ' @ ' ),
 
-            // navigation: {
-            //     includeCategories: true,
-            //     includeGroups: false,
-            //     includeFolders: true,
-            //     compactFolders: false,
-            //     excludeReferences: true,
-            // },
-
             navigationLinks: {
-                // 'About': `${ homepage }/ReadMe.html`,
                 'GitHub': repository,
                 'by Maddi Mathon': 'https://www.maddimathon.com',
             },
+
+            notRenderedTags: [
+                ...typeDoc.OptionDefaults.notRenderedTags,
+
+                '@TODO',
+                '@UPGRADE',
+            ],
 
             out: 'docs',
             plugin: [
@@ -268,11 +301,11 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             useFirstParagraphOfCommentAsSummary: true,
 
             visibilityFilters: {
-                '@alpha': false,
+                '@alpha': !this.args.releasing || !!this.args.dryrun,
                 '@beta': true,
                 external: true,
                 inherited: true,
-                private: false,
+                private: !this.args.releasing || !!this.args.dryrun,
                 protected: true,
             },
         };
@@ -282,7 +315,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             const outDir = config.out.replace( /\/+$/gi, '' );
 
-            this.fns.fs.deleteFiles( this.glob( [
+            this.fs.delete( this.glob( [
                 outDir + '/*',
                 outDir + '/.*',
             ] ) );
@@ -292,7 +325,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             if ( !config.out ) {
                 this.verboseLog( 'deleting existing files...', 2 );
             }
-            this.fns.fs.deleteFiles( [ config.json ] );
+            this.fs.delete( [ config.json ] );
         }
 
         this.verboseLog( 'running typedoc...', 2 );

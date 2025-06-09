@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-draft
+# Utility TypeScript @ 2.0.0-alpha.draft
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -22,7 +22,8 @@ my personal needs/preferences rather than (web) developers in general.
 ## Changelog
 
 <!--README_DOCS_CHANGELOG-->
-Read it from [the source](./CHANGELOG.md) or 
+Read it from [the source](https://github.com/maddimathon/utility-typescript/blob/main/CHANGELOG.md) 
+or 
 [the docs site](https://maddimathon.github.io/utility-typescript/Changelog.html).
 <!--/README_DOCS_CHANGELOG-->
 
@@ -31,15 +32,15 @@ Read it from [the source](./CHANGELOG.md) or
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@2.0.0
-npm i -D github:maddimathon/utility-typescript#2.0.0
+npm i -D @maddimathon/utility-typescript@2.0.0-alpha
+npm i -D github:maddimathon/utility-typescript#2.0.0-alpha
 ```
 <!--/README_INSTALL-->
 
 
 ## Use
 
-For an overview of all exported items, including types, see the documentation
+For an overview of all exported items, including types, see the docs website
 below.
 
 <!--README_DOCS_CTA-->

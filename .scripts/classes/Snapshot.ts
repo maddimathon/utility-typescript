@@ -43,7 +43,7 @@ export class Snapshot extends AbstractStage<Snapshot.Stages, Snapshot.Args> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: Snapshot.Stages ) {
+    protected async runSubStage( stage: Snapshot.Stages ) {
         await this[ stage ]();
     }
 
@@ -67,7 +67,7 @@ export class Snapshot extends AbstractStage<Snapshot.Stages, Snapshot.Args> {
 
         const snapdir = this.pkg.config.paths.snapshots.replace( /\/+$/gi, '' );
 
-        const exportPath: string = this.fns.fs.uniquePath( `${ snapdir }/${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.pkgVersion }_${ this.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
+        const exportPath: string = this.fs.uniquePath( `${ snapdir }/${ this.pkg.name.replace( /^@([^\/]+)\//, '$1_' ) }_${ this.pkgVersion }_${ this.datetimestamp( null, 'yyyyMMdd-HHmm' ) }` );
         const exportName: string = exportPath.replace( /^\/?([^\/]+\/)*/gi, '' );
 
 
@@ -89,21 +89,21 @@ export class Snapshot extends AbstractStage<Snapshot.Stages, Snapshot.Args> {
             },
             true
         );
-        this.args.debug && this.fns.nc.timestampVarDump( { includePaths }, { depth: ( this.args.verbose ? 2 : 1 ) + ( this.args[ 'log-base-level' ] ?? 0 ) } );
+        this.args.debug && this.nc.timestampVarDump( { includePaths }, { depth: ( this.args.verbose ? 2 : 1 ) + ( this.args[ 'log-base-level' ] ?? 0 ) } );
 
         this.verboseLog( 'copying files...', 1 );
         this.copyFiles( includePaths, exportPath );
 
 
         this.verboseLog( 'zipping snapshot...', 1 );
-        this.fns.nc.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
+        this.cmd( `cd ${ snapdir }/ && zip -r ${ exportName }.zip ${ exportName }` );
 
 
         this.verboseLog( 'tidying up...', 1 );
-        this.fns.fs.deleteFiles( [ exportPath ] );
+        this.fs.delete( [ exportPath ] );
 
 
-        this.progressLog( `snapshot zipped: ${ this.fns.fs.pathRelative( exportPath ) }.zip`, 1, { maxWidth: null } );
+        this.progressLog( `snapshot zipped: ${ this.fs.pathRelative( exportPath ) }.zip`, 1, { maxWidth: null } );
     }
 }
 

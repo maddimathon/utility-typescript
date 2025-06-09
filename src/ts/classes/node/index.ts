@@ -14,13 +14,6 @@
  * import { ... } from '@maddimathon/utility-typescript/classes/node';
  * ```
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- * @author Maddi Mathon (www.maddimathon.com)
- * @homepage ___CURRENT_URL___
- * 
- * @license MIT
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -31,4 +24,3 @@ export * from './NodeConsole/index.js';
 
 export * from './NodeConsole.js';
 export * from './NodeFiles.js';
-export * from './NodeFunctions.js';

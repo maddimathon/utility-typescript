@@ -1,6 +1,4 @@
-#!/usr/bin/env tsx
-'use strict';
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -45,7 +43,7 @@ export class Test extends AbstractStage<Test.Stages, Test.Args> {
     /* LOCAL METHODS
     * ====================================================================== */
 
-    protected async runStage( stage: Test.Stages ) {
+    protected async runSubStage( stage: Test.Stages ) {
         await this[ stage ]();
     }
 
@@ -67,12 +65,12 @@ export class Test extends AbstractStage<Test.Stages, Test.Args> {
     protected async js() {
         this.progressLog( 'running jest...', 1 );
 
-        this.fns.nc.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
+        this.cmd( 'node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js' );
 
         if ( this.args.packaging && !this.args.dryrun ) {
 
             this.verboseLog( 'removing test files from dist...', 2 );
-            this.fns.fs.deleteFiles( this.glob( [
+            this.fs.delete( this.glob( [
                 'dist/**/*.test.d.ts',
                 'dist/**/*.test.d.ts.map',
                 'dist/**/*.test.js',

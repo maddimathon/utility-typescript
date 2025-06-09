@@ -1,13 +1,14 @@
 #!/usr/bin/env tsx
 'use strict';
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
  * @license MIT
  */
 
-import { VariableInspector } from '../../src/ts/classes/VariableInspector.js';
+// import { slugify } from '../../src/ts/functions/index.js';
+import { VariableInspector } from '../../src/ts/classes/index.js';
 
 const defaultFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str;
 const resetFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str + '\x1b[0m';
@@ -32,5 +33,5 @@ VariableInspector.sample( {
     }
 } );
 
-// F.fs.writeFile( `.scripts/tmp/var-inspect-OBJ_${ F.fns.slugify( F.datetimestamp() ) }.json`, JSON.stringify( vi, null, 4 ), { force: true } );
-// F.fs.writeFile( `.scripts/tmp/var-inspect-OBJ_${ F.fns.slugify( F.datetimestamp() ) }.txt`, vi.toString(), { force: true } );
+// F.fs.write( `.scripts/tmp/var-inspect-OBJ_${ slugify( F.datetimestamp() ) }.json`, JSON.stringify( vi, null, 4 ), { force: true } );
+// F.fs.write( `.scripts/tmp/var-inspect-OBJ_${ slugify( F.datetimestamp() ) }.txt`, vi.toString(), { force: true } );

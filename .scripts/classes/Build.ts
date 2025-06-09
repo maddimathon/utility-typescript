@@ -1,4 +1,4 @@
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -14,7 +14,7 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
-import { softWrapText } from '../../src/ts/functions/index.js';
+import { escRegExpReplace, softWrapText } from '../../src/ts/functions/index.js';
 
 
 
@@ -57,7 +57,7 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
     /* LOCAL METHODS
      * ====================================================================== */
 
-    protected async runStage( stage: Build.Stages ) {
+    protected async runSubStage( stage: Build.Stages ) {
         await this[ stage ]();
     }
 
@@ -149,21 +149,21 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
 
         const changelogRegex = /(<!--README_DOCS_CHANGELOG-->).*?(<!--\/README_DOCS_CHANGELOG-->)/gs;
 
-        this.fns.fs.writeFile( 'README.md', (
-            this.fns.fs.readFile( 'README.md' )
-                .replace( headerRegex, '$1\n' + this.fns.fns.escRegExpReplace( `# ${ this.pkg.config.title } @ ${ this.pkgVersion }` ) + '\n$2' )
-                .replace( descRegex, '$1\n' + this.fns.fns.escRegExpReplace( softWrapText( this.pkg.description, 80 ) ) + '\n$2' )
-                .replace( ctaRegex, '$1\n' + this.fns.fns.escRegExpReplace( `[Read Documentation](${ this.pkg.homepage })` ) + '\n$2' )
-                .replace( changelogRegex, '$1\n' + this.fns.fns.escRegExpReplace( `Read it from [the source](./CHANGELOG.md) or \n[the docs site](${ this.pkg.homepage }/Changelog.html).` ) + '\n$2' )
+        this.fs.write( 'README.md', (
+            this.fs.readFile( 'README.md' )
+                .replace( headerRegex, '$1\n' + escRegExpReplace( `# ${ this.pkg.config.title } @ ${ this.pkgVersion }` ) + '\n$2' )
+                .replace( descRegex, '$1\n' + escRegExpReplace( softWrapText( this.pkg.description, 80 ) ) + '\n$2' )
+                .replace( ctaRegex, '$1\n' + escRegExpReplace( `[Read Documentation](${ this.pkg.homepage })` ) + '\n$2' )
+                .replace( changelogRegex, '$1\n' + escRegExpReplace( `Read it from [the source](${ this.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' ) }/blob/main/CHANGELOG.md) \nor \n[the docs site](${ this.pkg.homepage }/Changelog.html).` ) + '\n$2' )
         ), { force: true } );
 
         if ( this.args.releasing ) {
 
             const installRegex = /(<!--README_INSTALL-->).*?(<!--\/README_INSTALL-->)/gs;
 
-            this.fns.fs.writeFile( 'README.md', (
-                this.fns.fs.readFile( 'README.md' )
-                    .replace( installRegex, '$1\n' + this.fns.fns.escRegExpReplace( [
+            this.fs.write( 'README.md', (
+                this.fs.readFile( 'README.md' )
+                    .replace( installRegex, '$1\n' + escRegExpReplace( [
                         '```bash',
                         'npm i -D @maddimathon/utility-typescript@' + this.pkg.version,
                         'npm i -D github:maddimathon/utility-typescript#' + this.pkg.version,

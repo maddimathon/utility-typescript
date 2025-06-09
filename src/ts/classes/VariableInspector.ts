@@ -3,22 +3,20 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 
-import type { AnyClass } from '../types/functions/basics.js';
-import type { LangLocaleCode } from '../types/string-literals/index.js';
+import type {
+    AnyClass,
+    LangLocaleCode,
+} from '../types/index.js';
 
 import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
 
 import {
     arrayUnique,
-    mergeArgs,
     timestamp,
     typeOf,
 } from '../functions/index.js';
@@ -33,6 +31,8 @@ import {
  * inspection ({@link VariableInspector.prefix}, {@link VariableInspector.type}, 
  * {@link VariableInspector.value}) or get a json-compatible object representing 
  * the inspected value {@link VariableInspector.toJSON}.
+ * 
+ * @since 0.1.1
  *
  * @example
  * ```ts
@@ -171,9 +171,18 @@ export class VariableInspector<
             bigint: BigInt( 9007199254740991 ),
             number: Number( 207 ),
             'NaN': Number.NaN,
+
             string: 'string sample value',
-            stringMultiline: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in\njusto vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper\ninterdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales\naliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero\ndolor faucibus lacus, in tempus metus elit non ante.`,
+            stringMultiline: [
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in',
+                'justo vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper',
+                'interdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales',
+                'aliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero',
+                'dolor faucibus lacus, in tempus metus elit non ante.'
+            ].join( '\n' ),
+
             array: [ 'string sample value', Number( 207 ), {}, ],
+
             objectEmpty: {},
             objectSimple: {
                 one: 1,
@@ -286,7 +295,7 @@ export class VariableInspector<
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public get ARGS_DEFAULT(): VariableInspector.Args {
+    public get ARGS_DEFAULT() {
 
         return {
 
@@ -321,27 +330,6 @@ export class VariableInspector<
 
             stringQuoteCharacter: '"',
         } as const satisfies VariableInspector.Args;
-    }
-
-    /**
-     * Build a complete args object.
-     * 
-     * @category Args
-     */
-    public buildArgs( args?: Partial<VariableInspector.Args> ): VariableInspector.Args {
-
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(
-            this.ARGS_DEFAULT
-        ) as VariableInspector.Args;
-
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        // UPGRADE - this could probably use better typing
-        return mergeArgs(
-            mergedDefault as mergeArgs.Obj & VariableInspector.Args,
-            args as Partial<mergeArgs.Obj & VariableInspector.Args>,
-            false
-        ) as VariableInspector.Args;
     }
 
     /**
@@ -462,7 +450,7 @@ export class VariableInspector<
             Object.keys( this._rawValue as object ) as PropName[],
             Object.getOwnPropertyNames( this._rawValue ) as PropName[],
             Object.getOwnPropertySymbols( this._rawValue ) as PropName[],
-            // Object.getOwnPropertyDescriptors( this._rawValue as object ) as PropName[],
+            // Object.getOwnPropertyDescriptors( this._rawValue as object ),
         ].flat().filter( name => name !== '_getSet' );
 
         return arrayUnique( propertyNames );
@@ -837,7 +825,7 @@ export class VariableInspector<
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    public override toJSON(): VariableInspector.JSON<Type> {
+    public toJSON(): VariableInspector.JSON<Type> {
 
         const json: VariableInspector.JSON<Type> = {
             name: this._name,
@@ -959,13 +947,15 @@ export class VariableInspector<
 
 /**
  * Used only for {@link VariableInspector}.
+ * 
+ * @since 0.1.1
  */
 export namespace VariableInspector {
 
     /**
      * A function for formatting inspection output strings.
      * 
-     * @expand
+     * @since 0.1.1
      */
     export type Formatter = ( str: string ) => string;
 
@@ -974,14 +964,18 @@ export namespace VariableInspector {
      * 
      * `_` is used if the applicable formatter is not present.
      * 
+     * @since 0.1.1
+     * 
      * @expand
      */
     export type StageKeys = "_" | "prefix" | "type" | "value" | "via";
 
     /**
      * Optional configuration for {@link VariableInspector}.
+     * 
+     * @since 0.1.1
      */
-    export type Args = AbstractConfigurableClass.Args & {
+    export interface Args extends AbstractConfigurableClass.Args {
 
         /**
          * These args should never be recursive.
@@ -1144,8 +1138,10 @@ export namespace VariableInspector {
 
     /**
      * The shape used for {@link VariableInspector._properties}.
+     * 
+     * @since 0.1.1
      */
-    export type Child = {
+    export interface Child {
 
         key: {
             name: number | string | symbol;
@@ -1158,7 +1154,7 @@ export namespace VariableInspector {
     /**
      * The shape used when converting this object to JSON.
      * 
-     * @expandType ReturnType
+     * @since 0.1.1
      */
     export interface JSON<
         Type extends typeOf.TestType = typeOf.TestType,
@@ -1198,8 +1194,10 @@ export namespace VariableInspector {
 
     /**
      * The shape used when converting this object to JSON.
+     * 
+     * @since 0.1.1
      */
-    export type JSON_Child = {
+    export interface JSON_Child {
 
         key: {
             name: number | string | symbol;

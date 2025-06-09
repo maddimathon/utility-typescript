@@ -3,11 +3,8 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 // import type { WriteFileOptions } from 'node:fs';
@@ -15,48 +12,128 @@ import NodeFS from 'node:fs';
 import NodePath from 'node:path';
 // import type { RecursivePartial } from '../../types/objects/index.js';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
-import { mergeArgs, } from '../../functions/index.js';
+import { arrayUnique, } from '../../functions/index.js';
 import { NodeConsole } from './NodeConsole.js';
 /**
  * A configurable class for working with files and paths in node.
+ *
+ * @since 0.2.0
  */
 export class NodeFiles extends AbstractConfigurableClass {
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     *
+     * @category Classes
+     */
+    nc;
     /* Args ===================================== */
     /**
-     * @category Args
-     */
-    get ARGS_DEFAULT() {
-        return {
-            argsRecursive: false,
-            root: './',
-            writeFileArgs: {
-                force: false,
-                rename: false,
-            },
-        };
-    }
-    /**
-     * Build a complete args object.
+     * Default args for this stage.
      *
      * @category Args
      */
-    buildArgs(args) {
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(this.ARGS_DEFAULT);
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const merged = mergeArgs(mergedDefault, args !== null && args !== void 0 ? args : {}, this.ARGS_DEFAULT.argsRecursive);
-        return merged;
+    get ARGS_DEFAULT() {
+        const write = {
+            force: false,
+            rename: false,
+        };
+        return {
+            argsRecursive: true,
+            copyFile: {
+                force: true,
+                rename: true,
+                recursive: false,
+            },
+            root: './',
+            readDir: {
+                recursive: false,
+            },
+            readFile: {},
+            write,
+        };
     }
     /* CONSTRUCTOR
      * ====================================================================== */
     constructor(args = {}, utils = {}) {
-        var _a;
         super(args);
-        this.nc = (_a = utils.nc) !== null && _a !== void 0 ? _a : new NodeConsole(this.ARGS_DEFAULT);
+        this.nc = utils.nc ?? new NodeConsole(this.ARGS_DEFAULT);
+        const propNames = arrayUnique(Object.getOwnPropertyNames(NodeFiles.prototype)
+            .concat(Object.getOwnPropertyNames(this.constructor.prototype)));
+        for (const _name of propNames) {
+            // continues on match
+            switch (_name) {
+                case 'args':
+                case 'ARGS_DEFAULT':
+                case 'buildArgs':
+                case 'constructor':
+                case 'nc':
+                    continue;
+            }
+            // continues
+            if (typeof this[_name] !== 'function') {
+                continue;
+            }
+            // @ts-expect-error
+            this[_name] = this[_name].bind(this);
+        }
     }
     /* METHODS
      * ====================================================================== */
     /* Files ===================================== */
+    /**
+     * Copies a file to another path.
+     *
+     * @category Filers
+     *
+     * @experimental
+     *
+     * @param source       Location to write file.
+     * @param destination  Location to copy the source path to.
+     * @param args         Optional configuration.
+     *
+     * @return  Path to file if written, or false on failure.
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    copyFile(source, destination, args = {}) {
+        source = this.pathResolve(source);
+        destination = this.pathResolve(destination);
+        args = this.mergeArgs(this.args.copyFile, args, false);
+        // returns if we aren't forcing or renaming
+        if (this.exists(destination)) {
+            // returns
+            if (!args.force && !args.rename) {
+                return false;
+            }
+            if (args.force) {
+                this.delete([destination]);
+            }
+            else if (args.rename) {
+                destination = this.uniquePath(destination);
+            }
+        }
+        // returns
+        if (!args.recursive && this.isDirectory(source)) {
+            this.mkdir(destination, { ...args, recursive: true });
+            return this.exists(destination) && destination;
+        }
+        const destinationDir = this.dirname(destination);
+        if (!this.exists(destinationDir)) {
+            this.mkdir(destinationDir, { ...args, recursive: true });
+        }
+        NodeFS.cpSync(source, destination, {
+            ...args,
+            errorOnExist: false,
+            mode: undefined,
+            preserveTimestamps: true,
+            // verbatimSymlinks: true,
+        });
+        return (this.exists(destination) || this.isSymLink(destination)) && destination;
+    }
     /**
      * Deletes given files.
      *
@@ -64,18 +141,24 @@ export class NodeFiles extends AbstractConfigurableClass {
      *
      * @param paths         Paths to delete. Absolute or relative to root dir.
      * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
-     * @param logBaseLevel  Base depth for console messages (via NodeConsole).
+     * @param logLevel  Base depth for console messages (via NodeConsole).
+     *
+     * @since 2.0.0-alpha.draft — Renamed to delete from deleteFiles.
      */
-    deleteFiles(paths, dryRun = false, logBaseLevel = 0) {
+    delete(paths, logLevel = 0, dryRun = false) {
         for (const path of paths) {
             // continues
             if (!this.exists(path)) {
                 continue;
             }
-            const stat = NodeFS.statSync(path);
+            const stat = this.getStats(path);
+            // continues
+            if (!stat) {
+                continue;
+            }
             if (stat.isDirectory()) {
                 if (dryRun) {
-                    this.nc.timestampLog('deleting directory: ' + path, { depth: logBaseLevel });
+                    this.nc.timestampLog('deleting directory: ' + this.pathRelative(path).replace(' ', '%20'), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null });
                 }
                 else {
                     NodeFS.rmSync(path, { recursive: true, force: true });
@@ -83,13 +166,110 @@ export class NodeFiles extends AbstractConfigurableClass {
             }
             else if (stat.isFile() || stat.isSymbolicLink()) {
                 if (dryRun) {
-                    this.nc.timestampLog('deleting file: ' + path, { depth: logBaseLevel });
+                    this.nc.timestampLog('deleting file: ' + this.pathRelative(path).replace(' ', '%20'), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null });
                 }
                 else {
                     NodeFS.unlinkSync(path);
                 }
             }
         }
+    }
+    /**
+     * Gets the path dirname via {@link node:fs.dirname}.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    dirname(path) {
+        return NodePath.dirname(path);
+    }
+    /**
+     * Gets the NodeFS.Stats value for the given path.
+     *
+     * @category Meta
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    getStats(path) {
+        if (!this.exists(path)) {
+            return undefined;
+        }
+        return NodeFS.statSync(path);
+    }
+    /**
+     * Checks if the given path is a directory.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    isDirectory(path) {
+        return this.getStats(path)?.isDirectory() ?? false;
+    }
+    /**
+     * Checks if the given path is a file.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    isFile(path) {
+        return this.getStats(path)?.isFile() ?? false;
+    }
+    /**
+     * Checks if the given path is a symbolic link.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    isSymLink(path) {
+        return this.getStats(path)?.isSymbolicLink() ?? false;
+    }
+    /**
+     * Creates a directory.
+     *
+     * @category Filers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    mkdir(path, args) {
+        return NodeFS.mkdirSync(path, args);
+    }
+    /**
+     * Read the paths within a directory.
+     *
+     * @category Filers
+     *
+     * @param path  Directory to read.
+     * @param args  Optional configuration.
+     *
+     * @return  Paths within the given directory.
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    readDir(path, args = {}) {
+        args = this.mergeArgs(this.args.readDir, args, false);
+        return NodeFS.readdirSync(this.pathResolve(path), {
+            ...args,
+            withFileTypes: false,
+            encoding: 'utf-8',
+        }).filter(path => !path.match(/(^|\/)\._/g));
     }
     /**
      * Reads a file.
@@ -102,6 +282,7 @@ export class NodeFiles extends AbstractConfigurableClass {
      * @return  Contents of the file.
      */
     readFile(path, args = {}) {
+        args = this.mergeArgs(this.args.readFile, args, false);
         return NodeFS.readFileSync(this.pathResolve(path), {
             ...args,
             encoding: 'utf-8',
@@ -117,13 +298,15 @@ export class NodeFiles extends AbstractConfigurableClass {
      * @param args     Optional configuration.
      *
      * @return  Path to file if written, or false on failure.
+     *
+     * @since 2.0.0-alpha.draft — Renamed to write from writeFiles.
      */
-    writeFile(path, content, args = {}) {
+    write(path, content, args = {}) {
         path = this.pathResolve(path);
         content = Array.isArray(content)
             ? content.join('\n')
             : content;
-        args = this.mergeArgs(this.args.writeFileArgs, args, false);
+        args = this.mergeArgs(this.args.write, args, false);
         // returns if we aren't forcing or renaming
         if (this.exists(path)) {
             // returns
@@ -134,7 +317,7 @@ export class NodeFiles extends AbstractConfigurableClass {
                 path = this.uniquePath(path);
             }
         }
-        NodeFS.mkdirSync(NodePath.dirname(path), { recursive: true });
+        this.mkdir(this.dirname(path), { ...args, recursive: true });
         NodeFS.writeFileSync(path, content, args);
         return this.exists(path) && path;
     }
@@ -151,11 +334,35 @@ export class NodeFiles extends AbstractConfigurableClass {
      */
     changeBaseName(path, newName) {
         const isRelative = !path.match(/^\//g);
-        const newPath = this.pathResolve(NodePath.dirname(path), newName + NodePath.extname(path));
+        const newPath = this.pathResolve(this.dirname(path), newName + NodePath.extname(path));
         return isRelative ? this.pathRelative(newPath) : newPath;
     }
     /**
+     * Gets the basename of the given path.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    basename(path, suffix) {
+        if (suffix === false) {
+            suffix = undefined;
+        }
+        else if (!suffix) {
+            suffix = NodePath.extname(path) || undefined;
+        }
+        return NodePath.basename(path, suffix);
+    }
+    /**
      * Checks whether a file, directory, or link exists at the given path.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
      */
     exists(path) {
         return NodeFS.existsSync(this.pathResolve(path));
@@ -215,4 +422,16 @@ export class NodeFiles extends AbstractConfigurableClass {
         return uniqueFullPath;
     }
 }
+/**
+ * Used only for {@link NodeFiles}.
+ *
+ * @since 0.2.0
+ */
+(function (NodeFiles) {
+    ;
+    ;
+    ;
+    ;
+    ;
+})(NodeFiles || (NodeFiles = {}));
 //# sourceMappingURL=NodeFiles.js.map

@@ -3,17 +3,17 @@
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
+import NodeFS from 'node:fs';
 import { AbstractConfigurableClass } from '../abstracts/AbstractConfigurableClass.js';
 import { NodeConsole } from './NodeConsole.js';
 /**
  * A configurable class for working with files and paths in node.
+ *
+ * @since 0.2.0
  */
 export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
     /**
@@ -23,25 +23,48 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      */
     readonly nc: NodeConsole;
     /**
-     * @category Args
-     */
-    get ARGS_DEFAULT(): {
-        readonly argsRecursive: false;
-        readonly root: "./";
-        readonly writeFileArgs: {
-            readonly force: false;
-            readonly rename: false;
-        };
-    };
-    /**
-     * Build a complete args object.
+     * Default args for this stage.
      *
      * @category Args
      */
-    buildArgs(args?: Partial<NodeFiles.Args>): NodeFiles.Args;
+    get ARGS_DEFAULT(): {
+        readonly argsRecursive: true;
+        readonly copyFile: {
+            readonly force: true;
+            readonly rename: true;
+            readonly recursive: false;
+        };
+        readonly root: "./";
+        readonly readDir: {
+            readonly recursive: false;
+        };
+        readonly readFile: {};
+        readonly write: {
+            force: boolean;
+            rename: boolean;
+        };
+    };
     constructor(args?: Partial<NodeFiles.Args>, utils?: Partial<{
         nc: NodeConsole;
     }>);
+    /**
+     * Copies a file to another path.
+     *
+     * @category Filers
+     *
+     * @experimental
+     *
+     * @param source       Location to write file.
+     * @param destination  Location to copy the source path to.
+     * @param args         Optional configuration.
+     *
+     * @return  Path to file if written, or false on failure.
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    copyFile(source: string, destination: string, args?: Partial<NodeFiles.CopyFileArgs>): string | false;
     /**
      * Deletes given files.
      *
@@ -49,9 +72,88 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      *
      * @param paths         Paths to delete. Absolute or relative to root dir.
      * @param dryRun        If true, files that would be deleted are printed to the console and not deleted.
-     * @param logBaseLevel  Base depth for console messages (via NodeConsole).
+     * @param logLevel  Base depth for console messages (via NodeConsole).
+     *
+     * @since 2.0.0-alpha.draft — Renamed to delete from deleteFiles.
      */
-    deleteFiles(paths: string[], dryRun?: boolean, logBaseLevel?: number): void;
+    delete(paths: string[], logLevel?: number, dryRun?: boolean): void;
+    /**
+     * Gets the path dirname via {@link node:fs.dirname}.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    dirname(path: string): string;
+    /**
+     * Gets the NodeFS.Stats value for the given path.
+     *
+     * @category Meta
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    getStats(path: string): NodeFS.Stats | undefined;
+    /**
+     * Checks if the given path is a directory.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    isDirectory(path: string): boolean;
+    /**
+     * Checks if the given path is a file.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    isFile(path: string): boolean;
+    /**
+     * Checks if the given path is a symbolic link.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    isSymLink(path: string): boolean;
+    /**
+     * Creates a directory.
+     *
+     * @category Filers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    mkdir(path: string, args?: NodeFS.MakeDirectoryOptions & {
+        recursive: true;
+    }): string | undefined;
+    /**
+     * Read the paths within a directory.
+     *
+     * @category Filers
+     *
+     * @param path  Directory to read.
+     * @param args  Optional configuration.
+     *
+     * @return  Paths within the given directory.
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    readDir(path: string, args?: Partial<NodeFiles.ReadDirArgs>): string[];
     /**
      * Reads a file.
      *
@@ -73,8 +175,10 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @param args     Optional configuration.
      *
      * @return  Path to file if written, or false on failure.
+     *
+     * @since 2.0.0-alpha.draft — Renamed to write from writeFiles.
      */
-    writeFile(path: string, content: string | string[], args?: Partial<NodeFiles.WriteFileArgs>): string | false;
+    write(path: string, content: string | string[], args?: Partial<NodeFiles.WriteFileArgs>): string | false;
     /**
      * Changes just the file name of a path
      *
@@ -87,7 +191,23 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      */
     changeBaseName(path: string, newName: string): string;
     /**
+     * Gets the basename of the given path.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
+     */
+    basename(path: string, suffix?: string | false): string;
+    /**
      * Checks whether a file, directory, or link exists at the given path.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha.draft
+     *
+     * @experimental
      */
     exists(path: string): boolean;
     /**
@@ -122,12 +242,35 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
 }
 /**
  * Used only for {@link NodeFiles}.
+ *
+ * @since 0.2.0
  */
 export declare namespace NodeFiles {
     /**
      * Optional configuration for {@link NodeFiles}.
+     *
+     * @since 0.2.0
      */
-    type Args = AbstractConfigurableClass.Args & {
+    interface Args extends AbstractConfigurableClass.Args {
+        argsRecursive: true;
+        /**
+         * Default configuration for {@link NodeFiles.copy}.
+         *
+         * @since 2.0.0-alpha.draft — Renamed to copyFile from copyFileArgs.
+         */
+        copyFile: CopyFileArgs;
+        /**
+         * Default configuration for {@link NodeFiles.readDir}.
+         *
+         * @since 2.0.0-alpha.draft — Renamed to readDir from readDirArgs.
+         */
+        readDir: ReadDirArgs;
+        /**
+         * Default configuration for {@link NodeFiles.readFile}.
+         *
+         * @since 2.0.0-alpha.draft — Renamed to readFile from readFileArgs.
+         */
+        readFile: ReadFileArgs;
         /**
          * Path to the root directory (relative to node's cwd).
          *
@@ -135,21 +278,56 @@ export declare namespace NodeFiles {
          */
         root: string;
         /**
-         * Default configuration for {@link NodeFiles.writeFile}.
+         * Default configuration for {@link NodeFiles.write}.
+         *
+         * @since 2.0.0-alpha.draft — Renamed to write from writeArgs.
          */
-        writeFileArgs: WriteFileArgs;
-    };
+        write: WriteFileArgs;
+    }
+    /**
+     * Optional configuration for {@link NodeFiles.copy}.
+     *
+     * @see {@link https://nodejs.org/docs/latest-v22.x/api/fs.html#fscpsyncsrc-dest-options | node:fs.cpSync}
+     *
+     * @since 0.2.0
+     */
+    interface CopyFileArgs extends WriteFileArgs {
+        /**
+         * Function to filter copied files/directories.
+         *
+         * Return true to copy the item, false to ignore it.
+         *
+         * When ignoring a directory, all of its contents will be skipped as
+         * well.
+         */
+        filter?: (src: string, dest: string) => boolean;
+        /**
+         * Whether to copy directories recursively.
+         */
+        recursive: boolean;
+    }
+    /**
+     * Optional configuration for {@link NodeFiles.readDir}.
+     *
+     * @since 0.2.0
+     */
+    interface ReadDirArgs {
+        recursive: boolean;
+    }
     /**
      * Optional configuration for {@link NodeFiles.readFile}.
+     *
+     * @since 0.2.0
      */
-    type ReadFileArgs = {
-        encoding: BufferEncoding;
+    interface ReadFileArgs {
         flag?: string | undefined;
-    };
+    }
     /**
-     * Optional configuration for {@link NodeFiles.writeFile}.
+     * Optional configuration for {@link NodeFiles.write}.
+     *
+     * @since 0.2.0
      */
-    type WriteFileArgs = Partial<ReadFileArgs> & {
+    interface WriteFileArgs extends Partial<ReadFileArgs> {
         /**
          * Overwrite file at destination if it exists.
          *
@@ -163,6 +341,6 @@ export declare namespace NodeFiles {
          * @default false
          */
         rename: boolean;
-    };
+    }
 }
 //# sourceMappingURL=NodeFiles.d.ts.map

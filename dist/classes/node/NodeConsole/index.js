@@ -1,13 +1,10 @@
 /**
- * @since 2.0.0-draft
+ * @since 2.0.0-alpha.draft
  *
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@2.0.0-draft
- */
 /*!
- * @maddimathon/utility-typescript@2.0.0-draft
+ * @maddimathon/utility-typescript@2.0.0-alpha.draft
  * @license MIT
  */
 export * from './NodeConsole_Error.js';

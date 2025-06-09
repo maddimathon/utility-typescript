@@ -1,4 +1,4 @@
-/**
+/*
  * @package @maddimathon/utility-typescript
  * @author Maddi Mathon (www.maddimathon.com)
  * 
@@ -13,17 +13,18 @@ export type ReplacementObject = { find: string | RegExp, replace: string; };
 
 export function currentReplacements( stage: AbstractStage<any, any> ): ReplacementObject[] {
     return [
-        { find: '___CURRENT_DESC___', replace: stage.pkg.description, },
-        { find: '___CURRENT_URL___', replace: stage.pkg.homepage, },
-        { find: '___CURRENT_VERSION___', replace: stage.pkgVersion, },
-        { find: '___CURRENT_YEAR___', replace: stage.datestamp( null, 'yyyy' ), },
+        { find: /___(CURRENT)_DATE___/g, replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
+        { find: /___(CURRENT)_DESC(RIPTION)?___/g, replace: stage.pkg.description, },
+        { find: /___(CURRENT)_(HOMEPAGE|URL)___/g, replace: stage.pkg.homepage, },
+        { find: /___(CURRENT)_VERSION___/g, replace: stage.pkgVersion, },
+        { find: /___(CURRENT)_YEAR___/g, replace: stage.datestamp( null, 'yyyy' ), },
     ];
 }
 
 export function pkgReplacements( stage: AbstractStage<any, any> ): ReplacementObject[] {
     return [
-        { find: '___PKG_DATE___', replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
-        { find: '___PKG_VERSION___', replace: stage.pkgVersion, },
-        { find: '___PKG_YEAR___', replace: stage.datestamp( null, 'yyyy' ), },
+        { find: /___(PKG)_DATE___/g, replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
+        { find: /___(PKG)_VERSION___/g, replace: stage.pkgVersion, },
+        { find: /___(PKG)_YEAR___/g, replace: stage.datestamp( null, 'yyyy' ), },
     ];
 }

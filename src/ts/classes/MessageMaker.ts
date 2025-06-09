@@ -3,9 +3,6 @@
  * 
  * @packageDocumentation
  */
-/**
- * @package @maddimathon/utility-typescript@___CURRENT_VERSION___
- */
 /*!
  * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
@@ -25,6 +22,8 @@ import {
 
 /**
  * A configurable class for formatting message strings for various outputs.
+ * 
+ * @since 0.1.1 — Experimental
  * 
  * @experimental
  */
@@ -351,19 +350,13 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      * 
      * @category Args
      */
-    public buildArgs( args?: RecursivePartial<MessageMaker.Args> ): MessageMaker.Args {
+    public override buildArgs( args?: RecursivePartial<MessageMaker.Args> ): MessageMaker.Args {
 
-        const mergedDefault = AbstractConfigurableClass.abstractArgs(
-            this.ARGS_DEFAULT
-        ) as MessageMaker.Args;
+        const mergedDefault = this.ARGS_DEFAULT as MessageMaker.Args;
 
-        // using this.mergeArgs here can cause issues because this method is 
-        // sometimes called from the prototype
-        const built = mergeArgs(
-            mergedDefault,
-            args ?? {},
-            this.ARGS_DEFAULT.argsRecursive
-        );
+        // using this.mergeArgs here can cause issues because 
+        // this method is sometimes called from the prototype
+        const built = mergeArgs( mergedDefault, args, this.ARGS_DEFAULT.argsRecursive );
 
         if ( args?.msg && typeof args.msg !== 'function' ) {
 
@@ -393,14 +386,10 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      * @category Args
      */
     public msgArgs<
-        InputArgs extends RecursivePartial<MessageMaker.MsgArgs>,
-    >( args?: InputArgs ): MessageMaker.MsgArgs & InputArgs {
+        InputArgs extends Partial<MessageMaker.MsgArgs>,
+    >( args?: InputArgs ) {
 
-        const merged = mergeArgs(
-            this.args.msg,
-            args ?? {},
-            true
-        ) as MessageMaker.MsgArgs & InputArgs;
+        const merged = mergeArgs( this.args.msg, args as InputArgs, false );
 
         if ( merged.maxWidth !== null ) {
 
@@ -454,7 +443,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
         return lines.map( ( line ) => {
 
-            switch ( typeOf( line, { distinguishArrays: true, } ) ) {
+            switch ( typeOf( line ) ) {
 
                 case 'array':
                     return this.implodeWithIndent(
@@ -496,7 +485,11 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
             }
         }
 
-        if ( args.flag && this.args.paintFormat === 'node' ) {
+        if (
+            args.flag
+            && this.args.paintFormat === 'node'
+            && line.match( /^[\s\n]*$/gi ) === null
+        ) {
             line = ' ' + line + ' ';
         }
 
@@ -513,7 +506,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      */
     public msg(
         msg: string | string[],
-        _args: RecursivePartial<MessageMaker.MsgArgs> = {},
+        _args: Partial<MessageMaker.MsgArgs> = {},
     ): string {
         // VariableInspector.dump( { 'MessageMaker.msg() _args': _args } );
         const args: MessageMaker.MsgArgs = this.msgArgs( _args );
@@ -574,23 +567,25 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
         const ret: string[] = [];
 
-        messages.forEach( ( [ msg, args ], index ) => {
+        messages.forEach( ( [ _msg, _args ], index ) => {
 
-            args = this.mergeArgs( defaultUniversalArgs, args ?? {}, true );
+            _args = this.mergeArgs( defaultUniversalArgs, _args ?? {}, true );
 
-            if ( index > 0 && universalArgs.hangingIndent && defaultUniversalArgs.joiner?.match( /\n/g ) ) {
+            if (
+                index > 0
+                && universalArgs.hangingIndent
+                && defaultUniversalArgs.joiner?.match( /\n/g )
+            ) {
 
-                const indent = universalArgs.hangingIndent ?? this.ARGS_DEFAULT.msg.hangingIndent;
-
-                args = {
-                    ...args,
+                _args = {
+                    ..._args,
 
                     hangingIndent: '',
-                    indent,
+                    indent: universalArgs.hangingIndent ?? this.ARGS_DEFAULT.msg.hangingIndent,
                 };
             }
 
-            ret.push( this.msg( msg, args ) );
+            ret.push( this.msg( _msg, _args ) );
         } );
 
         return (
@@ -639,7 +634,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
         msgArgs: RecursivePartial<MessageMaker.BulkMsgArgs> = {},
 
-        timeArgs: RecursivePartial<MessageMaker.MsgArgs> & Partial<{
+        timeArgs: Partial<MessageMaker.MsgArgs> & Partial<{
             date: Date;
             stamp: timestamp.Args_Input;
         }> = {},
@@ -673,9 +668,6 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                 return m_arr;
             } );
         }
-
-        /** Properly formatted as bulk messages. */
-        const messages: MessageMaker.BulkMsgs = msg;
 
         // the actual values to be used for the whole message, but ignore when
         // formatting the message parts
@@ -711,6 +703,9 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
             ),
         };
 
+        /** Properly formatted as bulk messages. */
+        const messages: MessageMaker.BulkMsgs = msg;
+
         /** Compiled strings for each message part. */
         const compiledMessages = {
 
@@ -733,7 +728,8 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                         linesIn: 0,
                         linesOut: 0,
                     } as Partial<MessageMaker.BulkMsgArgs>,
-                    false )
+                    false
+                ),
             ),
         };
 
@@ -748,14 +744,18 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
 /**
  * Used only for {@link MessageMaker}.
+ * 
+ * @since 0.1.1
  */
 export namespace MessageMaker {
 
     /**
      * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter`
      * function.
+     * 
+     * @since 0.1.1
      */
-    export type AnsiColours = {
+    export interface AnsiColours {
 
         /** 
          * 4-bit colours to be used.
@@ -787,8 +787,10 @@ export namespace MessageMaker {
 
     /**
      * Optional configuration for {@link MessageMaker}.
+     * 
+     * @since 0.1.1
      */
-    export type Args = AbstractConfigurableClass.Args & {
+    export interface Args extends AbstractConfigurableClass.Args {
 
         /**
          * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter` function.
@@ -837,9 +839,10 @@ export namespace MessageMaker {
      *
      * `{@link MessageMaker.MsgArgs}.linesIn` and
      * `{@link MessageMaker.MsgArgs}.linesOut` are omitted from args because in
-     * bulk messages, they should just be a string in the `messages` param array.
-     * 
-     * @expandType RecursivePartial
+     * bulk messages, they should just be a string in the `messages` param
+     * array.
+     *
+     * @since 0.1.1
      */
     export type BulkMsgs = (
         | [ string | string[], RecursivePartial<Omit<MessageMaker.MsgArgs, "linesIn" | "linesOut">> | undefined ]
@@ -849,8 +852,7 @@ export namespace MessageMaker {
     /**
      * Colour slugs that can be used for formatting.
      * 
-     * @see {@link MessageMaker.painter}
-     * @see {@link MessageMaker.PainterArgs}
+     * @since 0.1.1
      */
     export type Colour =
         | "red"
@@ -866,8 +868,10 @@ export namespace MessageMaker {
 
     /**
      * Optional configuration for {@link MessageMaker.msg}.
+     * 
+     * @since 0.1.1
      */
-    export type MsgArgs = PainterArgs & {
+    export interface MsgArgs extends PainterArgs {
 
         /**
          * If defined, an indent is added to every line.  This is best for
@@ -945,8 +949,10 @@ export namespace MessageMaker {
 
     /**
      * Optional configuration for {@link MessageMaker.msgs}.
+     * 
+     * @since 0.1.1
      */
-    export type BulkMsgArgs = MsgArgs & {
+    export interface BulkMsgArgs extends MsgArgs {
 
         /**
          * Used to join bulk strings together.
@@ -958,8 +964,10 @@ export namespace MessageMaker {
 
     /**
      * Optional configuration for {@link MessageMaker.painter}.
+     * 
+     * @since 0.1.1
      */
-    export type PainterArgs = {
+    export interface PainterArgs {
 
         /**
          * If true, applies bold font styles.
