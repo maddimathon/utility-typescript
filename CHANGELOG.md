@@ -19,6 +19,11 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta** — 2025-06-09
+
+External testing complete, upgrading to beta.
+
+
 ## **2.0.0-alpha.1** — 2025-06-09
 
 ### Fixed
