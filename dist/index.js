@@ -13,7 +13,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha
+ * @maddimathon/utility-typescript@2.0.0-alpha.1
  * @license MIT
  */
 export * as classes from './classes/index.js';

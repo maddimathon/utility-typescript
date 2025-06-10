@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha
+ * @maddimathon/utility-typescript@2.0.0-alpha.1
  * @license MIT
  */
 import type { AnyClass } from '../types/functions/index.js';

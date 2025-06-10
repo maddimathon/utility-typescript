@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-alpha
+ * @maddimathon/utility-typescript@2.0.0-alpha.1
  * @license MIT
  */
 import NodeFS from 'node:fs';
@@ -61,6 +61,8 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @return  Path to file if written, or false on failure.
      *
      * @since 2.0.0-alpha
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so,
+     *                            returns ''.
      *
      * @experimental
      */
@@ -133,12 +135,11 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @category Filers
      *
      * @since 2.0.0-alpha
+     * @since 2.0.0-alpha.1 — Removed args param and now forces recursion.
      *
      * @experimental
      */
-    mkdir(path: string, args?: NodeFS.MakeDirectoryOptions & {
-        recursive: true;
-    }): string | undefined;
+    mkdir(path: string): string | undefined;
     /**
      * Read the paths within a directory.
      *
@@ -150,6 +151,8 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @return  Paths within the given directory.
      *
      * @since 2.0.0-alpha
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so,
+     *                            returns ''.
      *
      * @experimental
      */
@@ -163,6 +166,9 @@ export declare class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args>
      * @param args  Optional configuration.
      *
      * @return  Contents of the file.
+     *
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so,
+     *                            returns ''.
      */
     readFile(path: string, args?: Partial<NodeFiles.ReadFileArgs>): string;
     /**

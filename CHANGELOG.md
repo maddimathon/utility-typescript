@@ -19,6 +19,13 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-alpha.1** — 2025-06-09
+
+### Fixed
+- Added NodeFiles.exists() checks to NodeFiles.copyFile(), NodeFiles.mkdir(), NodeFiles.readDir(), NodeFiles.readFile()
+- Fixed NodeFiles.mkdir() to be recursive by default
+
+
 ## **2.0.0-alpha** — 2025-06-09
 
 ### Renamed & Moved

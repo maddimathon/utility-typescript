@@ -3,12 +3,11 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-alpha
+# Utility TypeScript @ 2.0.0-alpha.1
 <!--/README_HEADER-->
 
 <!--README_DESC-->
-TypeScript utilities (types, functions, classes) to use in various node/npm
-projects.
+TypeScript utilities (types, functions, classes) to use in various projects.
 <!--/README_DESC-->
 
 Probably not best to use in production/client-side without a bundler (and
@@ -32,8 +31,8 @@ or
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@2.0.0-alpha
-npm i -D github:maddimathon/utility-typescript#2.0.0-alpha
+npm i -D @maddimathon/utility-typescript@2.0.0-alpha.1
+npm i -D github:maddimathon/utility-typescript#2.0.0-alpha.1
 ```
 <!--/README_INSTALL-->
 

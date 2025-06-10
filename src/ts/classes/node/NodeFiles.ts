@@ -144,6 +144,8 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * @return  Path to file if written, or false on failure.
      * 
      * @since 2.0.0-alpha
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so, 
+     *                            returns ''.
      * 
      * @experimental
      */
@@ -157,6 +159,11 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
         destination = this.pathResolve( destination );
 
         args = this.mergeArgs( this.args.copyFile, args, false );
+
+        // returns
+        if ( !this.exists( source ) ) {
+            return false;
+        }
 
         // returns if we aren't forcing or renaming
         if ( this.exists( destination ) ) {
@@ -175,14 +182,14 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
 
         // returns
         if ( !args.recursive && this.isDirectory( source ) ) {
-            this.mkdir( destination, { ...args, recursive: true } );
+            this.mkdir( destination );
             return this.exists( destination ) && destination;
         }
 
         const destinationDir = this.dirname( destination );
 
         if ( !this.exists( destinationDir ) ) {
-            this.mkdir( destinationDir, { ...args, recursive: true } );
+            this.mkdir( destinationDir );
         }
 
         NodeFS.cpSync( source, destination, {
@@ -316,13 +323,14 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * @category Filers
      * 
      * @since 2.0.0-alpha
+     * @since 2.0.0-alpha.1 — Removed args param and now forces recursion.
      * 
      * @experimental
      */
-    public mkdir( path: string, args?: NodeFS.MakeDirectoryOptions & {
-        recursive: true;
-    } ) {
-        return NodeFS.mkdirSync( path, args );
+    public mkdir( path: string ) {
+        return NodeFS.mkdirSync( path, {
+            recursive: true,
+        } );
     }
 
     /**
@@ -336,6 +344,8 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * @return  Paths within the given directory.
      * 
      * @since 2.0.0-alpha
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so, 
+     *                            returns ''.
      * 
      * @experimental
      */
@@ -343,11 +353,17 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
         path: string,
         args: Partial<NodeFiles.ReadDirArgs> = {},
     ): string[] {
+        path = this.pathResolve( path );
+
+        // returns
+        if ( !this.exists( path ) ) {
+            return [];
+        }
 
         args = this.mergeArgs( this.args.readDir, args, false );
 
         return NodeFS.readdirSync(
-            this.pathResolve( path ),
+            path,
             {
                 ...args,
                 withFileTypes: false,
@@ -365,16 +381,25 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
      * @param args  Optional configuration.
      * 
      * @return  Contents of the file.
+     * 
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so, 
+     *                            returns ''.
      */
     public readFile(
         path: string,
         args: Partial<NodeFiles.ReadFileArgs> = {},
     ): string {
+        path = this.pathResolve( path );
+
+        // returns
+        if ( !this.exists( path ) ) {
+            return '';
+        }
 
         args = this.mergeArgs( this.args.readFile, args, false );
 
         return NodeFS.readFileSync(
-            this.pathResolve( path ),
+            path,
             {
                 ...args,
                 encoding: 'utf-8',
@@ -426,7 +451,7 @@ export class NodeFiles extends AbstractConfigurableClass<NodeFiles.Args> {
             }
         }
 
-        this.mkdir( this.dirname( path ), { ...args, recursive: true } );
+        this.mkdir( this.dirname( path ) );
 
         NodeFS.writeFileSync( path, content, args );
 
