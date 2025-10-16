@@ -15,7 +15,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta
+ * @maddimathon/utility-typescript@2.0.0-beta.1.draft
  * @license MIT
  */
 export * from './abstracts/index.js';

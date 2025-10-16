@@ -25,15 +25,15 @@ describe( 'NodeFiles', () => {
 
         const testSets: [ string, string ][] = [
             [
-                '/Volumes/maddi/Files/Creative/Coding/Code Libraries/utility-typescript/package.json',
+                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/package.json',
                 'package.json',
             ],
             [
-                '/Volumes/maddi/Files/Creative/Coding/Code Libraries/utility-typescript/.scripts/',
+                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/.scripts/',
                 '.scripts',
             ],
             [
-                '/Volumes/maddi/Files/Creative/Coding/Code Libraries/utility-typescript/',
+                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/',
                 '.',
             ],
         ];
@@ -48,15 +48,15 @@ describe( 'NodeFiles', () => {
         const testSets: [ string[], string ][] = [
             [
                 [ 'package.json' ],
-                '/Volumes/maddi/Files/Creative/Coding/Code Libraries/utility-typescript/package.json'
+                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/package.json'
             ],
             [
                 [ '.scripts', 'package.ts' ],
-                '/Volumes/maddi/Files/Creative/Coding/Code Libraries/utility-typescript/.scripts/package.ts'
+                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/.scripts/package.ts'
             ],
             [
                 [ '.scripts', 'classes/' ],
-                '/Volumes/maddi/Files/Creative/Coding/Code Libraries/utility-typescript/.scripts/classes'
+                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/.scripts/classes'
             ],
         ];
 

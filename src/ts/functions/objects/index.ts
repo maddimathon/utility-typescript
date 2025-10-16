@@ -8,4 +8,5 @@
  * @license MIT
  */
 
+export * from './isObjectEmpty.js';
 export * from './mergeArgs.js';
