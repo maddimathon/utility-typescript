@@ -1,0 +1,48 @@
+{
+    "name": "@maddimathon/utility-build",
+    "version": "2.1.0-pre",
+
+    "author": "Maddi Mathon (www.maddimathon.com)",
+    "description": "Opinionated utilities for easy build systems in npm projects.",
+
+    "homepage": "https://maddimathon.github.io/utility-js",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/maddimathon/utility-js.git"
+    },
+    
+    "engines": {
+        "node": ">=22"
+    },
+
+    "type": "module",
+
+    "files": [
+        "./dist/**/*",
+        "./LICENSE.md",
+        "./package.json",
+        "./README.md"
+    ],
+
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+
+    "exports": {
+        ".": "./dist/index.js",
+        "./*": [
+            "./dist/*.js",
+            "./dist/*/index.js",
+            "./dist/*"
+        ]
+    },
+
+    "bugs": {
+        "url": "https://github.com/maddimathon/utility-js/issues"
+    },
+
+    "dependencies": {
+        "@maddimathon/utility-node": "file:../utility-node",
+        "@maddimathon/utility-js": "file:../utility-js"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "Insert @since to docblock": {
+        "prefix": "@since",
+        "body": "@since ___PKG_VERSION___"
+    },
+    "Add file header (js, ts)": {
+        "scope": "javascript,typescript",
+        "prefix": [ "start", "start-ts" ],
+        "body": [
+            "/**",
+            " * @since ___PKG_VERSION___",
+            " * ",
+            " * @packageDocumentation",
+            " */",
+            "/*!",
+            " * @maddimathon/utility-js@___CURRENT_VERSION___",
+            " * @license MIT",
+            " */",
+            "$0",
+        ]
+    },
+}

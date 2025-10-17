@@ -21,9 +21,9 @@ my personal needs/preferences rather than (web) developers in general.
 ## Changelog
 
 <!--README_DOCS_CHANGELOG-->
-Read it from [the source](https://github.com/maddimathon/utility-typescript/blob/main/CHANGELOG.md) 
+Read it from [the source](https://github.com/maddimathon/utility-js/blob/main/CHANGELOG.md) 
 or 
-[the docs site](https://maddimathon.github.io/utility-typescript/Changelog.html).
+[the docs site](https://maddimathon.github.io/utility-js/Changelog.html).
 <!--/README_DOCS_CHANGELOG-->
 
 
@@ -31,8 +31,8 @@ or
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@2.0.0-beta.1
-npm i -D github:maddimathon/utility-typescript#2.0.0-beta.1
+npm i -D @maddimathon/utility-js@2.0.0-beta.1
+npm i -D github:maddimathon/utility-js#2.0.0-beta.1
 ```
 <!--/README_INSTALL-->
 
@@ -43,7 +43,7 @@ For an overview of all exported items, including types, see the docs website
 below.
 
 <!--README_DOCS_CTA-->
-[Read Documentation](https://maddimathon.github.io/utility-typescript)
+[Read Documentation](https://maddimathon.github.io/utility-js)
 <!--/README_DOCS_CTA-->
 
 
@@ -59,12 +59,12 @@ import {
     type Types,
     classes,
     functions,
-} from '@maddimathon/utility-typescript';
+} from '@maddimathon/utility-js';
 
-import type { ... } from '@maddimathon/utility-typescript/types';
+import type { ... } from '@maddimathon/utility-js/types';
 
-import { ... } from '@maddimathon/utility-typescript/classes';
-import { ... } from '@maddimathon/utility-typescript/functions';
+import { ... } from '@maddimathon/utility-js/classes';
+import { ... } from '@maddimathon/utility-js/functions';
 ```
 
 
@@ -97,8 +97,7 @@ resources from scripts meant to be run via npm.
 
 Long and clear is better than short and confusing.
 
-Abstract classes should start with `Abstract` (e.g., 
-[`AbstractConfigurableClass`](./src/ts/classes/abstracts/AbstractConfigurableClass.ts)).
+Abstract classes should start with `Abstract` (e.g., `AbstractClass`).
 
 Classes made only to be children of other classes should be prefixed with their
 parent class (e.g., `ParentClass_Child`).
@@ -129,7 +128,7 @@ but with `.test` added before the extension — e.g., `myFunction.ts` is tested 
 
 Every subdirectory should have its own `index.ts` that re-exports the contents
 of its files.  **Types should also be tested** using the utility types in 
-{@link Types.Test}.
+{@link utility-js.Types.Test}.
 
 
 

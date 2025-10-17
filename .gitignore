@@ -19,12 +19,11 @@
 
 # DIST
 # ==== #
-dist/**/*.css.map
-dist/**/*.js.map
-dist/**/*.ts.map
-dist/**/*.test.d.ts
-dist/**/*.test.js
-dist/docs/javascript.TypeDoc.json
+packages/*/dist/**/*.css.map
+packages/*/dist/**/*.js.map
+packages/*/dist/**/*.ts.map
+packages/*/dist/**/*.test.d.ts
+packages/*/dist/**/*.test.js
 
 
 # DOCS

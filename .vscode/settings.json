@@ -1,4 +1,23 @@
 {
+    "files.readonlyInclude": {
+        ".snapshots/**/*": true,
+        "@releases/**/*": true,
+        "docs/**/*": true,
+        "packages/*/dist/**/*": true,
+    },
+
+    "scss.scannerExclude": [
+        "**/.git",
+        "**/node_modules",
+        "**/bower_components",
+        "**/.snapshots",
+        "**/@releases",
+        "**/dist",
+        "**/docs",
+        "dist",
+        "docs",
+    ],
+
     "todo.embedded.exclude": [
         "**/._*",
         "**/._*/**",

@@ -1,5 +1,5 @@
 {
-    "name": "@maddimathon/utility-typescript",
+    "name": "@maddimathon/utility-js",
     "version": "2.0.0-beta.1",
 
     "author": "Maddi Mathon (www.maddimathon.com)",
@@ -16,11 +16,11 @@
         "typescript-utility-types"
     ],
 
-    "homepage": "https://maddimathon.github.io/utility-typescript",
+    "homepage": "https://maddimathon.github.io/utility-js",
     "license": "MIT",
     "repository": {
       "type": "git",
-      "url": "https://github.com/maddimathon/utility-typescript.git"
+      "url": "https://github.com/maddimathon/utility-js.git"
     },
 
     "config": {
@@ -70,36 +70,26 @@
     },
 
     "bugs": {
-        "url": "https://github.com/maddimathon/utility-typescript/issues"
+        "url": "https://github.com/maddimathon/utility-js/issues"
     },
 
     "scripts": {
-        "test-vardump": "tsx --tsconfig .scripts/tsconfig.json .scripts/sample/var-inspect.ts",
-        "test-console": "tsx --tsconfig .scripts/tsconfig.json .scripts/sample/node-console.ts",
-        
         "commit": "sh .scripts/commit.sh",
 
-        "snap": "tsx --tsconfig .scripts/tsconfig.json .scripts/snapshot.ts",
+        "postinstall": "run-p postinstall:*",
+            "postinstall:1": "cd packages/utility-js && npm i",
+            "postinstall:2": "cd packages/utility-node && npm i",
+            "postinstall:3": "cd packages/utility-build && npm i",
 
-        "compile": "tsx --tsconfig .scripts/tsconfig.json .scripts/compile.ts",
-
-        "build":       "tsx --tsconfig .scripts/tsconfig.json .scripts/build.ts",
-        "quick-build": "tsx --tsconfig .scripts/tsconfig.json .scripts/build.ts --without minimize,prettify",
-
-        "doc": "tsx --tsconfig .scripts/tsconfig.json .scripts/doc.ts",
-        "test": "tsx --tsconfig .scripts/tsconfig.json .scripts/test.ts",
-        
-
-        "prewatch": "npm run --silent build -- --starting --without minimize,prettify,test",
-        
-        "watch": "run-p --silent watch:*",
-            "watch:js": "watch -p 'src/ts/**/*' -c 'npm run --silent quick-build -- --compile-only js --watchedWatcher \"watch:js\" --watchedChange --watchedFilename \"$FILENAME\" --watchedEvent \"$EVENT\"'",
-        
-
-        "package": "tsx --tsconfig .scripts/tsconfig.json .scripts/package.ts",
-        
-        "dryrun":  "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts --dryrun --without-pkg snapshot",
-        "release": "tsx --tsconfig .scripts/tsconfig.json .scripts/release.ts"
+        "compile": "run-s compile:*",
+            "compile:ts": "run-p compile:ts:*",
+                "compile:ts:1": "tsc --project packages/utility-js/src/ts/tsconfig.json",
+                "compile:ts:2": "tsc --project packages/utility-node/src/ts/tsconfig.json",
+                "compile:ts:3": "tsc --project packages/utility-build/src/ts/tsconfig.json",
+                
+        "document": "typedoc",
+                
+        "build": "run-s compile document"
 
     },
     "dependencies": {
@@ -107,24 +97,19 @@
     },
     "devDependencies": {
         "@tsconfig/node20": "20.1.5",
-        "@types/jest": "29.5.14",
+        "@types/jest": "30.0.0",
         "@types/luxon": "3.6.2",
         "@types/minimist": "1.2.5",
         "@types/node": "22.14.0",
-        "glob": "11.0.1",
-        "jest": "29.7.0",
-        "luxon": "3.6.1",
+        "glob": "11.0.3",
+        "jest": "30.2.0",
+        "luxon": "3.7.2",
         "minimist": "1.2.8",
         "npm-run-all": "4.1.5",
-        "tsx": "4.19.3",
-        "typedoc": "0.28.2",
+        "tsx": "4.20.6",
+        "typedoc": "0.28.14",
         "typedoc-plugin-inline-sources": "1.3.0",
-        "typescript": "5.8.3",
+        "typescript": "5.9.3",
         "watch-cli": "0.2.3"
-    },
-    "browserslist": [
-        "last 3 major versions",
-        "> 0.5%",
-        "not dead"
-    ]
+    }
 }

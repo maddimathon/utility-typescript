@@ -1,0 +1,23 @@
+{
+    "extends": [
+        "@tsconfig/node20/tsconfig.json",
+        "../../../../tsconfig.base.json",
+        "../../../utility-js/src/ts/tsconfig.json"
+    ],
+    "include": [
+        "**/*",
+        "./src/ts/utility-js/**/*"
+    ],
+    "exclude": [
+        "./node_modules/**/*"
+    ],
+    "compilerOptions": {
+        "baseUrl": "../../",
+        "outDir": "../../../../packages/utility-js/dist/",
+        "rootDir": "../../",
+        
+        "lib": [ "ES2020", "ES2022" ],
+        "module": "Node18",
+        "moduleResolution": "Node16"
+    }
+}

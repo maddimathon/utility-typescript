@@ -2,6 +2,8 @@
     "compilerOptions": {
         "allowJs": true,
         "checkJs": true,
+        "declaration": true,
+        "declarationMap": true,
         "esModuleInterop": true,
         "exactOptionalPropertyTypes": false,
         "forceConsistentCasingInFileNames": true,
@@ -16,8 +18,10 @@
         "removeComments": false,
         "resolveJsonModule": true,
         "skipLibCheck": true,
+        "sourceMap": true,
         "strict": true,
         "strictBindCallApply": true,
+        "target": "ES2022"
     },
     "$schema": "https://json.schemastore.org/tsconfig"
 }

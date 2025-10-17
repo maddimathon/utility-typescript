@@ -1,0 +1,17 @@
+{
+    "extends": [
+        "../../packages/utility-js/src/ts/tsconfig.json",
+        "../../packages/utility-node/src/ts/tsconfig.json",
+        "../../packages/utility-build/src/ts/tsconfig.json"
+    ],
+    "include": [
+        "../../packages/utility-build/src/ts/**/*",
+        "../../packages/utility-node/src/ts/**/*",
+        "../../packages/utility-js/src/ts/**/*"
+    ],
+    "compilerOptions": {
+        "baseUrl": "../../",
+        "noEmit": true,
+        "rootDir": "../../"
+    }
+}
