@@ -483,6 +483,23 @@ export class VariableInspector<
                     case 'Date':
                     case 'RegExp':
                         return properties;
+
+                    case 'Map':
+                        return Array.from(
+                            ( this._rawValue as Map<unknown, unknown> ).entries(),
+                            ( [ key, value ] ): VariableInspector.Child => ( {
+
+                                key: {
+                                    name: key as "number" | "string" | "symbol",
+                                    type: typeof key as "number" | "string" | "symbol",
+                                },
+
+                                vi: this._new( { [ this.keyFormatter( key as number | string | symbol ) ]: value }, {
+                                    equalString: ':',
+                                    includePrefix: true,
+                                } ),
+                            } )
+                        );
                 }
                 break;
 
@@ -507,7 +524,7 @@ export class VariableInspector<
                 vi: this._new( { [ this.keyFormatter( name ) ]: value }, {
                     equalString: ':',
                     includePrefix: true,
-                } )
+                } ),
             } );
         } );
 

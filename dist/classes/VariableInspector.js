@@ -333,6 +333,17 @@ export class VariableInspector extends AbstractConfigurableClass {
                     case 'Date':
                     case 'RegExp':
                         return properties;
+                    case 'Map':
+                        return Array.from(this._rawValue.entries(), ([key, value]) => ({
+                            key: {
+                                name: key,
+                                type: typeof key,
+                            },
+                            vi: this._new({ [this.keyFormatter(key)]: value }, {
+                                equalString: ':',
+                                includePrefix: true,
+                            }),
+                        }));
                 }
                 break;
             default:
@@ -350,7 +361,7 @@ export class VariableInspector extends AbstractConfigurableClass {
                 vi: this._new({ [this.keyFormatter(name)]: value }, {
                     equalString: ':',
                     includePrefix: true,
-                })
+                }),
             });
         });
         return properties;
