@@ -101,6 +101,7 @@ describe( 'mergeArgs()', () => {
         },
 
         recursive: {
+
             partial: {
                 ...defaultObj,
                 ...inputObj.partialRecursive,
@@ -108,6 +109,23 @@ describe( 'mergeArgs()', () => {
                 child: {
                     ...defaultObj.child,
                     ...inputObj.partialRecursive.child,
+                },
+            },
+
+            mergeArrays: {
+                ...defaultObj,
+                ...inputObj.partialRecursive,
+
+                child: {
+                    ...defaultObj.child,
+                    ...inputObj.partialRecursive.child,
+
+                    1: [
+                        'default value 1',
+                        'default value 2',
+                        'override value 1',
+                        'override value 2',
+                    ],
                 },
             },
         },
@@ -124,6 +142,7 @@ describe( 'mergeArgs()', () => {
         recursive: {
             full: mergeArgs( defaultObj, inputObj.full, true ),
             partial: mergeArgs( defaultObj, inputObj.partialRecursive, true ),
+            mergeArrays: mergeArgs( defaultObj, inputObj.partialRecursive, true, true ),
         },
     };
 
@@ -179,6 +198,19 @@ describe( 'mergeArgs()', () => {
 
         // recursive, partial merging should return a combination of default and overridden props
         expect( merged.recursive.partial ).toEqual( expected.recursive.partial );
+
+        // as tests[0] only so that type is used
+        true as tests[ 0 ];
+    } );
+
+    test( 'mergeArgs() - recursive, partial input obj, merge arrays', () => {
+
+        type tests = [
+            Test.Expect<Test.Exactly<typeof merged.recursive.mergeArrays, typeof expected.recursive.mergeArrays>>,
+        ];
+
+        // recursive, partial merging should return a combination of default and overridden props
+        expect( merged.recursive.mergeArrays ).toEqual( expected.recursive.mergeArrays );
 
         // as tests[0] only so that type is used
         true as tests[ 0 ];

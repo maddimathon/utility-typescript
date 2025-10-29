@@ -9,6 +9,7 @@
  */
 
 import type { RecursivePartial } from '../../types/objects/index.js';
+import { arrayUnique } from '../arrays/arrayUnique.js';
 
 
 /**
@@ -32,6 +33,7 @@ export async function mergeArgsAsync<
     defaults: D,
     inputs?: undefined,
     recursive?: boolean | undefined,
+    mergeArrays?: boolean | undefined,
 ): Promise<D>;
 
 /**
@@ -45,6 +47,7 @@ export async function mergeArgsAsync<
     defaults: D,
     inputs: I,
     recursive?: false | undefined,
+    mergeArrays?: boolean | undefined,
 ): Promise<D & I>;
 
 /**
@@ -58,6 +61,7 @@ export async function mergeArgsAsync<
     defaults: D,
     inputs: I,
     recursive: true,
+    mergeArrays?: boolean | undefined,
 ): Promise<D & I>;
 
 /**
@@ -70,6 +74,7 @@ export async function mergeArgsAsync<
     defaults: D,
     inputs?: I | undefined,
     recursive?: boolean | undefined,
+    mergeArrays?: boolean | undefined,
 ): Promise<D | D & I>;
 
 
@@ -93,6 +98,7 @@ export async function mergeArgsAsync<
     defaults: D,
     inputs?: I | undefined,
     recursive: boolean = false,
+    mergeArrays: boolean = false,
 ): Promise<D | D & I> {
     // returns
     // invalid default object just returns the input (or empty object)
@@ -148,17 +154,25 @@ export async function mergeArgsAsync<
             // continues
             // not a simple args object and shouldn't have its props overwritten
             if (
-                typeof ( defaultValue as { prototype?: Function; } ).prototype !== 'undefined'
-                || typeof ( inputValue as { prototype?: Function; } ).prototype !== 'undefined'
+                Array.isArray( defaultValue )
+                || Array.isArray( inputValue )
             ) {
+                if (
+                    mergeArrays
+                    && Array.isArray( defaultValue )
+                    && Array.isArray( inputValue )
+                ) {
+                    return [ key, arrayUnique( defaultValue.concat( inputValue ) ) ];
+                }
+
                 return [ key, inputValue ];
             }
 
             // continues
             // not a simple args object and shouldn't have its props overwritten
             if (
-                Array.isArray( defaultValue )
-                || Array.isArray( inputValue )
+                typeof ( defaultValue as { prototype?: Function; } ).prototype !== 'undefined'
+                || typeof ( inputValue as { prototype?: Function; } ).prototype !== 'undefined'
             ) {
                 return [ key, inputValue ];
             }
@@ -168,10 +182,11 @@ export async function mergeArgsAsync<
                     defaultValue,
                     inputValue,
                     recursive,
+                    mergeArrays,
                 ) as Promise<( D & I )[ keyof D ]>
             ).then( ( value ) => [ key, value ] );
         }
     );
 
-    return Object.fromEntries( await Promise.all( entries ) );
+    return Promise.all( entries ).then( Object.fromEntries );
 }

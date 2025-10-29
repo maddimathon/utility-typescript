@@ -9,6 +9,7 @@
  */
 
 import type { RecursivePartial } from '../../types/objects/index.js';
+import { arrayUnique } from '../arrays/arrayUnique.js';
 
 
 /**
@@ -32,6 +33,7 @@ export function mergeArgs<
     defaults: D,
     inputs?: undefined,
     recursive?: boolean | undefined,
+    mergeArrays?: boolean | undefined,
 ): D;
 
 /**
@@ -45,6 +47,7 @@ export function mergeArgs<
     defaults: D,
     inputs: I,
     recursive?: false | undefined,
+    mergeArrays?: boolean | undefined,
 ): D & I;
 
 /**
@@ -58,6 +61,7 @@ export function mergeArgs<
     defaults: D,
     inputs: I,
     recursive: true,
+    mergeArrays?: boolean | undefined,
 ): D & I;
 
 /**
@@ -70,6 +74,7 @@ export function mergeArgs<
     defaults: D,
     inputs?: I | undefined,
     recursive?: boolean | undefined,
+    mergeArrays?: boolean | undefined,
 ): D | D & I;
 
 
@@ -85,6 +90,7 @@ export function mergeArgs<
  * @category Arg Objects
  * 
  * @since 0.1.0
+ * @since ___PKG_VERSION___ — Added mergeArrays param.
  */
 export function mergeArgs<
     D extends object,
@@ -93,6 +99,7 @@ export function mergeArgs<
     defaults: D,
     inputs?: I | undefined,
     recursive: boolean = false,
+    mergeArrays: boolean = false,
 ) {
     // invalid default object becomes an empty object
     if ( typeof defaults !== 'object' || !defaults ) { defaults = {} as D; }
@@ -141,17 +148,26 @@ export function mergeArgs<
         // continues
         // not a simple args object and shouldn't have its props overwritten
         if (
-            typeof ( defaultValue as { prototype?: Function; } ).prototype !== 'undefined'
-            || typeof ( inputValue as { prototype?: Function; } ).prototype !== 'undefined'
+            Array.isArray( defaultValue )
+            || Array.isArray( inputValue )
         ) {
+            if (
+                mergeArrays
+                && Array.isArray( defaultValue )
+                && Array.isArray( inputValue )
+            ) {
+                result[ key ] = arrayUnique(
+                    defaultValue.concat( inputValue )
+                ) as ( D & I )[ keyof D ];
+            }
             continue;
         }
 
         // continues
         // not a simple args object and shouldn't have its props overwritten
         if (
-            Array.isArray( defaultValue )
-            || Array.isArray( inputValue )
+            typeof ( defaultValue as { prototype?: Function; } ).prototype !== 'undefined'
+            || typeof ( inputValue as { prototype?: Function; } ).prototype !== 'undefined'
         ) {
             continue;
         }
@@ -161,6 +177,7 @@ export function mergeArgs<
             defaultValue,
             inputValue,
             recursive,
+            mergeArrays,
         ) as ( D & I )[ keyof D ];
     }
 

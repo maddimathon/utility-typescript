@@ -23,19 +23,19 @@ import type { RecursivePartial } from '../../types/objects/index.js';
  * @return  Resulting object with all the `defaults` and `inputs` keys with
  *          either default values or input values, as appropriate.
  */
-export declare function mergeArgs<D extends object>(defaults: D, inputs?: undefined, recursive?: boolean | undefined): D;
+export declare function mergeArgs<D extends object>(defaults: D, inputs?: undefined, recursive?: boolean | undefined, mergeArrays?: boolean | undefined): D;
 /**
  * Passing `recursive` as false means that the input type must be a `Partial`
  * (not {@link RecursivePartial}).
  */
-export declare function mergeArgs<D extends object, I extends Partial<D>>(defaults: D, inputs: I, recursive?: false | undefined): D & I;
+export declare function mergeArgs<D extends object, I extends Partial<D>>(defaults: D, inputs: I, recursive?: false | undefined, mergeArrays?: boolean | undefined): D & I;
 /**
  * Passing `recursive` as true means that the input type may actually be a
  * {@link RecursivePartial}.
  */
-export declare function mergeArgs<D extends object, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs: I, recursive: true): D & I;
+export declare function mergeArgs<D extends object, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs: I, recursive: true, mergeArrays?: boolean | undefined): D & I;
 /**
  * Universal overload.
  */
-export declare function mergeArgs<D extends object, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined): D | D & I;
+export declare function mergeArgs<D extends object, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined, mergeArrays?: boolean | undefined): D | D & I;
 //# sourceMappingURL=mergeArgs.d.ts.map

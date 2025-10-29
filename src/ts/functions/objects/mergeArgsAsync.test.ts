@@ -99,6 +99,7 @@ const expected = {
     },
 
     recursive: {
+
         partial: {
             ...defaultObj,
             ...inputObj.partialRecursive,
@@ -106,6 +107,23 @@ const expected = {
             child: {
                 ...defaultObj.child,
                 ...inputObj.partialRecursive.child,
+            },
+        },
+
+        mergeArrays: {
+            ...defaultObj,
+            ...inputObj.partialRecursive,
+
+            child: {
+                ...defaultObj.child,
+                ...inputObj.partialRecursive.child,
+
+                1: [
+                    'default value 1',
+                    'default value 2',
+                    'override value 1',
+                    'override value 2',
+                ],
             },
         },
     },
@@ -120,6 +138,7 @@ const [
     merged_partial,
     merged_recursive_full,
     merged_recursive_partial,
+    merged_recursive_partial_mergeArrays,
 
     merged_emptyObj,
     merged_undefined,
@@ -134,6 +153,7 @@ const [
     mergeArgsAsync( defaultObj, inputObj.partial, false ),
     mergeArgsAsync( defaultObj, inputObj.full, true ),
     mergeArgsAsync( defaultObj, inputObj.partialRecursive, true ),
+    mergeArgsAsync( defaultObj, inputObj.partialRecursive, true, true ),
 
     mergeArgsAsync( defaultObj, {} ),
     mergeArgsAsync( defaultObj, undefined ),
@@ -197,6 +217,19 @@ describe( 'mergeArgsAsync()', () => {
 
         // recursive, partial merging should return a combination of default and overridden props
         expect( merged_recursive_partial ).toEqual( expected.recursive.partial );
+
+        // as tests[0] only so that type is used
+        true as tests[ 0 ];
+    } );
+
+    test( 'mergeArgsAsync() - recursive, partial input obj, merge arrays', () => {
+
+        type tests = [
+            Test.Expect<Test.Satisfies<typeof merged_recursive_partial_mergeArrays, typeof expected.recursive.mergeArrays>>,
+        ];
+
+        // recursive, partial merging should return a combination of default and overridden props
+        expect( merged_recursive_partial_mergeArrays ).toEqual( expected.recursive.mergeArrays );
 
         // as tests[0] only so that type is used
         true as tests[ 0 ];

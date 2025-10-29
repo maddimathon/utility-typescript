@@ -7,6 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.1.draft
  * @license MIT
  */
+import { arrayUnique } from '../arrays/arrayUnique.js';
 /**
  * Returns an updated version of `defaults` merged with the contents of
  * `inputs`.
@@ -19,8 +20,9 @@
  * @category Arg Objects
  *
  * @since 0.1.0
+ * @since 2.0.0-beta.1.draft — Added mergeArrays param.
  */
-export function mergeArgs(defaults, inputs, recursive = false) {
+export function mergeArgs(defaults, inputs, recursive = false, mergeArrays = false) {
     // invalid default object becomes an empty object
     if (typeof defaults !== 'object' || !defaults) {
         defaults = {};
@@ -61,18 +63,23 @@ export function mergeArgs(defaults, inputs, recursive = false) {
         }
         // continues
         // not a simple args object and shouldn't have its props overwritten
-        if (typeof defaultValue.prototype !== 'undefined'
-            || typeof inputValue.prototype !== 'undefined') {
+        if (Array.isArray(defaultValue)
+            || Array.isArray(inputValue)) {
+            if (mergeArrays
+                && Array.isArray(defaultValue)
+                && Array.isArray(inputValue)) {
+                result[key] = arrayUnique(defaultValue.concat(inputValue));
+            }
             continue;
         }
         // continues
         // not a simple args object and shouldn't have its props overwritten
-        if (Array.isArray(defaultValue)
-            || Array.isArray(inputValue)) {
+        if (typeof defaultValue.prototype !== 'undefined'
+            || typeof inputValue.prototype !== 'undefined') {
             continue;
         }
         // get deep
-        result[key] = mergeArgs(defaultValue, inputValue, recursive);
+        result[key] = mergeArgs(defaultValue, inputValue, recursive, mergeArrays);
     }
     return result;
 }

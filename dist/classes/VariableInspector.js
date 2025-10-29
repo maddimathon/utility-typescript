@@ -333,6 +333,7 @@ export class VariableInspector extends AbstractConfigurableClass {
                     case 'Date':
                     case 'RegExp':
                         return properties;
+                    case 'List':
                     case 'Map':
                         return Array.from(this._rawValue.entries(), ([key, value]) => ({
                             key: {

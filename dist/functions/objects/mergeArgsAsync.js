@@ -7,6 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.1.draft
  * @license MIT
  */
+import { arrayUnique } from '../arrays/arrayUnique.js';
 /**
  * Returns an updated version of `defaults` merged with the contents of
  * `inputs`.
@@ -20,7 +21,7 @@
  *
  * @since 0.1.0
  */
-export async function mergeArgsAsync(defaults, inputs, recursive = false) {
+export async function mergeArgsAsync(defaults, inputs, recursive = false, mergeArrays = false) {
     // returns
     // invalid default object just returns the input (or empty object)
     if (typeof defaults !== 'object' || !defaults) {
@@ -60,18 +61,23 @@ export async function mergeArgsAsync(defaults, inputs, recursive = false) {
         }
         // continues
         // not a simple args object and shouldn't have its props overwritten
-        if (typeof defaultValue.prototype !== 'undefined'
-            || typeof inputValue.prototype !== 'undefined') {
+        if (Array.isArray(defaultValue)
+            || Array.isArray(inputValue)) {
+            if (mergeArrays
+                && Array.isArray(defaultValue)
+                && Array.isArray(inputValue)) {
+                return [key, arrayUnique(defaultValue.concat(inputValue))];
+            }
             return [key, inputValue];
         }
         // continues
         // not a simple args object and shouldn't have its props overwritten
-        if (Array.isArray(defaultValue)
-            || Array.isArray(inputValue)) {
+        if (typeof defaultValue.prototype !== 'undefined'
+            || typeof inputValue.prototype !== 'undefined') {
             return [key, inputValue];
         }
-        return mergeArgsAsync(defaultValue, inputValue, recursive).then((value) => [key, value]);
+        return mergeArgsAsync(defaultValue, inputValue, recursive, mergeArrays).then((value) => [key, value]);
     });
-    return Object.fromEntries(await Promise.all(entries));
+    return Promise.all(entries).then(Object.fromEntries);
 }
 //# sourceMappingURL=mergeArgsAsync.js.map

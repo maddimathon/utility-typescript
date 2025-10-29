@@ -484,6 +484,7 @@ export class VariableInspector<
                     case 'RegExp':
                         return properties;
 
+                    case 'List':
                     case 'Map':
                         return Array.from(
                             ( this._rawValue as Map<unknown, unknown> ).entries(),
