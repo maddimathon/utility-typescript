@@ -90,7 +90,7 @@ export function mergeArgs<
  * @category Arg Objects
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Added mergeArrays param.
+ * @since 2.0.0-beta.1 — Added mergeArrays param.
  */
 export function mergeArgs<
     D extends object,

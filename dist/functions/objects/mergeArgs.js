@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.1
  * @license MIT
  */
 import { arrayUnique } from '../arrays/arrayUnique.js';
@@ -20,7 +20,7 @@ import { arrayUnique } from '../arrays/arrayUnique.js';
  * @category Arg Objects
  *
  * @since 0.1.0
- * @since 2.0.0-beta.1.draft — Added mergeArrays param.
+ * @since 2.0.0-beta.1 — Added mergeArrays param.
  */
 export function mergeArgs(defaults, inputs, recursive = false, mergeArrays = false) {
     // invalid default object becomes an empty object

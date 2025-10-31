@@ -19,6 +19,19 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.1** — 2025-10-31
+
+Some quick updates needed for other libraries.
+
+### Added
+- Added isObjectEmpty() function
+- Added mergeArgsAsync() function
+- Added mergeArrays param to mergeArgs and mergeArgsAsync (default false)
+
+### Fixed
+- Fixed the display of Map and Set in VariableInspector (temp ugly fix)
+
+
 ## **2.0.0-beta** — 2025-06-09
 
 External testing complete, upgrading to beta.

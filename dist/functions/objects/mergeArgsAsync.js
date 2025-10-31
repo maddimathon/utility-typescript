@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.1.draft
+ * @since 2.0.0-beta.1
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.1
  * @license MIT
  */
 import { arrayUnique } from '../arrays/arrayUnique.js';

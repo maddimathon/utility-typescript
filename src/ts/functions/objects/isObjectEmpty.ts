@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.1
  * 
  * @packageDocumentation
  */
@@ -13,7 +13,7 @@
  * 
  * Non-object types are evaluated in other ways depending on type.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.1
  */
 export function isObjectEmpty( obj: unknown ) {
 

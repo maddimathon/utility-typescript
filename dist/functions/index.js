@@ -12,7 +12,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.1
  * @license MIT
  */
 // export * as node from './node/index.js';
