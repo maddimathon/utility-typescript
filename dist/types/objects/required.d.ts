@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import { AnyClass } from '../functions/index.js';
+import { AnyClass } from '../functions.js';
 /**
  * Similar to the default Required, but this also makes any child objects
  * Required.

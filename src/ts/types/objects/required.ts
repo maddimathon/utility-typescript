@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-import { AnyClass } from '../functions/index.js';
+import { AnyClass } from '../functions.js';
 
 
 /**

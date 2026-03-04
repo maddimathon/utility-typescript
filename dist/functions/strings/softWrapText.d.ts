@@ -4,13 +4,11 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 /**
  * Takes an input string and inserts `\n` to soft wrap text within the given width.
- *
- * @category  Formatters
  *
  * @param text      Text to wrap.
  * @param maxWidth  Optional. Max number of characters per line.

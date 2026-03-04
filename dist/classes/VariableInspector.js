@@ -4,11 +4,12 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-import { arrayUnique, timestamp, typeOf, } from '../functions/index.js';
+import { arrayUnique } from '../functions/arrays/arrayUnique.js';
+import { timestamp } from '../functions/strings/timestamp.js';
+import { typeOf } from '../functions/typeOf.js';
 /**
  * Inspects the value of a variable for debugging.
  *
@@ -29,7 +30,7 @@ import { arrayUnique, timestamp, typeOf, } from '../functions/index.js';
  *
  * @experimental
  */
-export class VariableInspector extends AbstractConfigurableClass {
+export class VariableInspector {
     /* STATIC METHODS
      * ====================================================================== */
     /**
@@ -178,10 +179,11 @@ export class VariableInspector extends AbstractConfigurableClass {
     static sample(_args = {}) {
         console.log('\nVariableInspector.sample() @ ' + timestamp(null, { date: true, time: true }));
         console.log('\n');
-        const args = VariableInspector.prototype.buildArgs({
+        const args = {
+            ...VariableInspector.prototype.ARGS_DEFAULT,
             debug: true,
             ...(_args ?? {})
-        });
+        };
         /**
          * Calls `VariableInspector.dump() with args.`.
          */
@@ -200,6 +202,12 @@ export class VariableInspector extends AbstractConfigurableClass {
     }
     /* LOCAL PROPERTIES
      * ====================================================================== */
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    args;
     get ARGS_DEFAULT() {
         return {
             childArgs: {
@@ -220,7 +228,6 @@ export class VariableInspector extends AbstractConfigurableClass {
             localizeDateOptions: {},
             localizeNumbers: false,
             localizeNumberOptions: {},
-            argsRecursive: false,
             stringQuoteCharacter: '"',
         };
     }
@@ -235,7 +242,7 @@ export class VariableInspector extends AbstractConfigurableClass {
      *
      * @category Inputs
      *
-     * @expandType Type
+     * @expandType T_Type
      */
     _rawValue;
     /**
@@ -259,7 +266,10 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @param variable  Passing the variable to inspect within an single-prop object
      */
     constructor(variable, args = {}) {
-        super(args);
+        this.args = {
+            ...this.ARGS_DEFAULT,
+            ...args,
+        };
         const validVar = VariableInspector.validateInput(variable);
         this._name = Object.keys(validVar)[0];
         this._rawValue = validVar[this._name];
@@ -629,7 +639,6 @@ export class VariableInspector extends AbstractConfigurableClass {
      *
      * @category Exporters
      *
-     * @see {@link AbstractConfigurableClass.toString)}
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     toString() {
@@ -649,12 +658,16 @@ export class VariableInspector extends AbstractConfigurableClass {
      * @category Recursion
      */
     _new(variable, args = {}) {
-        const fullArgs = this.buildArgs({
+        const fullArgs = {
             ...this.args,
             ...this.args.childArgs,
             ...args,
-        });
-        fullArgs.formatter = this.mergeArgs(this.args.formatter ?? {}, this.mergeArgs(this.args.childArgs.formatter ?? {}, args.formatter ?? {}));
+        };
+        fullArgs.formatter = {
+            ...this.args.formatter ?? {},
+            ...this.args.childArgs.formatter ?? {},
+            ...args.formatter ?? {},
+        };
         return new VariableInspector(variable, fullArgs);
     }
     /* Translators ===================================== */

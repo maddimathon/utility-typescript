@@ -4,12 +4,11 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import type { RecursivePartial } from '../types/objects/index.js';
-import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-import { timestamp } from '../functions/index.js';
+import type { RecursivePartial } from '../types/index.js';
+import { timestamp } from '../functions/strings/timestamp.js';
 /**
  * A configurable class for formatting message strings for various outputs.
  *
@@ -17,7 +16,7 @@ import { timestamp } from '../functions/index.js';
  *
  * @experimental
  */
-export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
+export declare class MessageMaker {
     /**
      * Returns the default painter callback function for the given format.
      *
@@ -32,6 +31,12 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      *                   avoid building complete arguments multiple times.
      */
     protected static defaultPainter(classArgs: MessageMaker.Args): MessageMaker.Args['painter'];
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    readonly args: MessageMaker.Args;
     get ARGS_DEFAULT(): {
         readonly ansiColours: {
             readonly 4: {
@@ -93,7 +98,6 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
                 readonly pink: "2;179;77;145";
             };
         };
-        readonly argsRecursive: true;
         readonly msg: {
             readonly bold: false;
             readonly clr: null;
@@ -120,7 +124,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      */
     buildArgs(args?: RecursivePartial<MessageMaker.Args>): MessageMaker.Args;
     /**
-     * Build a complete args object.
+     * Build a complete {@link MessageMaker.MsgArgs} object.
      *
      * @category Args
      */
@@ -130,7 +134,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      * Joins string arrays with a single new line and adds an indent to the
      * beginning of every line, and adds next level of indent for child arrays.
      *
-     * @category  Formatters
+     * @category Formatters
      *
      * @param lines   String to implode. Arrays are joined with `'\n'`.
      * @param indent  Optional. Default `this.args.msg.tab`.
@@ -144,7 +148,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
      * Does not wrap or split it (assumes this has already been done).  Applies
      * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
      *
-     * @category  Messagers
+     * @category Messagers
      *
      * @param line    String to map. Already wrapped to line width, if applicable.
      * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
@@ -154,7 +158,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
     /**
      * Formats the given message according to options.
      *
-     * @category  Messagers
+     * @category Messagers
      *
      * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
@@ -163,7 +167,7 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
     /**
      * Formats given messages individually and then joins them on return.
      *
-     * @category  Messagers
+     * @category Messagers
      *
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
@@ -172,13 +176,13 @@ export declare class MessageMaker extends AbstractConfigurableClass<MessageMaker
     /**
      * Applies colour and font styles to an message for output.
      *
-     * @category  Stylers
+     * @category Stylers
      */
     painter(msg: string, args?: Partial<MessageMaker.PainterArgs>): string;
     /**
      * Formats the given message according to options.
      *
-     * @category  Messagers
+     * @category Messagers
      *
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
      * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
@@ -239,7 +243,7 @@ export declare namespace MessageMaker {
      *
      * @since 0.1.1
      */
-    interface Args extends AbstractConfigurableClass.Args {
+    interface Args {
         /**
          * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter` function.
          *
@@ -254,7 +258,6 @@ export declare namespace MessageMaker {
          * @see {@link MessageMaker.buildArgs}  For default value.
          */
         msg: MsgArgs;
-        argsRecursive: true;
         /**
          * Function used to apply formatting to the messages.
          *

@@ -12,8 +12,10 @@ import {
     pkgReplacements,
 } from '../vars/replacements.js';
 
-import { escRegExpReplace, softWrapText } from '../../src/ts/functions/index.js';
-import { NodeConsole_Prompt } from 'src/ts/classes/node/index.js';
+import { escRegExpReplace } from '../../src/ts/functions/regex/escRegExpReplace.js';
+import { softWrapText } from '../../src/ts/functions/strings/softWrapText.js';
+
+import { NodeConsole_Prompt } from '../../src/ts/node/classes/NodeConsole/NodeConsole_Prompt.js';
 
 
 const releaseSubStages = [
@@ -380,7 +382,13 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
             this.verboseLog( 'resetting release notes...', 2 );
             this.fs.write( '.releasenotes.md', [
                 '',
-                '### Breaking',
+                '### Removed',
+                '- ',
+                '',
+                '### Moved & Renamed',
+                '- ',
+                '',
+                '### Misc. Breaking',
                 '- ',
                 '',
                 '### Added',
@@ -389,10 +397,10 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
                 '### Changed',
                 '- ',
                 '',
-                '### Fixed',
+                '### Deprecated',
                 '- ',
                 '',
-                '### Removed',
+                '### Fixed',
                 '- ',
                 '',
                 '',

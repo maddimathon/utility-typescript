@@ -1,5 +1,6 @@
 /**
- * Modules all javascript content, including types.
+ * Modules all javascript content & types, except those specific to node (which
+ * are exported from the {@link node} module).
  *
  * @module .
  *
@@ -13,9 +14,21 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-export * as classes from './classes/index.js';
-export * as functions from './functions/index.js';
+export * from './classes/MessageMaker.js';
+export * from './classes/VariableInspector.js';
+export * from './functions/arrays/arrayUnique.js';
+export * from './functions/objects/hasIterator.js';
+export * from './functions/objects/isObjectEmpty.js';
+export * from './functions/objects/mergeArgs.js';
+export * from './functions/objects/mergeArgsAsync.js';
+export * from './functions/strings/slugify.js';
+export * from './functions/strings/softWrapText.js';
+export * from './functions/strings/timestamp.js';
+export * from './functions/strings/toTitleCase.js';
+export * from './functions/regex/escRegExp.js';
+export * from './functions/regex/escRegExpReplace.js';
+export * from './functions/typeOf.js';
 //# sourceMappingURL=index.js.map

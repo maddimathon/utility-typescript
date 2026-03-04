@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-beta.1
+# Utility TypeScript @ 2.0.0-beta.2.draft
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -97,8 +97,7 @@ resources from scripts meant to be run via npm.
 
 Long and clear is better than short and confusing.
 
-Abstract classes should start with `Abstract` (e.g., 
-[`AbstractConfigurableClass`](./src/ts/classes/abstracts/AbstractConfigurableClass.ts)).
+Abstract classes should start with `Abstract`.
 
 Classes made only to be children of other classes should be prefixed with their
 parent class (e.g., `ParentClass_Child`).

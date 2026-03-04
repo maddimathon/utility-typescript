@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 /**
@@ -12,8 +12,6 @@
  *
  * Filters out any item that is not the first instance of that item in the
  * array.
- *
- * @category Array Helpers
  *
  * @source
  *

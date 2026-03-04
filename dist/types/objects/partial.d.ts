@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import type { AnyClass } from '../functions/index.js';
+import type { AnyClass } from '../functions.js';
 /**
  * {@link Partial}-izes an object, except for the given RequiredKeys, which are
  * converted to be required.

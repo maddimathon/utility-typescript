@@ -10,8 +10,6 @@
 
 /**
  * Turns the given slug into a string with only a-z, 0-9, and hyphens.
- * 
- * @category  Escapers
  *
  * @param input  String to convert.
  *

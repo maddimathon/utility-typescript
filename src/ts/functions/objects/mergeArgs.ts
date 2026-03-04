@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-import type { RecursivePartial } from '../../types/objects/index.js';
+import type { RecursivePartial } from '../../types/index.js';
 import { arrayUnique } from '../arrays/arrayUnique.js';
 
 
@@ -86,8 +86,6 @@ export function mergeArgs<
  * Preserves all input properties.
  * 
  * Overloaded for better typing dependent on recursion.
- * 
- * @category Arg Objects
  * 
  * @since 0.1.0
  * @since 2.0.0-beta.1 — Added mergeArrays param.

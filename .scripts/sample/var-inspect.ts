@@ -7,8 +7,8 @@
  * @license MIT
  */
 
-// import { slugify } from '../../src/ts/functions/index.js';
-import { VariableInspector } from '../../src/ts/classes/index.js';
+// import { slugify } from '../../src/ts/functions/slugify.js';
+import { VariableInspector } from '../../src/ts/classes/VariableInspector.js';
 
 const defaultFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str;
 const resetFormatter: VariableInspector.Formatter = ( str ) => '\x1b[0m' + str + '\x1b[0m';

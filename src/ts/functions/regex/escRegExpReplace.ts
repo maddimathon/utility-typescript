@@ -11,8 +11,6 @@
 /**
  * Escapes a string for use as a replacement for a regular expression.
  * 
- * @category  Escapers
- * 
  * @source
  * 
  * @example

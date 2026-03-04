@@ -10,8 +10,6 @@
 
 /**
  * Converts the given string to title case.
- * 
- * @category  Formatters
  *
  * @param input  String to convert.
  *

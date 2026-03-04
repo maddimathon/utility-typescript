@@ -14,7 +14,9 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
-import { escRegExpReplace, softWrapText } from '../../src/ts/functions/index.js';
+
+import { escRegExpReplace } from '../../src/ts/functions/regex/escRegExpReplace.js';
+import { softWrapText } from '../../src/ts/functions/strings/softWrapText.js';
 
 
 

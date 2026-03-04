@@ -4,13 +4,11 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 /**
  * Converts the given string to title case.
- *
- * @category  Formatters
  *
  * @param input  String to convert.
  *

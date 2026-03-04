@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import type { RecursivePartial } from '../../types/objects/index.js';
+import type { RecursivePartial } from '../../types/index.js';
 /**
  * Inputs can be undefined, and if so, the default is returned.
  *

@@ -9,7 +9,7 @@
  */
 
 import type {
-    Objects,
+    RecursivePartial,
     Test,
 } from '../../types/index.js';
 import { describe, expect, test } from '@jest/globals';
@@ -58,7 +58,7 @@ const inputObj = {
         },
 
         extra: 'input-only property',
-    } as DefaultObjType,
+    } satisfies DefaultObjType & { child: { extra: string; }; extra: string; },
 
     partial: {
 
@@ -74,7 +74,7 @@ const inputObj = {
         },
 
         extra: 'input-only property',
-    } as Partial<DefaultObjType>,
+    } satisfies Partial<DefaultObjType> & { child: { extra: string; }; extra: string; },
 
     partialRecursive: {
 
@@ -88,7 +88,7 @@ const inputObj = {
         },
 
         extra: 'input-only property',
-    } as Objects.RecursivePartial<DefaultObjType>,
+    } satisfies RecursivePartial<DefaultObjType> & { child: { extra: string; }; extra: string; },
 };
 
 const expected = {

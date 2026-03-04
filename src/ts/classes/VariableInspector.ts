@@ -13,13 +13,9 @@ import type {
     LangLocaleCode,
 } from '../types/index.js';
 
-import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-
-import {
-    arrayUnique,
-    timestamp,
-    typeOf,
-} from '../functions/index.js';
+import { arrayUnique } from '../functions/arrays/arrayUnique.js';
+import { timestamp } from '../functions/strings/timestamp.js';
+import { typeOf } from '../functions/typeOf.js';
 
 
 /**
@@ -43,8 +39,8 @@ import {
  * @experimental
  */
 export class VariableInspector<
-    Type extends typeOf.TestType = typeOf.TestType,
-> extends AbstractConfigurableClass<VariableInspector.Args> {
+    T_Type extends typeOf.TestType = typeOf.TestType,
+> {
 
 
 
@@ -87,12 +83,12 @@ export class VariableInspector<
      * @see {@link VariableInspector.constructor}
      */
     protected static validateInput<
-        Type extends typeOf.TestType
+        T_Type extends typeOf.TestType
     >(
-        variable: Type | { [ key: string ]: Type; },
-    ): { [ key: string ]: Type; } {
+        variable: T_Type | { [ key: string ]: T_Type; },
+    ): { [ key: string ]: T_Type; } {
 
-        const inputKeys = Object.keys( variable as { [ key: string ]: Type; } );
+        const inputKeys = Object.keys( variable as { [ key: string ]: T_Type; } );
 
         const inputHasOneStringKey =
             inputKeys.length === 1
@@ -100,10 +96,10 @@ export class VariableInspector<
 
         // returns
         if ( inputHasOneStringKey ) {
-            return variable as { [ key: string ]: Type; };
+            return variable as { [ key: string ]: T_Type; };
         }
 
-        return { 'var': variable as Type };
+        return { 'var': variable as T_Type };
     }
 
 
@@ -263,10 +259,11 @@ export class VariableInspector<
         console.log( '\nVariableInspector.sample() @ ' + timestamp( null, { date: true, time: true } ) );
         console.log( '\n' );
 
-        const args: VariableInspector.Args = VariableInspector.prototype.buildArgs( {
+        const args = {
+            ...VariableInspector.prototype.ARGS_DEFAULT,
             debug: true,
             ...( _args ?? {} )
-        } );
+        };
 
         /**
          * Calls `VariableInspector.dump() with args.`.
@@ -294,6 +291,13 @@ export class VariableInspector<
 
     /* LOCAL PROPERTIES
      * ====================================================================== */
+
+    /**
+     * A completed args object.
+     * 
+     * @category Args
+     */
+    public readonly args: VariableInspector.Args;
 
     public get ARGS_DEFAULT() {
 
@@ -326,9 +330,8 @@ export class VariableInspector<
             localizeNumbers: false,
             localizeNumberOptions: {},
 
-            argsRecursive: false,
-
             stringQuoteCharacter: '"',
+
         } as const satisfies VariableInspector.Args;
     }
 
@@ -344,9 +347,9 @@ export class VariableInspector<
      *
      * @category Inputs
      * 
-     * @expandType Type
+     * @expandType T_Type
      */
-    protected readonly _rawValue: Type;
+    protected readonly _rawValue: T_Type;
 
     /**
      * Alias for this.typeOf( this._rawValue ).
@@ -355,7 +358,7 @@ export class VariableInspector<
      * 
      * @expandType typeOf.Return
      */
-    protected readonly _typeOf: typeOf.Return<Type>;
+    protected readonly _typeOf: typeOf.Return<T_Type>;
 
     /**
      * These are the properties of the input object, if any.
@@ -374,10 +377,13 @@ export class VariableInspector<
      * @param variable  Passing the variable to inspect within an single-prop object
      */
     public constructor (
-        variable: Type | { [ key: string ]: Type; },
+        variable: T_Type | { [ key: string ]: T_Type; },
         args: Partial<VariableInspector.Args> = {},
     ) {
-        super( args );
+        this.args = {
+            ...this.ARGS_DEFAULT,
+            ...args,
+        };
 
         const validVar = VariableInspector.validateInput( variable );
 
@@ -513,7 +519,7 @@ export class VariableInspector<
         // now add them to the array
         propertyNames.forEach( ( name ) => {
 
-            const value = ( this._rawValue as NonNullable<Type> )[ name ];
+            const value = ( this._rawValue as NonNullable<T_Type> )[ name ];
 
             properties.push( {
 
@@ -843,16 +849,16 @@ export class VariableInspector<
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    public toJSON(): VariableInspector.JSON<Type> {
+    public toJSON(): VariableInspector.JSON<T_Type> {
 
-        const json: VariableInspector.JSON<Type> = {
+        const json: VariableInspector.JSON<T_Type> = {
             name: this._name,
             type: this._typeOf,
 
             inspection: this.value( true ),
         };
 
-        const properties: VariableInspector.JSON<Type>[ 'properties' ] = {};
+        const properties: VariableInspector.JSON<T_Type>[ 'properties' ] = {};
 
         this._properties.forEach( ( property ) => {
 
@@ -873,10 +879,9 @@ export class VariableInspector<
      *
      * @category Exporters
      *
-     * @see {@link AbstractConfigurableClass.toString)}
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
-    public override toString(): string {
+    public toString(): string {
 
         const strs: ( false | string )[] = [
             this.args.includePrefix ? this.prefix() : false,
@@ -902,19 +907,17 @@ export class VariableInspector<
         args: Partial<VariableInspector.Args> = {},
     ): VariableInspector {
 
-        const fullArgs = this.buildArgs( {
+        const fullArgs = {
             ...this.args,
             ...this.args.childArgs,
             ...args,
-        } );
+        };
 
-        fullArgs.formatter = this.mergeArgs(
-            this.args.formatter ?? {},
-            this.mergeArgs(
-                this.args.childArgs.formatter ?? {},
-                args.formatter ?? {}
-            )
-        );
+        fullArgs.formatter = {
+            ...this.args.formatter ?? {},
+            ...this.args.childArgs.formatter ?? {},
+            ...args.formatter ?? {},
+        };
 
         return new VariableInspector( variable, fullArgs );
     }
@@ -993,12 +996,7 @@ export namespace VariableInspector {
      * 
      * @since 0.1.1
      */
-    export interface Args extends AbstractConfigurableClass.Args {
-
-        /**
-         * These args should never be recursive.
-         */
-        argsRecursive: false;
+    export interface Args {
 
         /**
          * Arguments to use as an override for child inspections (i.e., of the
@@ -1175,7 +1173,7 @@ export namespace VariableInspector {
      * @since 0.1.1
      */
     export interface JSON<
-        Type extends typeOf.TestType = typeOf.TestType,
+        T_Type extends typeOf.TestType = typeOf.TestType,
     > {
 
         /**
@@ -1207,7 +1205,7 @@ export namespace VariableInspector {
          * 
          * @see {@link VariableInspector._typeOf}
          */
-        type: VariableInspector<Type>[ '_typeOf' ];
+        type: VariableInspector<T_Type>[ '_typeOf' ];
     }
 
     /**

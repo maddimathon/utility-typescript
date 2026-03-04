@@ -4,12 +4,11 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 import type { LangLocaleCode } from '../types/index.js';
-import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-import { typeOf } from '../functions/index.js';
+import { typeOf } from '../functions/typeOf.js';
 /**
  * Inspects the value of a variable for debugging.
  *
@@ -30,7 +29,7 @@ import { typeOf } from '../functions/index.js';
  *
  * @experimental
  */
-export declare class VariableInspector<Type extends typeOf.TestType = typeOf.TestType> extends AbstractConfigurableClass<VariableInspector.Args> {
+export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.TestType> {
     /**
      * Alias for `new VariableInspector( ...).dump()`.
      *
@@ -54,10 +53,10 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @see {@link VariableInspector.constructor}
      */
-    protected static validateInput<Type extends typeOf.TestType>(variable: Type | {
-        [key: string]: Type;
+    protected static validateInput<T_Type extends typeOf.TestType>(variable: T_Type | {
+        [key: string]: T_Type;
     }): {
-        [key: string]: Type;
+        [key: string]: T_Type;
     };
     /** Testing ==================================== **/
     /**
@@ -102,6 +101,12 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      * @returns  An example, constructed instance for a sample object.
      */
     static sample(_args?: Partial<VariableInspector.Args>): VariableInspector<typeof VariableInspector.sampleComplexObject>;
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    readonly args: VariableInspector.Args;
     get ARGS_DEFAULT(): {
         readonly childArgs: {
             readonly includeValue: true;
@@ -121,7 +126,6 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
         readonly localizeDateOptions: {};
         readonly localizeNumbers: false;
         readonly localizeNumberOptions: {};
-        readonly argsRecursive: false;
         readonly stringQuoteCharacter: "\"";
     };
     /**
@@ -135,9 +139,9 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @category Inputs
      *
-     * @expandType Type
+     * @expandType T_Type
      */
-    protected readonly _rawValue: Type;
+    protected readonly _rawValue: T_Type;
     /**
      * Alias for this.typeOf( this._rawValue ).
      *
@@ -145,7 +149,7 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @expandType typeOf.Return
      */
-    protected readonly _typeOf: typeOf.Return<Type>;
+    protected readonly _typeOf: typeOf.Return<T_Type>;
     /**
      * These are the properties of the input object, if any.
      *
@@ -156,8 +160,8 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @param variable  Passing the variable to inspect within an single-prop object
      */
-    constructor(variable: Type | {
-        [key: string]: Type;
+    constructor(variable: T_Type | {
+        [key: string]: T_Type;
     }, args?: Partial<VariableInspector.Args>);
     /**
      * Formats an object property name into a string for display.
@@ -232,14 +236,13 @@ export declare class VariableInspector<Type extends typeOf.TestType = typeOf.Tes
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    toJSON(): VariableInspector.JSON<Type>;
+    toJSON(): VariableInspector.JSON<T_Type>;
     /**
      * Overrides the default function to return a string representation of the
      * inspected variable’s value.
      *
      * @category Exporters
      *
-     * @see {@link AbstractConfigurableClass.toString)}
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString | Object.prototype.toString()}
      */
     toString(): string;
@@ -286,11 +289,7 @@ export declare namespace VariableInspector {
      *
      * @since 0.1.1
      */
-    interface Args extends AbstractConfigurableClass.Args {
-        /**
-         * These args should never be recursive.
-         */
-        argsRecursive: false;
+    interface Args {
         /**
          * Arguments to use as an override for child inspections (i.e., of the
          * property values).
@@ -445,7 +444,7 @@ export declare namespace VariableInspector {
      *
      * @since 0.1.1
      */
-    interface JSON<Type extends typeOf.TestType = typeOf.TestType> {
+    interface JSON<T_Type extends typeOf.TestType = typeOf.TestType> {
         /**
          * A string representation of the inspection. May have tabs and line breaks.
          *
@@ -472,7 +471,7 @@ export declare namespace VariableInspector {
          *
          * @see {@link VariableInspector._typeOf}
          */
-        type: VariableInspector<Type>['_typeOf'];
+        type: VariableInspector<T_Type>['_typeOf'];
     }
     /**
      * The shape used when converting this object to JSON.

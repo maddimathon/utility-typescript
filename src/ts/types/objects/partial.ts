@@ -10,7 +10,7 @@
 
 import type {
     AnyClass,
-} from '../functions/index.js';
+} from '../functions.js';
 
 
 /**

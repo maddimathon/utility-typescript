@@ -8,16 +8,12 @@
  * @license MIT
  */
 
-import type { RecursivePartial } from '../types/objects/index.js';
+import type { RecursivePartial } from '../types/index.js';
 
-import { AbstractConfigurableClass } from './abstracts/AbstractConfigurableClass.js';
-
-import {
-    mergeArgs,
-    softWrapText,
-    timestamp,
-    typeOf,
-} from '../functions/index.js';
+import { mergeArgs } from '../functions/objects/mergeArgs.js';
+import { softWrapText } from '../functions/strings/softWrapText.js';
+import { timestamp } from '../functions/strings/timestamp.js';
+import { typeOf } from '../functions/typeOf.js';
 
 
 /**
@@ -27,7 +23,7 @@ import {
  * 
  * @experimental
  */
-export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
+export class MessageMaker {
 
 
 
@@ -242,6 +238,13 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
+    /**
+     * A completed args object.
+     * 
+     * @category Args
+     */
+    public readonly args: MessageMaker.Args;
+
     public get ARGS_DEFAULT() {
 
         return {
@@ -316,8 +319,6 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
                 },
             },
 
-            argsRecursive: true,
-
             msg: {
                 bold: false,
                 clr: null,
@@ -350,13 +351,11 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      * 
      * @category Args
      */
-    public override buildArgs( args?: RecursivePartial<MessageMaker.Args> ): MessageMaker.Args {
+    public buildArgs( args?: RecursivePartial<MessageMaker.Args> ): MessageMaker.Args {
 
         const mergedDefault = this.ARGS_DEFAULT as MessageMaker.Args;
 
-        // using this.mergeArgs here can cause issues because 
-        // this method is sometimes called from the prototype
-        const built = mergeArgs( mergedDefault, args, this.ARGS_DEFAULT.argsRecursive );
+        const built = mergeArgs( mergedDefault, args, true );
 
         if ( args?.msg && typeof args.msg !== 'function' ) {
 
@@ -381,7 +380,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     }
 
     /**
-     * Build a complete args object.
+     * Build a complete {@link MessageMaker.MsgArgs} object.
      * 
      * @category Args
      */
@@ -417,7 +416,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      * ====================================================================== */
 
     public constructor ( args: RecursivePartial<MessageMaker.Args> = {} ) {
-        super( args );
+        this.args = this.buildArgs( args );
     }
 
 
@@ -429,7 +428,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      * Joins string arrays with a single new line and adds an indent to the
      * beginning of every line, and adds next level of indent for child arrays.
      * 
-     * @category  Formatters
+     * @category Formatters
      *
      * @param lines   String to implode. Arrays are joined with `'\n'`.
      * @param indent  Optional. Default `this.args.msg.tab`.
@@ -466,7 +465,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
      * Does not wrap or split it (assumes this has already been done).  Applies
      * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
      * 
-     * @category  Messagers
+     * @category Messagers
      * 
      * @param line    String to map. Already wrapped to line width, if applicable.
      * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
@@ -499,7 +498,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /**
      * Formats the given message according to options.
      * 
-     * @category  Messagers
+     * @category Messagers
      * 
      * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
@@ -543,7 +542,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /**
      * Formats given messages individually and then joins them on return.
      * 
-     * @category  Messagers
+     * @category Messagers
      * 
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
@@ -569,7 +568,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
         messages.forEach( ( [ _msg, _args ], index ) => {
 
-            _args = this.mergeArgs( defaultUniversalArgs, _args ?? {}, true );
+            _args = mergeArgs( defaultUniversalArgs, _args ?? {}, true );
 
             if (
                 index > 0
@@ -598,7 +597,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /**
      * Applies colour and font styles to an message for output.
      * 
-     * @category  Stylers
+     * @category Stylers
      */
     public painter(
         msg: string,
@@ -623,7 +622,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
     /**
      * Formats the given message according to options.
      * 
-     * @category  Messagers
+     * @category Messagers
      * 
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
      * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
@@ -716,7 +715,7 @@ export class MessageMaker extends AbstractConfigurableClass<MessageMaker.Args> {
 
             timestamp: this.msg(
                 timePrefix,
-                this.mergeArgs(
+                mergeArgs(
                     args_parts,
                     {
                         flag: false,
@@ -790,7 +789,7 @@ export namespace MessageMaker {
      * 
      * @since 0.1.1
      */
-    export interface Args extends AbstractConfigurableClass.Args {
+    export interface Args {
 
         /**
          * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter` function.
@@ -807,8 +806,6 @@ export namespace MessageMaker {
          * @see {@link MessageMaker.buildArgs}  For default value.
          */
         msg: MsgArgs;
-
-        argsRecursive: true,
 
         /**
          * Function used to apply formatting to the messages.

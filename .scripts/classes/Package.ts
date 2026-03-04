@@ -17,8 +17,9 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
-import { NodeConsole_Prompt } from '../../src/ts/classes/node/index.js';
-import { escRegExp } from 'src/ts/functions/index.js';
+
+import { NodeConsole_Prompt } from '../../src/ts/node/classes/NodeConsole/NodeConsole_Prompt.js';
+import { escRegExp } from '../../src/ts/index.js';
 
 
 const packageSubStages = [

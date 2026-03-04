@@ -9,7 +9,7 @@
  */
 
 import type {
-    Objects,
+    RecursivePartial,
     Test,
 } from '../../types/index.js';
 import { describe, expect, test } from '@jest/globals';
@@ -90,7 +90,7 @@ describe( 'mergeArgs()', () => {
             },
 
             extra: 'input-only property',
-        } as Objects.RecursivePartial<DefaultObjType>,
+        } as RecursivePartial<DefaultObjType>,
     };
 
     const expected = {

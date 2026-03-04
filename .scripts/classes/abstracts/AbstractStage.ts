@@ -20,14 +20,20 @@ import { globSync } from 'glob';
 import { currentReplacements, pkgReplacements } from '../../vars/replacements.js';
 
 import {
-    // Types as TS,
-    classes as cls,
-    functions as fns,
+    MessageMaker,
+    escRegExp,
+    escRegExpReplace,
+    mergeArgs,
 } from '../../../src/ts/index.js';
 
+import {
+    AbstractBuildStage,
+    NodeConsole,
+} from '../../../src/ts/node/index.js';
 
 
-type CmdArgs = Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 0 ];
+
+type CmdArgs = Parameters<NodeConsole[ 'cmdArgs' ]>[ 0 ];
 
 type GlobArgs = GlobOptions;
 
@@ -36,7 +42,7 @@ type GlobArgs = GlobOptions;
 export abstract class AbstractStage<
     SubStage extends string | never,
     Args extends AbstractStage.Args<SubStage>,
-> extends cls.node.AbstractBuildStage<SubStage, Args> {
+> extends AbstractBuildStage<SubStage, Args> {
 
     public static get ARGS_ABSTRACT(): AbstractStage.Args<string> {
 
@@ -165,7 +171,7 @@ export abstract class AbstractStage<
     /**
      * Prints a notice message to the console to signal the start or end of a stage.
      * 
-     * @see {@link cls.node.NodeConsole.timestampLog}  Function used to print to console.
+     * @see {@link NodeConsole.timestampLog}  Function used to print to console.
      */
     protected startEndNoticeLog(
         which: "start" | "end" | string,
@@ -237,9 +243,9 @@ export abstract class AbstractStage<
      */
     public cmd(
         cmd: string,
-        args: Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
-        literalFalse?: Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 1 ],
-        equals?: Parameters<cls.node.NodeConsole[ 'cmdArgs' ]>[ 2 ],
+        args: Parameters<NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
+        literalFalse?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 1 ],
+        equals?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 2 ],
     ) {
 
         // exits process on error
@@ -247,7 +253,7 @@ export abstract class AbstractStage<
             this.nc.cmd( cmd, args, literalFalse, equals );
         } catch ( error ) {
 
-            const msgArgs: Partial<cls.MessageMaker.MsgArgs> = {
+            const msgArgs: Partial<MessageMaker.MsgArgs> = {
                 bold: false,
                 clr: 'black',
                 italic: false,
@@ -364,7 +370,7 @@ export abstract class AbstractStage<
                 const regexp = find instanceof RegExp
                     ? find
                     : new RegExp(
-                        fns.escRegExp( find ),
+                        escRegExp( find ),
                         `g${ args.ignoreCase ? 'i' : '' }`
                     );
 
@@ -374,7 +380,7 @@ export abstract class AbstractStage<
                         path,
                         fileContent.replace(
                             regexp,
-                            fns.escRegExpReplace( replace )
+                            escRegExpReplace( replace )
                         ),
                         { force: true }
                     );
@@ -405,7 +411,7 @@ export abstract class AbstractStage<
         // I prefer them as constants
         const [ glob, destination, source ] = [ _glob, _destination, _source ];
 
-        const fullArgs = this.mergeArgs(
+        const fullArgs = mergeArgs(
             {
                 ignoreGlobs: [],
                 includeDefaultIgnoreGlobs: false,
@@ -441,8 +447,8 @@ export abstract class AbstractStage<
 
             const destFile = file
                 .replace(
-                    new RegExp( '^' + fns.escRegExp( resolved.source ), 'gi' ),
-                    fns.escRegExpReplace( resolved.destination )
+                    new RegExp( '^' + escRegExp( resolved.source ), 'gi' ),
+                    escRegExpReplace( resolved.destination )
                 )
                 .replace( /\/+$/gi, '' );
 
@@ -485,7 +491,7 @@ export abstract class AbstractStage<
             realpath: true,
         };
 
-        const globResult = globSync( globs, this.mergeArgs(
+        const globResult = globSync( globs, mergeArgs(
             DEFAULT_GlobOptions,
             args,
             false
@@ -562,7 +568,7 @@ export namespace AbstractStage {
 
     export type Args<
         SubStage extends string | never,
-    > = cls.node.AbstractBuildStage.Args<SubStage> & {
+    > = AbstractBuildStage.Args<SubStage> & {
 
         _: string[];
 

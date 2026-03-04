@@ -4,14 +4,12 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import type { AnyClass } from '../types/functions/index.js';
+import type { AnyClass } from '../types/index.js';
 /**
  * An alias for the typeof keyword that returns additional options.
- *
- * @category  Debuggers
  *
  * @typeParam T_Type  The possible types for the variable being tested. (This
  *                    helps restrict the results as applicable.)

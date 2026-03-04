@@ -4,16 +4,14 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import type { LangLocaleCode } from '../../types/string-literals/index.js';
+import type { LangLocaleCode } from '../../types/index.js';
 /**
  * Formats a date in a predictable way.
  *
  * Meant for human-readable timestamps, not ISO or Unix, etc.
- *
- * @category Formatters
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
  *

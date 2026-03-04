@@ -1,12 +1,13 @@
 /**
- * Modules all javascript content, including types.
- * 
+ * Modules all javascript content & types, except those specific to node (which
+ * are exported from the {@link node} module).
+ *
  * @module .
- * 
+ *
  * @mergeModuleWith <project>
- * 
+ *
  * @since 0.1.0
- * 
+ *
  * @example
  * ```ts
  * import { ... } from '@maddimathon/utility-typescript';
@@ -17,8 +18,22 @@
  * @license MIT
  */
 
-export type * as Types from './types/index.js';
+export * from './classes/MessageMaker.js';
+export * from './classes/VariableInspector.js';
 
-export * as classes from './classes/index.js';
+export * from './functions/arrays/arrayUnique.js';
 
-export * as functions from './functions/index.js';
+export * from './functions/objects/hasIterator.js';
+export * from './functions/objects/isObjectEmpty.js';
+export * from './functions/objects/mergeArgs.js';
+export * from './functions/objects/mergeArgsAsync.js';
+
+export * from './functions/strings/slugify.js';
+export * from './functions/strings/softWrapText.js';
+export * from './functions/strings/timestamp.js';
+export * from './functions/strings/toTitleCase.js';
+
+export * from './functions/regex/escRegExp.js';
+export * from './functions/regex/escRegExpReplace.js';
+
+export * from './functions/typeOf.js';

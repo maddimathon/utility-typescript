@@ -14,8 +14,6 @@
  * Filters out any item that is not the first instance of that item in the
  * array.
  * 
- * @category Array Helpers
- * 
  * @source
  *
  * @typeParam T_ArrayItem  Array item type.

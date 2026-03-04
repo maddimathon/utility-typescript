@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-import type { LangLocaleCode } from '../../types/string-literals/index.js';
+import type { LangLocaleCode } from '../../types/index.js';
 
 import { mergeArgs } from '../objects/mergeArgs.js';
 
@@ -17,8 +17,6 @@ import { mergeArgs } from '../objects/mergeArgs.js';
  * Formats a date in a predictable way.
  * 
  * Meant for human-readable timestamps, not ISO or Unix, etc.
- * 
- * @category Formatters
  * 
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
  * 

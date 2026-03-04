@@ -17,7 +17,7 @@
  * @license MIT
  */
 
-import { AnyClass } from './functions/index.js';
+import { AnyClass } from './functions.js';
 
 /**
  * For debugging types with intellisense/etc. Should only be used temporarily.

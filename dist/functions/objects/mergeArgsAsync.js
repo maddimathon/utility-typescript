@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 import { arrayUnique } from '../arrays/arrayUnique.js';
@@ -16,8 +16,6 @@ import { arrayUnique } from '../arrays/arrayUnique.js';
  * Preserves all input properties.
  *
  * Overloaded for better typing dependent on recursion.
- *
- * @category Arg Objects
  *
  * @since 0.1.0
  */

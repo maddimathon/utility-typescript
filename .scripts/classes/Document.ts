@@ -140,8 +140,8 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             disableSources: false,
 
             entryPoints: [
-                'src/ts/classes/index.ts',
-                'src/ts/functions/index.ts',
+                'src/ts/index.ts',
+                'src/ts/node/index.ts',
                 'src/ts/types/index.ts',
             ],
 

@@ -4,9 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
+import { hasIterator } from './hasIterator.js';
 /**
  * Checks whether an object is empty (by checking for keys and constructor).
  *
@@ -18,9 +19,16 @@ export function isObjectEmpty(obj) {
     // returns if non-object
     switch (typeof obj) {
         case 'object':
+            // returns - is empty
+            if (obj === null) {
+                return true;
+            }
             // returns - checks length if array for
             if (Array.isArray(obj)) {
-                return !(obj.length);
+                return !obj.length;
+            }
+            if (hasIterator(obj)) {
+                return !Array.from(obj).length;
             }
             break;
         // always false
@@ -35,16 +43,11 @@ export function isObjectEmpty(obj) {
             return true;
         // have to check
         case 'string':
-            return !(obj.length);
+            return !obj.length;
         // fallback checks for falsey-ness
         default:
             return !obj;
     }
-    // returns true
-    if (obj === null) {
-        return true;
-    }
-    return (Object.keys(obj).length === 0
-        && obj.constructor === Object);
+    return obj.constructor === Object && Object.keys(obj).length === 0;
 }
 //# sourceMappingURL=isObjectEmpty.js.map

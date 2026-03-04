@@ -1,13 +1,13 @@
 /**
  * Exports all global types (no JavaScript).
  * 
- * @module Types
+ * @module types
  * 
  * @since 0.1.0
+ * @since ___PKG_VERSION___ — Now only available at its own path, not as a namespace from the main export path.
  * 
  * @example
  * ```ts
- * import type { Types } from '@maddimathon/utility-typescript';
  * import type { ... } from '@maddimathon/utility-typescript/types';
  * ```
  */
@@ -16,10 +16,20 @@
  * @license MIT
  */
 
-export type * from './arrays/index.ts';
-export type * from './functions/index.ts';
-export type * as Json from './json/index.ts';
-export type * as Debug from './debug.js';
-export type * as Objects from './objects/index.ts';
-export type * from './string-literals/index.ts';
+export type * from './arrays.ts';
+
+export type * from './functions.js';
+
+export type * from './json/PackageJson.js';
+export type * from './json/TsConfig.js';
+
+export type * from './debug.js';
+
+export type * from './objects/classes.js';
+export type * from './objects/keys.js';
+export type * from './objects/partial.js';
+export type * from './objects/required.js';
+
+export type * from './string-literals/html.js';
+
 export type * as Test from './test.js';

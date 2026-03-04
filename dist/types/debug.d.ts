@@ -13,10 +13,10 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.1
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import { AnyClass } from './functions/index.js';
+import { AnyClass } from './functions.js';
 /**
  * For debugging types with intellisense/etc. Should only be used temporarily.
  *
