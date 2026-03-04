@@ -23,6 +23,9 @@ import { VariableInspector } from '../../classes/VariableInspector.js';
 import { NodeConsole_Error } from './NodeConsole/NodeConsole_Error.js';
 import { NodeConsole_Prompt } from './NodeConsole/NodeConsole_Prompt.js';
 
+export * from './NodeConsole/NodeConsole_Error.js';
+export * from './NodeConsole/NodeConsole_Prompt.js';
+
 
 /**
  * A configurable class for outputting to console within node.
@@ -1069,8 +1072,4 @@ export namespace NodeConsole {
          */
         via: "log" | "warn" | "debug";
     };
-
-    export const Error = NodeConsole_Error;
-
-    export const Prompt = NodeConsole_Prompt;
 }

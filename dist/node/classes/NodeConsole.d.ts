@@ -10,8 +10,9 @@
 import type { RecursivePartial } from '../../types/index.js';
 import { MessageMaker } from '../../classes/MessageMaker.js';
 import { VariableInspector } from '../../classes/VariableInspector.js';
-import { NodeConsole_Error } from './NodeConsole/NodeConsole_Error.js';
 import { NodeConsole_Prompt } from './NodeConsole/NodeConsole_Prompt.js';
+export * from './NodeConsole/NodeConsole_Error.js';
+export * from './NodeConsole/NodeConsole_Prompt.js';
 /**
  * A configurable class for outputting to console within node.
  *
@@ -306,7 +307,5 @@ export declare namespace NodeConsole {
          */
         via: "log" | "warn" | "debug";
     };
-    const Error: typeof NodeConsole_Error;
-    const Prompt: typeof NodeConsole_Prompt;
 }
 //# sourceMappingURL=NodeConsole.d.ts.map

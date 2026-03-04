@@ -14,6 +14,8 @@ import { MessageMaker } from '../../classes/MessageMaker.js';
 import { VariableInspector } from '../../classes/VariableInspector.js';
 import { NodeConsole_Error } from './NodeConsole/NodeConsole_Error.js';
 import { NodeConsole_Prompt } from './NodeConsole/NodeConsole_Prompt.js';
+export * from './NodeConsole/NodeConsole_Error.js';
+export * from './NodeConsole/NodeConsole_Prompt.js';
 /**
  * A configurable class for outputting to console within node.
  *
@@ -730,14 +732,4 @@ export class NodeConsole {
         this.logs(msgs, { ...args, via: 'warn' });
     }
 }
-/**
- * Used only for {@link NodeConsole}.
- *
- * @since 0.1.1
- * @since 2.0.0-alpha — Removed CmdErrorHandler type.
- */
-(function (NodeConsole) {
-    NodeConsole.Error = NodeConsole_Error;
-    NodeConsole.Prompt = NodeConsole_Prompt;
-})(NodeConsole || (NodeConsole = {}));
 //# sourceMappingURL=NodeConsole.js.map

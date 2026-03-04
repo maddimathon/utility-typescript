@@ -25,8 +25,16 @@ export * from './functions/arrays/arrayUnique.js';
 
 export * from './functions/objects/hasIterator.js';
 export * from './functions/objects/isObjectEmpty.js';
+export * from './functions/objects/makeNumber.js';
+export * from './functions/objects/makeNumberAsync.js';
+export * from './functions/objects/mapToObject.js';
+export * from './functions/objects/mapToObjectAsync.js';
 export * from './functions/objects/mergeArgs.js';
 export * from './functions/objects/mergeArgsAsync.js';
+export * from './functions/objects/objectFlatten.js';
+export * from './functions/objects/objectFlattenAsync.js';
+export * from './functions/objects/objectMap.js';
+export * from './functions/objects/objectMapAsync.js';
 
 export * from './functions/strings/slugify.js';
 export * from './functions/strings/softWrapText.js';
