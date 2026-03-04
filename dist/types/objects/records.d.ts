@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -11,7 +11,7 @@
  * Similar to the built-in `Record` type, but where the object's values can also
  * be identical records.
  *
- * @since 2.0.0-beta.2 — Experimental.
+ * @since 2.0.0-beta.2.draft — Experimental.
  *
  * @experimental
  */
@@ -20,7 +20,7 @@ export type RecursiveMap<T_Keys, T_Values> = Map<T_Keys, T_Values | RecursiveMap
  * Similar to the built-in `Record` type, but where the object's values can also
  * be identical records.
  *
- * @since 2.0.0-beta.2 — Experimental.
+ * @since 2.0.0-beta.2.draft — Experimental.
  *
  * @experimental
  */

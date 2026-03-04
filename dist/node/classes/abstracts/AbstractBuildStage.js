@@ -7,6 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
+import { mergeArgs } from 'src/ts/functions/objects/mergeArgs.js';
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
 /**
@@ -26,9 +27,22 @@ import { NodeFiles } from '../NodeFiles.js';
  * @since 0.4.2
  */
 export class AbstractBuildStage {
-    args;
     /* LOCAL PROPERTIES
      * ====================================================================== */
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    args;
+    /**
+     * Build a complete args object.
+     *
+     * @category Args
+     */
+    buildArgs(args) {
+        return mergeArgs(this.ARGS_DEFAULT, args, true);
+    }
     /**
      * Colour used for colour-coding this class.
      *
@@ -49,14 +63,8 @@ export class AbstractBuildStage {
     nc;
     /* CONSTRUCTOR
      * ====================================================================== */
-    constructor(
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args, clr = 'black', utils = {}) {
-        this.args = args;
+    constructor(args = {}, clr = 'black', utils = {}) {
+        this.args = this.buildArgs(args);
         this.clr = clr;
         this.nc = utils.nc ?? new NodeConsole();
         this.fs = utils.fs ?? new NodeFiles({}, { nc: this.nc });

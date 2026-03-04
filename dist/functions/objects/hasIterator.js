@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -10,7 +10,7 @@
 /**
  * Tests if the given object has an iterator function.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export function hasIterator(obj) {
     // returns

@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -15,7 +15,7 @@
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export function objectFlatten(obj, args = {}) {
     // returns
@@ -50,7 +50,7 @@ export function objectFlatten(obj, args = {}) {
 /**
  * Utilities for the {@link objectFlatten} function.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 (function (objectFlatten) {
     function parseArgs(args = {}) {

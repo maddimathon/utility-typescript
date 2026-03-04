@@ -8,10 +8,12 @@
  * @license MIT
  */
 
+import { mergeArgs } from 'src/ts/functions/objects/mergeArgs.js';
 import { MessageMaker } from '../../../classes/MessageMaker.js';
 
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
+import { RecursivePartial } from 'src/ts/types/index.js';
 
 
 /**
@@ -39,6 +41,29 @@ export abstract class AbstractBuildStage<
 
     /* LOCAL PROPERTIES
      * ====================================================================== */
+
+    /**
+     * A completed args object.
+     * 
+     * @category Args
+     */
+    public readonly args: T_Args;
+
+    /**
+     * A default completed args object.
+     * 
+     * @category Args
+     */
+    public abstract get ARGS_DEFAULT(): T_Args;
+
+    /**
+     * Build a complete args object.
+     * 
+     * @category Args
+     */
+    public buildArgs( args?: RecursivePartial<T_Args> ): T_Args {
+        return mergeArgs( this.ARGS_DEFAULT as T_Args, args, true );
+    }
 
     /**
      * Colour used for colour-coding this class.
@@ -73,12 +98,7 @@ export abstract class AbstractBuildStage<
      * ====================================================================== */
 
     public constructor (
-        /**
-         * A completed args object.
-         * 
-         * @category Args
-         */
-        public readonly args: T_Args,
+        args: RecursivePartial<T_Args> = {},
 
         clr: MessageMaker.Colour = 'black',
         utils: {
@@ -86,6 +106,7 @@ export abstract class AbstractBuildStage<
             nc?: NodeConsole;
         } = {},
     ) {
+        this.args = this.buildArgs( args );
 
         this.clr = clr;
 

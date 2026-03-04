@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -12,7 +12,7 @@
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export async function objectKeySortAsync(objPromise, recursive = false, 
 /**

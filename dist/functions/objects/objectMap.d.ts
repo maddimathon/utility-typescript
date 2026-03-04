@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -13,7 +13,7 @@
  * @param obj     The object to map.
  * @param mapper  The callback function used to define new values.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export declare function objectMap<T_Obj extends object, T_NewValue extends unknown>(obj: T_Obj, callback: (entry: [keyof T_Obj, T_Obj[keyof T_Obj]]) => T_NewValue): {
     [K in keyof T_Obj]: T_NewValue;

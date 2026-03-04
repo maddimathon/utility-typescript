@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -11,7 +11,7 @@
  * Maps a single-level object's properties to new values based on a callback
  * function.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export async function objectMapAsync(objPromise, callback) {
     return Promise.resolve(objPromise).then(async (obj) => {

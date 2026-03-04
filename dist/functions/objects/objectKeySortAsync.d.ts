@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -13,7 +13,7 @@ import { RecursiveRecord } from '../../types/objects/records.js';
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export declare function objectKeySortAsync<T_Obj extends Record<number | string, any> | RecursiveRecord<number | string, any>>(objPromise: T_Obj | Promise<T_Obj>, recursive?: boolean, 
 /**

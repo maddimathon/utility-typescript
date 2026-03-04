@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -13,7 +13,7 @@
  * @param obj     The object to map.
  * @param mapper  The callback function used to define new values.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export function objectMap(obj, callback) {
     // returns

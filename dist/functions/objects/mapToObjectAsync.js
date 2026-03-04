@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -10,7 +10,7 @@
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export async function mapToObjectAsync(map) {
     return Promise.all(Array.from(map.entries()).map(async ([key, value]) => {

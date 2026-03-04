@@ -10,6 +10,7 @@
 import { MessageMaker } from '../../../classes/MessageMaker.js';
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
+import { RecursivePartial } from 'src/ts/types/index.js';
 /**
  * A configurable class for a single stage of a build system run via npm.
  *
@@ -34,6 +35,18 @@ export declare abstract class AbstractBuildStage<T_SubStage extends string | nev
      */
     readonly args: T_Args;
     /**
+     * A default completed args object.
+     *
+     * @category Args
+     */
+    abstract get ARGS_DEFAULT(): T_Args;
+    /**
+     * Build a complete args object.
+     *
+     * @category Args
+     */
+    buildArgs(args?: RecursivePartial<T_Args>): T_Args;
+    /**
      * Colour used for colour-coding this class.
      *
      * @category Args
@@ -56,13 +69,7 @@ export declare abstract class AbstractBuildStage<T_SubStage extends string | nev
      * stage.
      */
     abstract readonly subStages: readonly T_SubStage[];
-    constructor(
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args: T_Args, clr?: MessageMaker.Colour, utils?: {
+    constructor(args?: RecursivePartial<T_Args>, clr?: MessageMaker.Colour, utils?: {
         fs?: NodeFiles;
         nc?: NodeConsole;
     });

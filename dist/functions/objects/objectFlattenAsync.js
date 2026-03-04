@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -16,7 +16,7 @@ import { objectFlatten } from './objectFlatten.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export async function objectFlattenAsync(objPromise, args = {}) {
     return Promise.resolve(objPromise).then(async (obj) => {

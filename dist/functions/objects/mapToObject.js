@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  *
  * @packageDocumentation
  */
@@ -10,7 +10,7 @@
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
  *
- * @since 2.0.0-beta.2
+ * @since 2.0.0-beta.2.draft
  */
 export function mapToObject(map) {
     const entries = Array.from(map.entries()).map(([key, value]) => {
