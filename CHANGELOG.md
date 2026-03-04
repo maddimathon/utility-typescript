@@ -19,6 +19,32 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.2** — 2026-03-04
+
+### Removed
+- Removed abstract class AbstractConfigurableClass
+
+### Moved & Renamed
+- Moved node exports to their own entry point
+- Moved type exports to their own entry point
+- Removed namespaces (Types, classes, functions) from main exports
+- Removed Json, Debug, Objects namespaces from types export
+
+### Added
+- New functions (mostly from utility-sass and design-system-utilities):
+    - hasIterator()
+    - makeNumber()
+    - makeNumberAsync()
+    - mapToObject()
+    - mapToObjectAsync()
+    - objectFlatten()
+    - objectFlattenAsync()
+    - objectKeySort()
+    - objectKeySortAsync()
+    - objectMap()
+    - objectMapAsync()
+
+
 ## **2.0.0-beta.1** — 2025-10-31
 
 Some quick updates needed for other libraries.

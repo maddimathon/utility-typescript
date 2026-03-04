@@ -13,7 +13,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 import { AnyClass } from './functions.js';

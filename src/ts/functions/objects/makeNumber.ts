@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  * 
  * @packageDocumentation
  */
@@ -12,7 +12,7 @@
  * Makes any input a number if it can be made into a valid number (e.g., by
  * parsing a string).
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  */
 export function makeNumber( input: unknown ): null | number {
     // returns

@@ -14,12 +14,12 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
-export * from './classes/MessageMaker.js';
-export * from './classes/VariableInspector.js';
 export * from './functions/arrays/arrayUnique.js';
+export * from './functions/regex/escRegExp.js';
+export * from './functions/regex/escRegExpReplace.js';
 export * from './functions/objects/hasIterator.js';
 export * from './functions/objects/isObjectEmpty.js';
 export * from './functions/objects/makeNumber.js';
@@ -30,13 +30,15 @@ export * from './functions/objects/mergeArgs.js';
 export * from './functions/objects/mergeArgsAsync.js';
 export * from './functions/objects/objectFlatten.js';
 export * from './functions/objects/objectFlattenAsync.js';
+export * from './functions/objects/objectKeySort.js';
+export * from './functions/objects/objectKeySortAsync.js';
 export * from './functions/objects/objectMap.js';
 export * from './functions/objects/objectMapAsync.js';
 export * from './functions/strings/slugify.js';
 export * from './functions/strings/softWrapText.js';
 export * from './functions/strings/timestamp.js';
 export * from './functions/strings/toTitleCase.js';
-export * from './functions/regex/escRegExp.js';
-export * from './functions/regex/escRegExpReplace.js';
 export * from './functions/typeOf.js';
+export * from './classes/MessageMaker.js';
+export * from './classes/VariableInspector.js';
 //# sourceMappingURL=index.js.map

@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 /**
@@ -15,7 +15,7 @@
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function objectFlatten(obj, args = {}) {
     // returns
@@ -50,7 +50,7 @@ export function objectFlatten(obj, args = {}) {
 /**
  * Utilities for the {@link objectFlatten} function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 (function (objectFlatten) {
     function parseArgs(args = {}) {

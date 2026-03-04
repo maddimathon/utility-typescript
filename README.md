@@ -3,7 +3,7 @@ title: ReadMe
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-beta.2.draft
+# Utility TypeScript @ 2.0.0-beta.2
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -31,8 +31,8 @@ or
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@2.0.0-beta.1
-npm i -D github:maddimathon/utility-typescript#2.0.0-beta.1
+npm i -D @maddimathon/utility-typescript@2.0.0-beta.2
+npm i -D github:maddimathon/utility-typescript#2.0.0-beta.2
 ```
 <!--/README_INSTALL-->
 

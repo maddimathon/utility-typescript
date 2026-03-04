@@ -131,7 +131,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             // compilerOptions,
 
-            customFooterHtml: `<p>Copyright <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025. <a href="${ homepage }/MIT_License.html">MIT license</a>.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
+            customFooterHtml: `<p>&copy; <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025–${ new Date().getFullYear() }. <a href="${ homepage }/MIT_License.html">MIT license</a>.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
             customFooterHtmlDisableWrapper: true,
 
             defaultCategory: 'Misc.',

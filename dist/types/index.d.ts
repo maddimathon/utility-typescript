@@ -4,7 +4,7 @@
  * @module types
  *
  * @since 0.1.0
- * @since 2.0.0-beta.2.draft — Now only available at its own path, not as a namespace from the main export path.
+ * @since 2.0.0-beta.2 — Now only available at its own path, not as a namespace from the main export path.
  *
  * @example
  * ```ts
@@ -12,7 +12,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 export type * from './arrays.ts';
@@ -23,6 +23,7 @@ export type * from './debug.js';
 export type * from './objects/classes.js';
 export type * from './objects/keys.js';
 export type * from './objects/partial.js';
+export type * from './objects/records.js';
 export type * from './objects/required.js';
 export type * from './string-literals/html.js';
 export type * as Test from './test.js';

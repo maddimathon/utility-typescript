@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 import { arrayUnique } from '../functions/arrays/arrayUnique.js';
@@ -115,11 +115,13 @@ export class VariableInspector {
                 'dolor faucibus lacus, in tempus metus elit non ante.'
             ].join('\n'),
             array: ['string sample value', Number(207), {},],
+            set: new Set(['string sample value', Number(207), {},]),
             objectEmpty: {},
             objectSimple: {
                 one: 1,
                 two: 2,
             },
+            map: new Map([['one', 1], ['two', 2]]),
             date: new Date('2024-02-08'),
             regex: /^regex$/g,
             functionSimple: () => { return 'hello'; },
@@ -162,8 +164,10 @@ export class VariableInspector {
             string: t.string,
             stringMultiline: t.stringMultiline,
             array: t.array,
+            set: t.set,
             objectEmpty: t.objectEmpty,
             objectSimple: t.objectSimple,
+            map: t.map,
             date: t.date,
             regex: t.regex,
             functionParams: t.functionParams,
@@ -337,24 +341,36 @@ export class VariableInspector {
         switch (this._typeOf) {
             case 'array':
             case 'object':
-                const constructorName = this._rawValue.constructor?.name;
-                // returns on match
-                switch (constructorName) {
-                    case 'Date':
-                    case 'RegExp':
-                        return properties;
-                    case 'List':
-                    case 'Map':
-                        return Array.from(this._rawValue.entries(), ([key, value]) => ({
-                            key: {
-                                name: key,
-                                type: typeof key,
-                            },
-                            vi: this._new({ [this.keyFormatter(key)]: value }, {
-                                equalString: ':',
-                                includePrefix: true,
-                            }),
-                        }));
+                const value = this._rawValue;
+                // returns
+                if (value instanceof Date || value instanceof RegExp) {
+                    return properties;
+                }
+                // returns
+                if (value instanceof Map) {
+                    return Array.from(this._rawValue.entries(), ([key, value]) => ({
+                        key: {
+                            name: key,
+                            type: typeof key,
+                        },
+                        vi: this._new({ [this.keyFormatter(key)]: value }, {
+                            equalString: ':',
+                            includePrefix: true,
+                        }),
+                    }));
+                }
+                // returns
+                if (value instanceof Set) {
+                    return Array.from(this._rawValue.values(), (value, index) => ({
+                        key: {
+                            name: index,
+                            type: 'number',
+                        },
+                        vi: this._new({ [this.keyFormatter(index)]: value }, {
+                            equalString: ':',
+                            includePrefix: true,
+                        }),
+                    }));
                 }
                 break;
             default:
@@ -541,20 +557,16 @@ export class VariableInspector {
                 return valueFilter(this._rawValue.toString());
             case 'array':
             case 'object':
-                switch (this._rawValue.constructor?.name) {
-                    /**
-                     * DATE
-                     */
-                    case 'Date':
-                        const date = this._rawValue;
-                        return valueFilter(this.args.localizeDates
-                            ? date.toLocaleString(this.args.locale, this.args.localizeDateOptions)
-                            : date.toString());
-                    /**
-                     * toString() classes
-                     */
-                    case 'RegExp':
-                        return valueFilter(this._rawValue.toString().replace(/\\/g, '\\\\'));
+                const value = this._rawValue;
+                // returns
+                if (value instanceof Date) {
+                    return valueFilter(this.args.localizeDates
+                        ? value.toLocaleString(this.args.locale, this.args.localizeDateOptions)
+                        : value.toString());
+                }
+                // returns
+                if (value instanceof RegExp) {
+                    return valueFilter(this._rawValue.toString().replace(/\\/g, '\\\\'));
                 }
                 return valueFilter(this._valueAsObject());
             case 'string':

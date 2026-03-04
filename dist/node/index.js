@@ -3,7 +3,7 @@
  *
  * @module node
  *
- * @since 2.0.0-beta.2.draft — Moved out of classes dir and now only available at its own path, not as a namespace from the main export path.
+ * @since 2.0.0-beta.2 — Moved out of classes dir and now only available at its own path, not as a namespace from the main export path.
  *
  * @example
  * ```ts
@@ -11,7 +11,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 export * from './classes/abstracts/AbstractBuildStage.js';

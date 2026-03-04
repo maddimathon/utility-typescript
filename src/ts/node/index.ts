@@ -3,7 +3,7 @@
  * 
  * @module node
  * 
- * @since ___PKG_VERSION___ — Moved out of classes dir and now only available at its own path, not as a namespace from the main export path.
+ * @since 2.0.0-beta.2.draft — Moved out of classes dir and now only available at its own path, not as a namespace from the main export path.
  *
  * @example
  * ```ts

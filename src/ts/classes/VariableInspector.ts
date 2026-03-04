@@ -149,8 +149,10 @@ export class VariableInspector<
             string: string;
             stringMultiline?: string;
             array?: any[];
+            set?: Set<any>;
             objectEmpty?: object;
             objectSimple?: object;
+            map?: Map<any, any>;
             date?: Date;
             regex?: RegExp;
             functionSimple?: () => any;
@@ -179,11 +181,15 @@ export class VariableInspector<
 
             array: [ 'string sample value', Number( 207 ), {}, ],
 
+            set: new Set( [ 'string sample value', Number( 207 ), {}, ] ),
+
             objectEmpty: {},
             objectSimple: {
                 one: 1,
                 two: 2,
             },
+
+            map: new Map( [ [ 'one', 1 ], [ 'two', 2 ] ] ),
 
             date: new Date( '2024-02-08' ),
             regex: /^regex$/g,
@@ -238,8 +244,10 @@ export class VariableInspector<
             string: t.string,
             stringMultiline: t.stringMultiline,
             array: t.array,
+            set: t.set,
             objectEmpty: t.objectEmpty,
             objectSimple: t.objectSimple,
+            map: t.map,
             date: t.date,
             regex: t.regex,
             functionParams: t.functionParams,
@@ -481,32 +489,51 @@ export class VariableInspector<
 
             case 'array':
             case 'object':
-                const constructorName = ( this._rawValue as object | any[] ).constructor?.name;
+                const value = this._rawValue as object | any[];
 
-                // returns on match
-                switch ( constructorName ) {
+                // returns
+                if ( value instanceof Date || value instanceof RegExp ) {
+                    return properties;
+                }
 
-                    case 'Date':
-                    case 'RegExp':
-                        return properties;
+                // returns
+                if ( value instanceof Map ) {
 
-                    case 'List':
-                    case 'Map':
-                        return Array.from(
-                            ( this._rawValue as Map<unknown, unknown> ).entries(),
-                            ( [ key, value ] ): VariableInspector.Child => ( {
+                    return Array.from(
+                        ( this._rawValue as Map<unknown, unknown> ).entries(),
+                        ( [ key, value ] ): VariableInspector.Child => ( {
 
-                                key: {
-                                    name: key as "number" | "string" | "symbol",
-                                    type: typeof key as "number" | "string" | "symbol",
-                                },
+                            key: {
+                                name: key as "number" | "string" | "symbol",
+                                type: typeof key as "number" | "string" | "symbol",
+                            },
 
-                                vi: this._new( { [ this.keyFormatter( key as number | string | symbol ) ]: value }, {
-                                    equalString: ':',
-                                    includePrefix: true,
-                                } ),
-                            } )
-                        );
+                            vi: this._new( { [ this.keyFormatter( key as number | string | symbol ) ]: value }, {
+                                equalString: ':',
+                                includePrefix: true,
+                            } ),
+                        } )
+                    );
+                }
+
+                // returns
+                if ( value instanceof Set ) {
+
+                    return Array.from(
+                        ( this._rawValue as Set<unknown> ).values(),
+                        ( value, index ): VariableInspector.Child => ( {
+
+                            key: {
+                                name: index,
+                                type: 'number',
+                            },
+
+                            vi: this._new( { [ this.keyFormatter( index ) ]: value }, {
+                                equalString: ':',
+                                includePrefix: true,
+                            } ),
+                        } )
+                    );
                 }
                 break;
 
@@ -752,25 +779,23 @@ export class VariableInspector<
 
             case 'array':
             case 'object':
-                switch ( ( this._rawValue as object ).constructor?.name ) {
+                const value = this._rawValue as object;
 
-                    /**
-                     * DATE
-                     */
-                    case 'Date':
-                        const date = this._rawValue as Date;
-                        return valueFilter(
-                            this.args.localizeDates
-                                ? date.toLocaleString( this.args.locale, this.args.localizeDateOptions )
-                                : date.toString()
-                        );
+                // returns
+                if ( value instanceof Date ) {
 
-                    /**
-                     * toString() classes
-                     */
-                    case 'RegExp':
-                        return valueFilter( ( this._rawValue as RegExp ).toString().replace( /\\/g, '\\\\' ) );
+                    return valueFilter(
+                        this.args.localizeDates
+                            ? value.toLocaleString( this.args.locale, this.args.localizeDateOptions )
+                            : value.toString()
+                    );
                 }
+
+                // returns
+                if ( value instanceof RegExp ) {
+                    return valueFilter( ( this._rawValue as RegExp ).toString().replace( /\\/g, '\\\\' ) );
+                }
+
                 return valueFilter( this._valueAsObject() );
 
             case 'string':

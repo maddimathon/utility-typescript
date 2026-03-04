@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  * 
  * @packageDocumentation
  */
@@ -20,7 +20,7 @@ import { RecursiveRecord } from '../../types/objects/records.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  */
 export async function objectFlattenAsync<
     T_Keys extends keyof any,

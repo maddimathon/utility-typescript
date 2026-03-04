@@ -1,17 +1,17 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 /**
  * Maps a single-level object's properties to new values based on a callback
  * function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export async function objectMapAsync(objPromise, callback) {
     return Promise.resolve(objPromise).then(async (obj) => {

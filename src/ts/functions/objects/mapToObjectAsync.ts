@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  * 
  * @packageDocumentation
  */
@@ -23,7 +23,7 @@ export async function mapToObjectAsync<
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  */
 export async function mapToObjectAsync<
     T_Keys extends keyof any,

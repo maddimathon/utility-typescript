@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 import type { LangLocaleCode } from '../types/index.js';
@@ -87,8 +87,10 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
         string: string;
         stringMultiline: string | undefined;
         array: any[] | undefined;
+        set: Set<any> | undefined;
         objectEmpty: object | undefined;
         objectSimple: object | undefined;
+        map: Map<any, any> | undefined;
         date: Date | undefined;
         regex: RegExp | undefined;
         functionParams: ((a: string, b: string) => any) | undefined;

@@ -1,16 +1,16 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function mapToObject(map) {
     const entries = Array.from(map.entries()).map(([key, value]) => {

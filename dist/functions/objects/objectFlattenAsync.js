@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.2
  * @license MIT
  */
 import { objectFlatten } from './objectFlatten.js';
@@ -16,7 +16,7 @@ import { objectFlatten } from './objectFlatten.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export async function objectFlattenAsync(objPromise, args = {}) {
     return Promise.resolve(objPromise).then(async (obj) => {

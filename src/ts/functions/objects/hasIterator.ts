@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  * 
  * @packageDocumentation
  */
@@ -11,7 +11,7 @@
 /**
  * Tests if the given object has an iterator function.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.2.draft
  */
 export function hasIterator<T_Obj extends any>( obj: T_Obj ): obj is Extract<T_Obj, Iterable<any>> {
     // returns
