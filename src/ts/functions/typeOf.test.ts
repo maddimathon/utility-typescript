@@ -12,7 +12,7 @@ import type { Test } from '../types/index.js';
 import { describe, expect, test } from '@jest/globals';
 
 import { typeOf } from './typeOf.js';
-// import { TypeDump } from 'src/ts/types/meta.js';
+// import { TypeDump } from '../types/meta.js';
 
 describe( 'typeOf()', () => {
 

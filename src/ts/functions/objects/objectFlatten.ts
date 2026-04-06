@@ -9,6 +9,7 @@
  */
 
 import { RecursiveRecord } from '../../types/objects/records.js';
+import { deleteUndefinedProps } from './deleteUndefinedProps.js';
 
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
@@ -65,12 +66,12 @@ export function objectFlatten<
             ...Object.entries(
                 objectFlatten(
                     value as RecursiveRecord<T_Keys, T_Values>,
-                    {
+                    deleteUndefinedProps( {
                         ...args,
                         prefix: String( key ),
                         separator,
                         suffix,
-                    },
+                    } ),
                 )
             ) as [ string, T_Values ][]
         );

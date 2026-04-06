@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 /**
@@ -56,6 +56,7 @@ export declare namespace TsConfig {
      * @since 2.0.0-alpha
      */
     interface CompilerOpts {
+        [key: string]: any;
         allowUnreachableCode?: boolean | undefined;
         allowUnusedLabels?: boolean | undefined;
         alwaysStrict?: boolean;

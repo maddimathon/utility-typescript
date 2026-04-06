@@ -4,9 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
+import { deleteUndefinedProps } from './deleteUndefinedProps.js';
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
  * nested object keys.
@@ -38,12 +39,12 @@ export function objectFlatten(obj, args = {}) {
             entries.push([key_addSuffix(key), value]);
             continue;
         }
-        entries.push(...Object.entries(objectFlatten(value, {
+        entries.push(...Object.entries(objectFlatten(value, deleteUndefinedProps({
             ...args,
             prefix: String(key),
             separator,
             suffix,
-        })));
+        }))));
     }
     return Object.fromEntries(entries);
 }

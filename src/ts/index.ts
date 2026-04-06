@@ -23,6 +23,7 @@ export * from './functions/arrays/arrayUnique.js';
 export * from './functions/regex/escRegExp.js';
 export * from './functions/regex/escRegExpReplace.js';
 
+export * from './functions/objects/deleteUndefinedProps.js';
 export * from './functions/objects/hasIterator.js';
 export * from './functions/objects/isObjectEmpty.js';
 export * from './functions/objects/makeNumber.js';

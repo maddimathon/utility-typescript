@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 import type { RecursivePartial } from '../../types/index.js';
@@ -37,5 +37,5 @@ export declare function mergeArgs<D extends object, I extends Partial<D> | Recur
 /**
  * Universal overload.
  */
-export declare function mergeArgs<D extends object, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined, mergeArrays?: boolean | undefined): D | D & I;
+export declare function mergeArgs<D extends object, I extends object>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined, mergeArrays?: boolean | undefined): D | D & I;
 //# sourceMappingURL=mergeArgs.d.ts.map

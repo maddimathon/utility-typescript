@@ -8,12 +8,13 @@
  * @license MIT
  */
 
-import { mergeArgs } from 'src/ts/functions/objects/mergeArgs.js';
+import type { RecursivePartial } from '../../../types/index.js';
+
 import { MessageMaker } from '../../../classes/MessageMaker.js';
+import { mergeArgs } from '../../../functions/objects/mergeArgs.js';
 
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
-import { RecursivePartial } from 'src/ts/types/index.js';
 
 
 /**

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 import { RecursiveRecord } from '../../types/objects/records.js';

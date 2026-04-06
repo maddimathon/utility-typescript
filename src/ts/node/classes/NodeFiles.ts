@@ -195,7 +195,7 @@ export class NodeFiles {
             ...args,
 
             errorOnExist: false,
-            mode: undefined,
+            mode: undefined as never,
             preserveTimestamps: true,
             // verbatimSymlinks: true,
         } );

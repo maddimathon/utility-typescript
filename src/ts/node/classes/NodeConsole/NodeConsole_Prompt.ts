@@ -71,32 +71,28 @@ export class NodeConsole_Prompt {
      * applicable.  Also handles and throws errors as applicable.
      */
     protected async prompt<
-        Prompter extends NodeConsole_Prompt.Slug,
-        Return extends NodeConsole_Prompt.SelectValue,
-        Config extends (
-            | ( Prompter extends "bool" ? NodeConsole_Prompt.BoolConfig : never )
-            | ( Prompter extends "input" ? NodeConsole_Prompt.InputConfig : never )
-            | ( Prompter extends "select" ? NodeConsole_Prompt.SelectConfig<Return> : never )
-        ),
+        T_Prompter extends NodeConsole_Prompt.Slug,
+        T_Return extends NodeConsole_Prompt.SelectValue,
     >(
-        prompter: Prompter,
-        run: ( config: Config, context?: {
-            input?: NodeJS.ReadableStream;
-            output?: NodeJS.WritableStream;
-            clearPromptOnDone?: boolean;
-            signal?: AbortSignal;
-        } ) => Promise<Return>,
-        _config: Omit<Config, "theme">,
-    ): Promise<Return | undefined> {
-
-        const config = mergeArgs(
-            {
-                msgArgs: {},
-                theme: {},
+        prompter: T_Prompter,
+        run: (
+            config: NodeConsole_Prompt.GenericConfig<T_Prompter, T_Return>,
+            context?: {
+                input?: NodeJS.ReadableStream;
+                output?: NodeJS.WritableStream;
+                clearPromptOnDone?: boolean;
+                signal?: AbortSignal;
             },
-            _config,
-            false
-        ) as Config;
+        ) => Promise<T_Return>,
+        _config: Omit<NodeConsole_Prompt.GenericConfig<T_Prompter, T_Return>, "theme">,
+    ): Promise<T_Return | undefined> {
+        type Config = NodeConsole_Prompt.GenericConfig<T_Prompter, T_Return>;
+
+        const config = {
+            msgArgs: {},
+            theme: {},
+            ..._config,
+        } as Config;
 
         const {
             depth = 0,
@@ -233,12 +229,10 @@ export class NodeConsole_Prompt {
 
         linesIn && console.log( ' ' + '\n'.repeat( linesIn - 1 ) );
 
-        const result: Return | undefined = await run(
+        const result: T_Return | undefined = await run(
             config as Config,
             {
-                signal: timeout
-                    ? AbortSignal.timeout( timeout )
-                    : undefined,
+                signal: AbortSignal.timeout( timeout ),
             },
         ).catch( ( error ) => {
 
@@ -272,12 +266,12 @@ export class NodeConsole_Prompt {
                             break;
                     }
 
-                    return config.default as Return | undefined;
+                    return config.default as T_Return | undefined;
 
                 case 'ExitPromptError':
                     console.log( '' );
                     process.exit( 0 );
-                    return config.default as Return | undefined;
+                    return config.default as T_Return | undefined;
             }
 
             throw error;
@@ -373,43 +367,26 @@ export class NodeConsole_Prompt {
      * @category Interactivity
      */
     public async select<
-        Return extends NodeConsole_Prompt.SelectValue,
-        Config extends Omit<NodeConsole_Prompt.SelectConfig<Return>, "choices"> & {
-            choices: {
-                value: Return;
-
-                name?: string;
-                description?: string;
-                short?: string;
-                disabled?: boolean | string;
-            }[];
-        } = Omit<NodeConsole_Prompt.SelectConfig<Return>, "choices"> & {
-            choices: {
-                value: Return;
-
-                name?: string;
-                description?: string;
-                short?: string;
-                disabled?: boolean | string;
-            }[];
-        },
+        T_Return extends NodeConsole_Prompt.SelectValue,
     >(
-        config: Omit<Config, "theme">,
-    ): Promise<Return | undefined> {
+        config: Omit<NodeConsole_Prompt.SelectConfig<T_Return>, "choices"> & {
+            choices: Extract<NodeConsole_Prompt.SelectConfig<T_Return>[ 'choices' ], object[]>;
+        },
+    ): Promise<T_Return | undefined> {
 
-        const defaultConfig: Omit<
-            NodeConsole_Prompt.SelectConfig<Return>,
-            "default" | "message"
-        > = {
+        const defaultConfig: Partial<typeof config> = {
             choices: [],
             msgArgs: {},
             pageSize: 10,
-        };
+        } satisfies Omit<
+            NodeConsole_Prompt.SelectConfig<T_Return>,
+            "default" | "message"
+        >;
 
-        return this.prompt(
+        return this.prompt<'select', T_Return>(
             'select',
             inquirer.select,
-            mergeArgs( defaultConfig, config, true )
+            mergeArgs( defaultConfig, config, true ),
         );
     }
 }
@@ -643,6 +620,15 @@ export namespace NodeConsole_Prompt {
         timeout?: number;
     };
 
+    export type GenericConfig<
+        T_Prompter extends Slug,
+        T_Return extends NodeConsole_Prompt.SelectValue,
+    > = (
+            | ( T_Prompter extends "bool" ? NodeConsole_Prompt.BoolConfig : never )
+            | ( T_Prompter extends "input" ? NodeConsole_Prompt.InputConfig : never )
+            | ( T_Prompter extends "select" ? NodeConsole_Prompt.SelectConfig<T_Return> : never )
+        );
+
     /**
      * Optional configuration for {@link NodeConsole.promptBool}.
      */
@@ -682,7 +668,7 @@ export namespace NodeConsole_Prompt {
         Value extends SelectValue = SelectValue,
     > = Omit<Config<"select", Value>, "default"> & {
         // these are in Config<"select"> already
-        // message: string;
+        message: string;
 
         default?: Value;
 

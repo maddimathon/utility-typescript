@@ -14,12 +14,13 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 export * from './functions/arrays/arrayUnique.js';
 export * from './functions/regex/escRegExp.js';
 export * from './functions/regex/escRegExpReplace.js';
+export * from './functions/objects/deleteUndefinedProps.js';
 export * from './functions/objects/hasIterator.js';
 export * from './functions/objects/isObjectEmpty.js';
 export * from './functions/objects/makeNumber.js';

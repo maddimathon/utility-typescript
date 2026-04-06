@@ -12,7 +12,6 @@ import type {
     AnyClass,
 } from '../functions.js';
 
-
 /**
  * {@link Partial}-izes an object, except for the given RequiredKeys, which are
  * converted to be required.

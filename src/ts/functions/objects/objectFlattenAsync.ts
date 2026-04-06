@@ -11,6 +11,7 @@
 import { objectFlatten } from './objectFlatten.js';
 
 import { RecursiveRecord } from '../../types/objects/records.js';
+import { deleteUndefinedProps } from './deleteUndefinedProps.js';
 
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
@@ -67,12 +68,12 @@ export async function objectFlattenAsync<
 
                         return objectFlattenAsync<T_Keys, T_Values>(
                             value as RecursiveRecord<T_Keys, T_Values>,
-                            {
+                            deleteUndefinedProps( {
                                 ...args,
                                 prefix: String( key ),
                                 separator,
                                 suffix,
-                            },
+                            } ),
                         ).then(
                             subObj => Object.entries( subObj )
                         );

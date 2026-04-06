@@ -4,10 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
-import { mergeArgs } from 'src/ts/functions/objects/mergeArgs.js';
+import { mergeArgs } from '../../../functions/objects/mergeArgs.js';
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
 /**

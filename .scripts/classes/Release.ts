@@ -348,17 +348,6 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
         const releaseAttachment = `"${ this.releasePath.replace( /\/*$/g, '' ) + '.zip' }#${ this.pkg.name }@${ this.pkgVersion }"`;
 
-        this.nc.varDump( { 'this.args': this.args }, {
-            clr: this.clr,
-            depth: ( this.args.verbose ? 4 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
-            maxWidth: null,
-        } );
-        this.nc.varDump( { releaseAttachment }, {
-            clr: this.clr,
-            depth: ( this.args.verbose ? 4 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
-            maxWidth: null,
-        } );
-
         const releaseCmd = `gh release create ${ this.pkgVersion } ${ releaseAttachment } ${ this.nc.cmdArgs( {
             draft: true,
             'notes-file': '.releasenotes.md',

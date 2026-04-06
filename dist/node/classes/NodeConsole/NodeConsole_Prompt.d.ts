@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 import type { RecursivePartial } from '../../../types/index.js';
@@ -39,12 +39,12 @@ export declare class NodeConsole_Prompt {
      * Runs a prompter function with some output before and after, if
      * applicable.  Also handles and throws errors as applicable.
      */
-    protected prompt<Prompter extends NodeConsole_Prompt.Slug, Return extends NodeConsole_Prompt.SelectValue, Config extends ((Prompter extends "bool" ? NodeConsole_Prompt.BoolConfig : never) | (Prompter extends "input" ? NodeConsole_Prompt.InputConfig : never) | (Prompter extends "select" ? NodeConsole_Prompt.SelectConfig<Return> : never))>(prompter: Prompter, run: (config: Config, context?: {
+    protected prompt<T_Prompter extends NodeConsole_Prompt.Slug, T_Return extends NodeConsole_Prompt.SelectValue>(prompter: T_Prompter, run: (config: NodeConsole_Prompt.GenericConfig<T_Prompter, T_Return>, context?: {
         input?: NodeJS.ReadableStream;
         output?: NodeJS.WritableStream;
         clearPromptOnDone?: boolean;
         signal?: AbortSignal;
-    }) => Promise<Return>, _config: Omit<Config, "theme">): Promise<Return | undefined>;
+    }) => Promise<T_Return>, _config: Omit<NodeConsole_Prompt.GenericConfig<T_Prompter, T_Return>, "theme">): Promise<T_Return | undefined>;
     /**
      * @category Interactivity
      */
@@ -282,6 +282,7 @@ export declare namespace NodeConsole_Prompt {
          */
         timeout?: number;
     };
+    export type GenericConfig<T_Prompter extends Slug, T_Return extends NodeConsole_Prompt.SelectValue> = ((T_Prompter extends "bool" ? NodeConsole_Prompt.BoolConfig : never) | (T_Prompter extends "input" ? NodeConsole_Prompt.InputConfig : never) | (T_Prompter extends "select" ? NodeConsole_Prompt.SelectConfig<T_Return> : never));
     /**
      * Optional configuration for {@link NodeConsole.promptBool}.
      */
@@ -305,6 +306,7 @@ export declare namespace NodeConsole_Prompt {
      * Optional configuration for {@link NodeConsole.prompt.select}.
      */
     export type SelectConfig<Value extends SelectValue = SelectValue> = Omit<Config<"select", Value>, "default"> & {
+        message: string;
         default?: Value;
         choices: ([string] & string[]) | {
             value: Value;

@@ -4,13 +4,13 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
+import type { RecursivePartial } from '../../../types/index.js';
 import { MessageMaker } from '../../../classes/MessageMaker.js';
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
-import { RecursivePartial } from 'src/ts/types/index.js';
 /**
  * A configurable class for a single stage of a build system run via npm.
  *

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2
+ * @maddimathon/utility-typescript@2.0.0-beta.2.draft
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -49,10 +49,11 @@ export class NodeConsole_Prompt {
      * applicable.  Also handles and throws errors as applicable.
      */
     async prompt(prompter, run, _config) {
-        const config = mergeArgs({
+        const config = {
             msgArgs: {},
             theme: {},
-        }, _config, false);
+            ..._config,
+        };
         const { depth = 0, indent = '', hangingIndent = '', linesIn = 0, linesOut = 0, timestamp = false, } = config.msgArgs ?? {};
         const msgArgs = {
             bold: true,
@@ -131,9 +132,7 @@ export class NodeConsole_Prompt {
         const timeout = config.timeout ?? this.args.prompt.timeout;
         linesIn && console.log(' ' + '\n'.repeat(linesIn - 1));
         const result = await run(config, {
-            signal: timeout
-                ? AbortSignal.timeout(timeout)
-                : undefined,
+            signal: AbortSignal.timeout(timeout),
         }).catch((error) => {
             const timeoutParams = [
                 `Prompt input timed out after ${timeout}ms.`,

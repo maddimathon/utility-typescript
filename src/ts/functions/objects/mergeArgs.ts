@@ -69,7 +69,7 @@ export function mergeArgs<
  */
 export function mergeArgs<
     D extends object,
-    I extends Partial<D> | RecursivePartial<D>,
+    I extends object,
 >(
     defaults: D,
     inputs?: I | undefined,

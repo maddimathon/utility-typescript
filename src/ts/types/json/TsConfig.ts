@@ -63,6 +63,7 @@ export namespace TsConfig {
      * @since 2.0.0-alpha
      */
     export interface CompilerOpts {
+        [ key: string ]: any;
 
         /*
          * Type Checking
