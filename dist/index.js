@@ -14,7 +14,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
 export * from './functions/arrays/arrayUnique.js';
@@ -25,6 +25,8 @@ export * from './functions/objects/hasIterator.js';
 export * from './functions/objects/isObjectEmpty.js';
 export * from './functions/objects/makeNumber.js';
 export * from './functions/objects/makeNumberAsync.js';
+export * from './functions/objects/mapFlatten.js';
+export * from './functions/objects/mapFlattenAsync.js';
 export * from './functions/objects/mapToObject.js';
 export * from './functions/objects/mapToObjectAsync.js';
 export * from './functions/objects/mergeArgs.js';

@@ -1,13 +1,12 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { deleteUndefinedProps } from './deleteUndefinedProps.js';
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
  * nested object keys.
@@ -16,7 +15,7 @@ import { deleteUndefinedProps } from './deleteUndefinedProps.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function objectFlatten(obj, args = {}) {
     // returns
@@ -39,19 +38,19 @@ export function objectFlatten(obj, args = {}) {
             entries.push([key_addSuffix(key), value]);
             continue;
         }
-        entries.push(...Object.entries(objectFlatten(value, deleteUndefinedProps({
+        entries.push(...Object.entries(objectFlatten(value, {
             ...args,
-            prefix: String(key),
+            prefix: key,
             separator,
             suffix,
-        }))));
+        })));
     }
     return Object.fromEntries(entries);
 }
 /**
  * Utilities for the {@link objectFlatten} function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 (function (objectFlatten) {
     function parseArgs(args = {}) {

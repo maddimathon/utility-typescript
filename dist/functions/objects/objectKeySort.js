@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
 /**
@@ -12,7 +12,7 @@
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function objectKeySort(obj, recursive = false, 
 /**

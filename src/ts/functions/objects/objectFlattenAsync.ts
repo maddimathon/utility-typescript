@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  * 
  * @packageDocumentation
  */
@@ -21,7 +21,7 @@ import { deleteUndefinedProps } from './deleteUndefinedProps.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  * 
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export async function objectFlattenAsync<
     T_Keys extends keyof any,
@@ -51,14 +51,14 @@ export async function objectFlattenAsync<
 
             return Promise.all(
                 Object.keys( obj ).map(
-                    async ( t_key ): Promise<false | [ string, T_Values ][]> => {
+                    async ( t_key ): Promise<[ string, T_Values ][]> => {
 
                         const value = obj[ t_key as T_Keys ] as undefined | T_Values;
                         const key = key_validate_addPrefix( t_key );
 
                         // continues
                         if ( typeof value === 'undefined' ) {
-                            return false;
+                            return [ [ key_addSuffix( key ), value as T_Values ] ];
                         }
 
                         // continues
@@ -80,7 +80,7 @@ export async function objectFlattenAsync<
                     }
                 )
             ).then(
-                entries => Object.fromEntries( entries.filter( item => item !== false ).flat() ) as { [ key: string ]: T_Values; }
+                entries => Object.fromEntries( entries.flat() ) as { [ key: string ]: T_Values; }
             );
         }
     );

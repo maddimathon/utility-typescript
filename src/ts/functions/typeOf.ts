@@ -23,7 +23,7 @@ import type { AnyClass } from '../types/index.js';
  * 
  * @since 0.1.0
  */
-export function typeOf<T_Type extends typeOf.TestType>( variable: T_Type ) {
+export function typeOf<T_Type extends typeOf.TestType>( variable: T_Type ): typeOf.Return<T_Type> {
 
     /*
      * BY VALUE

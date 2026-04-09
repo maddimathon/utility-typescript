@@ -1,29 +1,29 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.3.draft
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
 import { Test } from '../../types/index.js';
 /**
  * Deletes the properties of the given object whose types are undefined.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.3.draft
  */
 export declare function deleteUndefinedProps<T_Obj extends object>(obj: T_Obj): deleteUndefinedProps.OmitUndefined<T_Obj>;
 /**
  * Utilities for the {@link deleteUndefinedProps} function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.3.draft
  */
 export declare namespace deleteUndefinedProps {
     /**
      * Utility for {@link OmitUndefined} type.
      *
-     * @since 2.0.0-beta.2.draft
+     * @since 2.0.0-beta.3.draft
      * @internal
      */
     type KeysToKeep<T_Obj extends object> = ({
@@ -34,7 +34,7 @@ export declare namespace deleteUndefinedProps {
     /**
      * Utility for {@link OmitUndefined} type.
      *
-     * @since 2.0.0-beta.2.draft
+     * @since 2.0.0-beta.3.draft
      * @internal
      */
     type KeysToPartialize<T_Obj extends object> = ({

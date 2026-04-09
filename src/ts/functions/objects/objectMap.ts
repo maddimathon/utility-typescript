@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  * 
  * @packageDocumentation
  */
@@ -14,7 +14,7 @@
  * @param obj     The object to map.
  * @param mapper  The callback function used to define new values.
  * 
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function objectMap<
     T_Obj extends object,

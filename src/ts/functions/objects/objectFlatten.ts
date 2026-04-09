@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  * 
  * @packageDocumentation
  */
@@ -9,7 +9,6 @@
  */
 
 import { RecursiveRecord } from '../../types/objects/records.js';
-import { deleteUndefinedProps } from './deleteUndefinedProps.js';
 
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
@@ -19,7 +18,7 @@ import { deleteUndefinedProps } from './deleteUndefinedProps.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function objectFlatten<
     T_Keys extends keyof any,
@@ -66,12 +65,12 @@ export function objectFlatten<
             ...Object.entries(
                 objectFlatten(
                     value as RecursiveRecord<T_Keys, T_Values>,
-                    deleteUndefinedProps( {
+                    {
                         ...args,
-                        prefix: String( key ),
+                        prefix: key,
                         separator,
                         suffix,
-                    } ),
+                    },
                 )
             ) as [ string, T_Values ][]
         );
@@ -83,19 +82,19 @@ export function objectFlatten<
 /**
  * Utilities for the {@link objectFlatten} function.
  * 
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export namespace objectFlatten {
 
     /**
      * Optional params for the {@link objectFlatten} function.
      * 
-     * @since 2.0.0-beta.2.draft
+     * @since 2.0.0-beta.2
      */
     export type Args = {
-        prefix?: string;
-        separator?: string;
-        suffix?: string;
+        prefix?: undefined | string;
+        separator?: undefined | string;
+        suffix?: undefined | string;
     };
 
     export function parseArgs( args: Partial<objectFlatten.Args> = {} ) {

@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  * 
  * @packageDocumentation
  */
@@ -12,7 +12,7 @@
  * Maps a single-level object's properties to new values based on a callback
  * function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export async function objectMapAsync<
     T_Obj extends object,

@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
 import { objectFlatten } from './objectFlatten.js';
@@ -17,7 +17,7 @@ import { deleteUndefinedProps } from './deleteUndefinedProps.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export async function objectFlattenAsync(objPromise, args = {}) {
     return Promise.resolve(objPromise).then(async (obj) => {
@@ -33,7 +33,7 @@ export async function objectFlattenAsync(objPromise, args = {}) {
             const key = key_validate_addPrefix(t_key);
             // continues
             if (typeof value === 'undefined') {
-                return false;
+                return [[key_addSuffix(key), value]];
             }
             // continues
             if (typeof value !== 'object' || !value || Array.isArray(value)) {
@@ -45,7 +45,7 @@ export async function objectFlattenAsync(objPromise, args = {}) {
                 separator,
                 suffix,
             })).then(subObj => Object.entries(subObj));
-        })).then(entries => Object.fromEntries(entries.filter(item => item !== false).flat()));
+        })).then(entries => Object.fromEntries(entries.flat()));
     });
 }
 //# sourceMappingURL=objectFlattenAsync.js.map

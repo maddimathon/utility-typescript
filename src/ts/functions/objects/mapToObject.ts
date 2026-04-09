@@ -1,5 +1,5 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  * 
  * @packageDocumentation
  */
@@ -23,7 +23,7 @@ export function mapToObject<
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
  * 
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export function mapToObject<
     T_Keys extends keyof any,

@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
 import { RecursiveRecord } from '../../types/objects/records.js';
@@ -16,7 +16,7 @@ import { RecursiveRecord } from '../../types/objects/records.js';
  * @param prefix  Optional. String used to prefix the flattened keys.
  * @param suffix  Optional. String used to suffix the flattened keys.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export declare function objectFlatten<T_Keys extends keyof any, T_Values extends any, T_Obj extends RecursiveRecord<T_Keys, T_Values> = RecursiveRecord<T_Keys, T_Values>>(obj: T_Obj, args?: Partial<objectFlatten.Args>): {
     [key: string]: T_Values;
@@ -24,18 +24,18 @@ export declare function objectFlatten<T_Keys extends keyof any, T_Values extends
 /**
  * Utilities for the {@link objectFlatten} function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export declare namespace objectFlatten {
     /**
      * Optional params for the {@link objectFlatten} function.
      *
-     * @since 2.0.0-beta.2.draft
+     * @since 2.0.0-beta.2
      */
     type Args = {
-        prefix?: string;
-        separator?: string;
-        suffix?: string;
+        prefix?: undefined | string;
+        separator?: undefined | string;
+        suffix?: undefined | string;
     };
     function parseArgs(args?: Partial<objectFlatten.Args>): {
         readonly prefix: string | undefined;

@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/design-system-utilities@2.0.0-beta.2.draft
+ * @maddimathon/design-system-utilities@2.0.0-beta.3.draft
  * @license MIT
  */
 /**
@@ -12,7 +12,7 @@
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export async function objectKeySortAsync(objPromise, recursive = false, 
 /**

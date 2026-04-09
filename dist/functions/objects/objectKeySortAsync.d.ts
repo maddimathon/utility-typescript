@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/design-system-utilities@2.0.0-beta.2.draft
+ * @maddimathon/design-system-utilities@2.0.0-beta.3.draft
  * @license MIT
  */
 import { RecursiveRecord } from '../../types/objects/records.js';
@@ -13,7 +13,7 @@ import { RecursiveRecord } from '../../types/objects/records.js';
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export declare function objectKeySortAsync<T_Obj extends Record<number | string, any> | RecursiveRecord<number | string, any>>(objPromise: T_Obj | Promise<T_Obj>, recursive?: boolean, 
 /**

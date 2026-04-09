@@ -1,17 +1,17 @@
 /**
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.2.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
 /**
  * Maps a single-level object's properties to new values based on a callback
  * function.
  *
- * @since 2.0.0-beta.2.draft
+ * @since 2.0.0-beta.2
  */
 export declare function objectMapAsync<T_Obj extends object, T_NewValue extends unknown>(objPromise: T_Obj | Promise<T_Obj>, callback: (entry: [
     keyof T_Obj,
