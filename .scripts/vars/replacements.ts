@@ -7,12 +7,13 @@
 
 import { AbstractStage } from '../classes/abstracts/AbstractStage.js';
 
+import { THIS_DIR } from './test-secrets.js';
 
 export type ReplacementObject = { find: string | RegExp, replace: string; };
 
-
 export function currentReplacements( stage: AbstractStage<any, any> ): ReplacementObject[] {
     return [
+        { find: /___(THIS)_DIR___/g, replace: THIS_DIR, },
         { find: /___(CURRENT)_DATE___/g, replace: stage.datestamp( null, 'yyyy-MM-dd' ), },
         { find: /___(CURRENT)_DESC(RIPTION)?___/g, replace: stage.pkg.description, },
         { find: /___(CURRENT)_(HOMEPAGE|URL)___/g, replace: stage.pkg.homepage, },

@@ -8,9 +8,8 @@
         ".scripts/**/*",
     ],
     "compilerOptions": {
-        "baseUrl": "../",
-
         "declaration": false,
+        "exactOptionalPropertyTypes": false,
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "noEmit": true,

@@ -9,6 +9,7 @@
 .scripts/logs
 .scripts/tmp
 .scripts/typedoc-plugins
+.scripts/vars/test-secrets.ts
 
 
 # RELEASES

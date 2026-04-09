@@ -25,15 +25,15 @@ describe( 'NodeFiles', () => {
 
         const testSets: [ string, string ][] = [
             [
-                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/package.json',
+                '___THIS_DIR___package.json',
                 'package.json',
             ],
             [
-                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/.scripts/',
+                '___THIS_DIR___.scripts/',
                 '.scripts',
             ],
             [
-                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/',
+                '___THIS_DIR___',
                 '.',
             ],
         ];
@@ -48,15 +48,15 @@ describe( 'NodeFiles', () => {
         const testSets: [ string[], string ][] = [
             [
                 [ 'package.json' ],
-                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/package.json'
+                '___THIS_DIR___package.json'
             ],
             [
                 [ '.scripts', 'package.ts' ],
-                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/.scripts/package.ts'
+                '___THIS_DIR___.scripts/package.ts'
             ],
             [
                 [ '.scripts', 'classes/' ],
-                '/Users/maddi/— Local Files/Coding - Local/utility-typescript/.scripts/classes'
+                '___THIS_DIR___.scripts/classes'
             ],
         ];
 
