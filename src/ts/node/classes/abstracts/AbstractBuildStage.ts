@@ -288,7 +288,7 @@ export abstract class AbstractBuildStage<
      * {@link AbstractBuildStage['runSubStage']} if the stage is not excluded or
      * all sub-stages are included.
      */
-    public async run() {
+    public async run(): Promise<void> {
 
         /* start */
         await this.startEndNotice( 'start' );

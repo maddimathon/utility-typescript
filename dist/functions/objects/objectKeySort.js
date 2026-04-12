@@ -12,6 +12,8 @@
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
+ * @category Functions – Object
+ *
  * @since 2.0.0-beta.2
  */
 export function objectKeySort(obj, recursive = false, 
@@ -59,4 +61,3 @@ sortMaker) {
         };
     return Object.fromEntries(entries.sort(sortFn));
 }
-//# sourceMappingURL=objectKeySort.js.map

@@ -19,6 +19,8 @@ import { typeOf } from '../functions/typeOf.js';
  * {@link VariableInspector.value}) or get a json-compatible object representing
  * the inspected value {@link VariableInspector.toJSON}.
  *
+ * @category Classes
+ *
  * @since 0.1.1
  *
  * @example
@@ -64,37 +66,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @internal
      */
-    private static get _testClass();
-    /**
-     * Used for testing.
-     *
-     * @internal
-     */
-    private static _testVars;
-    /**
-     * Used for testing.
-     *
-     * @internal
-     */
-    static get sampleComplexObject(): {
-        undefined: undefined;
-        null: null;
-        true: true | undefined;
-        false: false | undefined;
-        bigint: bigint | undefined;
-        number: number;
-        NaN: number;
-        string: string;
-        stringMultiline: string | undefined;
-        array: any[] | undefined;
-        set: Set<any> | undefined;
-        objectEmpty: object | undefined;
-        objectSimple: object | undefined;
-        map: Map<any, any> | undefined;
-        date: Date | undefined;
-        regex: RegExp | undefined;
-        functionParams: ((a: string, b: string) => any) | undefined;
-    };
+    static get sampleComplexObject(): VariableInspector.Samples.Vars;
     /**
      * Prints sample output to the console via VariableInspector.dump().
      *
@@ -109,27 +81,10 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      * @category Args
      */
     readonly args: VariableInspector.Args;
-    get ARGS_DEFAULT(): {
-        readonly childArgs: {
-            readonly includeValue: true;
-        };
-        readonly debug: false;
-        readonly equalString: " =";
-        readonly fallbackToJSON: true;
-        readonly formatter: null;
-        readonly includePrefix: true;
-        readonly includeType: true;
-        readonly includeValue: true;
-        readonly indent: "    ";
-        readonly inspectClasses: false;
-        readonly inspectFunctions: false;
-        readonly locale: "en-CA";
-        readonly localizeDates: true;
-        readonly localizeDateOptions: {};
-        readonly localizeNumbers: false;
-        readonly localizeNumberOptions: {};
-        readonly stringQuoteCharacter: "\"";
-    };
+    /**
+     * @source
+     */
+    readonly ARGS_DEFAULT: VariableInspector.Args;
     /**
      * Value’s name, used in output.
      *
@@ -143,7 +98,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @expandType T_Type
      */
-    protected readonly _rawValue: T_Type;
+    protected readonly _rawValue: T_Type | undefined;
     /**
      * Alias for this.typeOf( this._rawValue ).
      *
@@ -151,7 +106,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @expandType typeOf.Return
      */
-    protected readonly _typeOf: typeOf.Return<T_Type>;
+    protected readonly _typeOf: typeOf.Return<T_Type | undefined>;
     /**
      * These are the properties of the input object, if any.
      *
@@ -266,6 +221,8 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
 }
 /**
  * Used only for {@link VariableInspector}.
+ *
+ * @category Classes
  *
  * @since 0.1.1
  */
@@ -487,5 +444,49 @@ export declare namespace VariableInspector {
         };
         value: JSON;
     }
+    /**
+     * Used to sample/test/demo functions.
+     *
+     * @since 2.0.0-beta.3.draft
+     * @internal
+     */
+    namespace Samples {
+        class TestClass {
+            undefinedProperty: any;
+            property: string;
+            static methodName(param: any): any;
+            _getSet: string;
+            get getSetProp(): string;
+            set getSetProp(param: string);
+        }
+        /**
+         * @since 2.0.0-beta.3.draft
+         * @internal
+         */
+        export type Vars = {
+            undefined?: undefined;
+            null: null;
+            true?: true;
+            false?: false;
+            bigint?: bigint;
+            number: number;
+            NaN: number;
+            string: string;
+            stringMultiline?: string;
+            array?: any[];
+            set?: Set<any>;
+            objectEmpty?: object;
+            objectSimple?: object;
+            map?: Map<any, any>;
+            date?: Date;
+            regex?: RegExp;
+            functionSimple?: () => any;
+            functionParams?: (a: string, b: string) => any;
+            class?: typeof TestClass;
+            classInstance?: TestClass;
+        };
+        export function getVars(verbose: true): Required<VariableInspector.Samples.Vars>;
+        export function getVars(verbose: boolean): VariableInspector.Samples.Vars;
+        export {};
+    }
 }
-//# sourceMappingURL=VariableInspector.d.ts.map

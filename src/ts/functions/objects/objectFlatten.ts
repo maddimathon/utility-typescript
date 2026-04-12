@@ -8,15 +8,13 @@
  * @license MIT
  */
 
-import { RecursiveRecord } from '../../types/objects/records.js';
+import type { RecursiveRecord } from '../../types/objects/records.js';
 
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
  * nested object keys.
- *
- * @param obj     Object to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * 
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.2
  */
@@ -82,6 +80,8 @@ export function objectFlatten<
 /**
  * Utilities for the {@link objectFlatten} function.
  * 
+ * @category Functions – Object
+ * 
  * @since 2.0.0-beta.2
  */
 export namespace objectFlatten {
@@ -97,7 +97,10 @@ export namespace objectFlatten {
         suffix?: undefined | string;
     };
 
-    export function parseArgs( args: Partial<objectFlatten.Args> = {} ) {
+    export function parseArgs( args: Partial<objectFlatten.Args> = {} ): Required<objectFlatten.Args> & {
+        key_addSuffix: ( key: number | string ) => string;
+        key_validate_addPrefix: ( key: number | string ) => string;
+    } {
 
         const {
             prefix,

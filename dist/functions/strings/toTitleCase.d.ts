@@ -10,6 +10,8 @@
 /**
  * Converts the given string to title case.
  *
+ * @category Functions – String
+ *
  * @param input  String to convert.
  *
  * @return  Title case version of the input string.
@@ -17,4 +19,3 @@
  * @source
  */
 export declare function toTitleCase(input: string): string;
-//# sourceMappingURL=toTitleCase.d.ts.map

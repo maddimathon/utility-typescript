@@ -11,6 +11,8 @@
 /**
  * Maps a single-level object's properties to new values based on a callback
  * function.
+ * 
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.2
  */

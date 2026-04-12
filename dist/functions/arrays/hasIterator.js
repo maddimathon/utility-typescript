@@ -10,6 +10,8 @@
 /**
  * Tests if the given object has an iterator function.
  *
+ * @category Functions – Array
+ *
  * @since 2.0.0-beta.2
  */
 export function hasIterator(obj) {
@@ -28,4 +30,3 @@ export function hasIterator(obj) {
     }
     return false;
 }
-//# sourceMappingURL=hasIterator.js.map

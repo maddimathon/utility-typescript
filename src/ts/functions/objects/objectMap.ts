@@ -11,8 +11,10 @@
 /**
  * A utility to map the values of an object using a callback function.
  * 
- * @param obj     The object to map.
- * @param mapper  The callback function used to define new values.
+ * @param obj       The object to map.
+ * @param callback  The callback function used to define new values.
+ * 
+ * @category Functions – Object
  * 
  * @since 2.0.0-beta.2
  */

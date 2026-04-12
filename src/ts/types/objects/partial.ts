@@ -57,8 +57,10 @@ export type RecursivePartialExcept<
  * @internal
  * @private
  */
-export type _RecursivePartial_Inner<T_Object> =
-    T_Object extends number | null | string | undefined | AnyClass | Function | Date
+export type _RecursivePartial_Value<T_Object> =
+    T_Object extends ( infer _Item )[]
+    ? _RecursivePartial_Value<_Item>[]
+    : T_Object extends number | null | string | undefined | AnyClass | Function | Date
     ? T_Object
     : T_Object extends Record<number | string, any>
     ? RecursivePartial<T_Object>
@@ -75,8 +77,5 @@ export type _RecursivePartial_Inner<T_Object> =
 export type RecursivePartial<
     T_Object extends Record<number | string | symbol, any>
 > = {
-        [ _Key in keyof T_Object ]?:
-        T_Object[ _Key ] extends ( infer _Item )[]
-        ? _RecursivePartial_Inner<_Item>[]
-        : _RecursivePartial_Inner<T_Object[ _Key ]>;
+        [ _Key in keyof T_Object ]?: _RecursivePartial_Value<T_Object[ _Key ]>;
     };

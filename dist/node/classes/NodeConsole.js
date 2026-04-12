@@ -363,55 +363,6 @@ export class NodeConsole {
         }
         return nc;
     }
-    /* LOCAL PROPERTIES
-     * ====================================================================== */
-    /**
-     * A local instance of {@link MessageMaker} initialized using
-     * `{@link NodeConsole.Args}.msgMaker`.
-     *
-     * @category Utilities
-     */
-    msg;
-    /**
-     * Public alias for internal prompting methods.
-     *
-     * @category Interactive
-     */
-    prompt;
-    /* Args ===================================== */
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args;
-    /**
-     * @category Args
-     */
-    get ARGS_DEFAULT() {
-        return {
-            argsRecursive: true,
-            msgMaker: {
-                msg: {
-                    maxWidth: 100,
-                    tab: '        ',
-                },
-                paintFormat: 'node',
-            },
-            prompt: {
-                throwError: 'auto',
-                timeout: 300000,
-            },
-            separator: null,
-            styleClrs: {
-                disabled: 'grey',
-                error: 'red',
-                help: 'grey',
-                highlight: 'purple',
-            },
-            varInspect: {},
-        };
-    }
     /**
      * Build a complete args object.
      *
@@ -438,6 +389,33 @@ export class NodeConsole {
     /* CONSTRUCTOR
      * ====================================================================== */
     constructor(args = {}) {
+        /**
+         * @category Args
+         *
+         * @source
+         */
+        this.ARGS_DEFAULT = {
+            argsRecursive: true,
+            msgMaker: {
+                msg: {
+                    maxWidth: 100,
+                    tab: '        ',
+                },
+                paintFormat: 'node',
+            },
+            prompt: {
+                throwError: 'auto',
+                timeout: 300000,
+            },
+            separator: null,
+            styleClrs: {
+                disabled: 'grey',
+                error: 'red',
+                help: 'grey',
+                highlight: 'purple',
+            },
+            varInspect: {},
+        };
         this.args = this.buildArgs(args);
         this.msg = new MessageMaker(this.args.msgMaker);
         this.prompt = new NodeConsole_Prompt(this.msg, this.args);
@@ -732,4 +710,3 @@ export class NodeConsole {
         this.logs(msgs, { ...args, via: 'warn' });
     }
 }
-//# sourceMappingURL=NodeConsole.js.map

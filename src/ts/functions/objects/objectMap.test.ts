@@ -32,7 +32,7 @@ const test1_expected = {
     'three': false,
 };
 
-const test1_result = objectMap( test1_og, test1_generator );
+const test1_result: typeof test1_expected = objectMap( test1_og, test1_generator ) satisfies typeof test1_expected;
 //#endregion - Test 1
 
 
@@ -62,7 +62,15 @@ const test2_expected = {
     'three': 3,
 };
 
-const test2_result = objectMap( test2_og, test2_generator );
+const test2_result: {
+    'one': number | string,
+    'two': number | string,
+    'three': number | string,
+} = objectMap( test2_og, test2_generator ) satisfies {
+    'one': number | string,
+    'two': number | string,
+    'three': number | string,
+};
 //#endregion - Test 2
 
 

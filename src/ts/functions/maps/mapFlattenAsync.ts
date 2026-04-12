@@ -10,16 +10,14 @@
 
 import { mapFlatten } from './mapFlatten.js';
 
-import { RecursiveMap } from '../../types/objects/records.js';
-import { deleteUndefinedProps } from './deleteUndefinedProps.js';
+import type { RecursiveMap } from '../../types/objects/records.js';
+import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
 
 /**
  * Returns a single-level map with kebab/snake/etc. case keys based on
  * nested map keys.
  * 
- * @param map     Map to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * @category Functions – Map
  * 
  * @since ___PKG_VERSION___
  */

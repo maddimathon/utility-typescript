@@ -13,6 +13,8 @@
  * Filters out any item that is not the first instance of that item in the
  * array.
  *
+ * @category Functions – Array
+ *
  * @source
  *
  * @typeParam T_ArrayItem  Array item type.
@@ -30,4 +32,3 @@ export function arrayUnique(arr) {
     }
     return [...arr].filter((v, i, a) => a.indexOf(v) === i);
 }
-//# sourceMappingURL=arrayUnique.js.map

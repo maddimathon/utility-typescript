@@ -10,6 +10,8 @@
 /**
  * Turns the given slug into a string with only a-z, 0-9, and hyphens.
  *
+ * @category Functions – String
+ *
  * @param input  String to convert.
  *
  * @return  Slug version of the input string.
@@ -40,4 +42,3 @@ export function slugify(input) {
     slug = slug.replace(/-+/gi, '-');
     return slug;
 }
-//# sourceMappingURL=slugify.js.map

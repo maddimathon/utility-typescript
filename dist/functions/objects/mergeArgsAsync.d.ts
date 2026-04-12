@@ -38,4 +38,3 @@ export declare function mergeArgsAsync<D extends object, I extends Partial<D> | 
  * Universal overload.
  */
 export declare function mergeArgsAsync<D extends object, I extends Partial<D> | RecursivePartial<D>>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined, mergeArrays?: boolean | undefined): Promise<D | D & I>;
-//# sourceMappingURL=mergeArgsAsync.d.ts.map

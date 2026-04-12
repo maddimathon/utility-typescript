@@ -11,9 +11,7 @@
  * Returns a single-level object record with kebab/snake/etc. case keys based on
  * nested object keys.
  *
- * @param obj     Object to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.2
  */
@@ -50,6 +48,8 @@ export function objectFlatten(obj, args = {}) {
 /**
  * Utilities for the {@link objectFlatten} function.
  *
+ * @category Functions – Object
+ *
  * @since 2.0.0-beta.2
  */
 (function (objectFlatten) {
@@ -76,4 +76,3 @@ export function objectFlatten(obj, args = {}) {
     }
     objectFlatten.parseArgs = parseArgs;
 })(objectFlatten || (objectFlatten = {}));
-//# sourceMappingURL=objectFlatten.js.map

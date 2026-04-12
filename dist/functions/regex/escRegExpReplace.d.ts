@@ -10,6 +10,8 @@
 /**
  * Escapes a string for use as a replacement for a regular expression.
  *
+ * @category Functions – Regex
+ *
  * @source
  *
  * @example
@@ -25,4 +27,3 @@
  * @since 0.1.0
  */
 export declare function escRegExpReplace(str: string): string;
-//# sourceMappingURL=escRegExpReplace.d.ts.map

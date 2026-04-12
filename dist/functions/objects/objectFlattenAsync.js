@@ -7,15 +7,13 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { objectFlatten } from './objectFlatten.js';
 import { deleteUndefinedProps } from './deleteUndefinedProps.js';
+import { objectFlatten } from './objectFlatten.js';
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
  * nested object keys.
  *
- * @param obj     Object to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.2
  */
@@ -48,4 +46,3 @@ export async function objectFlattenAsync(objPromise, args = {}) {
         })).then(entries => Object.fromEntries(entries.flat()));
     });
 }
-//# sourceMappingURL=objectFlattenAsync.js.map

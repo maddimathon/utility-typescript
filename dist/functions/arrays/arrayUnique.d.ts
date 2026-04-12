@@ -13,6 +13,8 @@
  * Filters out any item that is not the first instance of that item in the
  * array.
  *
+ * @category Functions – Array
+ *
  * @source
  *
  * @typeParam T_ArrayItem  Array item type.
@@ -24,4 +26,3 @@
  * @since 0.1.0
  */
 export declare function arrayUnique<T_ArrayItem>(arr: T_ArrayItem[]): T_ArrayItem[];
-//# sourceMappingURL=arrayUnique.d.ts.map

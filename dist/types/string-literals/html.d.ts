@@ -49,4 +49,3 @@ export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an" | "
  *           not include script subtag options.
  */
 export type LangLocaleCode<Lang extends LangCode = LangCode> = Lang | (LangCode extends Lang ? string : `${Lang}-${string}`) & ("ar-SA" | "bn-BD" | "bn-IN" | "cs-CZ" | "da-DK" | "de-AT" | "de-CH" | "de-DE" | "de-DE" | "el-GR" | "en-AU" | "en-AU" | "en-CA" | "en-GB" | "en-IE" | "en-IN" | "en-IN" | "en-NZ" | "en-US" | "en-ZA" | "es-AR" | "es-CL" | "es-CO" | "es-ES" | "es-MX" | "es-MX" | "es-US" | "fi-FI" | "fr-BE" | "fr-CA" | "fr-CH" | "fr-FR" | "he-IL" | "hi-IN" | "hu-HU" | "id-ID" | "it-CH" | "it-IT" | "ja-JP" | "ko-KR" | "nl-BE" | "nl-NL" | "no-NO" | "pl-PL" | "pt-BR" | "pt-PT" | "ro-RO" | "ru-RU" | "sk-SK" | "sv-SE" | "ta-IN" | "ta-LK" | "th-TH" | "tr-TR" | "zh-CN" | "zh-HK" | "zh-TW");
-//# sourceMappingURL=html.d.ts.map

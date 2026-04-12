@@ -18,4 +18,3 @@
 export type Classify<T_Object> = {
     [_Key in Exclude<keyof T_Object, never>]: T_Object[_Key];
 };
-//# sourceMappingURL=classes.d.ts.map

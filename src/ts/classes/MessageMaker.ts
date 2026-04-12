@@ -19,6 +19,8 @@ import { typeOf } from '../functions/typeOf.js';
 /**
  * A configurable class for formatting message strings for various outputs.
  * 
+ * @category Classes
+ * 
  * @since 0.1.1 — Experimental
  * 
  * @experimental
@@ -245,9 +247,191 @@ export class MessageMaker {
      */
     public readonly args: MessageMaker.Args;
 
-    public get ARGS_DEFAULT() {
+    public get ARGS_DEFAULT(): {
+        ansiColours: {
 
-        return {
+            4: {
+
+                fg: {
+                    black: '30',
+                    grey: '30',
+                    'light-grey': '37',
+                    white: '37',
+
+                    red: '31',
+                    orange: '33',
+                    yellow: '33',
+                    green: '32',
+                    turquoise: '36',
+                    blue: '34',
+                    purple: '35',
+                    pink: '35',
+                },
+
+                bg: {
+                    black: '40',
+                    grey: '40',
+                    'light-grey': '47',
+                    white: '47',
+
+                    red: '41',
+                    orange: '43',
+                    yellow: '43',
+                    green: '42',
+                    turquoise: '46',
+                    blue: '44',
+                    purple: '45',
+                    pink: '45',
+                },
+            },
+
+            8: {
+                black: '5;232',
+                grey: '5;241',
+                'light-grey': '5;247',
+                white: '5;255',
+
+                red: '5;124',
+                orange: '5;166',
+                yellow: '5;208',
+                green: '5;28',
+                turquoise: '5;30',
+                blue: '5;20',
+                purple: '5;55',
+                pink: '5;162',
+            },
+
+            24: {
+                black: '2;26;26;26',
+                grey: '2;108;108;108',
+                'light-grey': '2;208;208;208',
+                white: '2;248;248;248',
+
+                red: '2;168;36;36',
+                orange: '2;174;84;4',
+                yellow: '2;204;182;0',
+                green: '2;24;118;10',
+                turquoise: '2;0;128;98',
+                blue: '2;60;84;157',
+                purple: '2;129;75;155',
+                pink: '2;179;77;145',
+            },
+        },
+
+        msg: {
+            bold: false,
+            clr: null,
+            depth: 0,
+            flag: false,
+            fullWidth: false,
+            hangingIndent: '',
+            indent: '',
+            italic: false,
+            linesIn: 0,
+            linesOut: 1,
+            minWidth: 20,
+            maxWidth: null,
+            tab: '    ',
+        },
+
+        painter: null,
+        paintFormat: null,
+
+        paintIfEmpty: false,
+    } {
+
+        const DEFAULT: {
+            ansiColours: {
+
+                4: {
+
+                    fg: {
+                        black: '30',
+                        grey: '30',
+                        'light-grey': '37',
+                        white: '37',
+
+                        red: '31',
+                        orange: '33',
+                        yellow: '33',
+                        green: '32',
+                        turquoise: '36',
+                        blue: '34',
+                        purple: '35',
+                        pink: '35',
+                    },
+
+                    bg: {
+                        black: '40',
+                        grey: '40',
+                        'light-grey': '47',
+                        white: '47',
+
+                        red: '41',
+                        orange: '43',
+                        yellow: '43',
+                        green: '42',
+                        turquoise: '46',
+                        blue: '44',
+                        purple: '45',
+                        pink: '45',
+                    },
+                },
+
+                8: {
+                    black: '5;232',
+                    grey: '5;241',
+                    'light-grey': '5;247',
+                    white: '5;255',
+
+                    red: '5;124',
+                    orange: '5;166',
+                    yellow: '5;208',
+                    green: '5;28',
+                    turquoise: '5;30',
+                    blue: '5;20',
+                    purple: '5;55',
+                    pink: '5;162',
+                },
+
+                24: {
+                    black: '2;26;26;26',
+                    grey: '2;108;108;108',
+                    'light-grey': '2;208;208;208',
+                    white: '2;248;248;248',
+
+                    red: '2;168;36;36',
+                    orange: '2;174;84;4',
+                    yellow: '2;204;182;0',
+                    green: '2;24;118;10',
+                    turquoise: '2;0;128;98',
+                    blue: '2;60;84;157',
+                    purple: '2;129;75;155',
+                    pink: '2;179;77;145',
+                },
+            },
+
+            msg: {
+                bold: false,
+                clr: null,
+                depth: 0,
+                flag: false,
+                fullWidth: false,
+                hangingIndent: '',
+                indent: '',
+                italic: false,
+                linesIn: 0,
+                linesOut: 1,
+                minWidth: 20,
+                maxWidth: null,
+                tab: '    ',
+            },
+
+            painter: null,
+            paintFormat: null,
+
+            paintIfEmpty: false,
+        } = {
 
             ansiColours: {
 
@@ -344,6 +528,8 @@ export class MessageMaker {
             ansiColours: MessageMaker.Args[ 'ansiColours' ];
             msg: MessageMaker.MsgArgs;
         };
+
+        return DEFAULT;
     }
 
     /**
@@ -386,7 +572,7 @@ export class MessageMaker {
      */
     public msgArgs<
         InputArgs extends Partial<MessageMaker.MsgArgs>,
-    >( args?: InputArgs ) {
+    >( args?: InputArgs ): MessageMaker.MsgArgs & InputArgs {
 
         const merged = mergeArgs( this.args.msg, args as InputArgs, false );
 
@@ -743,6 +929,8 @@ export class MessageMaker {
 
 /**
  * Used only for {@link MessageMaker}.
+ * 
+ * @category Classes
  * 
  * @since 0.1.1
  */

@@ -8,12 +8,14 @@
  * @license MIT
  */
 
-import { RecursiveRecord } from '../../types/objects/records.js';
+import type { RecursiveRecord } from '../../types/objects/records.js';
 
 /**
  * Sorts a record object according to its keys and returns a sorted copy.
  * 
  * Optionally provide a function to create the strings used to sort each object.
+ * 
+ * @category Functions – Object
  * 
  * @since 2.0.0-beta.2
  */

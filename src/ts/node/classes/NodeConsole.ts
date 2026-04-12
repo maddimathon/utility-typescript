@@ -256,7 +256,7 @@ export class NodeConsole {
     public static async sampleInteractivity(
         nc?: NodeConsole,
         args: RecursivePartial<NodeConsole.Args & { debug: boolean; }> = {},
-    ) {
+    ): Promise<NodeConsole> {
         if ( !nc ) {
             nc = new NodeConsole( mergeArgs( {
 
@@ -498,38 +498,37 @@ export class NodeConsole {
 
     /**
      * @category Args
+     * 
+     * @source
      */
-    public get ARGS_DEFAULT() {
+    public readonly ARGS_DEFAULT: NodeConsole.Args = {
 
-        return {
+        argsRecursive: true,
 
-            argsRecursive: true,
-
-            msgMaker: {
-                msg: {
-                    maxWidth: 100,
-                    tab: '        ',
-                },
-                paintFormat: 'node',
+        msgMaker: {
+            msg: {
+                maxWidth: 100,
+                tab: '        ',
             },
+            paintFormat: 'node',
+        },
 
-            prompt: {
-                throwError: 'auto',
-                timeout: 300000,
-            },
+        prompt: {
+            throwError: 'auto',
+            timeout: 300000,
+        },
 
-            separator: null,
+        separator: null,
 
-            styleClrs: {
-                disabled: 'grey',
-                error: 'red',
-                help: 'grey',
-                highlight: 'purple',
-            },
+        styleClrs: {
+            disabled: 'grey',
+            error: 'red',
+            help: 'grey',
+            highlight: 'purple',
+        },
 
-            varInspect: {},
-        } as const satisfies NodeConsole.Args;
-    }
+        varInspect: {},
+    } as const;
 
     /**
      * Build a complete args object.

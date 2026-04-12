@@ -16,7 +16,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { AnyClass } from './functions.js';
+import type { AnyClass } from './functions.js';
 /**
  * For debugging types with intellisense/etc. Should only be used temporarily.
  *
@@ -37,4 +37,3 @@ export type TypeDump<T> = T extends (number | null | string | undefined | AnyCla
 export type TypeDumpRecursive<T> = T extends (number | null | string | undefined | AnyClass | Date) ? T : T extends (...args: infer _Params) => infer _Return ? (...args: TypeDump<_Params>) => TypeDumpRecursive<_Return> : T extends any ? {
     [_Key in keyof T]: TypeDumpRecursive<T[_Key]>;
 } : never;
-//# sourceMappingURL=debug.d.ts.map

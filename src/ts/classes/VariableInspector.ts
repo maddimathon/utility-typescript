@@ -28,6 +28,8 @@ import { typeOf } from '../functions/typeOf.js';
  * {@link VariableInspector.value}) or get a json-compatible object representing 
  * the inspected value {@link VariableInspector.toJSON}.
  * 
+ * @category Classes
+ * 
  * @since 0.1.1
  *
  * @example
@@ -41,8 +43,6 @@ import { typeOf } from '../functions/typeOf.js';
 export class VariableInspector<
     T_Type extends typeOf.TestType = typeOf.TestType,
 > {
-
-
 
     /* STATIC METHODS
      * ====================================================================== */
@@ -110,147 +110,46 @@ export class VariableInspector<
      * 
      * @internal
      */
-    private static get _testClass() {
+    public static get sampleComplexObject(): VariableInspector.Samples.Vars {
 
-        class TestClass {
-
-            public undefinedProperty: any;
-            public property = 'property sample value';
-
-            static methodName( param: any ) { return param; }
-
-            _getSet = '_getSet sample value';
-            get getSetProp() { return this._getSet; }
-            set getSetProp( param: string ) { this._getSet = param; }
-        };
-
-        return TestClass;
-    }
-
-    /**
-     * Used for testing.
-     * 
-     * @internal
-     */
-    private static _testVars( verbose: boolean ) {
-
-        const TestClass = VariableInspector._testClass;
-
-        const classInstance = new TestClass();
-
-        const vars: {
-            undefined?: undefined;
-            null: null;
-            true?: true;
-            false?: false;
-            bigint?: bigint;
-            number: number;
-            NaN: number;
-            string: string;
-            stringMultiline?: string;
-            array?: any[];
-            set?: Set<any>;
-            objectEmpty?: object;
-            objectSimple?: object;
-            map?: Map<any, any>;
-            date?: Date;
-            regex?: RegExp;
-            functionSimple?: () => any;
-            functionParams?: ( a: string, b: string ) => any;
-            class?: typeof TestClass;
-            classInstance?: typeof classInstance;
-        } = {
+        const {
             undefined,
-            null: null,
-
-            true: true,
-            false: false,
-
-            bigint: BigInt( 9007199254740991 ),
-            number: Number( 207 ),
-            'NaN': Number.NaN,
-
-            string: 'string sample value',
-            stringMultiline: [
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in',
-                'justo vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper',
-                'interdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales',
-                'aliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero',
-                'dolor faucibus lacus, in tempus metus elit non ante.'
-            ].join( '\n' ),
-
-            array: [ 'string sample value', Number( 207 ), {}, ],
-
-            set: new Set( [ 'string sample value', Number( 207 ), {}, ] ),
-
-            objectEmpty: {},
-            objectSimple: {
-                one: 1,
-                two: 2,
-            },
-
-            map: new Map( [ [ 'one', 1 ], [ 'two', 2 ] ] ),
-
-            date: new Date( '2024-02-08' ),
-            regex: /^regex$/g,
-
-            functionSimple: (): string => { return 'hello'; },
-            functionParams: (
-                value1: string,
-                value2: string,
-            ): string => { const test = value2; return test + value1; },
-
-            'class': TestClass,
-            classInstance,
-        };
-
-        if ( !verbose ) {
-
-            delete vars[ 'undefined' ];
-            delete vars[ 'true' ];
-            delete vars[ 'bigint' ];
-            delete vars[ 'stringMultiline' ];
-            delete vars[ 'array' ];
-            delete vars[ 'objectEmpty' ];
-            delete vars[ 'objectSimple' ];
-            delete vars[ 'date' ];
-            delete vars[ 'regex' ];
-            delete vars[ 'functionSimple' ];
-            delete vars[ 'functionParams' ];
-            delete vars[ 'class' ];
-            delete vars[ 'classInstance' ];
-        }
-
-        return vars;
-    }
-
-    /**
-     * Used for testing.
-     * 
-     * @internal
-     */
-    public static get sampleComplexObject() {
-
-        const t = VariableInspector._testVars( true );
+            null: null_val,
+            true: true_val,
+            false: false_val,
+            bigint,
+            number,
+            NaN,
+            string,
+            stringMultiline,
+            array,
+            set,
+            objectEmpty,
+            objectSimple,
+            map,
+            date,
+            regex,
+            functionParams,
+        } = VariableInspector.Samples.getVars( true );
 
         return {
-            undefined: t.undefined,
-            null: t.null,
-            true: t.true,
-            false: t.false,
-            bigint: t.bigint,
-            number: t.number,
-            NaN: t.NaN,
-            string: t.string,
-            stringMultiline: t.stringMultiline,
-            array: t.array,
-            set: t.set,
-            objectEmpty: t.objectEmpty,
-            objectSimple: t.objectSimple,
-            map: t.map,
-            date: t.date,
-            regex: t.regex,
-            functionParams: t.functionParams,
+            undefined,
+            null: null_val,
+            true: true_val,
+            false: false_val,
+            bigint,
+            number,
+            NaN,
+            string,
+            stringMultiline,
+            array,
+            set,
+            objectEmpty,
+            objectSimple,
+            map,
+            date,
+            regex,
+            functionParams,
         };
     }
 
@@ -281,7 +180,7 @@ export class VariableInspector<
             console.log( '\n' );
         };
 
-        const t = VariableInspector._testVars( !!args.debug );
+        const t = VariableInspector.Samples.getVars( !!args.debug );
 
         for ( const key in t ) {
             varDump( { [ key ]: t[ key as keyof typeof t ] } );
@@ -307,41 +206,41 @@ export class VariableInspector<
      */
     public readonly args: VariableInspector.Args;
 
-    public get ARGS_DEFAULT() {
+    /**
+     * @source
+     */
+    public readonly ARGS_DEFAULT: VariableInspector.Args = {
 
-        return {
-
-            childArgs: {
-                includeValue: true,
-            },
-
-            debug: false,
-
-            equalString: ' =',
-
-            fallbackToJSON: true,
-
-            formatter: null,
-
-            includePrefix: true,
-            includeType: true,
+        childArgs: {
             includeValue: true,
+        },
 
-            indent: '    ',
+        debug: false,
 
-            inspectClasses: false,
-            inspectFunctions: false,
+        equalString: ' =',
 
-            locale: 'en-CA',
-            localizeDates: true,
-            localizeDateOptions: {},
-            localizeNumbers: false,
-            localizeNumberOptions: {},
+        fallbackToJSON: true,
 
-            stringQuoteCharacter: '"',
+        formatter: null,
 
-        } as const satisfies VariableInspector.Args;
-    }
+        includePrefix: true,
+        includeType: true,
+        includeValue: true,
+
+        indent: '    ',
+
+        inspectClasses: false,
+        inspectFunctions: false,
+
+        locale: 'en-CA',
+        localizeDates: true,
+        localizeDateOptions: {},
+        localizeNumbers: false,
+        localizeNumberOptions: {},
+
+        stringQuoteCharacter: '"',
+
+    };
 
     /**
      * Value’s name, used in output.
@@ -357,7 +256,7 @@ export class VariableInspector<
      * 
      * @expandType T_Type
      */
-    protected readonly _rawValue: T_Type;
+    protected readonly _rawValue: T_Type | undefined;
 
     /**
      * Alias for this.typeOf( this._rawValue ).
@@ -366,7 +265,7 @@ export class VariableInspector<
      * 
      * @expandType typeOf.Return
      */
-    protected readonly _typeOf: typeOf.Return<T_Type>;
+    protected readonly _typeOf: typeOf.Return<T_Type | undefined>;
 
     /**
      * These are the properties of the input object, if any.
@@ -395,7 +294,7 @@ export class VariableInspector<
 
         const validVar = VariableInspector.validateInput( variable );
 
-        this._name = Object.keys( validVar )[ 0 ];
+        this._name = Object.keys( validVar )[ 0 ] ?? 'variable';
 
         this._rawValue = validVar[ this._name ];
 
@@ -994,6 +893,8 @@ export class VariableInspector<
 /**
  * Used only for {@link VariableInspector}.
  * 
+ * @category Classes
+ * 
  * @since 0.1.1
  */
 export namespace VariableInspector {
@@ -1247,4 +1148,129 @@ export namespace VariableInspector {
 
         value: JSON;
     };
+
+    /**
+     * Used to sample/test/demo functions.
+     * 
+     * @since ___PKG_VERSION___
+     * @internal
+     */
+    export namespace Samples {
+
+        class TestClass {
+            public undefinedProperty: any;
+            public property = 'property sample value';
+
+            static methodName( param: any ): any { return param; }
+
+            _getSet = '_getSet sample value';
+            get getSetProp() { return this._getSet; }
+            set getSetProp( param: string ) { this._getSet = param; }
+        };
+
+        /**
+         * @since ___PKG_VERSION___
+         * @internal
+         */
+        export type Vars = {
+            undefined?: undefined;
+            null: null;
+            true?: true;
+            false?: false;
+            bigint?: bigint;
+            number: number;
+            NaN: number;
+            string: string;
+            stringMultiline?: string;
+            array?: any[];
+            set?: Set<any>;
+            objectEmpty?: object;
+            objectSimple?: object;
+            map?: Map<any, any>;
+            date?: Date;
+            regex?: RegExp;
+            functionSimple?: () => any;
+            functionParams?: ( a: string, b: string ) => any;
+            class?: typeof TestClass;
+            classInstance?: TestClass;
+        };
+
+
+        export function getVars( verbose: true ): Required<VariableInspector.Samples.Vars>;
+        export function getVars( verbose: boolean ): VariableInspector.Samples.Vars;
+
+        /**
+         * Used for testing.
+         * 
+         * @since ___PKG_VERSION___
+         * @internal
+         */
+        export function getVars( verbose: boolean ): VariableInspector.Samples.Vars {
+
+            const classInstance = new TestClass();
+
+            const vars: VariableInspector.Samples.Vars = {
+                undefined,
+                null: null,
+
+                true: true,
+                false: false,
+
+                bigint: BigInt( 9007199254740991 ),
+                number: Number( 207 ),
+                'NaN': Number.NaN,
+
+                string: 'string sample value',
+                stringMultiline: [
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in',
+                    'justo vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper',
+                    'interdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales',
+                    'aliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero',
+                    'dolor faucibus lacus, in tempus metus elit non ante.'
+                ].join( '\n' ),
+
+                array: [ 'string sample value', Number( 207 ), {}, ],
+
+                set: new Set( [ 'string sample value', Number( 207 ), {}, ] ),
+
+                objectEmpty: {},
+                objectSimple: {
+                    one: 1,
+                    two: 2,
+                },
+
+                map: new Map( [ [ 'one', 1 ], [ 'two', 2 ] ] ),
+
+                date: new Date( '2024-02-08' ),
+                regex: /^regex$/g,
+
+                functionSimple: (): string => { return 'hello'; },
+                functionParams: (
+                    value1: string,
+                    value2: string,
+                ): string => { const test = value2; return test + value1; },
+
+                'class': TestClass,
+                classInstance,
+            } satisfies Required<VariableInspector.Samples.Vars>;
+
+            if ( !verbose ) {
+                delete vars[ 'undefined' ];
+                delete vars[ 'true' ];
+                delete vars[ 'bigint' ];
+                delete vars[ 'stringMultiline' ];
+                delete vars[ 'array' ];
+                delete vars[ 'objectEmpty' ];
+                delete vars[ 'objectSimple' ];
+                delete vars[ 'date' ];
+                delete vars[ 'regex' ];
+                delete vars[ 'functionSimple' ];
+                delete vars[ 'functionParams' ];
+                delete vars[ 'class' ];
+                delete vars[ 'classInstance' ];
+            }
+
+            return vars;
+        }
+    }
 }

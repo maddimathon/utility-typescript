@@ -10,6 +10,8 @@
 /**
  * Deletes the properties of the given object whose types are undefined.
  *
+ * @category Functions – Object
+ *
  * @since 2.0.0-beta.3.draft
  */
 export function deleteUndefinedProps(obj) {
@@ -20,4 +22,3 @@ export function deleteUndefinedProps(obj) {
     }
     return obj;
 }
-//# sourceMappingURL=deleteUndefinedProps.js.map

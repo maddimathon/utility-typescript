@@ -40,7 +40,7 @@ export type RecursivePartialExcept<T_Object, T_KeysRequired extends keyof T_Obje
  * @internal
  * @private
  */
-export type _RecursivePartial_Inner<T_Object> = T_Object extends number | null | string | undefined | AnyClass | Function | Date ? T_Object : T_Object extends Record<number | string, any> ? RecursivePartial<T_Object> : T_Object;
+export type _RecursivePartial_Value<T_Object> = T_Object extends (infer _Item)[] ? _RecursivePartial_Value<_Item>[] : T_Object extends number | null | string | undefined | AnyClass | Function | Date ? T_Object : T_Object extends Record<number | string, any> ? RecursivePartial<T_Object> : T_Object;
 /**
  * Similar to the default {@link Partial}, but this also makes any child objects
  * partial.
@@ -50,6 +50,5 @@ export type _RecursivePartial_Inner<T_Object> = T_Object extends number | null |
  * @since 0.1.0
  */
 export type RecursivePartial<T_Object extends Record<number | string | symbol, any>> = {
-    [_Key in keyof T_Object]?: T_Object[_Key] extends (infer _Item)[] ? _RecursivePartial_Inner<_Item>[] : _RecursivePartial_Inner<T_Object[_Key]>;
+    [_Key in keyof T_Object]?: _RecursivePartial_Value<T_Object[_Key]>;
 };
-//# sourceMappingURL=partial.d.ts.map

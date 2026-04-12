@@ -9,6 +9,7 @@
  */
 import * as inquirer from '@inquirer/prompts';
 import { mergeArgs } from '../../../functions/objects/mergeArgs.js';
+import { MessageMaker } from '../../../classes/MessageMaker.js';
 import { NodeConsole_Error } from './NodeConsole_Error.js';
 /**
  * Only used by {@link NodeConsole}.
@@ -18,21 +19,6 @@ import { NodeConsole_Error } from './NodeConsole_Error.js';
  * @experimental
  */
 export class NodeConsole_Prompt {
-    /* LOCAL PROPERTIES
-     * ====================================================================== */
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args;
-    /**
-     * A local instance of {@link MessageMaker} initialized using
-     * `{@link NodeConsole.Args}.msgMaker`.
-     *
-     * @category Utilities
-     */
-    msg;
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -125,7 +111,7 @@ export class NodeConsole_Prompt {
                     italic: !msgArgs?.italic,
                 }),
                 key: (text) => 'KEY: (' + text + ')',
-                message: (text, status) => this.msg.msg(text, msgArgs),
+                message: (text) => this.msg.msg(text, msgArgs),
             },
             validationFailureMode: 'keep',
         };
@@ -198,4 +184,3 @@ export class NodeConsole_Prompt {
         return this.prompt('select', inquirer.select, mergeArgs(defaultConfig, config, true));
     }
 }
-//# sourceMappingURL=NodeConsole_Prompt.js.map

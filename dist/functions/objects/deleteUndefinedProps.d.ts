@@ -7,15 +7,19 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { Test } from '../../types/index.js';
+import type { Test } from '../../types/index.js';
 /**
  * Deletes the properties of the given object whose types are undefined.
+ *
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.3.draft
  */
 export declare function deleteUndefinedProps<T_Obj extends object>(obj: T_Obj): deleteUndefinedProps.OmitUndefined<T_Obj>;
 /**
  * Utilities for the {@link deleteUndefinedProps} function.
+ *
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.3.draft
  */
@@ -48,4 +52,3 @@ export declare namespace deleteUndefinedProps {
         [K in KeysToPartialize<T_Obj>]?: Exclude<T_Obj[K], undefined>;
     };
 }
-//# sourceMappingURL=deleteUndefinedProps.d.ts.map

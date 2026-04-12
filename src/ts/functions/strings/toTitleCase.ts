@@ -10,6 +10,8 @@
 
 /**
  * Converts the given string to title case.
+ * 
+ * @category Functions – String
  *
  * @param input  String to convert.
  *

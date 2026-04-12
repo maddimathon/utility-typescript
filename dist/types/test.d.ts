@@ -16,16 +16,24 @@
  * import { Test } from '@maddimathon/utility-typescript/types';
  * ```
  *
- * Your type tests should probably be in the same place as your Javascript tests
- * (and not where those objects are defined).  (So replace this with your
- * imported item(s) to test.)
+ * Your type tests should probably be in the same file as your Javascript tests
+ * (and not in your production code where those objects are defined). For this
+ * example, imagine we imported this function to test.
+ *
  * {@includeCode ./test.example.docs.ts#FunctionToTest}
  *
- * These values should also be tested by Jest/etc. for their values, but this
- * example is just looking at type testing.
+ * These values should also be tested by Jest/etc. for their values — and though
+ * this example is just looking at type testing, this lets us test the inferred
+ * return types at the same time.
+ *
  * {@includeCode ./test.example.docs.ts#ReturnsToTest}
  *
- * If any of these tests fail, the {@link Expect} type will cause an error.
+ * Here’s how I would test these types. Add two types to {@link Exactly} to test
+ * that these types match. In rare cases you might use {@link Satisfies}.
+ *
+ * Wrap your tests in either {@link Expect} or {@link ExpectNot} — if any of
+ * your tests fail, this is what will cause an error.
+ *
  * {@includeCode ./test.example.docs.ts#TypeTests}
  */
 /*!
@@ -113,4 +121,3 @@ export type IsArray<T_Type> = T_Type extends (infer _Item)[] ? true : false;
 export type Satisfies<T_Type, T_SuperType> = [
     T_Type
 ] extends [T_SuperType] ? true : false;
-//# sourceMappingURL=test.d.ts.map

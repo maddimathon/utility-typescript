@@ -1,5 +1,6 @@
 ---
 title: Changelog
+category: Docs
 ---
 
 # Utility TypeScript Changelog
@@ -32,17 +33,17 @@ and this project adheres to
 
 ### Added
 - New functions (mostly from utility-sass and design-system-utilities):
-    - hasIterator()
-    - makeNumber()
-    - makeNumberAsync()
-    - mapToObject()
-    - mapToObjectAsync()
-    - objectFlatten()
-    - objectFlattenAsync()
-    - objectKeySort()
-    - objectKeySortAsync()
-    - objectMap()
-    - objectMapAsync()
+    - {@link default.hasIterator}
+    - {@link default.makeNumber}
+    - {@link default.makeNumberAsync}
+    - {@link default.mapToObject}
+    - {@link default.mapToObjectAsync}
+    - {@link default.objectFlatten}
+    - {@link default.objectFlattenAsync}
+    - {@link default.objectKeySort}
+    - {@link default.objectKeySortAsync}
+    - {@link default.objectMap}
+    - {@link default.objectMapAsync}
 
 
 ## **2.0.0-beta.1** — 2025-10-31
@@ -50,12 +51,12 @@ and this project adheres to
 Some quick updates needed for other libraries.
 
 ### Added
-- Added isObjectEmpty() function
-- Added mergeArgsAsync() function
-- Added mergeArrays param to mergeArgs and mergeArgsAsync (default false)
+- Added {@link isObjectEmpty} function
+- Added {@link mergeArgsAsync} function
+- Added mergeArrays param to {@link mergeArgs} and {@link mergeArgsAsync} (default false)
 
 ### Fixed
-- Fixed the display of Map and Set in VariableInspector (temp ugly fix)
+- Fixed the display of Map and Set in {@link VariableInspector} (temp ugly fix)
 
 
 ## **2.0.0-beta** — 2025-06-09
@@ -66,8 +67,9 @@ External testing complete, upgrading to beta.
 ## **2.0.0-alpha.1** — 2025-06-09
 
 ### Fixed
-- Added NodeFiles.exists() checks to NodeFiles.copyFile(), NodeFiles.mkdir(), NodeFiles.readDir(), NodeFiles.readFile()
-- Fixed NodeFiles.mkdir() to be recursive by default
+- Added {@link NodeFiles.exists} checks to {@link NodeFiles.copyFile}, 
+  {@link NodeFiles.mkdir}, {@link NodeFiles.readDir}, {@link NodeFiles.readFile}
+- Fixed {@link NodeFiles.mkdir} to be recursive by default
 
 
 ## **2.0.0-alpha** — 2025-06-09
@@ -79,10 +81,10 @@ External testing complete, upgrading to beta.
     - deleteFiles() → delete()
     - writeFiles() → write()
 - NodeFiles types:
-    - NodeFiles.Args.copyFileArgs → NodeFiles.Args.copyFile
-    - NodeFiles.Args.readDirArgs → NodeFiles.Args.readDir
-    - NodeFiles.Args.readFileArgs → NodeFiles.Args.readFile
-    - NodeFiles.Args.writeFileArgs → NodeFiles.Args.writeFile
+    - NodeFiles.Args.copyFileArgs → {@link NodeFiles.Args.copyFile}
+    - NodeFiles.Args.readDirArgs → {@link NodeFiles.Args.readDir}
+    - NodeFiles.Args.readFileArgs → {@link NodeFiles.Args.readFile}
+    - NodeFiles.Args.writeFileArgs → {@link NodeFiles.Args.writeFile}
 - The following type namespaces’ contents are now global: 
     - Arrays, Functions, Node, StringLiterals
 

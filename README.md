@@ -1,5 +1,6 @@
 ---
 title: ReadMe
+category: Docs
 ---
 
 <!--README_HEADER-->
@@ -55,16 +56,11 @@ change without being considered a breaking change). The root entry point exports
 the other entry points as modules.
 
 ```ts
-import {
-    type Types,
-    classes,
-    functions,
-} from '@maddimathon/utility-typescript';
+import { ... } from '@maddimathon/utility-typescript';
 
 import type { ... } from '@maddimathon/utility-typescript/types';
 
-import { ... } from '@maddimathon/utility-typescript/classes';
-import { ... } from '@maddimathon/utility-typescript/functions';
+import { ... } from '@maddimathon/utility-typescript/node';
 ```
 
 

@@ -27,4 +27,3 @@ export type RecursiveMap<T_Keys, T_Values> = Map<T_Keys, T_Values | RecursiveMap
 export type RecursiveRecord<T_Keys extends keyof any, T_Values extends any> = {
     [K in T_Keys]: T_Values | RecursiveRecord<T_Keys, T_Values>;
 };
-//# sourceMappingURL=records.d.ts.map

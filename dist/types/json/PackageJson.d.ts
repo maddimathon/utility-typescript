@@ -116,4 +116,3 @@ export interface PackageJson {
     };
     workspaces?: string[];
 }
-//# sourceMappingURL=PackageJson.d.ts.map

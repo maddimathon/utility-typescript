@@ -120,9 +120,14 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 '@internal',
             ],
 
-            categorizeByGroup: true,
+            categorizeByGroup: false,
 
             categoryOrder: [
+                'Docs',
+                'Documentation',
+                'Exports',
+                'Modules',
+                'Submodules',
                 '*',
                 'Other',
                 'Misc.',
@@ -204,7 +209,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 'Namespaces',
                 'Modules',
             ],
-            groupReferencesByType: true,
+            groupReferencesByType: false,
 
             headings: {
                 readme: false,
@@ -254,6 +259,14 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 this.pkgVersion,
             ].filter( v => v ).join( ' @ ' ),
 
+            navigation: {
+                includeCategories: true,
+                // includeGroups: true,
+                includeFolders: true,
+                compactFolders: true,
+                // excludeReferences: true,
+            },
+
             navigationLinks: {
                 'GitHub': repository,
                 'by Maddi Mathon': 'https://www.maddimathon.com',
@@ -290,9 +303,9 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 'documents-first',
                 'static-first',
                 'required-first',
-                'kind',
                 'visibility',
                 'alphabetical',
+                'kind',
             ],
             sortEntryPoints: false,
 

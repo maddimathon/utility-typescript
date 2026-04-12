@@ -1,5 +1,5 @@
 
-import { Test } from './index.js';
+import type { Test } from './index.js';
 
 // #region Example
 // #endregion Example
@@ -11,7 +11,7 @@ declare function toTest( param: boolean | string ): boolean | string;
 // #endregion FunctionToTest
 
 // #region ReturnsToTest
-const _tests_toTest = {
+const testResults = {
     bool: toTest( true ),
     string: toTest( 'string' ),
     either: toTest( 'unk' as boolean | string ),
@@ -20,21 +20,23 @@ const _tests_toTest = {
 
 // #region TypeTests
 // (export does nothing but avoid errors since these files don't go to prod!)
-export type Test_toTest = [
+export type T_toTest = [
 
     // testing the general return
     Test.Expect<Test.Exactly<ReturnType<typeof toTest>, boolean | string>>,
 
     // testing the override results
-    Test.Expect<Test.Exactly<typeof _tests_toTest.bool, boolean>>,
-    Test.Expect<Test.Exactly<typeof _tests_toTest.string, string>>,
-    Test.Expect<Test.Exactly<typeof _tests_toTest.either, boolean | string>>,
+    Test.Expect<Test.Exactly<typeof testResults.bool, boolean>>,
+    Test.Expect<Test.Exactly<typeof testResults.string, string>>,
+    Test.Expect<Test.Exactly<typeof testResults.either, boolean | string>>,
 
     // testing what should fail is also useful
-    Test.ExpectNot<Test.Exactly<typeof _tests_toTest.bool, string>>,
-    Test.ExpectNot<Test.Exactly<typeof _tests_toTest.string, boolean>>,
-    Test.ExpectNot<Test.Exactly<typeof _tests_toTest.either, any>>,
-    Test.ExpectNot<Test.Exactly<typeof _tests_toTest.either, boolean>>,
-    Test.ExpectNot<Test.Exactly<typeof _tests_toTest.either, string>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.bool, string>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.bool, boolean | string>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.string, boolean>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.string, boolean | string>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.either, any>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.either, boolean>>,
+    Test.ExpectNot<Test.Exactly<typeof testResults.either, string>>,
 ];
 // #endregion TypeTests

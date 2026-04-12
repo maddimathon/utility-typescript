@@ -29,7 +29,10 @@ class _TestClass {
     public num: number = 3;
     public str: string = 'anything';
 
-    public toJson() {
+    public toJson(): {
+        num: number,
+        str: string,
+    } {
         return {
             num: this.num,
             str: this.str,
@@ -52,15 +55,23 @@ const _classFalseImplementation = {
     str: 'hello',
 };
 
-const _classImplementation = new _TestClass();
+const _classImplementation: _TestClass = new _TestClass();
 
-const _fullObj = {
+const _fullObj: {
+    a: string,
+    b: ( string | number )[],
+    c: number,
+} = {
     a: '',
     b: [ '', 2 ],
     c: 2,
 };
 
-const _fullObj_wrong = {
+const _fullObj_wrong: {
+    a: string,
+    b: [ string ],
+    c: number,
+} = {
     a: '',
     b: [ '' ],
     c: 2,
@@ -217,7 +228,7 @@ export const T_ExpectNot: [
     ];
 
 
-const _array = [ 'hello' ];
+const _array: string[] = [ 'hello' ];
 
 export const T_IsArray: [
 

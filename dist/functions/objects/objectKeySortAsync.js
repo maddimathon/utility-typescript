@@ -12,6 +12,8 @@
  *
  * Optionally provide a function to create the strings used to sort each object.
  *
+ * @category Functions – Object
+ *
  * @since 2.0.0-beta.2
  */
 export async function objectKeySortAsync(objPromise, recursive = false, 
@@ -60,4 +62,3 @@ sortMaker) {
         return Promise.all(entries).then(toSort => Object.fromEntries(toSort.sort(sortFn)));
     });
 }
-//# sourceMappingURL=objectKeySortAsync.js.map

@@ -50,34 +50,30 @@ export class NodeFiles {
      * Default args for this stage.
      * 
      * @category Args
+     * 
+     * @source
      */
-    public get ARGS_DEFAULT() {
+    public readonly ARGS_DEFAULT: NodeFiles.Args = {
 
-        const write = {
+        copyFile: {
+            force: true,
+            rename: true,
+            recursive: false,
+        },
+
+        root: './',
+
+        readDir: {
+            recursive: false,
+        },
+
+        readFile: {},
+
+        write: {
             force: false,
             rename: false,
-        };
-
-        return {
-
-            copyFile: {
-                force: true,
-                rename: true,
-                recursive: false,
-            },
-
-            root: './',
-
-            readDir: {
-                recursive: false,
-            },
-
-            readFile: {},
-
-            write,
-
-        } as const satisfies NodeFiles.Args;
-    }
+        },
+    } as const;
 
 
 
@@ -133,8 +129,6 @@ export class NodeFiles {
      * Copies a file to another path.
      * 
      * @category Filers
-     * 
-     * @experimental
      * 
      * @param source       Location to write file.
      * @param destination  Location to copy the source path to.
@@ -257,7 +251,7 @@ export class NodeFiles {
      * 
      * @experimental
      */
-    public dirname( path: string ) {
+    public dirname( path: string ): string {
         return NodePath.dirname( path );
     }
 
@@ -270,7 +264,7 @@ export class NodeFiles {
      * 
      * @experimental
      */
-    public getStats( path: string ) {
+    public getStats( path: string ): NodeFS.Stats | undefined {
         if ( !this.exists( path ) ) {
             return undefined;
         }
@@ -286,7 +280,7 @@ export class NodeFiles {
      * 
      * @experimental
      */
-    public isDirectory( path: string ) {
+    public isDirectory( path: string ): boolean {
         return this.getStats( path )?.isDirectory() ?? false;
     }
 
@@ -299,7 +293,7 @@ export class NodeFiles {
      * 
      * @experimental
      */
-    public isFile( path: string ) {
+    public isFile( path: string ): boolean {
         return this.getStats( path )?.isFile() ?? false;
     }
 
@@ -312,7 +306,7 @@ export class NodeFiles {
      * 
      * @experimental
      */
-    public isSymLink( path: string ) {
+    public isSymLink( path: string ): boolean {
         return this.getStats( path )?.isSymbolicLink() ?? false;
     }
 
@@ -326,7 +320,8 @@ export class NodeFiles {
      * 
      * @experimental
      */
-    public mkdir( path: string ) {
+    public mkdir( path: string ): string | undefined {
+
         return NodeFS.mkdirSync( path, {
             recursive: true,
         } );

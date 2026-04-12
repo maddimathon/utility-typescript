@@ -10,6 +10,8 @@
 /**
  * Escapes a string for use in a regular expression.
  *
+ * @category Functions – Regex
+ *
  * @source
  *
  * @example
@@ -26,4 +28,3 @@
 export function escRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
-//# sourceMappingURL=escRegExp.js.map

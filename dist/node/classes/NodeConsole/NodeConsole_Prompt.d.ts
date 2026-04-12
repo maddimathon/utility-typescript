@@ -339,4 +339,3 @@ export declare namespace NodeConsole_Prompt {
     export type Slug = "bool" | "input" | "select";
     export {};
 }
-//# sourceMappingURL=NodeConsole_Prompt.d.ts.map

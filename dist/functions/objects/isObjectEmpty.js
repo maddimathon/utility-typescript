@@ -7,11 +7,13 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { hasIterator } from './hasIterator.js';
+import { hasIterator } from '../arrays/hasIterator.js';
 /**
  * Checks whether an object is empty (by checking for keys and constructor).
  *
  * Non-object types are evaluated in other ways depending on type.
+ *
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.1
  */
@@ -50,4 +52,3 @@ export function isObjectEmpty(obj) {
     }
     return obj.constructor === Object && Object.keys(obj).length === 0;
 }
-//# sourceMappingURL=isObjectEmpty.js.map

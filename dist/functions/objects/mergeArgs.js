@@ -17,6 +17,8 @@ import { arrayUnique } from '../arrays/arrayUnique.js';
  *
  * Overloaded for better typing dependent on recursion.
  *
+ * @category Functions – Object
+ *
  * @since 0.1.0
  * @since 2.0.0-beta.1 — Added mergeArrays param.
  */
@@ -81,4 +83,3 @@ export function mergeArgs(defaults, inputs, recursive = false, mergeArrays = fal
     }
     return result;
 }
-//# sourceMappingURL=mergeArgs.js.map

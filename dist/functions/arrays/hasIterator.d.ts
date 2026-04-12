@@ -10,7 +10,8 @@
 /**
  * Tests if the given object has an iterator function.
  *
+ * @category Functions – Array
+ *
  * @since 2.0.0-beta.2
  */
 export declare function hasIterator<T_Obj extends any>(obj: T_Obj): obj is Extract<T_Obj, Iterable<any>>;
-//# sourceMappingURL=hasIterator.d.ts.map

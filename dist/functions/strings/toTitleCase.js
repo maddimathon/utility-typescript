@@ -10,6 +10,8 @@
 /**
  * Converts the given string to title case.
  *
+ * @category Functions – String
+ *
  * @param input  String to convert.
  *
  * @return  Title case version of the input string.
@@ -19,4 +21,3 @@
 export function toTitleCase(input) {
     return input.replace(/\w\S*/g, (s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase());
 }
-//# sourceMappingURL=toTitleCase.js.map

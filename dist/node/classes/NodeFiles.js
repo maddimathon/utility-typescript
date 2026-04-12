@@ -18,32 +18,18 @@ import { NodeConsole } from './NodeConsole.js';
  * @since 0.2.0
  */
 export class NodeFiles {
-    /* LOCAL PROPERTIES
+    /* CONSTRUCTOR
      * ====================================================================== */
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args;
-    /**
-     * The instance of {@link NodeConsole} used within this class.
-     *
-     * @category Classes
-     */
-    nc;
-    /* Args ===================================== */
-    /**
-     * Default args for this stage.
-     *
-     * @category Args
-     */
-    get ARGS_DEFAULT() {
-        const write = {
-            force: false,
-            rename: false,
-        };
-        return {
+    constructor(args = {}, utils = {}) {
+        /* Args ===================================== */
+        /**
+         * Default args for this stage.
+         *
+         * @category Args
+         *
+         * @source
+         */
+        this.ARGS_DEFAULT = {
             copyFile: {
                 force: true,
                 rename: true,
@@ -54,12 +40,11 @@ export class NodeFiles {
                 recursive: false,
             },
             readFile: {},
-            write,
+            write: {
+                force: false,
+                rename: false,
+            },
         };
-    }
-    /* CONSTRUCTOR
-     * ====================================================================== */
-    constructor(args = {}, utils = {}) {
         this.args = mergeArgs(this.ARGS_DEFAULT, args, true);
         this.nc = utils.nc ?? new NodeConsole(this.ARGS_DEFAULT);
         const propNames = arrayUnique(Object.getOwnPropertyNames(NodeFiles.prototype)
@@ -88,8 +73,6 @@ export class NodeFiles {
      * Copies a file to another path.
      *
      * @category Filers
-     *
-     * @experimental
      *
      * @param source       Location to write file.
      * @param destination  Location to copy the source path to.
@@ -460,4 +443,3 @@ export class NodeFiles {
     ;
     ;
 })(NodeFiles || (NodeFiles = {}));
-//# sourceMappingURL=NodeFiles.js.map

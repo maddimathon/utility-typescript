@@ -1,5 +1,6 @@
 ---
 title: MIT License
+category: Docs
 ---
 
 **Copyright © 2025  Maddi Mathon**

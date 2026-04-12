@@ -7,6 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
+import { MessageMaker } from '../../../classes/MessageMaker.js';
 import { mergeArgs } from '../../../functions/objects/mergeArgs.js';
 import { NodeConsole } from '../NodeConsole.js';
 import { NodeFiles } from '../NodeFiles.js';
@@ -27,14 +28,6 @@ import { NodeFiles } from '../NodeFiles.js';
  * @since 0.4.2
  */
 export class AbstractBuildStage {
-    /* LOCAL PROPERTIES
-     * ====================================================================== */
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args;
     /**
      * Build a complete args object.
      *
@@ -43,24 +36,6 @@ export class AbstractBuildStage {
     buildArgs(args) {
         return mergeArgs(this.ARGS_DEFAULT, args, true);
     }
-    /**
-     * Colour used for colour-coding this class.
-     *
-     * @category Args
-     */
-    clr;
-    /**
-     * The instance of {@link NodeFiles} used within this class.
-     *
-     * @category Classes
-     */
-    fs;
-    /**
-     * The instance of {@link NodeConsole} used within this class.
-     *
-     * @category Classes
-     */
-    nc;
     /* CONSTRUCTOR
      * ====================================================================== */
     constructor(args = {}, clr = 'black', utils = {}) {
@@ -206,4 +181,3 @@ export class AbstractBuildStage {
 (function (AbstractBuildStage) {
     ;
 })(AbstractBuildStage || (AbstractBuildStage = {}));
-//# sourceMappingURL=AbstractBuildStage.js.map

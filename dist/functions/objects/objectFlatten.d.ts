@@ -7,14 +7,12 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { RecursiveRecord } from '../../types/objects/records.js';
+import type { RecursiveRecord } from '../../types/objects/records.js';
 /**
  * Returns a single-level object record with kebab/snake/etc. case keys based on
  * nested object keys.
  *
- * @param obj     Object to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.2
  */
@@ -23,6 +21,8 @@ export declare function objectFlatten<T_Keys extends keyof any, T_Values extends
 };
 /**
  * Utilities for the {@link objectFlatten} function.
+ *
+ * @category Functions – Object
  *
  * @since 2.0.0-beta.2
  */
@@ -37,12 +37,8 @@ export declare namespace objectFlatten {
         separator?: undefined | string;
         suffix?: undefined | string;
     };
-    function parseArgs(args?: Partial<objectFlatten.Args>): {
-        readonly prefix: string | undefined;
-        readonly separator: string;
-        readonly suffix: string | undefined;
-        readonly key_addSuffix: (key: number | string) => string;
-        readonly key_validate_addPrefix: (key: number | string) => string;
+    function parseArgs(args?: Partial<objectFlatten.Args>): Required<objectFlatten.Args> & {
+        key_addSuffix: (key: number | string) => string;
+        key_validate_addPrefix: (key: number | string) => string;
     };
 }
-//# sourceMappingURL=objectFlatten.d.ts.map

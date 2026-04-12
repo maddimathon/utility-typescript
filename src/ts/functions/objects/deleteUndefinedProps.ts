@@ -8,10 +8,12 @@
  * @license MIT
  */
 
-import { Test } from '../../types/index.js';
+import type { Test } from '../../types/index.js';
 
 /**
  * Deletes the properties of the given object whose types are undefined.
+ * 
+ * @category Functions – Object
  * 
  * @since ___PKG_VERSION___
  */
@@ -31,6 +33,8 @@ export function deleteUndefinedProps<T_Obj extends object>(
 
 /**
  * Utilities for the {@link deleteUndefinedProps} function.
+ * 
+ * @category Functions – Object
  * 
  * @since ___PKG_VERSION___
  */

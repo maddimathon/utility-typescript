@@ -87,6 +87,8 @@ export async function mergeArgsAsync<
  * 
  * Overloaded for better typing dependent on recursion.
  * 
+ * @category Functions – Object
+ * 
  * @since 0.1.0
  */
 export async function mergeArgsAsync<

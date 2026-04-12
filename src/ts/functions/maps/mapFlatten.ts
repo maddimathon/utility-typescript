@@ -8,16 +8,14 @@
  * @license MIT
  */
 
-import { RecursiveMap } from '../../types/objects/records.js';
-import { deleteUndefinedProps } from './deleteUndefinedProps.js';
+import type { RecursiveMap } from '../../types/objects/records.js';
+import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
 
 /**
  * Returns a single-level map with kebab/snake/etc. case keys based on
  * nested map keys.
- *
- * @param map     Map to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * 
+ * @category Functions – Map
  *
  * @since ___PKG_VERSION___
  */
@@ -79,6 +77,8 @@ export function mapFlatten<
 /**
  * Utilities for the {@link mapFlatten} function.
  * 
+ * @category Functions – Map
+ * 
  * @since ___PKG_VERSION___
  */
 export namespace mapFlatten {
@@ -94,7 +94,10 @@ export namespace mapFlatten {
         suffix?: undefined | string;
     };
 
-    export function parseArgs( args: Partial<mapFlatten.Args> = {} ) {
+    export function parseArgs( args: Partial<mapFlatten.Args> = {} ): Required<mapFlatten.Args> & {
+        key_addSuffix: ( key: number | string ) => string;
+        key_validate_addPrefix: ( key: number | string ) => string;
+    } {
 
         const {
             prefix,

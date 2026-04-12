@@ -18,7 +18,6 @@ import type { NodeConsole } from '../NodeConsole.js';
  * 
  * @since 2.0.0-alpha
  * 
- * @experimental
  * @internal
  * @private
  */
@@ -69,8 +68,11 @@ export class NodeConsole_Error extends Error {
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    public toJSON() {
-
+    public toJSON(): {
+        cause: unknown,
+        message: string,
+        name: string,
+    } {
         return {
             cause: this.cause,
             message: this.message,
@@ -113,5 +115,11 @@ export class NodeConsole_Error extends Error {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
      * @see {@link NodeConsole_Error.toJSON | NodeConsole_Error.toJSON()}
      */
-    public override valueOf() { return this.toJSON(); }
+    public override valueOf(): {
+        cause: unknown,
+        message: string,
+        name: string,
+    } {
+        return this.toJSON();
+    }
 }

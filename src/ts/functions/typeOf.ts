@@ -14,6 +14,8 @@ import type { AnyClass } from '../types/index.js';
 /**
  * An alias for the typeof keyword that returns additional options.
  * 
+ * @category Functions – Meta
+ * 
  * @typeParam T_Type  The possible types for the variable being tested. (This 
  *                    helps restrict the results as applicable.)
  * 
@@ -65,6 +67,8 @@ export function typeOf<T_Type extends typeOf.TestType>( variable: T_Type ): type
 
 /**
  * Used only for {@link typeOf | typeOf()}.
+ * 
+ * @category Functions – Meta
  * 
  * @since 0.1.0
  */

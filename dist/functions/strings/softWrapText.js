@@ -10,6 +10,8 @@
 /**
  * Takes an input string and inserts `\n` to soft wrap text within the given width.
  *
+ * @category Functions – String
+ *
  * @param text      Text to wrap.
  * @param maxWidth  Optional. Max number of characters per line.
  *
@@ -23,4 +25,3 @@ export function softWrapText(text, maxWidth = 80) {
     });
     return splits.flat().join('\n');
 }
-//# sourceMappingURL=softWrapText.js.map

@@ -65,29 +65,10 @@ export declare class NodeConsole {
     readonly args: NodeConsole.Args;
     /**
      * @category Args
+     *
+     * @source
      */
-    get ARGS_DEFAULT(): {
-        readonly argsRecursive: true;
-        readonly msgMaker: {
-            readonly msg: {
-                readonly maxWidth: 100;
-                readonly tab: "        ";
-            };
-            readonly paintFormat: "node";
-        };
-        readonly prompt: {
-            readonly throwError: "auto";
-            readonly timeout: 300000;
-        };
-        readonly separator: null;
-        readonly styleClrs: {
-            readonly disabled: "grey";
-            readonly error: "red";
-            readonly help: "grey";
-            readonly highlight: "purple";
-        };
-        readonly varInspect: {};
-    };
+    readonly ARGS_DEFAULT: NodeConsole.Args;
     /**
      * Build a complete args object.
      *
@@ -308,4 +289,3 @@ export declare namespace NodeConsole {
         via: "log" | "warn" | "debug";
     };
 }
-//# sourceMappingURL=NodeConsole.d.ts.map

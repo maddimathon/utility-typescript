@@ -31,23 +31,10 @@ export declare class NodeFiles {
      * Default args for this stage.
      *
      * @category Args
+     *
+     * @source
      */
-    get ARGS_DEFAULT(): {
-        readonly copyFile: {
-            readonly force: true;
-            readonly rename: true;
-            readonly recursive: false;
-        };
-        readonly root: "./";
-        readonly readDir: {
-            readonly recursive: false;
-        };
-        readonly readFile: {};
-        readonly write: {
-            force: boolean;
-            rename: boolean;
-        };
-    };
+    readonly ARGS_DEFAULT: NodeFiles.Args;
     constructor(args?: Partial<NodeFiles.Args>, utils?: Partial<{
         nc: NodeConsole;
     }>);
@@ -55,8 +42,6 @@ export declare class NodeFiles {
      * Copies a file to another path.
      *
      * @category Filers
-     *
-     * @experimental
      *
      * @param source       Location to write file.
      * @param destination  Location to copy the source path to.
@@ -352,4 +337,3 @@ export declare namespace NodeFiles {
         rename: boolean;
     }
 }
-//# sourceMappingURL=NodeFiles.d.ts.map

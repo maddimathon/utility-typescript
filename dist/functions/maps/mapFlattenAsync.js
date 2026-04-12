@@ -8,14 +8,12 @@
  * @license MIT
  */
 import { mapFlatten } from './mapFlatten.js';
-import { deleteUndefinedProps } from './deleteUndefinedProps.js';
+import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
 /**
  * Returns a single-level map with kebab/snake/etc. case keys based on
  * nested map keys.
  *
- * @param map     Map to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * @category Functions – Map
  *
  * @since 2.0.0-beta.3.draft
  */
@@ -47,4 +45,3 @@ export async function mapFlattenAsync(mapPromise, args = {}) {
         })).then(entries => new Map(entries.flat()));
     });
 }
-//# sourceMappingURL=mapFlattenAsync.js.map

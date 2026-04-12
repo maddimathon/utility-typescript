@@ -7,7 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { AnyClass } from '../functions.js';
+import type { AnyClass } from '../functions.js';
 /**
  * Similar to the default Required, but this also makes any child objects
  * Required.
@@ -36,4 +36,3 @@ export type RequiredPartially<T_Object, T_RequiredKeys extends keyof T_Object = 
  * @param T_RequiredKeys  Keys that cannot be undefined. Default `never`.
  */
 export type RecursiveRequiredPartially<T_Object, T_RequiredKeys extends keyof T_Object = never> = RecursiveRequired<Pick<T_Object, T_RequiredKeys>> & Omit<T_Object, T_RequiredKeys>;
-//# sourceMappingURL=required.d.ts.map

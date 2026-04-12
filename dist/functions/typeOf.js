@@ -10,6 +10,8 @@
 /**
  * An alias for the typeof keyword that returns additional options.
  *
+ * @category Functions – Meta
+ *
  * @typeParam T_Type  The possible types for the variable being tested. (This
  *                    helps restrict the results as applicable.)
  *
@@ -53,4 +55,3 @@ export function typeOf(variable) {
     }
     return typeOf;
 }
-//# sourceMappingURL=typeOf.js.map

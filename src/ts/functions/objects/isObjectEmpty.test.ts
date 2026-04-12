@@ -9,7 +9,8 @@
  */
 
 import type { Test } from '../../types/index.js';
-import { expect, test } from '@jest/globals';
+
+import { describe, expect, test } from '@jest/globals';
 
 import { isObjectEmpty } from './isObjectEmpty.js';
 

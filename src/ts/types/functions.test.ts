@@ -25,9 +25,9 @@ class _TestClass_Params {
     ) { }
 };
 
-const _varClass = class { };
+const _varClass: new () => {} = class { };
 
-const _notAClass = () => { a: 'am I a class?'; };
+const _notAClass = (): { a: string; } => ( { a: 'am I a class?' } );
 
 export type T_AnyClass = [
     Test.Expect<Test.Satisfies<typeof _TestClass_Params, AnyClass>>,

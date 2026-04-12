@@ -61,13 +61,22 @@ const test2_expected = {
 };
 //#endregion - Test 2
 
-const [
-    test1_result,
-    test2_result,
-] = await Promise.all( [
+const arr = await Promise.all( [
     objectMapAsync( test1_og, test1_generator ),
     objectMapAsync( test2_og, test2_generator ),
 ] );
+
+const test1_result: {
+    readonly one: boolean;
+    readonly two: boolean;
+    readonly three: boolean;
+} = arr[ 0 ];
+
+const test2_result: {
+    readonly one: string | number;
+    readonly two: string | number;
+    readonly three: string | number;
+} = arr[ 1 ];
 
 
 export type Tests = [

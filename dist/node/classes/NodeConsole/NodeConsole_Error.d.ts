@@ -14,7 +14,6 @@
  *
  * @since 2.0.0-alpha
  *
- * @experimental
  * @internal
  * @private
  */
@@ -70,4 +69,3 @@ export declare class NodeConsole_Error extends Error {
         name: string;
     };
 }
-//# sourceMappingURL=NodeConsole_Error.d.ts.map

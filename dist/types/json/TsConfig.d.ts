@@ -197,4 +197,3 @@ export declare namespace TsConfig {
         type Target = "ES3" | "ES5" | "ES2015" | "ES6" | "ES2016" | "ES2017" | "ES2018" | "ES2019" | "ES2020" | "ES2021" | "ES2022" | "ESNext";
     }
 }
-//# sourceMappingURL=TsConfig.d.ts.map

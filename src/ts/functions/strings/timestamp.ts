@@ -20,6 +20,8 @@ import { mergeArgs } from '../objects/mergeArgs.js';
  * 
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
  * 
+ * @category Functions – String
+ * 
  * @param date   Optional. Date object to format. Defaults to now.
  * @param _args  Optional.
  * 
@@ -90,6 +92,8 @@ export function timestamp(
 
 /**
  * Used only for {@link timestamp | timestamp()}.
+ * 
+ * @category Functions – String
  * 
  * @since 0.1.0
  */

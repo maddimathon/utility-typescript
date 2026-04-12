@@ -7,14 +7,12 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import { deleteUndefinedProps } from './deleteUndefinedProps.js';
+import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
 /**
  * Returns a single-level map with kebab/snake/etc. case keys based on
  * nested map keys.
  *
- * @param map     Map to flatten.
- * @param prefix  Optional. String used to prefix the flattened keys.
- * @param suffix  Optional. String used to suffix the flattened keys.
+ * @category Functions – Map
  *
  * @since 2.0.0-beta.3.draft
  */
@@ -50,6 +48,8 @@ export function mapFlatten(map, args = {}) {
 /**
  * Utilities for the {@link mapFlatten} function.
  *
+ * @category Functions – Map
+ *
  * @since 2.0.0-beta.3.draft
  */
 (function (mapFlatten) {
@@ -76,4 +76,3 @@ export function mapFlatten(map, args = {}) {
     }
     mapFlatten.parseArgs = parseArgs;
 })(mapFlatten || (mapFlatten = {}));
-//# sourceMappingURL=mapFlatten.js.map

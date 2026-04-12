@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-import { RecursiveMap, RecursiveRecord } from '../../types/objects/records.js';
+import type { RecursiveMap, RecursiveRecord } from '../../types/objects/records.js';
 
 export function mapToObject<
     T_Keys extends keyof any,
@@ -22,6 +22,8 @@ export function mapToObject<
 
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
+ * 
+ * @category Functions – Map
  * 
  * @since 2.0.0-beta.2
  */

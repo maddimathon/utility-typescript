@@ -10,19 +10,16 @@
 /**
  * Converts a Map (and any of its Map children, recursively) to a simple object.
  *
+ * @category Functions – Map
+ *
  * @since 2.0.0-beta.2
  */
-export function mapToObject(map) {
-    const entries = Array.from(map.entries()).map(([key, value]) => {
+export async function mapToObjectAsync(map) {
+    return Promise.all(Array.from(map.entries()).map(async ([key, value]) => {
         // returns
         if (!(value instanceof Map)) {
             return [key, value];
         }
-        return [
-            key,
-            mapToObject(value),
-        ];
-    });
-    return Object.fromEntries(entries);
+        return [key, await mapToObjectAsync(value)];
+    })).then((arr) => Object.fromEntries(arr));
 }
-//# sourceMappingURL=mapToObject.js.map

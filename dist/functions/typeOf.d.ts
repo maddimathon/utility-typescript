@@ -11,6 +11,8 @@ import type { AnyClass } from '../types/index.js';
 /**
  * An alias for the typeof keyword that returns additional options.
  *
+ * @category Functions – Meta
+ *
  * @typeParam T_Type  The possible types for the variable being tested. (This
  *                    helps restrict the results as applicable.)
  *
@@ -23,6 +25,8 @@ import type { AnyClass } from '../types/index.js';
 export declare function typeOf<T_Type extends typeOf.TestType>(variable: T_Type): typeOf.Return<T_Type>;
 /**
  * Used only for {@link typeOf | typeOf()}.
+ *
+ * @category Functions – Meta
  *
  * @since 0.1.0
  */
@@ -53,4 +57,3 @@ export declare namespace typeOf {
      */
     type TestType = undefined | (() => any | void) | any[] | AnyClass | BigInt | boolean | Function | null | number | object | Object | string | symbol | Symbol;
 }
-//# sourceMappingURL=typeOf.d.ts.map

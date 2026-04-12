@@ -14,6 +14,8 @@ import { typeOf } from '../functions/typeOf.js';
 /**
  * A configurable class for formatting message strings for various outputs.
  *
+ * @category Classes
+ *
  * @since 0.1.1 — Experimental
  *
  * @experimental
@@ -175,16 +177,8 @@ export class MessageMaker {
         }
         return null;
     }
-    /* LOCAL PROPERTIES
-     * ====================================================================== */
-    /**
-     * A completed args object.
-     *
-     * @category Args
-     */
-    args;
     get ARGS_DEFAULT() {
-        return {
+        const DEFAULT = {
             ansiColours: {
                 4: {
                     fg: {
@@ -264,6 +258,7 @@ export class MessageMaker {
             paintFormat: null,
             paintIfEmpty: false,
         };
+        return DEFAULT;
     }
     /**
      * Build a complete args object.
@@ -516,6 +511,8 @@ export class MessageMaker {
 /**
  * Used only for {@link MessageMaker}.
  *
+ * @category Classes
+ *
  * @since 0.1.1
  */
 (function (MessageMaker) {
@@ -525,4 +522,3 @@ export class MessageMaker {
     ;
     ;
 })(MessageMaker || (MessageMaker = {}));
-//# sourceMappingURL=MessageMaker.js.map

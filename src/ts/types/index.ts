@@ -1,6 +1,8 @@
 /**
  * Exports all global types (no JavaScript).
  * 
+ * @category Exports
+ * 
  * @module types
  * 
  * @since 0.1.0

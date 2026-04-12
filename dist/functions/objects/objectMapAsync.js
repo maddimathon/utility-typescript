@@ -11,6 +11,8 @@
  * Maps a single-level object's properties to new values based on a callback
  * function.
  *
+ * @category Functions – Object
+ *
  * @since 2.0.0-beta.2
  */
 export async function objectMapAsync(objPromise, callback) {
@@ -23,4 +25,3 @@ export async function objectMapAsync(objPromise, callback) {
         return Promise.all(entries.map(async ([key, value]) => [key, await callback([key, value])])).then(mappedEntries => Object.fromEntries(mappedEntries));
     });
 }
-//# sourceMappingURL=objectMapAsync.js.map

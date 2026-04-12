@@ -15,6 +15,8 @@ import type { LangLocaleCode } from '../../types/index.js';
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}  Used to format the string.
  *
+ * @category Functions – String
+ *
  * @param date   Optional. Date object to format. Defaults to now.
  * @param _args  Optional.
  *
@@ -25,6 +27,8 @@ import type { LangLocaleCode } from '../../types/index.js';
 export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Input): string;
 /**
  * Used only for {@link timestamp | timestamp()}.
+ *
+ * @category Functions – String
  *
  * @since 0.1.0
  */
@@ -102,4 +106,3 @@ export declare namespace timestamp {
         format?: Partial<Args['format']>;
     };
 }
-//# sourceMappingURL=timestamp.d.ts.map

@@ -19,4 +19,3 @@
  *                            of the Functions namespace.
  */
 export type AnyClass<T_Object extends any = any, T_ConstructParams extends (any | never)[] = (any | never)[]> = new (...args: T_ConstructParams) => T_Object;
-//# sourceMappingURL=functions.d.ts.map

@@ -14,21 +14,10 @@
  *
  * @since 2.0.0-alpha
  *
- * @experimental
  * @internal
  * @private
  */
 export class NodeConsole_Error extends Error {
-    /* LOCAL PROPERTIES
-     * ====================================================================== */
-    /**
-     * Represents the name for the type of error.
-     */
-    cause;
-    /**
-     * Represents the name for the type of error.
-     */
-    name = 'NodeConsole_Error';
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -36,6 +25,10 @@ export class NodeConsole_Error extends Error {
      */
     constructor(msg, args) {
         super(msg);
+        /**
+         * Represents the name for the type of error.
+         */
+        this.name = 'NodeConsole_Error';
         this.cause = args.cause;
     }
     /* LOCAL METHODS
@@ -89,6 +82,7 @@ export class NodeConsole_Error extends Error {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf | Object.prototype.valueOf()}
      * @see {@link NodeConsole_Error.toJSON | NodeConsole_Error.toJSON()}
      */
-    valueOf() { return this.toJSON(); }
+    valueOf() {
+        return this.toJSON();
+    }
 }
-//# sourceMappingURL=NodeConsole_Error.js.map

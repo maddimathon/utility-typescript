@@ -20,6 +20,8 @@ import { typeOf } from '../functions/typeOf.js';
  * {@link VariableInspector.value}) or get a json-compatible object representing
  * the inspected value {@link VariableInspector.toJSON}.
  *
+ * @category Classes
+ *
  * @since 0.1.1
  *
  * @example
@@ -78,99 +80,26 @@ export class VariableInspector {
      *
      * @internal
      */
-    static get _testClass() {
-        class TestClass {
-            undefinedProperty;
-            property = 'property sample value';
-            static methodName(param) { return param; }
-            _getSet = '_getSet sample value';
-            get getSetProp() { return this._getSet; }
-            set getSetProp(param) { this._getSet = param; }
-        }
-        ;
-        return TestClass;
-    }
-    /**
-     * Used for testing.
-     *
-     * @internal
-     */
-    static _testVars(verbose) {
-        const TestClass = VariableInspector._testClass;
-        const classInstance = new TestClass();
-        const vars = {
-            undefined,
-            null: null,
-            true: true,
-            false: false,
-            bigint: BigInt(9007199254740991),
-            number: Number(207),
-            'NaN': Number.NaN,
-            string: 'string sample value',
-            stringMultiline: [
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in',
-                'justo vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper',
-                'interdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales',
-                'aliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero',
-                'dolor faucibus lacus, in tempus metus elit non ante.'
-            ].join('\n'),
-            array: ['string sample value', Number(207), {},],
-            set: new Set(['string sample value', Number(207), {},]),
-            objectEmpty: {},
-            objectSimple: {
-                one: 1,
-                two: 2,
-            },
-            map: new Map([['one', 1], ['two', 2]]),
-            date: new Date('2024-02-08'),
-            regex: /^regex$/g,
-            functionSimple: () => { return 'hello'; },
-            functionParams: (value1, value2) => { const test = value2; return test + value1; },
-            'class': TestClass,
-            classInstance,
-        };
-        if (!verbose) {
-            delete vars['undefined'];
-            delete vars['true'];
-            delete vars['bigint'];
-            delete vars['stringMultiline'];
-            delete vars['array'];
-            delete vars['objectEmpty'];
-            delete vars['objectSimple'];
-            delete vars['date'];
-            delete vars['regex'];
-            delete vars['functionSimple'];
-            delete vars['functionParams'];
-            delete vars['class'];
-            delete vars['classInstance'];
-        }
-        return vars;
-    }
-    /**
-     * Used for testing.
-     *
-     * @internal
-     */
     static get sampleComplexObject() {
-        const t = VariableInspector._testVars(true);
+        const { undefined, null: null_val, true: true_val, false: false_val, bigint, number, NaN, string, stringMultiline, array, set, objectEmpty, objectSimple, map, date, regex, functionParams, } = VariableInspector.Samples.getVars(true);
         return {
-            undefined: t.undefined,
-            null: t.null,
-            true: t.true,
-            false: t.false,
-            bigint: t.bigint,
-            number: t.number,
-            NaN: t.NaN,
-            string: t.string,
-            stringMultiline: t.stringMultiline,
-            array: t.array,
-            set: t.set,
-            objectEmpty: t.objectEmpty,
-            objectSimple: t.objectSimple,
-            map: t.map,
-            date: t.date,
-            regex: t.regex,
-            functionParams: t.functionParams,
+            undefined,
+            null: null_val,
+            true: true_val,
+            false: false_val,
+            bigint,
+            number,
+            NaN,
+            string,
+            stringMultiline,
+            array,
+            set,
+            objectEmpty,
+            objectSimple,
+            map,
+            date,
+            regex,
+            functionParams,
         };
     }
     /**
@@ -195,7 +124,7 @@ export class VariableInspector {
             VariableInspector.dump(variable, args);
             console.log('\n');
         };
-        const t = VariableInspector._testVars(!!args.debug);
+        const t = VariableInspector.Samples.getVars(!!args.debug);
         for (const key in t) {
             varDump({ [key]: t[key] });
         }
@@ -204,16 +133,17 @@ export class VariableInspector {
         console.log('\n');
         return complexVarInspect;
     }
-    /* LOCAL PROPERTIES
+    /* CONSTRUCTOR
      * ====================================================================== */
     /**
-     * A completed args object.
      *
-     * @category Args
+     * @param variable  Passing the variable to inspect within an single-prop object
      */
-    args;
-    get ARGS_DEFAULT() {
-        return {
+    constructor(variable, args = {}) {
+        /**
+         * @source
+         */
+        this.ARGS_DEFAULT = {
             childArgs: {
                 includeValue: true,
             },
@@ -234,48 +164,12 @@ export class VariableInspector {
             localizeNumberOptions: {},
             stringQuoteCharacter: '"',
         };
-    }
-    /**
-     * Value’s name, used in output.
-     *
-     * @category Inputs
-     */
-    _name;
-    /**
-     * Value to inspect.
-     *
-     * @category Inputs
-     *
-     * @expandType T_Type
-     */
-    _rawValue;
-    /**
-     * Alias for this.typeOf( this._rawValue ).
-     *
-     * @category Inputs
-     *
-     * @expandType typeOf.Return
-     */
-    _typeOf;
-    /**
-     * These are the properties of the input object, if any.
-     *
-     * @category Inputs
-     */
-    _properties;
-    /* CONSTRUCTOR
-     * ====================================================================== */
-    /**
-     *
-     * @param variable  Passing the variable to inspect within an single-prop object
-     */
-    constructor(variable, args = {}) {
         this.args = {
             ...this.ARGS_DEFAULT,
             ...args,
         };
         const validVar = VariableInspector.validateInput(variable);
-        this._name = Object.keys(validVar)[0];
+        this._name = Object.keys(validVar)[0] ?? 'variable';
         this._rawValue = validVar[this._name];
         this._typeOf = typeOf(this._rawValue);
         // must be last so that this._rawValue and this._typeOf are set
@@ -719,11 +613,88 @@ export class VariableInspector {
 /**
  * Used only for {@link VariableInspector}.
  *
+ * @category Classes
+ *
  * @since 0.1.1
  */
 (function (VariableInspector) {
     ;
     ;
     ;
+    /**
+     * Used to sample/test/demo functions.
+     *
+     * @since 2.0.0-beta.3.draft
+     * @internal
+     */
+    let Samples;
+    (function (Samples) {
+        class TestClass {
+            constructor() {
+                this.property = 'property sample value';
+                this._getSet = '_getSet sample value';
+            }
+            static methodName(param) { return param; }
+            get getSetProp() { return this._getSet; }
+            set getSetProp(param) { this._getSet = param; }
+        }
+        ;
+        /**
+         * Used for testing.
+         *
+         * @since 2.0.0-beta.3.draft
+         * @internal
+         */
+        function getVars(verbose) {
+            const classInstance = new TestClass();
+            const vars = {
+                undefined,
+                null: null,
+                true: true,
+                false: false,
+                bigint: BigInt(9007199254740991),
+                number: Number(207),
+                'NaN': Number.NaN,
+                string: 'string sample value',
+                stringMultiline: [
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Donec bibendum in',
+                    'justo vulputate euismod.Vivamus vel lectus dolor.Curabitur ullamcorper',
+                    'interdum diam, sit amet pulvinar odio tristique eget.Pellentesque sodales',
+                    'aliquam ex in convallis.Morbi tristique, risus et imperdiet aliquam, libero',
+                    'dolor faucibus lacus, in tempus metus elit non ante.'
+                ].join('\n'),
+                array: ['string sample value', Number(207), {},],
+                set: new Set(['string sample value', Number(207), {},]),
+                objectEmpty: {},
+                objectSimple: {
+                    one: 1,
+                    two: 2,
+                },
+                map: new Map([['one', 1], ['two', 2]]),
+                date: new Date('2024-02-08'),
+                regex: /^regex$/g,
+                functionSimple: () => { return 'hello'; },
+                functionParams: (value1, value2) => { const test = value2; return test + value1; },
+                'class': TestClass,
+                classInstance,
+            };
+            if (!verbose) {
+                delete vars['undefined'];
+                delete vars['true'];
+                delete vars['bigint'];
+                delete vars['stringMultiline'];
+                delete vars['array'];
+                delete vars['objectEmpty'];
+                delete vars['objectSimple'];
+                delete vars['date'];
+                delete vars['regex'];
+                delete vars['functionSimple'];
+                delete vars['functionParams'];
+                delete vars['class'];
+                delete vars['classInstance'];
+            }
+            return vars;
+        }
+        Samples.getVars = getVars;
+    })(Samples = VariableInspector.Samples || (VariableInspector.Samples = {}));
 })(VariableInspector || (VariableInspector = {}));
-//# sourceMappingURL=VariableInspector.js.map

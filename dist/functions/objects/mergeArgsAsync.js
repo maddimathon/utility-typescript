@@ -17,6 +17,8 @@ import { arrayUnique } from '../arrays/arrayUnique.js';
  *
  * Overloaded for better typing dependent on recursion.
  *
+ * @category Functions – Object
+ *
  * @since 0.1.0
  */
 export async function mergeArgsAsync(defaults, inputs, recursive = false, mergeArrays = false) {
@@ -78,4 +80,3 @@ export async function mergeArgsAsync(defaults, inputs, recursive = false, mergeA
     });
     return Promise.all(entries).then(Object.fromEntries);
 }
-//# sourceMappingURL=mergeArgsAsync.js.map

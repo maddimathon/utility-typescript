@@ -217,7 +217,6 @@ export class NodeConsole_Prompt {
 
                 message: (
                     text: string,
-                    status,
                 ) => this.msg.msg( text, msgArgs ),
             },
 

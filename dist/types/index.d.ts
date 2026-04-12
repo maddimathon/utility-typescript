@@ -1,6 +1,8 @@
 /**
  * Exports all global types (no JavaScript).
  *
+ * @category Exports
+ *
  * @module types
  *
  * @since 0.1.0
@@ -27,4 +29,3 @@ export type * from './objects/records.js';
 export type * from './objects/required.js';
 export type * from './string-literals/html.js';
 export type * as Test from './test.js';
-//# sourceMappingURL=index.d.ts.map

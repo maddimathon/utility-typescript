@@ -10,6 +10,8 @@
 /**
  * Takes an input string and inserts `\n` to soft wrap text within the given width.
  *
+ * @category Functions – String
+ *
  * @param text      Text to wrap.
  * @param maxWidth  Optional. Max number of characters per line.
  *
@@ -18,4 +20,3 @@
  * @since 0.1.0
  */
 export declare function softWrapText(text: string, maxWidth?: number): string;
-//# sourceMappingURL=softWrapText.d.ts.map

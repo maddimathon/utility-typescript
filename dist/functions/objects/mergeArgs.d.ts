@@ -38,4 +38,3 @@ export declare function mergeArgs<D extends object, I extends Partial<D> | Recur
  * Universal overload.
  */
 export declare function mergeArgs<D extends object, I extends object>(defaults: D, inputs?: I | undefined, recursive?: boolean | undefined, mergeArrays?: boolean | undefined): D | D & I;
-//# sourceMappingURL=mergeArgs.d.ts.map

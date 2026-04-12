@@ -12,6 +12,8 @@ import { timestamp } from '../functions/strings/timestamp.js';
 /**
  * A configurable class for formatting message strings for various outputs.
  *
+ * @category Classes
+ *
  * @since 0.1.1 — Experimental
  *
  * @experimental
@@ -38,84 +40,84 @@ export declare class MessageMaker {
      */
     readonly args: MessageMaker.Args;
     get ARGS_DEFAULT(): {
-        readonly ansiColours: {
-            readonly 4: {
-                readonly fg: {
-                    readonly black: "30";
-                    readonly grey: "30";
-                    readonly 'light-grey': "37";
-                    readonly white: "37";
-                    readonly red: "31";
-                    readonly orange: "33";
-                    readonly yellow: "33";
-                    readonly green: "32";
-                    readonly turquoise: "36";
-                    readonly blue: "34";
-                    readonly purple: "35";
-                    readonly pink: "35";
+        ansiColours: {
+            4: {
+                fg: {
+                    black: '30';
+                    grey: '30';
+                    'light-grey': '37';
+                    white: '37';
+                    red: '31';
+                    orange: '33';
+                    yellow: '33';
+                    green: '32';
+                    turquoise: '36';
+                    blue: '34';
+                    purple: '35';
+                    pink: '35';
                 };
-                readonly bg: {
-                    readonly black: "40";
-                    readonly grey: "40";
-                    readonly 'light-grey': "47";
-                    readonly white: "47";
-                    readonly red: "41";
-                    readonly orange: "43";
-                    readonly yellow: "43";
-                    readonly green: "42";
-                    readonly turquoise: "46";
-                    readonly blue: "44";
-                    readonly purple: "45";
-                    readonly pink: "45";
+                bg: {
+                    black: '40';
+                    grey: '40';
+                    'light-grey': '47';
+                    white: '47';
+                    red: '41';
+                    orange: '43';
+                    yellow: '43';
+                    green: '42';
+                    turquoise: '46';
+                    blue: '44';
+                    purple: '45';
+                    pink: '45';
                 };
             };
-            readonly 8: {
-                readonly black: "5;232";
-                readonly grey: "5;241";
-                readonly 'light-grey': "5;247";
-                readonly white: "5;255";
-                readonly red: "5;124";
-                readonly orange: "5;166";
-                readonly yellow: "5;208";
-                readonly green: "5;28";
-                readonly turquoise: "5;30";
-                readonly blue: "5;20";
-                readonly purple: "5;55";
-                readonly pink: "5;162";
+            8: {
+                black: '5;232';
+                grey: '5;241';
+                'light-grey': '5;247';
+                white: '5;255';
+                red: '5;124';
+                orange: '5;166';
+                yellow: '5;208';
+                green: '5;28';
+                turquoise: '5;30';
+                blue: '5;20';
+                purple: '5;55';
+                pink: '5;162';
             };
-            readonly 24: {
-                readonly black: "2;26;26;26";
-                readonly grey: "2;108;108;108";
-                readonly 'light-grey': "2;208;208;208";
-                readonly white: "2;248;248;248";
-                readonly red: "2;168;36;36";
-                readonly orange: "2;174;84;4";
-                readonly yellow: "2;204;182;0";
-                readonly green: "2;24;118;10";
-                readonly turquoise: "2;0;128;98";
-                readonly blue: "2;60;84;157";
-                readonly purple: "2;129;75;155";
-                readonly pink: "2;179;77;145";
+            24: {
+                black: '2;26;26;26';
+                grey: '2;108;108;108';
+                'light-grey': '2;208;208;208';
+                white: '2;248;248;248';
+                red: '2;168;36;36';
+                orange: '2;174;84;4';
+                yellow: '2;204;182;0';
+                green: '2;24;118;10';
+                turquoise: '2;0;128;98';
+                blue: '2;60;84;157';
+                purple: '2;129;75;155';
+                pink: '2;179;77;145';
             };
         };
-        readonly msg: {
-            readonly bold: false;
-            readonly clr: null;
-            readonly depth: 0;
-            readonly flag: false;
-            readonly fullWidth: false;
-            readonly hangingIndent: "";
-            readonly indent: "";
-            readonly italic: false;
-            readonly linesIn: 0;
-            readonly linesOut: 1;
-            readonly minWidth: 20;
-            readonly maxWidth: null;
-            readonly tab: "    ";
+        msg: {
+            bold: false;
+            clr: null;
+            depth: 0;
+            flag: false;
+            fullWidth: false;
+            hangingIndent: '';
+            indent: '';
+            italic: false;
+            linesIn: 0;
+            linesOut: 1;
+            minWidth: 20;
+            maxWidth: null;
+            tab: '    ';
         };
-        readonly painter: null;
-        readonly paintFormat: null;
-        readonly paintIfEmpty: false;
+        painter: null;
+        paintFormat: null;
+        paintIfEmpty: false;
     };
     /**
      * Build a complete args object.
@@ -195,6 +197,8 @@ export declare class MessageMaker {
 }
 /**
  * Used only for {@link MessageMaker}.
+ *
+ * @category Classes
  *
  * @since 0.1.1
  */
@@ -419,4 +423,3 @@ export declare namespace MessageMaker {
         italic: boolean;
     }
 }
-//# sourceMappingURL=MessageMaker.d.ts.map

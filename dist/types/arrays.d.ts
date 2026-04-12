@@ -17,4 +17,3 @@
  *                            of the Arrays namespace.
  */
 export type ArrayItem<T_Array extends readonly unknown[]> = T_Array extends readonly (infer I)[] ? I : never;
-//# sourceMappingURL=arrays.d.ts.map

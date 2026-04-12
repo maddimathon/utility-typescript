@@ -87,6 +87,8 @@ export function mergeArgs<
  * 
  * Overloaded for better typing dependent on recursion.
  * 
+ * @category Functions – Object
+ * 
  * @since 0.1.0
  * @since 2.0.0-beta.1 — Added mergeArrays param.
  */
