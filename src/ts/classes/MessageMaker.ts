@@ -28,7 +28,6 @@ import { typeOf } from '../functions/typeOf.js';
 export class MessageMaker {
 
 
-
     /* STATIC
      * ====================================================================== */
 
@@ -39,8 +38,6 @@ export class MessageMaker {
      * colours.
      *
      * Used only by {@link MessageMaker.buildArgs}.
-     * 
-     * @category Static
      *
      * @param classArgs  A complete arguments object.  Requires complete to
      *                   avoid building complete arguments multiple times.
@@ -242,11 +239,12 @@ export class MessageMaker {
 
     /**
      * A completed args object.
-     * 
-     * @category Args
      */
     public readonly args: MessageMaker.Args;
 
+    /**
+     * Default arguments.
+     */
     public get ARGS_DEFAULT(): {
         ansiColours: {
 
@@ -534,8 +532,6 @@ export class MessageMaker {
 
     /**
      * Build a complete args object.
-     * 
-     * @category Args
      */
     public buildArgs( args?: RecursivePartial<MessageMaker.Args> ): MessageMaker.Args {
 
@@ -567,8 +563,6 @@ export class MessageMaker {
 
     /**
      * Build a complete {@link MessageMaker.MsgArgs} object.
-     * 
-     * @category Args
      */
     public msgArgs<
         InputArgs extends Partial<MessageMaker.MsgArgs>,
@@ -613,8 +607,6 @@ export class MessageMaker {
     /**
      * Joins string arrays with a single new line and adds an indent to the
      * beginning of every line, and adds next level of indent for child arrays.
-     * 
-     * @category Formatters
      *
      * @param lines   String to implode. Arrays are joined with `'\n'`.
      * @param indent  Optional. Default `this.args.msg.tab`.
@@ -651,8 +643,6 @@ export class MessageMaker {
      * Does not wrap or split it (assumes this has already been done).  Applies
      * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
      * 
-     * @category Messagers
-     * 
      * @param line    String to map. Already wrapped to line width, if applicable.
      * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
      * @param prefix  Optional. Unpainted string added before the line. Helpful for hanging indents. Default ''.
@@ -683,8 +673,6 @@ export class MessageMaker {
 
     /**
      * Formats the given message according to options.
-     * 
-     * @category Messagers
      * 
      * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
@@ -728,16 +716,16 @@ export class MessageMaker {
     /**
      * Formats given messages individually and then joins them on return.
      * 
-     * @category Messagers
-     * 
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
+     * 
+     * @since ___PKG_VERSION___ — Renamed from msgs to bulk.
      */
-    public msgs(
+    public bulk(
         messages: MessageMaker.BulkMsgs,
         universalArgs: Partial<MessageMaker.BulkMsgArgs> = {},
     ): string {
-        // VariableInspector.dump( { 'MessageMaker.msgs() _auniversalArgsrgs': universalArgs } );
+
         if ( !Array.isArray( messages ) ) {
             messages = [ messages ];
         }
@@ -782,8 +770,6 @@ export class MessageMaker {
 
     /**
      * Applies colour and font styles to an message for output.
-     * 
-     * @category Stylers
      */
     public painter(
         msg: string,
@@ -806,23 +792,19 @@ export class MessageMaker {
     }
 
     /**
-     * Formats the given message according to options.
-     * 
-     * @category Messagers
+     * Formats a message prepended with a timestamp.
      * 
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
+     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker.msgArgs}.
+     * 
+     * @since ___PKG_VERSION___ — Renamed from timestampMsg to timestamped. Removed `timeArgs` param and switched to a time prop in `msgArgs`.
      */
-    public timestampMsg(
+    public timestamped(
         msg: string | string[] | MessageMaker.BulkMsgs,
-
-        msgArgs: RecursivePartial<MessageMaker.BulkMsgArgs> = {},
-
-        timeArgs: Partial<MessageMaker.MsgArgs> & Partial<{
-            date: Date;
-            stamp: timestamp.Args_Input;
-        }> = {},
+        {
+            time: timeArgs = {},
+            ...msgArgs
+        }: RecursivePartial<MessageMaker.TimestampedArgs> = {},
     ): string {
 
         /** A complete version of the base message arguments. */
@@ -896,7 +878,7 @@ export class MessageMaker {
 
             message: ( messages.length ? (
                 ( args_parts.flag ? this.msg( ' ', args_parts ) : ' ' )
-                + this.msgs( messages, args_parts )
+                + this.bulk( messages, args_parts )
             ) : '' ),
 
             timestamp: this.msg(
@@ -937,7 +919,7 @@ export class MessageMaker {
 export namespace MessageMaker {
 
     /**
-     * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter`
+     * Ansi colour codes for the default node {@link MessageMaker.Args}.painter
      * function.
      * 
      * @since 0.1.1
@@ -1133,7 +1115,7 @@ export namespace MessageMaker {
     };
 
     /**
-     * Optional configuration for {@link MessageMaker.msgs}.
+     * Optional configuration for {@link MessageMaker.bulk}.
      * 
      * @since 0.1.1
      */
@@ -1188,5 +1170,19 @@ export namespace MessageMaker {
          * @default false
          */
         italic: boolean;
+    };
+
+    /**
+     * Optional args for {@link MessageMaker.timestamped}.
+     * 
+     * @since ___PKG_VERSION___
+     */
+    export interface TimestampedArgs extends Omit<BulkMsgArgs, 'depth'> {
+        time: Partial<
+            Omit<MsgArgs, 'depth' | 'fullWidth' | 'hangingIndent' | 'indent' | 'maxWidth' | 'minWidth' | 'tab'> & {
+                date: Date;
+                stamp: timestamp.Args_Input;
+            }
+        >;
     };
 }

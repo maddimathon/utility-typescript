@@ -68,7 +68,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
 
     public async startEndNotice( which: "start" | "end" | string ): Promise<void> {
 
-        const depth = this.args[ 'log-base-level' ] ?? 0;
+        const depth = this.args.logBaseLevel ?? 0;
 
         let linesIn = 2;
 
@@ -220,10 +220,12 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping changelog updates during dryrun...', 1 );
 
-            this.args.debug && this.nc.varDump( { newChangeLogEntry }, {
-                clr: this.clr,
-                depth: 2 + ( this.args[ 'log-base-level' ] ?? 0 ),
-                maxWidth: null,
+            this.args.debug && this.nc.vi.debug( { newChangeLogEntry }, {
+                msg: {
+                    clr: this.clr,
+                    depth: 2 + this.args.logBaseLevel,
+                    maxWidth: null,
+                },
             } );
 
             return;
@@ -240,7 +242,7 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         const pkg = new Package( {
             ...this.args as Package.Args,
 
-            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
+            logBaseLevel: 1 + this.args.logBaseLevel,
 
             only: this.args[ 'only-pkg' ],
             without: this.args[ 'without-pkg' ],
@@ -297,18 +299,22 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping git commit during dryrun...', 2 );
 
-            this.args.debug && this.nc.varDump( { gitCmd }, {
-                clr: this.clr,
-                depth: ( this.args.verbose ? 3 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
-                maxWidth: null,
+            this.args.debug && this.nc.vi.debug( { gitCmd }, {
+                msg: {
+                    clr: this.clr,
+                    depth: ( this.args.verbose ? 3 : 2 ) + this.args.logBaseLevel,
+                    maxWidth: null,
+                },
             } );
 
         } else {
 
-            this.args.debug && this.nc.varDump( { gitCmd }, {
-                clr: this.clr,
-                depth: 2 + ( this.args[ 'log-base-level' ] ?? 0 ),
-                maxWidth: null,
+            this.args.debug && this.nc.vi.debug( { gitCmd }, {
+                msg: {
+                    clr: this.clr,
+                    depth: 2 + this.args.logBaseLevel,
+                    maxWidth: null,
+                },
             } );
 
             this.cmd( gitCmd );
@@ -333,10 +339,12 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping repo updates during dryrun...', 3 );
 
-            this.args.debug && this.nc.varDump( { repoUpdateCmd }, {
-                clr: this.clr,
-                depth: ( this.args.verbose ? 4 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
-                maxWidth: null,
+            this.args.debug && this.nc.vi.debug( { repoUpdateCmd }, {
+                msg: {
+                    clr: this.clr,
+                    depth: ( this.args.verbose ? 4 : 2 ) + this.args.logBaseLevel,
+                    maxWidth: null,
+                },
             } );
 
         } else {
@@ -357,18 +365,22 @@ export class Release extends AbstractStage<Release.Stages, Release.Args> {
         if ( this.args.dryrun ) {
             this.verboseLog( 'skipping github release during dryrun...', 3 );
 
-            this.args.debug && this.nc.varDump( { releaseCmd }, {
-                clr: this.clr,
-                depth: ( this.args.verbose ? 4 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
-                maxWidth: null,
+            this.args.debug && this.nc.vi.debug( { releaseCmd }, {
+                msg: {
+                    clr: this.clr,
+                    depth: ( this.args.verbose ? 4 : 2 ) + this.args.logBaseLevel,
+                    maxWidth: null,
+                },
             } );
 
         } else {
 
-            this.args.debug && this.nc.varDump( { releaseCmd }, {
-                clr: this.clr,
-                depth: ( this.args.verbose ? 3 : 2 ) + ( this.args[ 'log-base-level' ] ?? 0 ),
-                maxWidth: null,
+            this.args.debug && this.nc.vi.debug( { releaseCmd }, {
+                msg: {
+                    clr: this.clr,
+                    depth: ( this.args.verbose ? 3 : 2 ) + this.args.logBaseLevel,
+                    maxWidth: null,
+                },
             } );
 
             this.cmd( releaseCmd );

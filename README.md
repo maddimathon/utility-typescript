@@ -69,10 +69,10 @@ import { ... } from '@maddimathon/utility-typescript/node';
 This library is maintained by [Maddi Mathon](https://www.maddimathon.com) and is
 currently unlikely to accept other contributions.
 
-Each file that defines items/exports should limit its exports to one item and
-its associated types, if applicable.  Occasionally (and judiciously), it may
-make more sense to define a small number of closely-related items in the same
-file.
+Each file that defines resources (e.g., functions, classes, global constants)
+should limit its exports to one item (and its associated types, if applicable).
+Occasionally (and judiciously), it may make more sense to define a small number
+of closely-related items in the same file.
 
 ### Directory Structure
 
@@ -95,8 +95,9 @@ Long and clear is better than short and confusing.
 
 Abstract classes should start with `Abstract`.
 
-Classes made only to be children of other classes should be prefixed with their
-parent class (e.g., `ParentClass_Child`).
+Classes made only to be children of other classes should be either prefixed with
+their parent class (e.g., `ParentClass_Child`) *or* be a member of the parent
+class' eponymous namespace.
 
 ### Documentation
 
@@ -107,8 +108,8 @@ and changelog up to date is also important.
 #### TypeDoc
 
 Documentation for the included JavaScript is generated from the TypeScript types
-and block comments in the source.  Every new addition should be thoroughly
-documented from the start.
+and block comments in the source (via [TypeDoc](https://typedoc.org/)).  Every
+new addition should be thoroughly documented from the start.
 
 To include source code in documentation, add the `@source` block tag (uses
 [typedoc-plugin-inline-sources](https://www.npmjs.com/package/typedoc-plugin-inline-sources)).
@@ -120,12 +121,7 @@ Unit tests are written in the source but run after compile and minimize (via
 but with `.test` added before the extension — e.g., `myFunction.ts` is tested by
 `myFunction.test.ts`.
 
-### TypeScript
-
-Every subdirectory should have its own `index.ts` that re-exports the contents
-of its files.  **Types should also be tested** using the utility types in 
-{@link Types.Test}.
-
+**Types should also be tested** using the utility types in {@link types.Test}.
 
 
 ## License

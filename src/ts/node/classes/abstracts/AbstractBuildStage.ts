@@ -165,22 +165,23 @@ export abstract class AbstractBuildStage<
      * 
      * @param level     Depth level for this message.
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      * 
      * @return  An object with arguments separated by message (`msg`) and time.
      */
     protected msgArgs(
         level: number = 0,
-        msgArgs: Parameters<NodeConsole[ 'timestampLog' ]>[ 1 ] = {},
-        timeArgs: Parameters<NodeConsole[ 'timestampLog' ]>[ 2 ] = {},
-    ): {
-        msg: Parameters<NodeConsole[ 'timestampLog' ]>[ 1 ];
-        time: Parameters<NodeConsole[ 'timestampLog' ]>[ 2 ];
-    } {
-        const depth = level + Number( this.args[ 'log-base-level' ] ?? 0 );
+        {
+            time: timeArgs = {},
+            ...msgArgs
+        }: Parameters<NodeConsole[ 'timestamp' ][ 'log' ]>[ 1 ] = {},
+    ): NonNullable<Parameters<NodeConsole[ 'timestamp' ][ 'log' ]>[ 1 ]> {
 
-        const msg: typeof msgArgs = {
+        type MsgArgs = Omit<NonNullable<Parameters<NodeConsole[ 'timestamp' ][ 'log' ]>[ 1 ]>, 'time'>;
+        type TimeArgs = NonNullable<Parameters<NodeConsole[ 'timestamp' ][ 'log' ]>[ 1 ]>[ 'time' ];
 
+        const depth = level + Number( this.args.logBaseLevel );
+
+        const msg: MsgArgs = {
             bold: depth == 0 || level <= 1,
             clr: this.clr,
 
@@ -192,9 +193,7 @@ export abstract class AbstractBuildStage<
             ...msgArgs,
         };
 
-        const time: typeof timeArgs = {
-            ...timeArgs,
-        };
+        const time: TimeArgs = timeArgs;
 
         if ( level <= 0 ) {
             msg.linesIn = msgArgs.linesIn ?? 2;
@@ -216,7 +215,7 @@ export abstract class AbstractBuildStage<
             msg.clr = msgArgs.clr ?? 'grey';
         }
 
-        return { msg, time };
+        return { ...msg, time };
     }
 
     /**
@@ -229,21 +228,19 @@ export abstract class AbstractBuildStage<
      * 
      * @param msg       The message(s) to print to the console.
      * @param level     Depth level for this message (above the value of 
-     *                  {@link AbstractBuildStage.T_Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     *                  {@link AbstractBuildStage.T_Args.logBaseLevel|`this.args.logBaseLevel`}).
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
     public progressLog(
-        msg: Parameters<NodeConsole[ 'timestampLog' ]>[ 0 ],
+        msg: Parameters<NodeConsole[ 'timestamp' ][ 'log' ]>[ 0 ],
         level: number,
-        msgArgs: Parameters<NodeConsole[ 'timestampLog' ]>[ 1 ] = {},
-        timeArgs: Parameters<NodeConsole[ 'timestampLog' ]>[ 2 ] = {},
+        msgArgs: Parameters<NodeConsole[ 'timestamp' ][ 'log' ]>[ 1 ] = {},
     ): void {
         if ( this.args[ 'progress' ] === false ) { return; }
 
-        const args = this.msgArgs( level, msgArgs, timeArgs );
+        const args = this.msgArgs( level, msgArgs );
 
-        this.nc.timestampLog( msg, args.msg, args.time );
+        this.nc.timestamp.log( msg, args );
     }
 
     /**
@@ -264,18 +261,16 @@ export abstract class AbstractBuildStage<
      * 
      * @param msg       The message(s) to print to the console.
      * @param level     Depth level for this message (above the value of 
-     *                  {@link AbstractBuildStage.T_Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     *                  {@link AbstractBuildStage.T_Args.logBaseLevel|`this.args.logBaseLevel`}).
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
     public verboseLog(
         msg: Parameters<AbstractBuildStage<T_SubStage, T_Args>[ 'progressLog' ]>[ 0 ],
         level: Parameters<AbstractBuildStage<T_SubStage, T_Args>[ 'progressLog' ]>[ 1 ],
         msgArgs?: Parameters<AbstractBuildStage<T_SubStage, T_Args>[ 'progressLog' ]>[ 2 ],
-        timeArgs?: Parameters<AbstractBuildStage<T_SubStage, T_Args>[ 'progressLog' ]>[ 3 ],
     ): void {
         if ( !this.args[ 'verbose' ] ) { return; }
-        this.progressLog( msg, level, msgArgs, timeArgs );
+        this.progressLog( msg, level, msgArgs );
     }
 
 
@@ -349,8 +344,10 @@ export namespace AbstractBuildStage {
          * The minimum log level to output.
          * 
          * @default 0
+         * 
+         * @since ___PKG_VERSION___ — Renamed from 'log-base-level' to logBaseLevel.
          */
-        'log-base-level': number;
+        logBaseLevel: number;
 
         /**
          * Display notice when starting/ending.

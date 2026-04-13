@@ -8,7 +8,7 @@
  * @license MIT
  */
 /**
- * Uses `Array.filter()` to create a unique array.
+ * Uses {@link Array.filter} to create a unique array.
  *
  * Filters out any item that is not the first instance of that item in the
  * array.

@@ -64,6 +64,8 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
     /**
      * Used for testing.
      *
+     * @category Static
+     *
      * @internal
      */
     static get sampleComplexObject(): VariableInspector.Samples.Vars;
@@ -82,9 +84,31 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      */
     readonly args: VariableInspector.Args;
     /**
+     * @category Args
+     *
      * @source
      */
-    readonly ARGS_DEFAULT: VariableInspector.Args;
+    get ARGS_DEFAULT(): {
+        childArgs: {
+            includeValue: true;
+        };
+        debug: false;
+        equalString: ' =';
+        fallbackToJSON: true;
+        formatter: null;
+        includePrefix: true;
+        includeType: true;
+        includeValue: true;
+        indent: '    ';
+        inspectClasses: false;
+        inspectFunctions: false;
+        locale: 'en-CA';
+        localizeDates: true;
+        localizeDateOptions: {};
+        localizeNumbers: false;
+        localizeNumberOptions: {};
+        stringQuoteCharacter: '"';
+    };
     /**
      * Value’s name, used in output.
      *
@@ -114,6 +138,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      */
     protected readonly _properties: VariableInspector.Child[];
     /**
+     * @category Constructor
      *
      * @param variable  Passing the variable to inspect within an single-prop object
      */
@@ -411,7 +436,7 @@ export declare namespace VariableInspector {
          */
         inspection: string;
         /**
-         * The provided name for the inspecte variable.
+         * The provided name for the inspected variable.
          *
          * @see {@link VariableInspector._name}
          */

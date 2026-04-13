@@ -32,18 +32,20 @@ and this project adheres to
 - Removed Json, Debug, Objects namespaces from types export
 
 ### Added
-- New functions (mostly from utility-sass and design-system-utilities):
-    - {@link default.hasIterator}
-    - {@link default.makeNumber}
-    - {@link default.makeNumberAsync}
-    - {@link default.mapToObject}
-    - {@link default.mapToObjectAsync}
-    - {@link default.objectFlatten}
-    - {@link default.objectFlattenAsync}
-    - {@link default.objectKeySort}
-    - {@link default.objectKeySortAsync}
-    - {@link default.objectMap}
-    - {@link default.objectMapAsync}
+- New functions (mostly brought over from
+  [utility-sass](https://github.com/maddimathon/utility-sass) and
+  [design-system-utilities](https://github.com/maddimathon/design-system-utilities)):
+    - {@link hasIterator}
+    - {@link makeNumber}
+    - {@link makeNumberAsync}
+    - {@link mapToObject}
+    - {@link mapToObjectAsync}
+    - {@link objectFlatten}
+    - {@link objectFlattenAsync}
+    - {@link objectKeySort}
+    - {@link objectKeySortAsync}
+    - {@link objectMap}
+    - {@link objectMapAsync}
 
 
 ## **2.0.0-beta.1** — 2025-10-31
@@ -75,25 +77,25 @@ External testing complete, upgrading to beta.
 ## **2.0.0-alpha** — 2025-06-09
 
 ### Renamed & Moved
-- AbstractBuildStage.runStage() changed name to runSubStage()
+- {@link AbstractBuildStage.runStage} changed name to {@link AbstractBuildStage.runSubStage}
 - Meta type namespace was changed to Debug
 - NodeFiles methods:
-    - deleteFiles() → delete()
-    - writeFiles() → write()
+    - {@link NodeFiles.deleteFiles} → {@link NodeFiles.delete}
+    - {@link NodeFiles.writeFiles} → {@link NodeFiles.write}
 - NodeFiles types:
-    - NodeFiles.Args.copyFileArgs → {@link NodeFiles.Args.copyFile}
-    - NodeFiles.Args.readDirArgs → {@link NodeFiles.Args.readDir}
-    - NodeFiles.Args.readFileArgs → {@link NodeFiles.Args.readFile}
-    - NodeFiles.Args.writeFileArgs → {@link NodeFiles.Args.writeFile}
+    - {@link NodeFiles.Args.copyFileArgs} → {@link NodeFiles.Args.copyFile}
+    - {@link NodeFiles.Args.readDirArgs} → {@link NodeFiles.Args.readDir}
+    - {@link NodeFiles.Args.readFileArgs} → {@link NodeFiles.Args.readFile}
+    - {@link NodeFiles.Args.writeFileArgs} → {@link NodeFiles.Args.writeFile}
 - The following type namespaces’ contents are now global: 
     - Arrays, Functions, Node, StringLiterals
 
 ### Removed
-- Removed distinguishArrays option from typeOf() and removed typeOf args
+- Removed distinguishArrays option from {@link typeOf} and removed {@link typeOf} args
   completely (now empty)
-- compileTypescript() method from AbstractStage (in build scripts)
-- abstractArgs() static method from AbstractConfigurableClass
-- abstractArgs() static method from AbstractBuildStage
+- compileTypescript() method from {@link AbstractStage} (in build scripts)
+- abstractArgs() static method from {@link AbstractConfigurableClass}
+- abstractArgs() static method from {@link AbstractBuildStage}
 - NodeFunctions class removed
 - Functions class removed
 - Types:
@@ -103,45 +105,45 @@ External testing complete, upgrading to beta.
     - NodeConsole.CmdErrorHandler
 
 ### Misc. Breaking
-- NodeConsole.prompt is now an instance of NodeConsole_Prompt and not a method
+- {@link NodeConsole.prompt} is now an instance of {@link NodeConsole_Prompt} and not a method
 
 ### Added
-- AbstractConfigurableClass method - valueOf()
-- NodeFiles methods (untested):
-    - basename()
-    - copyFile()
-    - dirname()
-    - exists()
-    - getStats()
-    - isDirectory()
-    - isFile()
-    - isSymLink()
-    - mkdir()
-    - readDir()
-- Additional NodeConsole_Prompt and NodeConsole_Error classes
-- Basic testing for NodeConsole.prompt (including types)
-- Added cmd method to AbstractStage (in build scripts) - better error handling
+- {@link AbstractConfigurableClass} method - {@link AbstractConfigurableClass.valueOf}
+- {@link NodeFiles} methods (untested):
+    - {@link basename}
+    - {@link copyFile}
+    - {@link dirname}
+    - {@link exists}
+    - {@link getStats}
+    - {@link isDirectory}
+    - {@link isFile}
+    - {@link isSymLink}
+    - {@link mkdir}
+    - {@link readDir}
+- Additional {@link NodeConsole_Prompt} and {@link NodeConsole_Error} classes
+- Basic testing for {@link NodeConsole.prompt} (including types)
+- Added cmd method to {@link AbstractStage} (in build scripts) - better error handling
 - Types:
     - Json namespace with common schemas - TsConfig, PackageJson
-    - Classify (with tests)
-    - RecursiveRequired (with tests)
-    - KeysOptional & KeysRequired (with tests)
-    - PartialExcept & RecursivePartialExcept (with tests)
-    - RequiredPartially & RecursiveRequiredPartially (with tests)
+    - {@link Classify} (with tests)
+    - {@link RecursiveRequired} (with tests)
+    - {@link KeysOptional} & {@link KeysRequired} (with tests)
+    - {@link PartialExcept} & {@link RecursivePartialExcept} (with tests)
+    - {@link RequiredPartially} & {@link RecursiveRequiredPartially} (with tests)
 
 ### Changed
-- NodeConsole - Better errors and error handling (incluing prompt timeouts and
+- {@link NodeConsole} - Better errors and error handling (incluing prompt timeouts and
   <kbd>cntl<kbd> + <kbd>C<kbd>)
-- Added constructor params optional param to AnyClass type
+- Added constructor params optional param to {@link AnyClass} type
 - Improved documentation
-- Improved Classify type
+- Improved {@link Classify} type
 
 ### Fixed
 - Corrected vulnerable outdated inherited dependencies — cross-spawn, lodash,
   minimatch
-- MessageMaker - default node painter now checks for the existance of
+- {@link MessageMaker} - default node painter now checks for the existance of
   process.stdout.getColorDepth function
-- Added tests Test types namespace
+- Added tests {@link Test} types namespace
 
 
 ## **1.0.0** — 2025-05-10
@@ -173,28 +175,30 @@ First full release!
 ## **0.4.2** — 2025-05-04
 
 ### Added
-- AbstractBuildStage new method - isSubStageIncluded()
+- {@link AbstractBuildStage} new method - {@link AbstractBuildStage.isSubStageIncluded}
 
 
 ## **0.4.0** — 2025-05-04
 
 ### Added
-- Added AbstractBuildStage - and updated build scripts accordingly
-- Added object type - MergeObjects - allows prettier types for merged objects
+- Added {@link AbstractBuildStage} - and updated build scripts accordingly
+- Added object type - {@link MergeObjects} - allows prettier types for merged objects
   (e.g., in mergeArgs())
 
 ### Changed
-- Moved AbstractStage (build script) properties to AbstractBuildStage - fns,
+- Moved {@link AbstractStage} (build script) properties to {@link AbstractBuildStage} - fns,
   stages
-- Moved AbstractStage (build script) methods to AbstractBuildStage -
-  buildArgs(), msgArgs(), progressLog(), run(), runStage(), startEndNotice(),
-  verboseLog()
+- Moved {@link AbstractStage} (build script) methods to {@link AbstractBuildStage} -
+  {@link AbstractBuildStage.buildArgs}, {@link AbstractBuildStage.msgArgs}, 
+  {@link AbstractBuildStage.progressLog}, {@link AbstractBuildStage.run}, 
+  {@link AbstractBuildStage.runStage}, {@link AbstractBuildStage.startEndNotice}, 
+  {@link AbstractBuildStage.verboseLog}
 
 ### Fixed
-- Slight improvements to mergeArgs() typing
+- Slight improvements to {@link mergeArgs} typing
 
 ### Removed
-- Removed replace-in-files-cli dependency and updated AbstractStage with custom
+- Removed replace-in-files-cli dependency and updated {@link AbstractStage} with custom
   implementation
 - Removed start npm scripts
 - Removed browser-sync dev dependency

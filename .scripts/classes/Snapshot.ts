@@ -89,7 +89,11 @@ export class Snapshot extends AbstractStage<Snapshot.Stages, Snapshot.Args> {
             },
             true
         );
-        this.args.debug && this.nc.timestampVarDump( { includePaths }, { depth: ( this.args.verbose ? 2 : 1 ) + ( this.args[ 'log-base-level' ] ?? 0 ) } );
+        this.args.debug && this.nc.vi.timestamp.log( { includePaths }, {
+            msg: {
+                depth: ( this.args.verbose ? 2 : 1 ) + this.args.logBaseLevel,
+            },
+        } );
 
         this.verboseLog( 'copying files...', 1 );
         this.copyFiles( includePaths, exportPath );

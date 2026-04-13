@@ -135,9 +135,9 @@ export class NodeConsole_Prompt {
         const prefixIndent = this.msg.args.msg.tab.repeat( depth )
             + ' '.repeat( hangingIndent.length + indent.length );
 
-        const prefixTimestamp = timestamp ? this.msg.timestampMsg( '', msgArgs ) : '';
+        const prefixTimestamp = timestamp ? this.msg.timestamped( '', msgArgs ) : '';
 
-        const prefixTimestampIndent = timestamp ? ' '.repeat( this.msg.timestampMsg( '' ).length ) : '';
+        const prefixTimestampIndent = timestamp ? ' '.repeat( this.msg.timestamped( '' ).length ) : '';
 
         const selectCursorIndent = prompter == 'select' ? '  ' : '';
 

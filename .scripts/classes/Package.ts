@@ -106,7 +106,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
 
         if ( which === 'start' && !this.args.releasing ) {
 
-            const depth = this.args[ 'log-base-level' ] ?? 0;
+            const depth = this.args.logBaseLevel ?? 0;
 
             const promptArgs: Omit<NodeConsole_Prompt.Config, "message"> = {
 
@@ -141,7 +141,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
         const snap = new Snapshot( {
             ...this.args as Snapshot.Args,
 
-            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
+            logBaseLevel: 1 + this.args.logBaseLevel,
 
             only: this.args[ 'only-snap' ],
             without: this.args[ 'without-snap' ],
@@ -157,7 +157,7 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
         const build = new Build( {
             ...this.args as Build.Args,
 
-            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
+            logBaseLevel: 1 + this.args.logBaseLevel,
 
             only: this.args[ 'only-build' ],
             without: this.args[ 'without-build' ],
@@ -230,9 +230,11 @@ export class Package extends AbstractStage<Package.Stages, Package.Args> {
             try {
                 this.fs.delete( [ outDir ] );
             } catch ( error ) {
-                this.nc.timestampVarDump( { error }, {
-                    clr: 'red',
-                    depth: ( this.args.verbose ? 4 : 3 ),
+                this.nc.vi.timestamp.log( { error }, {
+                    msg: {
+                        clr: 'red',
+                        depth: ( this.args.verbose ? 4 : 3 ),
+                    },
                 } );
             }
         }

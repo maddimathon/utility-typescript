@@ -28,6 +28,14 @@ import { NodeFiles } from '../NodeFiles.js';
  * @since 0.4.2
  */
 export class AbstractBuildStage {
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    args;
     /**
      * Build a complete args object.
      *
@@ -36,6 +44,24 @@ export class AbstractBuildStage {
     buildArgs(args) {
         return mergeArgs(this.ARGS_DEFAULT, args, true);
     }
+    /**
+     * Colour used for colour-coding this class.
+     *
+     * @category Args
+     */
+    clr;
+    /**
+     * The instance of {@link NodeFiles} used within this class.
+     *
+     * @category Classes
+     */
+    fs;
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     *
+     * @category Classes
+     */
+    nc;
     /* CONSTRUCTOR
      * ====================================================================== */
     constructor(args = {}, clr = 'black', utils = {}) {
@@ -77,12 +103,11 @@ export class AbstractBuildStage {
      *
      * @param level     Depth level for this message.
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      *
      * @return  An object with arguments separated by message (`msg`) and time.
      */
-    msgArgs(level = 0, msgArgs = {}, timeArgs = {}) {
-        const depth = level + Number(this.args['log-base-level'] ?? 0);
+    msgArgs(level = 0, { time: timeArgs = {}, ...msgArgs } = {}) {
+        const depth = level + Number(this.args.logBaseLevel);
         const msg = {
             bold: depth == 0 || level <= 1,
             clr: this.clr,
@@ -91,9 +116,7 @@ export class AbstractBuildStage {
             linesOut: 0,
             ...msgArgs,
         };
-        const time = {
-            ...timeArgs,
-        };
+        const time = timeArgs;
         if (level <= 0) {
             msg.linesIn = msgArgs.linesIn ?? 2;
         }
@@ -109,7 +132,7 @@ export class AbstractBuildStage {
         if (level > 3) {
             msg.clr = msgArgs.clr ?? 'grey';
         }
-        return { msg, time };
+        return { ...msg, time };
     }
     /**
      * Prints a timestamped log message to the console. Only if
@@ -121,16 +144,15 @@ export class AbstractBuildStage {
      *
      * @param msg       The message(s) to print to the console.
      * @param level     Depth level for this message (above the value of
-     *                  {@link AbstractBuildStage.T_Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     *                  {@link AbstractBuildStage.T_Args.logBaseLevel|`this.args.logBaseLevel`}).
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
-    progressLog(msg, level, msgArgs = {}, timeArgs = {}) {
+    progressLog(msg, level, msgArgs = {}) {
         if (this.args['progress'] === false) {
             return;
         }
-        const args = this.msgArgs(level, msgArgs, timeArgs);
-        this.nc.timestampLog(msg, args.msg, args.time);
+        const args = this.msgArgs(level, msgArgs);
+        this.nc.timestamp.log(msg, args);
     }
     /**
      * Method for printing a log message to the console. Only if
@@ -142,15 +164,14 @@ export class AbstractBuildStage {
      *
      * @param msg       The message(s) to print to the console.
      * @param level     Depth level for this message (above the value of
-     *                  {@link AbstractBuildStage.T_Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     *                  {@link AbstractBuildStage.T_Args.logBaseLevel|`this.args.logBaseLevel`}).
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
-    verboseLog(msg, level, msgArgs, timeArgs) {
+    verboseLog(msg, level, msgArgs) {
         if (!this.args['verbose']) {
             return;
         }
-        this.progressLog(msg, level, msgArgs, timeArgs);
+        this.progressLog(msg, level, msgArgs);
     }
     /* RUNNING ===================================== */
     /**

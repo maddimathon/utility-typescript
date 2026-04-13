@@ -27,18 +27,17 @@ export declare class MessageMaker {
      *
      * Used only by {@link MessageMaker.buildArgs}.
      *
-     * @category Static
-     *
      * @param classArgs  A complete arguments object.  Requires complete to
      *                   avoid building complete arguments multiple times.
      */
     protected static defaultPainter(classArgs: MessageMaker.Args): MessageMaker.Args['painter'];
     /**
      * A completed args object.
-     *
-     * @category Args
      */
     readonly args: MessageMaker.Args;
+    /**
+     * Default arguments.
+     */
     get ARGS_DEFAULT(): {
         ansiColours: {
             4: {
@@ -121,22 +120,16 @@ export declare class MessageMaker {
     };
     /**
      * Build a complete args object.
-     *
-     * @category Args
      */
     buildArgs(args?: RecursivePartial<MessageMaker.Args>): MessageMaker.Args;
     /**
      * Build a complete {@link MessageMaker.MsgArgs} object.
-     *
-     * @category Args
      */
     msgArgs<InputArgs extends Partial<MessageMaker.MsgArgs>>(args?: InputArgs): MessageMaker.MsgArgs & InputArgs;
     constructor(args?: RecursivePartial<MessageMaker.Args>);
     /**
      * Joins string arrays with a single new line and adds an indent to the
      * beginning of every line, and adds next level of indent for child arrays.
-     *
-     * @category Formatters
      *
      * @param lines   String to implode. Arrays are joined with `'\n'`.
      * @param indent  Optional. Default `this.args.msg.tab`.
@@ -150,8 +143,6 @@ export declare class MessageMaker {
      * Does not wrap or split it (assumes this has already been done).  Applies
      * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
      *
-     * @category Messagers
-     *
      * @param line    String to map. Already wrapped to line width, if applicable.
      * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
      * @param prefix  Optional. Unpainted string added before the line. Helpful for hanging indents. Default ''.
@@ -160,8 +151,6 @@ export declare class MessageMaker {
     /**
      * Formats the given message according to options.
      *
-     * @category Messagers
-     *
      * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
      */
@@ -169,31 +158,25 @@ export declare class MessageMaker {
     /**
      * Formats given messages individually and then joins them on return.
      *
-     * @category Messagers
-     *
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from msgs to bulk.
      */
-    msgs(messages: MessageMaker.BulkMsgs, universalArgs?: Partial<MessageMaker.BulkMsgArgs>): string;
+    bulk(messages: MessageMaker.BulkMsgs, universalArgs?: Partial<MessageMaker.BulkMsgArgs>): string;
     /**
      * Applies colour and font styles to an message for output.
-     *
-     * @category Stylers
      */
     painter(msg: string, args?: Partial<MessageMaker.PainterArgs>): string;
     /**
-     * Formats the given message according to options.
-     *
-     * @category Messagers
+     * Formats a message prepended with a timestamp.
      *
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
+     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker.msgArgs}.
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from timestampMsg to timestamped. Removed `timeArgs` param and switched to a time prop in `msgArgs`.
      */
-    timestampMsg(msg: string | string[] | MessageMaker.BulkMsgs, msgArgs?: RecursivePartial<MessageMaker.BulkMsgArgs>, timeArgs?: Partial<MessageMaker.MsgArgs> & Partial<{
-        date: Date;
-        stamp: timestamp.Args_Input;
-    }>): string;
+    timestamped(msg: string | string[] | MessageMaker.BulkMsgs, { time: timeArgs, ...msgArgs }?: RecursivePartial<MessageMaker.TimestampedArgs>): string;
 }
 /**
  * Used only for {@link MessageMaker}.
@@ -204,7 +187,7 @@ export declare class MessageMaker {
  */
 export declare namespace MessageMaker {
     /**
-     * Ansi colour codes for the default node `{@link MessageMaker.Args}.painter`
+     * Ansi colour codes for the default node {@link MessageMaker.Args}.painter
      * function.
      *
      * @since 0.1.1
@@ -372,7 +355,7 @@ export declare namespace MessageMaker {
         tab: string;
     }
     /**
-     * Optional configuration for {@link MessageMaker.msgs}.
+     * Optional configuration for {@link MessageMaker.bulk}.
      *
      * @since 0.1.1
      */
@@ -421,5 +404,16 @@ export declare namespace MessageMaker {
          * @default false
          */
         italic: boolean;
+    }
+    /**
+     * Optional args for {@link MessageMaker.timestamped}.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    interface TimestampedArgs extends Omit<BulkMsgArgs, 'depth'> {
+        time: Partial<Omit<MsgArgs, 'depth' | 'fullWidth' | 'hangingIndent' | 'indent' | 'maxWidth' | 'minWidth' | 'tab'> & {
+            date: Date;
+            stamp: timestamp.Args_Input;
+        }>;
     }
 }

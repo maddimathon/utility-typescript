@@ -78,6 +78,8 @@ export class VariableInspector {
     /**
      * Used for testing.
      *
+     * @category Static
+     *
      * @internal
      */
     static get sampleComplexObject() {
@@ -133,17 +135,21 @@ export class VariableInspector {
         console.log('\n');
         return complexVarInspect;
     }
-    /* CONSTRUCTOR
+    /* LOCAL PROPERTIES
      * ====================================================================== */
     /**
+     * A completed args object.
      *
-     * @param variable  Passing the variable to inspect within an single-prop object
+     * @category Args
      */
-    constructor(variable, args = {}) {
-        /**
-         * @source
-         */
-        this.ARGS_DEFAULT = {
+    args;
+    /**
+     * @category Args
+     *
+     * @source
+     */
+    get ARGS_DEFAULT() {
+        return {
             childArgs: {
                 includeValue: true,
             },
@@ -164,6 +170,43 @@ export class VariableInspector {
             localizeNumberOptions: {},
             stringQuoteCharacter: '"',
         };
+    }
+    /**
+     * Value’s name, used in output.
+     *
+     * @category Inputs
+     */
+    _name;
+    /**
+     * Value to inspect.
+     *
+     * @category Inputs
+     *
+     * @expandType T_Type
+     */
+    _rawValue;
+    /**
+     * Alias for this.typeOf( this._rawValue ).
+     *
+     * @category Inputs
+     *
+     * @expandType typeOf.Return
+     */
+    _typeOf;
+    /**
+     * These are the properties of the input object, if any.
+     *
+     * @category Inputs
+     */
+    _properties;
+    /* CONSTRUCTOR
+     * ====================================================================== */
+    /**
+     * @category Constructor
+     *
+     * @param variable  Passing the variable to inspect within an single-prop object
+     */
+    constructor(variable, args = {}) {
         this.args = {
             ...this.ARGS_DEFAULT,
             ...args,
@@ -630,11 +673,10 @@ export class VariableInspector {
     let Samples;
     (function (Samples) {
         class TestClass {
-            constructor() {
-                this.property = 'property sample value';
-                this._getSet = '_getSet sample value';
-            }
+            undefinedProperty;
+            property = 'property sample value';
             static methodName(param) { return param; }
+            _getSet = '_getSet sample value';
             get getSetProp() { return this._getSet; }
             set getSetProp(param) { this._getSet = param; }
         }

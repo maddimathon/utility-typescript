@@ -22,19 +22,21 @@ and this project adheres to
 <li>Removed Json, Debug, Objects namespaces from types export</li>
 </ul>
 <h3 id="added" class="tsd-anchor-link">Added<a href="#added" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>New functions (mostly from utility-sass and design-system-utilities):
+<li>New functions (mostly brought over from
+<a href="https://github.com/maddimathon/utility-sass" target="_blank" class="external">utility-sass</a> and
+<a href="https://github.com/maddimathon/design-system-utilities" target="_blank" class="external">design-system-utilities</a>):
 <ul>
-<li>default.hasIterator</li>
-<li>default.makeNumber</li>
-<li>default.makeNumberAsync</li>
-<li>default.mapToObject</li>
-<li>default.mapToObjectAsync</li>
-<li>default.objectFlatten</li>
-<li>default.objectFlattenAsync</li>
-<li>default.objectKeySort</li>
-<li>default.objectKeySortAsync</li>
-<li>default.objectMap</li>
-<li>default.objectMapAsync</li>
+<li><a href="hasIterator.html" class="tsd-kind-function"> hasIterator</a></li>
+<li><a href="makeNumber.html" class="tsd-kind-function"> makeNumber</a></li>
+<li><a href="makeNumberAsync.html" class="tsd-kind-function"> makeNumberAsync</a></li>
+<li><a href="mapToObject.html" class="tsd-kind-function"> mapToObject</a></li>
+<li><a href="mapToObjectAsync.html" class="tsd-kind-function"> mapToObjectAsync</a></li>
+<li><a href="objectFlatten.html" class="tsd-kind-function"> objectFlatten</a></li>
+<li><a href="objectFlattenAsync.html" class="tsd-kind-function"> objectFlattenAsync</a></li>
+<li><a href="objectKeySort.html" class="tsd-kind-function"> objectKeySort</a></li>
+<li><a href="objectKeySortAsync.html" class="tsd-kind-function"> objectKeySortAsync</a></li>
+<li><a href="objectMap.html" class="tsd-kind-function"> objectMap</a></li>
+<li><a href="objectMapAsync.html" class="tsd-kind-function"> objectMapAsync</a></li>
 </ul>
 </li>
 </ul>
@@ -54,12 +56,12 @@ NodeFiles.mkdir,  NodeFiles.readDir,  NodeFiles.readFile</li>
 <li>Fixed  NodeFiles.mkdir to be recursive by default</li>
 </ul>
 <h2 id="200-alpha--2025-06-09" class="tsd-anchor-link"><strong>2.0.0-alpha</strong> — 2025-06-09<a href="#200-alpha--2025-06-09" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="renamed--moved" class="tsd-anchor-link">Renamed &amp; Moved<a href="#renamed--moved" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>AbstractBuildStage.runStage() changed name to runSubStage()</li>
+<li>AbstractBuildStage.runStage changed name to  AbstractBuildStage.runSubStage</li>
 <li>Meta type namespace was changed to Debug</li>
 <li>NodeFiles methods:
 <ul>
-<li>deleteFiles() → delete()</li>
-<li>writeFiles() → write()</li>
+<li>NodeFiles.deleteFiles →  NodeFiles.delete</li>
+<li>NodeFiles.writeFiles →  NodeFiles.write</li>
 </ul>
 </li>
 <li>NodeFiles types:
@@ -77,11 +79,11 @@ NodeFiles.mkdir,  NodeFiles.readDir,  NodeFiles.readFile</li>
 </li>
 </ul>
 <h3 id="removed-1" class="tsd-anchor-link">Removed<a href="#removed-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Removed distinguishArrays option from typeOf() and removed typeOf args
+<li>Removed distinguishArrays option from <a href="typeOf.html" class="tsd-kind-function"> typeOf</a> and removed <a href="typeOf.html" class="tsd-kind-function"> typeOf</a> args
 completely (now empty)</li>
-<li>compileTypescript() method from AbstractStage (in build scripts)</li>
-<li>abstractArgs() static method from AbstractConfigurableClass</li>
-<li>abstractArgs() static method from AbstractBuildStage</li>
+<li>compileTypescript() method from  AbstractStage (in build scripts)</li>
+<li>abstractArgs() static method from  AbstractConfigurableClass</li>
+<li>abstractArgs() static method from  AbstractBuildStage</li>
 <li>NodeFunctions class removed</li>
 <li>Functions class removed</li>
 <li>Types:
@@ -94,51 +96,51 @@ completely (now empty)</li>
 </li>
 </ul>
 <h3 id="misc-breaking" class="tsd-anchor-link">Misc. Breaking<a href="#misc-breaking" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>NodeConsole.prompt is now an instance of NodeConsole_Prompt and not a method</li>
+<li>NodeConsole.prompt is now an instance of  NodeConsole_Prompt and not a method</li>
 </ul>
 <h3 id="added-2" class="tsd-anchor-link">Added<a href="#added-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>AbstractConfigurableClass method - valueOf()</li>
+<li>AbstractConfigurableClass method -  AbstractConfigurableClass.valueOf</li>
 <li>NodeFiles methods (untested):
 <ul>
-<li>basename()</li>
-<li>copyFile()</li>
-<li>dirname()</li>
-<li>exists()</li>
-<li>getStats()</li>
-<li>isDirectory()</li>
-<li>isFile()</li>
-<li>isSymLink()</li>
-<li>mkdir()</li>
-<li>readDir()</li>
+<li>basename</li>
+<li>copyFile</li>
+<li>dirname</li>
+<li>exists</li>
+<li>getStats</li>
+<li>isDirectory</li>
+<li>isFile</li>
+<li>isSymLink</li>
+<li>mkdir</li>
+<li>readDir</li>
 </ul>
 </li>
-<li>Additional NodeConsole_Prompt and NodeConsole_Error classes</li>
-<li>Basic testing for NodeConsole.prompt (including types)</li>
-<li>Added cmd method to AbstractStage (in build scripts) - better error handling</li>
+<li>Additional  NodeConsole_Prompt and  NodeConsole_Error classes</li>
+<li>Basic testing for  NodeConsole.prompt (including types)</li>
+<li>Added cmd method to  AbstractStage (in build scripts) - better error handling</li>
 <li>Types:
 <ul>
 <li>Json namespace with common schemas - TsConfig, PackageJson</li>
 <li>Classify (with tests)</li>
 <li>RecursiveRequired (with tests)</li>
-<li>KeysOptional &amp; KeysRequired (with tests)</li>
-<li>PartialExcept &amp; RecursivePartialExcept (with tests)</li>
-<li>RequiredPartially &amp; RecursiveRequiredPartially (with tests)</li>
+<li>KeysOptional &amp;  KeysRequired (with tests)</li>
+<li>PartialExcept &amp;  RecursivePartialExcept (with tests)</li>
+<li>RequiredPartially &amp;  RecursiveRequiredPartially (with tests)</li>
 </ul>
 </li>
 </ul>
 <h3 id="changed" class="tsd-anchor-link">Changed<a href="#changed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
 <li>NodeConsole - Better errors and error handling (incluing prompt timeouts and
 <kbd>cntl<kbd> + <kbd>C<kbd>)</li>
-<li>Added constructor params optional param to AnyClass type</li>
+<li>Added constructor params optional param to  AnyClass type</li>
 <li>Improved documentation</li>
-<li>Improved Classify type</li>
+<li>Improved  Classify type</li>
 </ul>
 <h3 id="fixed-2" class="tsd-anchor-link">Fixed<a href="#fixed-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
 <li>Corrected vulnerable outdated inherited dependencies — cross-spawn, lodash,
 minimatch</li>
-<li>MessageMaker - default node painter now checks for the existance of
+<li><a href="MessageMaker.html" class="tsd-kind-class"> MessageMaker</a> - default node painter now checks for the existance of
 process.stdout.getColorDepth function</li>
-<li>Added tests Test types namespace</li>
+<li>Added tests  Test types namespace</li>
 </ul>
 <h2 id="100--2025-05-10" class="tsd-anchor-link"><strong>1.0.0</strong> — 2025-05-10<a href="#100--2025-05-10" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>First full release!</p>
 <h3 id="breaking" class="tsd-anchor-link">Breaking<a href="#breaking" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
@@ -157,25 +159,27 @@ process.stdout.getColorDepth function</li>
 significantly</li>
 </ul>
 <h2 id="042--2025-05-04" class="tsd-anchor-link"><strong>0.4.2</strong> — 2025-05-04<a href="#042--2025-05-04" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="added-3" class="tsd-anchor-link">Added<a href="#added-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>AbstractBuildStage new method - isSubStageIncluded()</li>
+<li>AbstractBuildStage new method -  AbstractBuildStage.isSubStageIncluded</li>
 </ul>
 <h2 id="040--2025-05-04" class="tsd-anchor-link"><strong>0.4.0</strong> — 2025-05-04<a href="#040--2025-05-04" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="added-4" class="tsd-anchor-link">Added<a href="#added-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Added AbstractBuildStage - and updated build scripts accordingly</li>
-<li>Added object type - MergeObjects - allows prettier types for merged objects
+<li>Added  AbstractBuildStage - and updated build scripts accordingly</li>
+<li>Added object type -  MergeObjects - allows prettier types for merged objects
 (e.g., in mergeArgs())</li>
 </ul>
 <h3 id="changed-2" class="tsd-anchor-link">Changed<a href="#changed-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Moved AbstractStage (build script) properties to AbstractBuildStage - fns,
+<li>Moved  AbstractStage (build script) properties to  AbstractBuildStage - fns,
 stages</li>
-<li>Moved AbstractStage (build script) methods to AbstractBuildStage -
-buildArgs(), msgArgs(), progressLog(), run(), runStage(), startEndNotice(),
-verboseLog()</li>
+<li>Moved  AbstractStage (build script) methods to  AbstractBuildStage -
+AbstractBuildStage.buildArgs,  AbstractBuildStage.msgArgs,
+AbstractBuildStage.progressLog,  AbstractBuildStage.run,
+AbstractBuildStage.runStage,  AbstractBuildStage.startEndNotice,
+AbstractBuildStage.verboseLog</li>
 </ul>
 <h3 id="fixed-5" class="tsd-anchor-link">Fixed<a href="#fixed-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Slight improvements to mergeArgs() typing</li>
+<li>Slight improvements to <a href="mergeArgs.html" class="tsd-kind-function"> mergeArgs</a> typing</li>
 </ul>
 <h3 id="removed-2" class="tsd-anchor-link">Removed<a href="#removed-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>Removed replace-in-files-cli dependency and updated AbstractStage with custom
+<li>Removed replace-in-files-cli dependency and updated  AbstractStage with custom
 implementation</li>
 <li>Removed start npm scripts</li>
 <li>Removed browser-sync dev dependency</li>

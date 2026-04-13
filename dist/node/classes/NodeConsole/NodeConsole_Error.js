@@ -18,6 +18,16 @@
  * @private
  */
 export class NodeConsole_Error extends Error {
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * Represents the name for the type of error.
+     */
+    cause;
+    /**
+     * Represents the name for the type of error.
+     */
+    name = 'NodeConsole_Error';
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -25,10 +35,6 @@ export class NodeConsole_Error extends Error {
      */
     constructor(msg, args) {
         super(msg);
-        /**
-         * Represents the name for the type of error.
-         */
-        this.name = 'NodeConsole_Error';
         this.cause = args.cause;
     }
     /* LOCAL METHODS

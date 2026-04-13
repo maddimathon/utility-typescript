@@ -1,7 +1,7 @@
 /**
  * Exports all global types (no JavaScript).
  *
- * @category Exports
+ * @category Secondary Endpoints
  *
  * @module types
  *

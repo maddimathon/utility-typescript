@@ -2,9 +2,11 @@
     "compilerOptions": {
         "allowUnusedLabels": false,
         "alwaysStrict": true,
+        "composite": true,
         "esModuleInterop": true,
         "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
+        "isolatedDeclarations": true,
         "isolatedModules": true,
         "module": "Node18",
         "moduleResolution": "Node16",
@@ -29,7 +31,7 @@
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
-        "target": "ES2021",
+        "target": "ES2022",
         "useUnknownInCatchVariables": true,
         "verbatimModuleSyntax": true
     },

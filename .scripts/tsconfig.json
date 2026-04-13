@@ -8,9 +8,11 @@
         ".scripts/**/*",
     ],
     "compilerOptions": {
+        "composite": false,
         "declaration": false,
-        "isolatedDeclarations": false,
         "exactOptionalPropertyTypes": false,
+        "isolatedDeclarations": false,
+        "isolatedModules": false,
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "noEmit": true,

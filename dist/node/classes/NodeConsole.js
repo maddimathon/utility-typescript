@@ -60,8 +60,8 @@ export class NodeConsole {
         ]);
         if (args.debug) {
             nc.separator();
-            nc.logs([
-                ['This is a completely default array of messages (via logs).'],
+            nc.bulk.log([
+                ['This is a completely default array of messages (via bulk.log).'],
                 [''],
                 ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.'],
                 ['Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.'],
@@ -106,7 +106,7 @@ export class NodeConsole {
                 }
             ]);
         }
-        nc.logs(clrMsgs, { joiner: '\n' });
+        nc.bulk.log(clrMsgs, { joiner: '\n' });
         const clrFlagMsgs = [];
         for (const clr of colours) {
             clrFlagMsgs.push([
@@ -120,7 +120,7 @@ export class NodeConsole {
             ]);
         }
         nc.h3('H3: Flags');
-        nc.logs(clrFlagMsgs, { joiner: '\n' });
+        nc.bulk.log(clrFlagMsgs, { joiner: '\n' });
         const clrReverseFlagMsgs = [];
         for (const clr of colours) {
             clrReverseFlagMsgs.push([
@@ -134,7 +134,7 @@ export class NodeConsole {
             ]);
         }
         nc.heading('H4: Reversed Flags', 4);
-        nc.logs(clrReverseFlagMsgs, { joiner: '\n' });
+        nc.bulk.log(clrReverseFlagMsgs, { joiner: '\n' });
         nc.heading('H4: Random Test Heading', 4);
         nc.h2('H2: Styles');
         nc.log('This is a red, italic message.', { clr: 'red', italic: true, });
@@ -148,17 +148,17 @@ export class NodeConsole {
             ], { depth: i });
         }
         nc.h2('H2: Timestamps');
-        nc.timestampLog('This is a red, italic timestamped message.', { clr: 'red', italic: true, });
-        nc.timestampLog('This is a turquoise, bold timestamped message.', { clr: 'turquoise', bold: true, });
-        nc.timestampLog('This timestamped message is both bold *and* italic.', { bold: true, italic: true, });
+        nc.timestamp.log('This is a red, italic timestamped message.', { clr: 'red', italic: true, });
+        nc.timestamp.log('This is a turquoise, bold timestamped message.', { clr: 'turquoise', bold: true, });
+        nc.timestamp.log('This timestamped message is both bold *and* italic.', { bold: true, italic: true, });
         if (args.debug) {
-            nc.timestampLog([
+            nc.timestamp.log([
                 'This is an array timestamped message.',
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.',
                 'Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis. Donec tincidunt ex mollis, gravida lectus ac, malesuada est. Aenean sit amet velit dapibus, auctor odio in, fringilla velit. Nullam ut pellentesque dui, sit amet dapibus nibh.',
                 'Sed ultricies viverra nisi, in sodales mauris vehicula et. Maecenas ut pharetra orci.',
             ], { clr: 'purple', });
-            nc.timestampLog([
+            nc.timestamp.log([
                 ['This is a bulk timestamped message.'],
                 ['I AM BLUE.', { clr: 'blue', flag: true, }],
                 ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend.'],
@@ -168,7 +168,7 @@ export class NodeConsole {
         }
         nc.h3('H3: Timestamped Depth');
         for (let i = 0; i <= 7; i++) {
-            nc.timestampLog([
+            nc.timestamp.log([
                 `This is a timestamped depth level ${i} message.`,
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi scelerisque dui eu turpis semper eleifend. Cras congue orci quis justo tristique vehicula. Suspendisse pretium eros et mauris vehicula, non facilisis libero venenatis.',
             ], { depth: i });
@@ -176,8 +176,8 @@ export class NodeConsole {
         if (args.debug) {
             nc.h2('H2: Variable Inspections');
             const exampleVariable = VariableInspector.sampleComplexObject;
-            nc.varDump({ exampleVariable });
-            nc.timestampVarDump({ exampleVariable });
+            nc.vi.log({ exampleVariable });
+            nc.vi.timestamp.log({ exampleVariable });
         }
         nc.h2('H2: Interactivity');
         await NodeConsole.sampleInteractivity(nc, args);
@@ -200,21 +200,23 @@ export class NodeConsole {
                 },
             }, args, true));
         }
-        // nc.timestampVarDump( { 'nc.args': nc.args } );
-        // nc.timestampLog( '{ 'nc.args': nc.args }' );
+        // nc.vi.timestamp.log( { 'nc.args': nc.args } );
+        // nc.timestamp.log( '{ 'nc.args': nc.args }' );
         const errorHandler = (error) => {
             if (error instanceof NodeConsole_Error) {
-                nc.timestampLog(error.toString(), {
+                nc.timestamp.log(error.toString(), {
                     clr: 'red',
                     depth: 1,
                     maxWidth: null,
                 });
             }
             else {
-                nc.timestampVarDump({ error }, {
-                    clr: 'red',
-                    depth: 1,
-                    maxWidth: null,
+                nc.vi.timestamp.log({ error }, {
+                    msg: {
+                        clr: 'red',
+                        depth: 1,
+                        maxWidth: null,
+                    },
                 });
             }
             return undefined;
@@ -227,21 +229,24 @@ export class NodeConsole {
          */
         const runAndDump = async (run, msgArgs = {}) => {
             try {
-                const inspectorVar = { result: await run({ msgArgs }).catch(errorHandler) };
-                const inspectorMsgArgs = {
-                    bold: false,
-                    italic: false,
-                    depth: 1,
-                    ...msgArgs ?? {},
+                const inspectorVar = {
+                    result: await run({ msgArgs }).catch(errorHandler),
                 };
-                nc.timestampVarDump(inspectorVar, inspectorMsgArgs);
+                nc.vi.timestamp.log(inspectorVar, {
+                    msg: {
+                        bold: false,
+                        italic: false,
+                        depth: 1,
+                        ...msgArgs ?? {},
+                    },
+                });
             }
             catch (error) {
                 errorHandler(error);
             }
         };
         nc.h3('H3: Bool');
-        nc.timestampLog('');
+        nc.timestamp.log('');
         await runAndDump(async (args) => nc.prompt.bool({
             ...args,
             message: 'This bool method should let you say yes or no:',
@@ -363,6 +368,57 @@ export class NodeConsole {
         }
         return nc;
     }
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * A local instance of {@link MessageMaker} initialized using
+     * `{@link NodeConsole.Args}.msgMaker`.
+     *
+     * @category Utilities
+     */
+    msg;
+    /**
+     * Public alias for internal prompting methods.
+     *
+     * @category Interactive
+     */
+    prompt;
+    /* Args ===================================== */
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    args;
+    /**
+     * @category Args
+     *
+     * @source
+     */
+    get ARGS_DEFAULT() {
+        return {
+            argsRecursive: true,
+            msgMaker: {
+                msg: {
+                    maxWidth: 100,
+                    tab: '        ',
+                },
+                paintFormat: 'node',
+            },
+            prompt: {
+                throwError: 'auto',
+                timeout: 300000,
+            },
+            separator: null,
+            styleClrs: {
+                disabled: 'grey',
+                error: 'red',
+                help: 'grey',
+                highlight: 'purple',
+            },
+            varInspect: {},
+        };
+    }
     /**
      * Build a complete args object.
      *
@@ -389,33 +445,6 @@ export class NodeConsole {
     /* CONSTRUCTOR
      * ====================================================================== */
     constructor(args = {}) {
-        /**
-         * @category Args
-         *
-         * @source
-         */
-        this.ARGS_DEFAULT = {
-            argsRecursive: true,
-            msgMaker: {
-                msg: {
-                    maxWidth: 100,
-                    tab: '        ',
-                },
-                paintFormat: 'node',
-            },
-            prompt: {
-                throwError: 'auto',
-                timeout: 300000,
-            },
-            separator: null,
-            styleClrs: {
-                disabled: 'grey',
-                error: 'red',
-                help: 'grey',
-                highlight: 'purple',
-            },
-            varInspect: {},
-        };
         this.args = this.buildArgs(args);
         this.msg = new MessageMaker(this.args.msgMaker);
         this.prompt = new NodeConsole_Prompt(this.msg, this.args);
@@ -499,10 +528,114 @@ export class NodeConsole {
         return arr.join(' ');
     }
     /* Outputters ===================================== */
+    #bulk = null;
+    /**
+     * Output longer messages with per-section formatting.
+     *
+     * @category Outputters
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    get bulk() {
+        // returns
+        if (this.#bulk !== null) {
+            return this.#bulk;
+        }
+        const log = (msgs, args = {}) => {
+            if (!Array.isArray(msgs)) {
+                msgs = [msgs];
+            }
+            console[args.via ?? 'log'](this.msg.bulk(msgs, args));
+        };
+        const debug = (msgs, args = {}) => {
+            log(msgs, { ...args, via: 'debug' });
+        };
+        const warn = (msgs, args = {}) => {
+            log(msgs, { ...args, via: 'warn' });
+        };
+        this.#bulk = {
+            debug: debug.bind(this),
+            log: log.bind(this),
+            warn: warn.bind(this),
+        };
+        return this.#bulk;
+    }
+    #timestamp = null;
+    /**
+     * Output messages (long or short) prepended with a timestamp.
+     *
+     * @category Outputters
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    get timestamp() {
+        // returns
+        if (this.#timestamp !== null) {
+            return this.#timestamp;
+        }
+        const log = (msg, args = {}) => {
+            console[args.via ?? 'log'](this.msg.timestamped(msg, args));
+        };
+        const debug = (msg, args = {}) => {
+            log(msg, { ...args, via: 'debug' });
+        };
+        const warn = (msg, args = {}) => {
+            log(msg, { ...args, via: 'warn' });
+        };
+        this.#timestamp = {
+            debug: debug.bind(this),
+            log: log.bind(this),
+            warn: warn.bind(this),
+        };
+        return this.#timestamp;
+    }
+    #vi = null;
+    /**
+     * Output an inspection of the given variable to the console, with a timestamp if desired.
+     *
+     * @category Outputters
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    get vi() {
+        // returns
+        if (this.#vi !== null) {
+            return this.#vi;
+        }
+        const log = (variable, { msg: msgArgs, ...inspectArgs } = {}) => this.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), msgArgs);
+        const debug = (variable, { msg: msgArgs, ...inspectArgs } = {}) => this.debug(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), msgArgs);
+        const warn = (variable, { msg: msgArgs, ...inspectArgs } = {}) => this.warn(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), msgArgs);
+        const timestampLog = (variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this.timestamp.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), {
+            ...msgArgs,
+            time: timeArgs,
+        });
+        const timestampDebug = (variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this.timestamp.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), {
+            ...msgArgs,
+            time: timeArgs,
+        });
+        const timestampWarn = (variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this.timestamp.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), {
+            ...msgArgs,
+            time: timeArgs,
+        });
+        this.#vi = {
+            debug: debug.bind(this),
+            log: log.bind(this),
+            warn: warn.bind(this),
+            timestamp: {
+                debug: timestampDebug.bind(this),
+                log: timestampLog.bind(this),
+                warn: timestampWarn.bind(this),
+            },
+        };
+        return this.#vi;
+    }
     /**
      * Outputs the given message to the console.
      *
      * @category Outputters
+     *
+     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+     * @param args  Optional. Configuration for the output and message, if any.
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      */
@@ -515,39 +648,36 @@ export class NodeConsole {
      * @category Outputters
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.log} instead.
      */
-    logs(msgs, args = {}) {
-        if (!Array.isArray(msgs)) {
-            msgs = [msgs];
-        }
-        console[args.via ?? 'log'](this.msg.msgs(msgs, args));
+    logs(...args) {
+        this.bulk.log(...args);
     }
     /**
      * Outputs the given message to the console prefixed with a timestamp.
      *
      * @category Outputters
      *
-     * @see {@link MessageMaker.timestampMsg}  Used to format the message.
-     *
-     * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param args      Optional. Overrides for default message arguments. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default message arguments. Used only for the timestamp.
+     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.timestamp.log} instead.
      */
-    timestampLog(msg, args = {}, timeArgs = {}) {
-        console[args.via ?? 'log'](this.msg.timestampMsg(msg, args, timeArgs));
+    timestampLog(...args) {
+        this.timestamp.log(...args);
     }
     /**
      * Outputs the given message to the console prefixed with a timestamp.
      *
      * @category Outputters
      *
-     * @see {@link NodeConsole.timestampLog}  Used to print the inspection.
+     * @see {@link NodeConsole.timestamp.log}  Used to print the inspection.
      *
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.vi.timestamp.log} instead.
      */
-    timestampVarDump(variable, args = {}, timeArgs = {}) {
-        this.timestampLog(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, args, true)), args, timeArgs);
+    timestampVarDump(...args) {
+        this.vi.timestamp.log(...args);
     }
     /**
      * Outputs an inspection of the given variable to the console.
@@ -558,9 +688,11 @@ export class NodeConsole {
      *
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.vi.log} instead.
      */
-    varDump(variable, args = {}) {
-        this.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, args, true)), args);
+    varDump(...args) {
+        this.vi.log(...args);
     }
     /* Outputters (Pre-formatted) ===================================== */
     /**
@@ -615,7 +747,7 @@ export class NodeConsole {
                 ];
                 break;
         }
-        console[args.via ?? 'log'](this.msg.msgs(messages, args));
+        console[args.via ?? 'log'](this.msg.bulk(messages, args));
     }
     /**
      * Outputs a separator string to the console.
@@ -643,6 +775,9 @@ export class NodeConsole {
      * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
      *
      * @category Aliases
+     *
+     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+     * @param args  Configuration for the output and message, if any.
      */
     debug(msg, args = {}) {
         this.log(msg, { ...args, via: 'debug' });
@@ -651,9 +786,11 @@ export class NodeConsole {
      * Alias for {@link NodeConsole.logs} with `via: "debug"` argument.
      *
      * @category Aliases
+     *
+     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.debug} instead.
      */
-    debugs(msgs, args = {}) {
-        this.logs(msgs, { ...args, via: 'debug' });
+    debugs(...args) {
+        this.bulk.debug(...args);
     }
     /**
      * Outputs a level-one heading string to the console.
@@ -697,6 +834,9 @@ export class NodeConsole {
      * Alias for {@link NodeConsole.log} with `via: "warn"` argument.
      *
      * @category Aliases
+     *
+     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+     * @param args  Configuration for the output and message, if any.
      */
     warn(msg, args = {}) {
         this.log(msg, { ...args, via: 'warn' });
@@ -705,8 +845,10 @@ export class NodeConsole {
      * Alias for {@link NodeConsole.logs} with `via: "warn"` argument.
      *
      * @category Aliases
+     *
+     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.warn} instead.
      */
-    warns(msgs, args = {}) {
-        this.logs(msgs, { ...args, via: 'warn' });
+    warns(...args) {
+        this.bulk.warn(...args);
     }
 }

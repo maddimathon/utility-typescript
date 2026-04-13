@@ -107,6 +107,8 @@ export class VariableInspector<
 
     /**
      * Used for testing.
+     *
+     * @category Static
      * 
      * @internal
      */
@@ -207,10 +209,11 @@ export class VariableInspector<
     public readonly args: VariableInspector.Args;
 
     /**
+     * @category Args
+     *
      * @source
      */
-    public readonly ARGS_DEFAULT: VariableInspector.Args = {
-
+    public get ARGS_DEFAULT(): {
         childArgs: {
             includeValue: true,
         },
@@ -239,8 +242,38 @@ export class VariableInspector<
         localizeNumberOptions: {},
 
         stringQuoteCharacter: '"',
+    } {
+        return {
+            childArgs: {
+                includeValue: true,
+            },
 
-    };
+            debug: false,
+
+            equalString: ' =',
+
+            fallbackToJSON: true,
+
+            formatter: null,
+
+            includePrefix: true,
+            includeType: true,
+            includeValue: true,
+
+            indent: '    ',
+
+            inspectClasses: false,
+            inspectFunctions: false,
+
+            locale: 'en-CA',
+            localizeDates: true,
+            localizeDateOptions: {},
+            localizeNumbers: false,
+            localizeNumberOptions: {},
+
+            stringQuoteCharacter: '"',
+        };
+    }
 
     /**
      * Value’s name, used in output.
@@ -280,6 +313,7 @@ export class VariableInspector<
      * ====================================================================== */
 
     /**
+     * @category Constructor
      * 
      * @param variable  Passing the variable to inspect within an single-prop object
      */
@@ -1110,7 +1144,7 @@ export namespace VariableInspector {
         inspection: string;
 
         /**
-         * The provided name for the inspecte variable.
+         * The provided name for the inspected variable.
          * 
          * @see {@link VariableInspector._name}
          */

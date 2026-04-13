@@ -51,7 +51,7 @@ export abstract class AbstractStage<
             _: [],
 
             debug: false,
-            'log-base-level': 0,
+            logBaseLevel: 0,
             notice: true,
             progress: true,
             verbose: false,
@@ -171,7 +171,7 @@ export abstract class AbstractStage<
     /**
      * Prints a notice message to the console to signal the start or end of a stage.
      * 
-     * @see {@link NodeConsole.timestampLog}  Function used to print to console.
+     * @see {@link NodeConsole.timestamp.log}  Function used to print to console.
      */
     protected startEndNoticeLog(
         which: "start" | "end" | string,
@@ -183,7 +183,7 @@ export abstract class AbstractStage<
     ): void {
         if ( this.args[ 'notice' ] === false ) { return; }
 
-        const depth = ( this.args[ 'log-base-level' ] ?? 0 );
+        const depth = this.args.logBaseLevel;
 
         let linesIn = msgArgs.linesIn ?? 2;
         let linesOut = msgArgs.linesOut ?? 0;
@@ -262,7 +262,7 @@ export abstract class AbstractStage<
 
             // exits process
             if ( typeof error !== 'object' ) {
-                this.nc.timestampLog( 'ERROR caught:\n\n' + String( error ).trim(), msgArgs );
+                this.nc.timestamp.log( 'ERROR caught:\n\n' + String( error ).trim(), msgArgs );
                 process.exit();
             }
 
@@ -273,7 +273,7 @@ export abstract class AbstractStage<
                 && 'message' in error
                 && String( error.message )?.match( /^\s*ENOTEMPTY\b/g )
             ) {
-                this.nc.timestampLog( 'Error (ENOTEMPTY) caught and ignored during AbstractStage.cmd()', msgArgs );
+                this.nc.timestamp.log( 'Error (ENOTEMPTY) caught and ignored during AbstractStage.cmd()', msgArgs );
                 return;
             }
 
@@ -289,7 +289,7 @@ export abstract class AbstractStage<
                 _output = _output.join( '\n' );
             }
 
-            this.nc.timestampLog( 'ERROR caught:\n\n' + _output.trim(), msgArgs );
+            this.nc.timestamp.log( 'ERROR caught:\n\n' + _output.trim(), msgArgs );
             process.exit();
         }
     }

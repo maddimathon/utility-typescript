@@ -34,7 +34,7 @@ export declare class NodeFiles {
      *
      * @source
      */
-    readonly ARGS_DEFAULT: NodeFiles.Args;
+    get ARGS_DEFAULT(): NodeFiles.Args;
     constructor(args?: Partial<NodeFiles.Args>, utils?: Partial<{
         nc: NodeConsole;
     }>);

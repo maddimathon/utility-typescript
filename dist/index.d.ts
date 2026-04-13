@@ -2,7 +2,7 @@
  * Exports all atomized javascript content, except types from the {@link type}
  * export or those specific to node (which are exported at {@link node}).
  *
- * @category Exports
+ * @category Default Endpoint
  *
  * @module default
  *

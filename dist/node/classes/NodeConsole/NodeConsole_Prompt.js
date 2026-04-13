@@ -19,6 +19,21 @@ import { NodeConsole_Error } from './NodeConsole_Error.js';
  * @experimental
  */
 export class NodeConsole_Prompt {
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    args;
+    /**
+     * A local instance of {@link MessageMaker} initialized using
+     * `{@link NodeConsole.Args}.msgMaker`.
+     *
+     * @category Utilities
+     */
+    msg;
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -60,8 +75,8 @@ export class NodeConsole_Prompt {
         };
         const prefixIndent = this.msg.args.msg.tab.repeat(depth)
             + ' '.repeat(hangingIndent.length + indent.length);
-        const prefixTimestamp = timestamp ? this.msg.timestampMsg('', msgArgs) : '';
-        const prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestampMsg('').length) : '';
+        const prefixTimestamp = timestamp ? this.msg.timestamped('', msgArgs) : '';
+        const prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestamped('').length) : '';
         const selectCursorIndent = prompter == 'select' ? '  ' : '';
         config.theme = {
             helpMode: 'always',

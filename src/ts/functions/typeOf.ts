@@ -66,7 +66,7 @@ export function typeOf<T_Type extends typeOf.TestType>( variable: T_Type ): type
 }
 
 /**
- * Used only for {@link typeOf | typeOf()}.
+ * Used only for {@link typeOf} function.
  * 
  * @category Functions – Meta
  * 
@@ -75,7 +75,7 @@ export function typeOf<T_Type extends typeOf.TestType>( variable: T_Type ): type
 export namespace typeOf {
 
     /**
-     * Return options for the {@link typeOf | typeOf()}.
+     * Return options for the {@link typeOf} function.
      *
      * The complete options for return are: `array`, `bigint`, `boolean`,
      * `class`, `function`, `NaN`, `null`, `number`, `object`, `string`,
@@ -100,7 +100,7 @@ export namespace typeOf {
 
     /**
      * Types that _are_ objects, but are not actually evaluated as such in the
-     * {@link typeOf | typeOf()} function.
+     * {@link typeOf} function function.
      * 
      * @since 0.1.0
      */
@@ -120,7 +120,7 @@ export namespace typeOf {
         | undefined;
 
     /**
-     * Input variable types for the {@link typeOf | typeOf()}.
+     * Input variable types for the {@link typeOf} function.
      * 
      * @since 0.1.0
      */

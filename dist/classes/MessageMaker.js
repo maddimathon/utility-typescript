@@ -31,8 +31,6 @@ export class MessageMaker {
      *
      * Used only by {@link MessageMaker.buildArgs}.
      *
-     * @category Static
-     *
      * @param classArgs  A complete arguments object.  Requires complete to
      *                   avoid building complete arguments multiple times.
      */
@@ -177,6 +175,15 @@ export class MessageMaker {
         }
         return null;
     }
+    /* LOCAL PROPERTIES
+     * ====================================================================== */
+    /**
+     * A completed args object.
+     */
+    args;
+    /**
+     * Default arguments.
+     */
     get ARGS_DEFAULT() {
         const DEFAULT = {
             ansiColours: {
@@ -262,8 +269,6 @@ export class MessageMaker {
     }
     /**
      * Build a complete args object.
-     *
-     * @category Args
      */
     buildArgs(args) {
         const mergedDefault = this.ARGS_DEFAULT;
@@ -287,8 +292,6 @@ export class MessageMaker {
     }
     /**
      * Build a complete {@link MessageMaker.MsgArgs} object.
-     *
-     * @category Args
      */
     msgArgs(args) {
         const merged = mergeArgs(this.args.msg, args, false);
@@ -311,8 +314,6 @@ export class MessageMaker {
     /**
      * Joins string arrays with a single new line and adds an indent to the
      * beginning of every line, and adds next level of indent for child arrays.
-     *
-     * @category Formatters
      *
      * @param lines   String to implode. Arrays are joined with `'\n'`.
      * @param indent  Optional. Default `this.args.msg.tab`.
@@ -337,8 +338,6 @@ export class MessageMaker {
      * Does not wrap or split it (assumes this has already been done).  Applies
      * {@link MessageMaker.painter} and {@link MessageMaker.Args.depth} indent.
      *
-     * @category Messagers
-     *
      * @param line    String to map. Already wrapped to line width, if applicable.
      * @param args    Message arguments that apply to this line. Also passed to {@link MessageMaker.painter}.
      * @param prefix  Optional. Unpainted string added before the line. Helpful for hanging indents. Default ''.
@@ -358,8 +357,6 @@ export class MessageMaker {
     }
     /**
      * Formats the given message according to options.
-     *
-     * @category Messagers
      *
      * @param msg    Message to display.  If it's an array, the strings are joined with `'\n'`.
      * @param _args  Optional.  Overrides for default arguments in {@link MessageMaker.args}.
@@ -384,13 +381,12 @@ export class MessageMaker {
     /**
      * Formats given messages individually and then joins them on return.
      *
-     * @category Messagers
-     *
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from msgs to bulk.
      */
-    msgs(messages, universalArgs = {}) {
-        // VariableInspector.dump( { 'MessageMaker.msgs() _auniversalArgsrgs': universalArgs } );
+    bulk(messages, universalArgs = {}) {
         if (!Array.isArray(messages)) {
             messages = [messages];
         }
@@ -420,8 +416,6 @@ export class MessageMaker {
     }
     /**
      * Applies colour and font styles to an message for output.
-     *
-     * @category Stylers
      */
     painter(msg, args = {}) {
         // returns if empty
@@ -437,15 +431,14 @@ export class MessageMaker {
         return msg;
     }
     /**
-     * Formats the given message according to options.
-     *
-     * @category Messagers
+     * Formats a message prepended with a timestamp.
      *
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
-     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used for the whole message.
-     * @param timeArgs  Optional. Overrides for default arguments in {@link MessageMaker['msgArgs']}. Used only for the timestamp.
+     * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker.msgArgs}.
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from timestampMsg to timestamped. Removed `timeArgs` param and switched to a time prop in `msgArgs`.
      */
-    timestampMsg(msg, msgArgs = {}, timeArgs = {}) {
+    timestamped(msg, { time: timeArgs = {}, ...msgArgs } = {}) {
         /** A complete version of the base message arguments. */
         const args_full = this.msgArgs({
             joiner: '\n\n',
@@ -492,7 +485,7 @@ export class MessageMaker {
         /** Compiled strings for each message part. */
         const compiledMessages = {
             message: (messages.length ? ((args_parts.flag ? this.msg(' ', args_parts) : ' ')
-                + this.msgs(messages, args_parts)) : ''),
+                + this.bulk(messages, args_parts)) : ''),
             timestamp: this.msg(timePrefix, mergeArgs(args_parts, {
                 flag: false,
                 italic: false,
@@ -516,6 +509,7 @@ export class MessageMaker {
  * @since 0.1.1
  */
 (function (MessageMaker) {
+    ;
     ;
     ;
     ;

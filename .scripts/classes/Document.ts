@@ -125,6 +125,8 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             categoryOrder: [
                 'Docs',
                 'Documentation',
+                'Default Endpoint',
+                'Secondary Endpoints',
                 'Exports',
                 'Modules',
                 'Submodules',
@@ -281,6 +283,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             out: 'docs',
             plugin: [
+                'typedoc-plugin-mdn-links',
                 'typedoc-plugin-inline-sources',
             ],
 

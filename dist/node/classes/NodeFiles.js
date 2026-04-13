@@ -18,18 +18,30 @@ import { NodeConsole } from './NodeConsole.js';
  * @since 0.2.0
  */
 export class NodeFiles {
-    /* CONSTRUCTOR
+    /* LOCAL PROPERTIES
      * ====================================================================== */
-    constructor(args = {}, utils = {}) {
-        /* Args ===================================== */
-        /**
-         * Default args for this stage.
-         *
-         * @category Args
-         *
-         * @source
-         */
-        this.ARGS_DEFAULT = {
+    /**
+     * A completed args object.
+     *
+     * @category Args
+     */
+    args;
+    /**
+     * The instance of {@link NodeConsole} used within this class.
+     *
+     * @category Classes
+     */
+    nc;
+    /* Args ===================================== */
+    /**
+     * Default args for this stage.
+     *
+     * @category Args
+     *
+     * @source
+     */
+    get ARGS_DEFAULT() {
+        return {
             copyFile: {
                 force: true,
                 rename: true,
@@ -45,6 +57,10 @@ export class NodeFiles {
                 rename: false,
             },
         };
+    }
+    /* CONSTRUCTOR
+     * ====================================================================== */
+    constructor(args = {}, utils = {}) {
         this.args = mergeArgs(this.ARGS_DEFAULT, args, true);
         this.nc = utils.nc ?? new NodeConsole(this.ARGS_DEFAULT);
         const propNames = arrayUnique(Object.getOwnPropertyNames(NodeFiles.prototype)
@@ -149,7 +165,7 @@ export class NodeFiles {
             }
             if (stat.isDirectory()) {
                 if (dryRun) {
-                    this.nc.timestampLog('deleting directory: ' + this.pathRelative(path).replace(' ', '%20'), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null });
+                    this.nc.timestamp.log('deleting directory: ' + this.pathRelative(path).replace(' ', '%20'), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null });
                 }
                 else {
                     NodeFS.rmSync(path, { recursive: true, force: true });
@@ -157,7 +173,7 @@ export class NodeFiles {
             }
             else if (stat.isFile() || stat.isSymbolicLink()) {
                 if (dryRun) {
-                    this.nc.timestampLog('deleting file: ' + this.pathRelative(path).replace(' ', '%20'), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null });
+                    this.nc.timestamp.log('deleting file: ' + this.pathRelative(path).replace(' ', '%20'), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null });
                 }
                 else {
                     NodeFS.unlinkSync(path);

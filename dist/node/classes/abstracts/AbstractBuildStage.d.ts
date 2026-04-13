@@ -93,14 +93,10 @@ export declare abstract class AbstractBuildStage<T_SubStage extends string | nev
      *
      * @param level     Depth level for this message.
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      *
      * @return  An object with arguments separated by message (`msg`) and time.
      */
-    protected msgArgs(level?: number, msgArgs?: Parameters<NodeConsole['timestampLog']>[1], timeArgs?: Parameters<NodeConsole['timestampLog']>[2]): {
-        msg: Parameters<NodeConsole['timestampLog']>[1];
-        time: Parameters<NodeConsole['timestampLog']>[2];
-    };
+    protected msgArgs(level?: number, { time: timeArgs, ...msgArgs }?: Parameters<NodeConsole['timestamp']['log']>[1]): NonNullable<Parameters<NodeConsole['timestamp']['log']>[1]>;
     /**
      * Prints a timestamped log message to the console. Only if
      * `{@link AbstractBuildStage.T_Args}.notice` is truthy.
@@ -111,11 +107,10 @@ export declare abstract class AbstractBuildStage<T_SubStage extends string | nev
      *
      * @param msg       The message(s) to print to the console.
      * @param level     Depth level for this message (above the value of
-     *                  {@link AbstractBuildStage.T_Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     *                  {@link AbstractBuildStage.T_Args.logBaseLevel|`this.args.logBaseLevel`}).
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
-    progressLog(msg: Parameters<NodeConsole['timestampLog']>[0], level: number, msgArgs?: Parameters<NodeConsole['timestampLog']>[1], timeArgs?: Parameters<NodeConsole['timestampLog']>[2]): void;
+    progressLog(msg: Parameters<NodeConsole['timestamp']['log']>[0], level: number, msgArgs?: Parameters<NodeConsole['timestamp']['log']>[1]): void;
     /**
      * Prints a message to the console signalling the start or end of this build
      * stage.
@@ -133,11 +128,10 @@ export declare abstract class AbstractBuildStage<T_SubStage extends string | nev
      *
      * @param msg       The message(s) to print to the console.
      * @param level     Depth level for this message (above the value of
-     *                  {@link AbstractBuildStage.T_Args['log-base-level']|`this.args[ 'log-base-level' ]`}).
+     *                  {@link AbstractBuildStage.T_Args.logBaseLevel|`this.args.logBaseLevel`}).
      * @param msgArgs   Optional. Argument overrides for the message.
-     * @param timeArgs  Optional. Argument overrides for the message's timestamp.
      */
-    verboseLog(msg: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[0], level: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[1], msgArgs?: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[2], timeArgs?: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[3]): void;
+    verboseLog(msg: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[0], level: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[1], msgArgs?: Parameters<AbstractBuildStage<T_SubStage, T_Args>['progressLog']>[2]): void;
     /**
      * This method should probably not be overwritten.
      *
@@ -181,8 +175,10 @@ export declare namespace AbstractBuildStage {
          * The minimum log level to output.
          *
          * @default 0
+         *
+         * @since 2.0.0-beta.3.draft — Renamed from 'log-base-level' to logBaseLevel.
          */
-        'log-base-level': number;
+        logBaseLevel: number;
         /**
          * Display notice when starting/ending.
          *

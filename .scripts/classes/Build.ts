@@ -93,7 +93,7 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
         const cmpl = new Compile( {
             ...this.args as Compile.Args & Build.Args,
 
-            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
+            logBaseLevel: 1 + this.args.logBaseLevel,
 
             only: this.args[ 'only-compile' ],
             without: this.args[ 'without-compile' ],
@@ -109,7 +109,7 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
         const doc = new Document( {
             ...this.args as Document.Args & Build.Args,
 
-            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
+            logBaseLevel: 1 + this.args.logBaseLevel,
 
             only: this.args[ 'only-document' ],
             without: this.args[ 'without-document' ],
@@ -180,7 +180,7 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
         const t = new Test( {
             ...this.args as Test.Args & Build.Args,
 
-            'log-base-level': 1 + ( this.args[ 'log-base-level' ] ?? 0 ),
+            logBaseLevel: 1 + this.args.logBaseLevel,
 
             only: this.args[ 'only-test' ],
             without: this.args[ 'without-test' ],

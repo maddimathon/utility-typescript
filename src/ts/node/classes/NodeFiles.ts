@@ -53,27 +53,29 @@ export class NodeFiles {
      * 
      * @source
      */
-    public readonly ARGS_DEFAULT: NodeFiles.Args = {
+    public get ARGS_DEFAULT(): NodeFiles.Args {
 
-        copyFile: {
-            force: true,
-            rename: true,
-            recursive: false,
-        },
+        return {
+            copyFile: {
+                force: true,
+                rename: true,
+                recursive: false,
+            },
 
-        root: './',
+            root: './',
 
-        readDir: {
-            recursive: false,
-        },
+            readDir: {
+                recursive: false,
+            },
 
-        readFile: {},
+            readFile: {},
 
-        write: {
-            force: false,
-            rename: false,
-        },
-    } as const;
+            write: {
+                force: false,
+                rename: false,
+            },
+        };
+    }
 
 
 
@@ -226,7 +228,7 @@ export class NodeFiles {
             if ( stat.isDirectory() ) {
 
                 if ( dryRun ) {
-                    this.nc.timestampLog( 'deleting directory: ' + this.pathRelative( path ).replace( ' ', '%20' ), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null } );
+                    this.nc.timestamp.log( 'deleting directory: ' + this.pathRelative( path ).replace( ' ', '%20' ), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null } );
                 } else {
                     NodeFS.rmSync( path, { recursive: true, force: true } );
                 }
@@ -234,7 +236,7 @@ export class NodeFiles {
             } else if ( stat.isFile() || stat.isSymbolicLink() ) {
 
                 if ( dryRun ) {
-                    this.nc.timestampLog( 'deleting file: ' + this.pathRelative( path ).replace( ' ', '%20' ), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null } );
+                    this.nc.timestamp.log( 'deleting file: ' + this.pathRelative( path ).replace( ' ', '%20' ), { depth: logLevel, linesIn: 0, linesOut: 0, maxWidth: null } );
                 } else {
                     NodeFS.unlinkSync( path );
                 }

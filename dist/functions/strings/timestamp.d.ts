@@ -26,7 +26,7 @@ import type { LangLocaleCode } from '../../types/index.js';
  */
 export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Input): string;
 /**
- * Used only for {@link timestamp | timestamp()}.
+ * Used only for {@link timestamp} function.
  *
  * @category Functions – String
  *
@@ -34,7 +34,7 @@ export declare function timestamp(date?: Date | null, _args?: timestamp.Args_Inp
  */
 export declare namespace timestamp {
     /**
-     * Optional configuation for {@link timestamp | timestamp()}.
+     * Optional configuation for {@link timestamp} function.
      *
      * @since 0.1.0
      */
@@ -98,7 +98,7 @@ export declare namespace timestamp {
     };
     /**
      * A partial-ized version of {@link timestamp.Args}. Used for the
-     * {@link timestamp | timestamp()} optional input args.
+     * {@link timestamp} function optional input args.
      *
      * @since 0.1.0
      */

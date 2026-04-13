@@ -1,7 +1,7 @@
 /**
  * Utilities specific to the Node environment.
  *
- * @category Exports
+ * @category Secondary Endpoints
  *
  * @module node
  *
