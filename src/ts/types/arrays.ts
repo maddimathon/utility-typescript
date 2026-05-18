@@ -20,3 +20,33 @@
 export type ArrayItem<
     T_Array extends readonly unknown[]
 > = T_Array extends readonly ( infer I )[] ? I : never;
+
+/**
+ * Returns a tuple without its last item.
+ * 
+ * @since ___PKG_VERSION___
+ * 
+ * @source
+ */
+export type TuplePop<
+    T_Tuple extends readonly unknown[]
+> = T_Tuple extends readonly [
+    ...infer R,
+    // @ts-expect-error
+    infer A
+] ? R : [];
+
+/**
+ * Returns a tuple without its first item.
+ * 
+ * @since ___PKG_VERSION___
+ * 
+ * @source
+ */
+export type TupleShift<
+    T_Tuple extends readonly unknown[]
+> = T_Tuple extends readonly [
+    // @ts-expect-error
+    infer A,
+    ...infer R
+] ? R : [];

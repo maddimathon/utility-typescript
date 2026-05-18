@@ -10,6 +10,7 @@
 import { arrayUnique } from '../functions/arrays/arrayUnique.js';
 import { timestamp } from '../functions/strings/timestamp.js';
 import { typeOf } from '../functions/typeOf.js';
+import { MiniConsole } from './MiniConsole.js';
 /**
  * Inspects the value of a variable for debugging.
  *
@@ -23,6 +24,7 @@ import { typeOf } from '../functions/typeOf.js';
  * @category Classes
  *
  * @since 0.1.1
+ * @since 2.0.0-beta.3.draft — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
  *
  * @example
  * ```ts
@@ -56,23 +58,6 @@ export class VariableInspector {
     static stringify(...params) {
         const vi = new VariableInspector(...params);
         return vi.toString();
-    }
-    /**
-     * Validates the first input parameter to ensure it is an object with a single string key.
-     *
-     * @category Static
-     *
-     * @see {@link VariableInspector.constructor}
-     */
-    static validateInput(variable) {
-        const inputKeys = Object.keys(variable);
-        const inputHasOneStringKey = inputKeys.length === 1
-            && typeof inputKeys[0] === 'string';
-        // returns
-        if (inputHasOneStringKey) {
-            return variable;
-        }
-        return { 'var': variable };
     }
     /** Testing ==================================== **/
     /**
@@ -111,13 +96,15 @@ export class VariableInspector {
      *
      * @returns  An example, constructed instance for a sample object.
      */
-    static sample(_args = {}) {
+    static sample(_args, _console) {
+        const console = _console ?? new MiniConsole();
         console.log('\nVariableInspector.sample() @ ' + timestamp(null, { date: true, time: true }));
         console.log('\n');
         const args = {
             ...VariableInspector.prototype.ARGS_DEFAULT,
             debug: true,
-            ...(_args ?? {})
+            ..._args,
+            console,
         };
         /**
          * Calls `VariableInspector.dump() with args.`.
@@ -153,9 +140,17 @@ export class VariableInspector {
             childArgs: {
                 includeValue: true,
             },
+            /**
+             * @since 2.0.0-beta.3.draft
+             */
+            console: new MiniConsole(),
             debug: false,
             equalString: ' =',
             fallbackToJSON: true,
+            /**
+             * @since 2.0.0-beta.3.draft
+             */
+            formatKeys: true,
             formatter: null,
             includePrefix: true,
             includeType: true,
@@ -172,17 +167,35 @@ export class VariableInspector {
         };
     }
     /**
+     * @since 2.0.0-beta.3.draft
+     */
+    console;
+    /**
+     * Default name for unnamed variables passed for inspection.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    _defaultName = 'variable';
+    /**
+     * Value to inspect.
+     *
+     * @category Inputs
+     *
+     * @expandType T_InspectionType
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    _inspectionValue;
+    /**
      * Value’s name, used in output.
      *
      * @category Inputs
      */
     _name;
     /**
-     * Value to inspect.
+     * Value to inspect as passed to the constructor.
      *
      * @category Inputs
-     *
-     * @expandType T_Type
      */
     _rawValue;
     /**
@@ -199,6 +212,12 @@ export class VariableInspector {
      * @category Inputs
      */
     _properties;
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    get properties() {
+        return this._properties;
+    }
     /* CONSTRUCTOR
      * ====================================================================== */
     /**
@@ -206,17 +225,67 @@ export class VariableInspector {
      *
      * @param variable  Passing the variable to inspect within an single-prop object
      */
-    constructor(variable, args = {}) {
+    constructor(variable, args = {}, 
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    console) {
         this.args = {
             ...this.ARGS_DEFAULT,
             ...args,
         };
-        const validVar = VariableInspector.validateInput(variable);
-        this._name = Object.keys(validVar)[0] ?? 'variable';
-        this._rawValue = validVar[this._name];
-        this._typeOf = typeOf(this._rawValue);
-        // must be last so that this._rawValue and this._typeOf are set
-        this._properties = this.indexProperties();
+        this.console = console ?? new MiniConsole();
+        const params = this._parseInputParams(this._validateInputVariable(variable));
+        this._name = params.name;
+        this._rawValue = params.rawValue;
+        this._inspectionValue = params.inspectionValue;
+        this._typeOf = params.typeOf;
+        // must be last so that this._inspectionValue and this._typeOf are set
+        this._properties = this._indexProperties();
+    }
+    /**
+     * @category Inputs
+     *
+     * @see {@link VariableInspector.constructor}
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    _parseInputParams(validVar) {
+        const name = Object.keys(validVar)[0] ?? this._defaultName;
+        const rawValue = validVar[name];
+        const rawOrObject = typeof rawValue === 'object' ? rawValue : false;
+        const inspectionValue = (rawOrObject
+            && typeof rawOrObject.toVariableInspection === 'function')
+            ? rawOrObject.toVariableInspection()
+            : rawValue;
+        // this.console.log( { inspectionValue } );
+        return {
+            name,
+            rawValue,
+            inspectionValue,
+            typeOf: typeOf(inspectionValue),
+        };
+    }
+    /**
+     * Validates the first input parameter to ensure it is an object with a
+     * single string key.
+     *
+     * @category Inputs
+     *
+     * @see {@link VariableInspector.constructor}
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from validateInput to _validateInputVariable.
+     * Changed from static to local.
+     */
+    _validateInputVariable(variable) {
+        const inputKeys = Object.keys(variable);
+        const inputHasOneStringKey = inputKeys.length === 1
+            && typeof inputKeys[0] === 'string';
+        // returns
+        if (inputHasOneStringKey) {
+            return variable;
+        }
+        return { [this._defaultName]: variable };
     }
     /* LOCAL METHODS
      * ====================================================================== */
@@ -224,8 +293,14 @@ export class VariableInspector {
      * Formats an object property name into a string for display.
      *
      * @category Formatters
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from keyFormatter to _keyFormatter.
      */
-    keyFormatter(key) {
+    _keyFormatter(key) {
+        // returns
+        if (!this.args.formatKeys) {
+            return String(key);
+        }
         // returns for number and string
         switch (typeof key) {
             case 'number':
@@ -236,16 +311,19 @@ export class VariableInspector {
         return `{${String(key)}}`;
     }
     /**
-     * Builds an array of the property names.  Used by {@link VariableInspector.indexProperties}
+     * Builds an array of the property names.  Used by
+     * {@link VariableInspector._indexProperties}
      *
      * @category Inputs
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from getPropertyNames to _getPropertyNames.
      */
-    getPropertyNames() {
+    _getPropertyNames() {
         // returns on array or unsupported types
         switch (this._typeOf) {
             case 'array':
                 const indices = [];
-                for (let index = 0; index < this._rawValue.length; index++) {
+                for (let index = 0; index < this._inspectionValue.length; index++) {
                     indices.push(index);
                 }
                 indices.push('length');
@@ -256,41 +334,44 @@ export class VariableInspector {
                 return [];
         }
         const propertyNames = [
-            Object.keys(this._rawValue),
-            Object.getOwnPropertyNames(this._rawValue),
-            Object.getOwnPropertySymbols(this._rawValue),
-            // Object.getOwnPropertyDescriptors( this._rawValue as object ),
+            Object.keys(this._inspectionValue),
+            Object.getOwnPropertyNames(this._inspectionValue),
+            Object.getOwnPropertySymbols(this._inspectionValue),
+            // Object.getOwnPropertyDescriptors( this._inspectionValue as object ),
         ].flat().filter(name => name !== '_getSet');
         return arrayUnique(propertyNames);
     }
     /**
-     * Builds an array of the properties for the current {@link VariableInspector._rawValue| this._rawValue()}.
+     * Builds an array of the properties for the current
+     * {@link VariableInspector._inspectionValue| this._inspectionValue}.
      *
      * @category Inputs
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from indexProperties to _indexProperties.
      */
-    indexProperties() {
+    _indexProperties() {
         const properties = [];
         // returns
-        if (!this._rawValue) {
+        if (!this._inspectionValue) {
             return properties;
         }
         // returns if it doesn't match a supported type
         switch (this._typeOf) {
             case 'array':
             case 'object':
-                const value = this._rawValue;
+                const value = this._inspectionValue;
                 // returns
                 if (value instanceof Date || value instanceof RegExp) {
                     return properties;
                 }
                 // returns
                 if (value instanceof Map) {
-                    return Array.from(this._rawValue.entries(), ([key, value]) => ({
+                    return Array.from(this._inspectionValue.entries(), ([key, value]) => ({
                         key: {
                             name: key,
                             type: typeof key,
                         },
-                        vi: this._new({ [this.keyFormatter(key)]: value }, {
+                        vi: this._new({ [this._keyFormatter(key)]: value }, {
                             equalString: ':',
                             includePrefix: true,
                         }),
@@ -298,12 +379,12 @@ export class VariableInspector {
                 }
                 // returns
                 if (value instanceof Set) {
-                    return Array.from(this._rawValue.values(), (value, index) => ({
+                    return Array.from(this._inspectionValue.values(), (value, index) => ({
                         key: {
                             name: index,
                             type: 'number',
                         },
-                        vi: this._new({ [this.keyFormatter(index)]: value }, {
+                        vi: this._new({ [this._keyFormatter(index)]: value }, {
                             equalString: ':',
                             includePrefix: true,
                         }),
@@ -313,16 +394,16 @@ export class VariableInspector {
             default:
                 return properties;
         }
-        const propertyNames = this.getPropertyNames();
+        const propertyNames = this._getPropertyNames();
         // now add them to the array
         propertyNames.forEach((name) => {
-            const value = this._rawValue[name];
+            const value = this._inspectionValue[name];
             properties.push({
                 key: {
                     name: name,
                     type: typeof name,
                 },
-                vi: this._new({ [this.keyFormatter(name)]: value }, {
+                vi: this._new({ [this._keyFormatter(name)]: value }, {
                     equalString: ':',
                     includePrefix: true,
                 }),
@@ -331,6 +412,64 @@ export class VariableInspector {
         return properties;
     }
     /* Compilers ===================================== */
+    /**
+     * Filters for the ouput of different inspection parts.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    get _filter() {
+        const valueVia = (viaMethod, skipFormatting) => {
+            const str = `<via ${viaMethod}>`;
+            return skipFormatting ? str : this._formatter('via', str);
+        };
+        return {
+            /**
+             * Filters the value's type for output.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            type: (type, skipFormatting) => {
+                type = type.replace(/(^[\n\s]+|[\n\s]+$)/gi, '');
+                // returns
+                if (skipFormatting) {
+                    return type;
+                }
+                return this._formatter('type', `<${type}>`);
+            },
+            /**
+             * Filters the value for output.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            value: (str, viaMethod, skipFormatting) => {
+                const ret = [];
+                if (viaMethod) {
+                    ret.push(valueVia(viaMethod, skipFormatting));
+                }
+                if (!this.args.includeType) {
+                    if (typeof str === 'undefined') {
+                        str = 'undefined';
+                    }
+                    else if (str === null) {
+                        str = 'NULL';
+                    }
+                }
+                if (skipFormatting) {
+                    ret.push(str ?? '');
+                }
+                else {
+                    ret.push(this._formatter('value', str ?? ''));
+                }
+                return ret.join(' ');
+            },
+            /**
+             * Add 'via' info to value filter.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            valueVia: valueVia,
+        };
+    }
     /**
      * Applies any formatting functions as defined in the args.
      *
@@ -343,8 +482,10 @@ export class VariableInspector {
      * @param str    Value to format.
      *
      * @return  Formatted value.
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from formatter to _formatter.
      */
-    formatter(stage, str) {
+    _formatter(stage, str) {
         // returns
         if (!this.args.formatter) {
             return str;
@@ -357,7 +498,7 @@ export class VariableInspector {
         if (stage === '_') {
             return str;
         }
-        // returns if stage formatter exists
+        // returns if stage _formatter exists
         if (stage === 'via') {
             if (typeof this.args.formatter.type === 'function') {
                 return this.args.formatter.type(str);
@@ -374,7 +515,7 @@ export class VariableInspector {
      *
      * @category Compilers
      *
-     * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
+     * @param skipFormatting  Optional. Whether to skip the _formatter functions. Default false.
      */
     prefix(skipFormatting = false) {
         const str = this._name + this.args.equalString;
@@ -382,7 +523,7 @@ export class VariableInspector {
         if (skipFormatting) {
             return str;
         }
-        return this.formatter('prefix', str);
+        return this._formatter('prefix', str);
     }
     /**
      * String to print for variable type.
@@ -392,29 +533,18 @@ export class VariableInspector {
      *
      * @category Compilers
      *
-     * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
+     * @param skipFormatting  Optional. Whether to skip the _formatter functions. Default false.
      */
     type(skipFormatting = false) {
-        /** Filters the type value before return. */
-        const typeFilter = (str) => {
-            str = str.replace(/(^[\n\s]+|[\n\s]+$)/gi, '');
-            // returns
-            if (skipFormatting) {
-                return str;
-            }
-            return this.formatter('type', `<${str}>`);
-        };
         // returns on match
         switch (this._typeOf) {
             case 'NaN':
-                return typeFilter(typeof Number.NaN);
+                return this._filter.type(typeof Number.NaN, skipFormatting);
             case 'object':
-                const constructorName = this._rawValue.constructor?.name ?? 'Object';
-                return typeFilter(constructorName === 'Object'
-                    ? 'object'
-                    : constructorName);
+                const constructorName = this._inspectionValue.constructor?.name ?? 'Object';
+                return this._filter.type(constructorName === 'Object' ? 'object' : constructorName, skipFormatting);
         }
-        return typeFilter(this._typeOf);
+        return this._filter.type(this._typeOf, skipFormatting);
     }
     /**
      * Representation of the variable’s value to print, not including the
@@ -422,39 +552,16 @@ export class VariableInspector {
      *
      * @category Compilers
      *
-     * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
+     * @param skipFormatting  Optional. Whether to skip the _formatter functions. Default false.
      */
     value(skipFormatting = false) {
         /**
          * Returns a string formatted to represent the
          * value-getting method. (e.g., when using a fallback)
          */
-        const via = (viaMethod) => {
-            const str = `<via ${viaMethod}>`;
-            return skipFormatting ? str : this.formatter('via', str);
-        };
+        const via = (viaMethod) => this._filter.valueVia(viaMethod, skipFormatting);
         /** Filters the type value before return. */
-        const valueFilter = (str, viaMethod) => {
-            const ret = [];
-            if (viaMethod) {
-                ret.push(via(viaMethod));
-            }
-            if (!this.args.includeType) {
-                if (typeof str === 'undefined') {
-                    str = 'undefined';
-                }
-                else if (str === null) {
-                    str = 'NULL';
-                }
-            }
-            if (skipFormatting) {
-                ret.push(str ?? '');
-            }
-            else {
-                ret.push(this.formatter('value', str ?? ''));
-            }
-            return ret.join(' ');
-        };
+        const valueFilter = (str, viaMethod) => this._filter.value(str, viaMethod, skipFormatting);
         /**
          * PARSE BY TYPE
          */
@@ -462,22 +569,22 @@ export class VariableInspector {
         switch (this._typeOf) {
             case 'null':
             case 'undefined':
-                return valueFilter(this._rawValue);
+                return valueFilter(this._inspectionValue);
             case 'bigint':
             case 'number':
                 return valueFilter(this.args.localizeNumbers
-                    ? this._rawValue.toLocaleString(this.args.locale, this.args.localizeNumberOptions)
-                    : this._rawValue.toString());
+                    ? this._inspectionValue.toLocaleString(this.args.locale, this.args.localizeNumberOptions)
+                    : this._inspectionValue.toString());
             case 'boolean':
-                return valueFilter(this._rawValue.toString().toUpperCase());
+                return valueFilter(this._inspectionValue.toString().toUpperCase());
             case 'class':
-                let classValue = this._rawValue.prototype.constructor.name + ' {}';
+                let classValue = this._inspectionValue.prototype.constructor.name + ' {}';
                 if (this.args.inspectClasses) {
-                    classValue = this._rawValue.toString();
+                    classValue = this._inspectionValue.toString();
                 }
                 return valueFilter(classValue);
             case 'function':
-                let functionValue = this._rawValue.toString();
+                let functionValue = this._inspectionValue.toString();
                 const paramRegex = /^\s*\(([^\(|\)]*)\)\s*(\=\>|\{).*$/gs;
                 if (!this.args.inspectFunctions) {
                     if (!functionValue.match(paramRegex)) {
@@ -491,10 +598,10 @@ export class VariableInspector {
                 }
                 return valueFilter(functionValue);
             case 'NaN':
-                return valueFilter(this._rawValue.toString());
+                return valueFilter(this._inspectionValue.toString());
             case 'array':
             case 'object':
-                const value = this._rawValue;
+                const value = this._inspectionValue;
                 // returns
                 if (value instanceof Date) {
                     return valueFilter(this.args.localizeDates
@@ -503,11 +610,11 @@ export class VariableInspector {
                 }
                 // returns
                 if (value instanceof RegExp) {
-                    return valueFilter(this._rawValue.toString().replace(/\\/g, '\\\\'));
+                    return valueFilter(this._inspectionValue.toString().replace(/\\/g, '\\\\'));
                 }
                 return valueFilter(this._valueAsObject());
             case 'string':
-                return valueFilter(this.args.stringQuoteCharacter + this._rawValue + this.args.stringQuoteCharacter);
+                return valueFilter(this.args.stringQuoteCharacter + this._inspectionValue + this.args.stringQuoteCharacter);
         }
         /**
          * FALLBACK
@@ -519,8 +626,8 @@ export class VariableInspector {
                 'toJSON',
                 // 'valueOf',
             ]) {
-                if (typeof this._rawValue[fn] === 'function') {
-                    const fnReturn = this._rawValue[fn]();
+                if (typeof this._inspectionValue[fn] === 'function') {
+                    const fnReturn = this._inspectionValue[fn]();
                     if (fnReturn) {
                         return `${via(`.${fn}()`)} ${JSON.stringify(fnReturn, null, 4)}`;
                     }
@@ -536,8 +643,8 @@ export class VariableInspector {
             'toString',
             'stringify',
         ]) {
-            if (typeof this._rawValue[fn] === 'function') {
-                const fnReturn = this._rawValue[fn]();
+            if (typeof this._inspectionValue[fn] === 'function') {
+                const fnReturn = this._inspectionValue[fn]();
                 if (typeof fnReturn === 'string') {
                     return `${via(`.${fn}()`)} ${fnReturn}`;
                 }
@@ -547,7 +654,7 @@ export class VariableInspector {
          * FALLBACK
          * Interpolation
          */
-        return `${via('interpolation')} ${String(this._rawValue)}`;
+        return `${via('interpolation')} ${String(this._inspectionValue)}`;
     }
     /* Exporters ===================================== */
     /**
@@ -556,7 +663,7 @@ export class VariableInspector {
      * @category Exporters
      */
     dump() {
-        return console.log(this.toString());
+        return this.console.log(this.toString());
     }
     ;
     /**
@@ -592,9 +699,9 @@ export class VariableInspector {
      */
     toString() {
         const strs = [
-            this.args.includePrefix ? this.prefix() : false,
-            this.args.includeType ? this.type() : false,
-            this.args.includeValue ? this.value() : false,
+            this.args.includePrefix && this.prefix(),
+            this.args.includeType && this.type(),
+            this.args.includeValue && this.value(),
         ];
         return strs.filter(v => v).join(' ');
     }
@@ -621,7 +728,7 @@ export class VariableInspector {
     }
     /* Translators ===================================== */
     /**
-     * Creates a readable representation of {@link VariableInspector._rawValue}
+     * Creates a readable representation of {@link VariableInspector._inspectionValue}
      * as if its type is object (including arrays).
      *
      * @category Translators

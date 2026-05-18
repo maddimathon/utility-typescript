@@ -9,8 +9,8 @@
  */
 import type { AnyClass } from '../functions.js';
 /**
- * {@link Partial}-izes an object, except for the given RequiredKeys, which are
- * converted to be required.
+ * {@link Partial}-izes an object, except for the given T_KeysRequired, which are
+ * themselves to be required.
  *
  * For the recursive version, see {@link RecursivePartialExcept}.
  *
@@ -20,6 +20,16 @@ import type { AnyClass } from '../functions.js';
  * @since 2.0.0-alpha
  */
 export type PartialExcept<T_Object, T_KeysRequired extends keyof T_Object = never> = Partial<Omit<T_Object, T_KeysRequired>> & Pick<Required<T_Object>, T_KeysRequired>;
+/**
+ * {@link Partial}-izes an object, but only for the given T_KeysPartial.
+ *
+ * @param T_Object        Type or interface to transform.
+ * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
+ *
+ * @since 2.0.0-beta.3.draft
+ * @experimental
+ */
+export type PartialPick<T_Object, T_KeysPartial extends keyof T_Object = never> = Omit<T_Object, T_KeysPartial> & Partial<Pick<T_Object, T_KeysPartial>>;
 /**
  * Recursively {@link Partial}-izes an object, except for the given
  * RequiredKeys — i.e., the recursive version of {@link PartialExcept}.

@@ -52,4 +52,5 @@ export * from './functions/strings/toTitleCase.js';
 export * from './functions/typeOf.js';
 
 export * from './classes/MessageMaker.js';
+export * from './classes/MiniConsole.js';
 export * from './classes/VariableInspector.js';

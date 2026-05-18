@@ -32,6 +32,7 @@ export type * from './objects/keys.js';
 export type * from './objects/partial.js';
 export type * from './objects/records.js';
 export type * from './objects/required.js';
+export type * from './objects/utilities.js';
 
 export type * from './string-literals/html.js';
 

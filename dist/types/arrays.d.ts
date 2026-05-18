@@ -17,3 +17,25 @@
  *                            of the Arrays namespace.
  */
 export type ArrayItem<T_Array extends readonly unknown[]> = T_Array extends readonly (infer I)[] ? I : never;
+/**
+ * Returns a tuple without its last item.
+ *
+ * @since 2.0.0-beta.3.draft
+ *
+ * @source
+ */
+export type TuplePop<T_Tuple extends readonly unknown[]> = T_Tuple extends readonly [
+    ...infer R,
+    infer A
+] ? R : [];
+/**
+ * Returns a tuple without its first item.
+ *
+ * @since 2.0.0-beta.3.draft
+ *
+ * @source
+ */
+export type TupleShift<T_Tuple extends readonly unknown[]> = T_Tuple extends readonly [
+    infer A,
+    ...infer R
+] ? R : [];

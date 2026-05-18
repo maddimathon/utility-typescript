@@ -1,0 +1,60 @@
+/**
+ * @since 2.0.0-beta.3.draft
+ *
+ * @packageDocumentation
+ */
+/*!
+ * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @license MIT
+ */
+/**
+ * The simplest implementation of the {@link ConsoleUtility} interface, intended
+ * as a fallback or to be extended.
+ *
+ * @category Classes
+ *
+ * @since 2.0.0-beta.3.draft
+ */
+export class MiniConsole {
+    constructor() {
+        this.debug = this.debug.bind(this);
+        this.info = this.info.bind(this);
+        this.log = this.log.bind(this);
+        this.verbose = this.verbose.bind(this);
+        this.warn = this.warn.bind(this);
+    }
+    debug(...params) {
+        this.output('debug', ...params);
+    }
+    error(...params) {
+        this.output('error', ...params);
+    }
+    /**
+     * Alias for {@link MiniConsole.verbose}.
+     */
+    info(...params) {
+        this.verbose(...params);
+    }
+    log(...params) {
+        this.output('log', ...params);
+    }
+    /**
+     * Generic base output method for other outputs.
+     */
+    output(via, msg) {
+        console[via](msg);
+    }
+    verbose(...params) {
+        this.output('info', ...params);
+    }
+    warn(...params) {
+        this.output('warn', ...params);
+    }
+}
+// /**
+//  * Utilities for the {@link MiniConsole} class.
+//  * 
+//  * @since 2.0.0-beta.3.draft
+//  */
+// export namespace MiniConsole {
+// }

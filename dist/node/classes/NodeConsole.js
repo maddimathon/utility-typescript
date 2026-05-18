@@ -448,6 +448,8 @@ export class NodeConsole {
         this.args = this.buildArgs(args);
         this.msg = new MessageMaker(this.args.msgMaker);
         this.prompt = new NodeConsole_Prompt(this.msg, this.args);
+        this._bulkOutput = this._bulkOutput.bind(this);
+        this._timestampOutput = this._timestampOutput.bind(this);
         this.cmd = this.cmd.bind(this);
         this.cmdArgs = this.cmdArgs.bind(this);
         this.debug = this.debug.bind(this);
@@ -463,6 +465,7 @@ export class NodeConsole {
         this.timestampLog = this.timestampLog.bind(this);
         this.timestampVarDump = this.timestampVarDump.bind(this);
         this.varDump = this.varDump.bind(this);
+        this.verbose = this.verbose.bind(this);
         this.warn = this.warn.bind(this);
         this.warns = this.warns.bind(this);
     }
@@ -530,6 +533,12 @@ export class NodeConsole {
     /* Outputters ===================================== */
     #bulk = null;
     /**
+     * @since 2.0.0-beta.3.draft
+     */
+    _bulkOutput(via, msgs, args = {}) {
+        return console[via](this.msg.bulk(Array.isArray(msgs) ? msgs : [msgs], args));
+    }
+    /**
      * Output longer messages with per-section formatting.
      *
      * @category Outputters
@@ -541,26 +550,28 @@ export class NodeConsole {
         if (this.#bulk !== null) {
             return this.#bulk;
         }
-        const log = (msgs, args = {}) => {
-            if (!Array.isArray(msgs)) {
-                msgs = [msgs];
-            }
-            console[args.via ?? 'log'](this.msg.bulk(msgs, args));
-        };
-        const debug = (msgs, args = {}) => {
-            log(msgs, { ...args, via: 'debug' });
-        };
-        const warn = (msgs, args = {}) => {
-            log(msgs, { ...args, via: 'warn' });
-        };
+        const output = this._bulkOutput;
+        const log = (...params) => output('log', ...params);
+        const debug = (...params) => output('debug', ...params);
+        const error = (...params) => output('error', ...params);
+        const verbose = (...params) => output('info', ...params);
+        const warn = (...params) => output('warn', ...params);
         this.#bulk = {
             debug: debug.bind(this),
+            error: error.bind(this),
             log: log.bind(this),
+            verbose: verbose.bind(this),
             warn: warn.bind(this),
         };
         return this.#bulk;
     }
     #timestamp = null;
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    _timestampOutput(via, msg, args = {}) {
+        return console[via](this.msg.timestamped(msg, args));
+    }
     /**
      * Output messages (long or short) prepended with a timestamp.
      *
@@ -573,18 +584,17 @@ export class NodeConsole {
         if (this.#timestamp !== null) {
             return this.#timestamp;
         }
-        const log = (msg, args = {}) => {
-            console[args.via ?? 'log'](this.msg.timestamped(msg, args));
-        };
-        const debug = (msg, args = {}) => {
-            log(msg, { ...args, via: 'debug' });
-        };
-        const warn = (msg, args = {}) => {
-            log(msg, { ...args, via: 'warn' });
-        };
+        const output = this._timestampOutput;
+        const log = (...params) => output('log', ...params);
+        const debug = (...params) => output('debug', ...params);
+        const error = (...params) => output('error', ...params);
+        const verbose = (...params) => output('info', ...params);
+        const warn = (...params) => output('warn', ...params);
         this.#timestamp = {
             debug: debug.bind(this),
+            error: error.bind(this),
             log: log.bind(this),
+            verbose: verbose.bind(this),
             warn: warn.bind(this),
         };
         return this.#timestamp;
@@ -602,35 +612,39 @@ export class NodeConsole {
         if (this.#vi !== null) {
             return this.#vi;
         }
-        const log = (variable, { msg: msgArgs, ...inspectArgs } = {}) => this.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), msgArgs);
-        const debug = (variable, { msg: msgArgs, ...inspectArgs } = {}) => this.debug(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), msgArgs);
-        const warn = (variable, { msg: msgArgs, ...inspectArgs } = {}) => this.warn(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), msgArgs);
-        const timestampLog = (variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this.timestamp.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), {
+        const output = ((via, variable, { msg: msgArgs, ...inspectArgs } = {}) => this.output(via, VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true), this), msgArgs)).bind(this);
+        const log = (...params) => output('log', ...params);
+        const debug = (...params) => output('debug', ...params);
+        const error = (...params) => output('error', ...params);
+        const verbose = (...params) => output('info', ...params);
+        const warn = (...params) => output('warn', ...params);
+        const timestampOutput = ((via, variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this._timestampOutput(via, VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true), this), {
             ...msgArgs,
             time: timeArgs,
-        });
-        const timestampDebug = (variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this.timestamp.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), {
-            ...msgArgs,
-            time: timeArgs,
-        });
-        const timestampWarn = (variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this.timestamp.log(VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true)), {
-            ...msgArgs,
-            time: timeArgs,
-        });
+        })).bind(this);
+        const timestampLog = (...params) => timestampOutput('log', ...params);
+        const timestampDebug = (...params) => timestampOutput('debug', ...params);
+        const timestampError = (...params) => timestampOutput('error', ...params);
+        const timestampVerbose = (...params) => timestampOutput('info', ...params);
+        const timestampWarn = (...params) => timestampOutput('warn', ...params);
         this.#vi = {
             debug: debug.bind(this),
+            error: error.bind(this),
             log: log.bind(this),
+            verbose: verbose.bind(this),
             warn: warn.bind(this),
             timestamp: {
                 debug: timestampDebug.bind(this),
+                error: timestampError.bind(this),
                 log: timestampLog.bind(this),
+                verbose: timestampVerbose.bind(this),
                 warn: timestampWarn.bind(this),
             },
         };
         return this.#vi;
     }
     /**
-     * Outputs the given message to the console.
+     * Base method for outputting the given message to the console.
      *
      * @category Outputters
      *
@@ -638,9 +652,17 @@ export class NodeConsole {
      * @param args  Optional. Configuration for the output and message, if any.
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @since 2.0.0-beta.3.draft
      */
-    log(msg, args = {}) {
-        console[args.via ?? 'log'](this.msg.msg(msg, args));
+    output(via, msg, args = {}) {
+        console[via](this.msg.msg(msg, args));
+    }
+    /**
+     * Outputs the given message to the console.
+     */
+    log(...params) {
+        this.output('log', ...params);
     }
     /**
      * Outputs the given message to the console.
@@ -701,8 +723,10 @@ export class NodeConsole {
      * @category Outputters (Pre-formatted)
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
-    heading(heading, level, _args = {}) {
+    heading(heading, level, _args = {}, via) {
         const args = {
             bold: true,
             joiner: '\n',
@@ -747,7 +771,7 @@ export class NodeConsole {
                 ];
                 break;
         }
-        console[args.via ?? 'log'](this.msg.bulk(messages, args));
+        this._bulkOutput(via ?? 'log', messages, args);
     }
     /**
      * Outputs a separator string to the console.
@@ -755,8 +779,10 @@ export class NodeConsole {
      * @category Outputters (Pre-formatted)
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
-    separator(args = {}) {
+    separator(args = {}, via) {
         const quarterWidth = this.maxWidth / 4;
         const padding = ' '.repeat(quarterWidth);
         const defaultArgs = {
@@ -764,23 +790,20 @@ export class NodeConsole {
             clr: 'grey',
             ...(this.args.separator?.[1] ?? {}),
         };
-        console[args.via ?? 'log'](this.msg.msg(this.args.separator?.[0] ?? [
+        this.output(via ?? 'log', this.args.separator?.[0] ?? [
             '',
             padding + '- '.repeat(quarterWidth).trim() + padding,
             '',
-        ], { ...defaultArgs, ...args }));
+        ], { ...defaultArgs, ...args });
     }
     /* Aliases ===================================== */
     /**
      * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
      *
      * @category Aliases
-     *
-     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-     * @param args  Configuration for the output and message, if any.
      */
-    debug(msg, args = {}) {
-        this.log(msg, { ...args, via: 'debug' });
+    debug(...params) {
+        this.output('debug', ...params);
     }
     /**
      * Alias for {@link NodeConsole.logs} with `via: "debug"` argument.
@@ -793,11 +816,23 @@ export class NodeConsole {
         this.bulk.debug(...args);
     }
     /**
+     * Alias for {@link NodeConsole.log} with `via: "error"` argument.
+     *
+     * @category Aliases
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    error(...params) {
+        this.output('error', ...params);
+    }
+    /**
      * Outputs a level-one heading string to the console.
      *
      * Alias for {@link MessageMaker.heading}.
      *
      * @category Outputters (Pre-formatted)
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h1(heading, args = {}) {
         this.heading(heading, 1, args);
@@ -808,6 +843,8 @@ export class NodeConsole {
      * Alias for {@link MessageMaker.heading}.
      *
      * @category Outputters (Pre-formatted)
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h2(heading, args = {}) {
         this.heading(heading, 2, args);
@@ -818,28 +855,47 @@ export class NodeConsole {
      * Alias for {@link MessageMaker.heading}.
      *
      * @category Outputters (Pre-formatted)
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h3(heading, args = {}) {
         this.heading(heading, 3, args);
     }
     /**
+     * Alias for {@link NodeConsole.verbose}.
+     *
+     * @category Aliases
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    info(...params) {
+        this.verbose(...params);
+    }
+    /**
      * Alias for {@link NodeConsole.separator}.
      *
      * @category Aliases
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     sep(...params) {
         this.separator(...params);
     }
     /**
+     * Alias for {@link NodeConsole.log} with `via: "info"` argument.
+     *
+     * @category Aliases
+     */
+    verbose(...params) {
+        this.output('info', ...params);
+    }
+    /**
      * Alias for {@link NodeConsole.log} with `via: "warn"` argument.
      *
      * @category Aliases
-     *
-     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-     * @param args  Configuration for the output and message, if any.
      */
-    warn(msg, args = {}) {
-        this.log(msg, { ...args, via: 'warn' });
+    warn(...params) {
+        this.output('warn', ...params);
     }
     /**
      * Alias for {@link NodeConsole.logs} with `via: "warn"` argument.

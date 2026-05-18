@@ -7,8 +7,9 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import type { LangLocaleCode } from '../types/index.js';
+import type { ConsoleUtility, LangLocaleCode } from '../types/index.js';
 import { typeOf } from '../functions/typeOf.js';
+import { MiniConsole } from './MiniConsole.js';
 /**
  * Inspects the value of a variable for debugging.
  *
@@ -22,6 +23,7 @@ import { typeOf } from '../functions/typeOf.js';
  * @category Classes
  *
  * @since 0.1.1
+ * @since 2.0.0-beta.3.draft — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
  *
  * @example
  * ```ts
@@ -31,7 +33,7 @@ import { typeOf } from '../functions/typeOf.js';
  *
  * @experimental
  */
-export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.TestType> {
+export declare class VariableInspector<T_InspectionType extends VariableInspector.InspectionType = VariableInspector.InspectionType> {
     /**
      * Alias for `new VariableInspector( ...).dump()`.
      *
@@ -48,18 +50,6 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      * @see {@link VariableInspector.toString}
      */
     static stringify(...params: ConstructorParameters<typeof VariableInspector>): string;
-    /**
-     * Validates the first input parameter to ensure it is an object with a single string key.
-     *
-     * @category Static
-     *
-     * @see {@link VariableInspector.constructor}
-     */
-    protected static validateInput<T_Type extends typeOf.TestType>(variable: T_Type | {
-        [key: string]: T_Type;
-    }): {
-        [key: string]: T_Type;
-    };
     /** Testing ==================================== **/
     /**
      * Used for testing.
@@ -76,7 +66,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @returns  An example, constructed instance for a sample object.
      */
-    static sample(_args?: Partial<VariableInspector.Args>): VariableInspector<typeof VariableInspector.sampleComplexObject>;
+    static sample(_args?: Partial<VariableInspector.Args>, _console?: ConsoleUtility): VariableInspector<typeof VariableInspector.sampleComplexObject>;
     /**
      * A completed args object.
      *
@@ -92,9 +82,11 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
         childArgs: {
             includeValue: true;
         };
+        console: MiniConsole;
         debug: false;
         equalString: ' =';
         fallbackToJSON: true;
+        formatKeys: true;
         formatter: null;
         includePrefix: true;
         includeType: true;
@@ -110,19 +102,37 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
         stringQuoteCharacter: '"';
     };
     /**
+     * @since 2.0.0-beta.3.draft
+     */
+    readonly console: ConsoleUtility;
+    /**
+     * Default name for unnamed variables passed for inspection.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    protected readonly _defaultName: string;
+    /**
+     * Value to inspect.
+     *
+     * @category Inputs
+     *
+     * @expandType T_InspectionType
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    protected readonly _inspectionValue: T_InspectionType | undefined;
+    /**
      * Value’s name, used in output.
      *
      * @category Inputs
      */
     protected readonly _name: string;
     /**
-     * Value to inspect.
+     * Value to inspect as passed to the constructor.
      *
      * @category Inputs
-     *
-     * @expandType T_Type
      */
-    protected readonly _rawValue: T_Type | undefined;
+    protected readonly _rawValue: VariableInspector.InputType<T_InspectionType> | undefined;
     /**
      * Alias for this.typeOf( this._rawValue ).
      *
@@ -130,7 +140,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @expandType typeOf.Return
      */
-    protected readonly _typeOf: typeOf.Return<T_Type | undefined>;
+    protected readonly _typeOf: typeOf.Return<Extract<T_InspectionType, typeOf.TestType> | undefined>;
     /**
      * These are the properties of the input object, if any.
      *
@@ -138,31 +148,103 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      */
     protected readonly _properties: VariableInspector.Child[];
     /**
+     * @since 2.0.0-beta.3.draft
+     */
+    get properties(): VariableInspector.Child[];
+    /**
      * @category Constructor
      *
      * @param variable  Passing the variable to inspect within an single-prop object
      */
-    constructor(variable: T_Type | {
-        [key: string]: T_Type;
-    }, args?: Partial<VariableInspector.Args>);
+    constructor(variable: {
+        [key: string]: VariableInspector.InputType<T_InspectionType>;
+    }, args?: Partial<VariableInspector.Args>, 
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    console?: ConsoleUtility);
+    /**
+     * @category Inputs
+     *
+     * @see {@link VariableInspector.constructor}
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    protected _parseInputParams(validVar: {
+        [key: string]: VariableInspector.InputType<T_InspectionType>;
+    }): {
+        name: string;
+        rawValue: VariableInspector.InputType<T_InspectionType> | undefined;
+        inspectionValue: T_InspectionType | undefined;
+        typeOf: typeOf.Return<Extract<T_InspectionType, typeOf.TestType> | undefined>;
+    };
+    /**
+     * Validates the first input parameter to ensure it is an object with a
+     * single string key.
+     *
+     * @category Inputs
+     *
+     * @see {@link VariableInspector.constructor}
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from validateInput to _validateInputVariable.
+     * Changed from static to local.
+     */
+    protected _validateInputVariable(variable: {
+        [key: string]: VariableInspector.InputType<T_InspectionType>;
+    }): {
+        [key: string]: VariableInspector.InputType<T_InspectionType>;
+    };
     /**
      * Formats an object property name into a string for display.
      *
      * @category Formatters
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from keyFormatter to _keyFormatter.
      */
-    protected keyFormatter(key: number | string | symbol): string;
+    protected _keyFormatter(key: number | string | symbol): string;
     /**
-     * Builds an array of the property names.  Used by {@link VariableInspector.indexProperties}
+     * Builds an array of the property names.  Used by
+     * {@link VariableInspector._indexProperties}
      *
      * @category Inputs
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from getPropertyNames to _getPropertyNames.
      */
-    protected getPropertyNames(): ((number | string | symbol) & keyof typeof this._rawValue)[];
+    protected _getPropertyNames(): ((number | string | symbol) & keyof typeof this._inspectionValue)[];
     /**
-     * Builds an array of the properties for the current {@link VariableInspector._rawValue| this._rawValue()}.
+     * Builds an array of the properties for the current
+     * {@link VariableInspector._inspectionValue| this._inspectionValue}.
      *
      * @category Inputs
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from indexProperties to _indexProperties.
      */
-    protected indexProperties(): VariableInspector.Child[];
+    protected _indexProperties(): VariableInspector.Child[];
+    /**
+     * Filters for the ouput of different inspection parts.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    protected get _filter(): {
+        /**
+         * Filters the value's type for output.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly type: (type: string, skipFormatting: boolean) => string;
+        /**
+         * Filters the value for output.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly value: (str: null | undefined | string, viaMethod: string | undefined, skipFormatting: boolean) => string;
+        /**
+         * Add 'via' info to value filter.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly valueVia: (viaMethod: string, skipFormatting: boolean) => string;
+    };
     /**
      * Applies any formatting functions as defined in the args.
      *
@@ -175,14 +257,16 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      * @param str    Value to format.
      *
      * @return  Formatted value.
+     *
+     * @since 2.0.0-beta.3.draft — Renamed from formatter to _formatter.
      */
-    protected formatter(stage: VariableInspector.StageKeys, str: string): string;
+    protected _formatter(stage: VariableInspector.StageKeys, str: string): string;
     /**
      * Prefix to print, not including the {@link VariableInspector.type}.
      *
      * @category Compilers
      *
-     * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
+     * @param skipFormatting  Optional. Whether to skip the _formatter functions. Default false.
      */
     prefix(skipFormatting?: boolean): string;
     /**
@@ -193,7 +277,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @category Compilers
      *
-     * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
+     * @param skipFormatting  Optional. Whether to skip the _formatter functions. Default false.
      */
     type(skipFormatting?: boolean): string;
     /**
@@ -202,7 +286,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @category Compilers
      *
-     * @param skipFormatting  Optional. Whether to skip the formatter functions. Default false.
+     * @param skipFormatting  Optional. Whether to skip the _formatter functions. Default false.
      */
     value(skipFormatting?: boolean): string;
     /**
@@ -218,7 +302,7 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description | JSON.stringify}
      */
-    toJSON(): VariableInspector.JSON<T_Type>;
+    toJSON(): VariableInspector.JSON<T_InspectionType>;
     /**
      * Overrides the default function to return a string representation of the
      * inspected variable’s value.
@@ -235,9 +319,9 @@ export declare class VariableInspector<T_Type extends typeOf.TestType = typeOf.T
      *
      * @category Recursion
      */
-    protected _new(variable: ConstructorParameters<typeof VariableInspector>[0], args?: Partial<VariableInspector.Args>): VariableInspector;
+    protected _new<T_InspectionType extends VariableInspector.InspectionType>(variable: ConstructorParameters<typeof VariableInspector<T_InspectionType>>[0], args?: Partial<VariableInspector.Args>): VariableInspector<T_InspectionType>;
     /**
-     * Creates a readable representation of {@link VariableInspector._rawValue}
+     * Creates a readable representation of {@link VariableInspector._inspectionValue}
      * as if its type is object (including arrays).
      *
      * @category Translators
@@ -259,9 +343,25 @@ export declare namespace VariableInspector {
      */
     type Formatter = (str: string) => string;
     /**
-     * Stages at which formatter functions may be used.
+     * @since 2.0.0-beta.3.draft
+     */
+    type InputObject<T_InspectionType extends InspectionType> = (T_InspectionType & {
+        toVariableInspection?: never | undefined;
+    }) | {
+        toVariableInspection: () => T_InspectionType;
+    };
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    type InputType<T_InspectionType extends InspectionType> = Exclude<T_InspectionType, object> | InputObject<T_InspectionType>;
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    type InspectionType = typeOf.TestType | unknown;
+    /**
+     * Stages at which _formatter functions may be used.
      *
-     * `_` is used if the applicable formatter is not present.
+     * `_` is used if the applicable _formatter is not present.
      *
      * @since 0.1.1
      *
@@ -279,7 +379,7 @@ export declare namespace VariableInspector {
          * property values).
          *
          * Useful to change things like the
-         * {@link VariableInspector.Args['formatter']} functions.
+         * {@link VariableInspector.Args['_formatter']} functions.
          *
          * @default
          * { includeValue: true }
@@ -307,6 +407,14 @@ export declare namespace VariableInspector {
          * @default true
          */
         fallbackToJSON: boolean;
+        /**
+         * An optional callback for formatting the output values.
+         *
+         * @default true
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        formatKeys: boolean;
         /**
          * An optional callback for formatting the output values.
          *
@@ -428,7 +536,7 @@ export declare namespace VariableInspector {
      *
      * @since 0.1.1
      */
-    interface JSON<T_Type extends typeOf.TestType = typeOf.TestType> {
+    interface JSON<T_Type extends InspectionType = InspectionType> {
         /**
          * A string representation of the inspection. May have tabs and line breaks.
          *

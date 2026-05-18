@@ -179,7 +179,6 @@ export abstract class AbstractStage<
         endMsg: string,
         defaultMsg: string,
         msgArgs: Parameters<typeof this.progressLog>[ 2 ] = {},
-        timeArgs: Parameters<typeof this.progressLog>[ 3 ] = {},
     ): void {
         if ( this.args[ 'notice' ] === false ) { return; }
 
@@ -226,7 +225,6 @@ export abstract class AbstractStage<
             ] ],
             depth,
             msgArgs,
-            timeArgs,
         );
     }
 

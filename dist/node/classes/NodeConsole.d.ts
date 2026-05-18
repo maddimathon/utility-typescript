@@ -7,7 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.3.draft
  * @license MIT
  */
-import type { RecursivePartial } from '../../types/index.js';
+import type { ConsoleUtility, RecursivePartial, TupleShift } from '../../types/index.js';
 import { MessageMaker } from '../../classes/MessageMaker.js';
 import { VariableInspector } from '../../classes/VariableInspector.js';
 import { NodeConsole_Prompt } from './NodeConsole/NodeConsole_Prompt.js';
@@ -25,7 +25,7 @@ export * from './NodeConsole/NodeConsole_Prompt.js';
  *
  * @experimental
  */
-export declare class NodeConsole {
+export declare class NodeConsole implements ConsoleUtility<[undefined | RecursivePartial<NodeConsole.MsgArgs>]> {
     #private;
     /**
      * Prints sample output to the console via NodeConsole.log().
@@ -111,47 +111,21 @@ export declare class NodeConsole {
         [key: string]: boolean | number | string | null;
     }, literalFalse?: boolean, equals?: boolean): string;
     /**
+     * @since 2.0.0-beta.3.draft
+     */
+    protected _bulkOutput(via: ConsoleUtility.OutputMethod, msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>): void;
+    /**
      * Output longer messages with per-section formatting.
      *
      * @category Outputters
      *
      * @since 2.0.0-beta.3.draft
      */
-    get bulk(): {
-        /**
-         * Alias for {@link NodeConsole.bulk.log} with `via: "debug"` argument.
-         *
-         * @see {@link MessageMaker.bulk}  Used to format the message.
-         *
-         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
-         * @param args  Optional. Configuration for the output and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.debugs to NodeConsole.bulk.debug
-         */
-        debug: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
-        /**
-         * Outputs the given message to the console.
-         *
-         * @see {@link MessageMaker.bulk}  Used to format the message.
-         *
-         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
-         * @param args  Optional. Configuration for the output and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.logs to NodeConsole.bulk.log
-         */
-        log: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
-        /**
-         * Alias for {@link NodeConsole.bulk.log} with `via: "warn"` argument.
-         *
-         * @see {@link MessageMaker.bulk}  Used to format the message.
-         *
-         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
-         * @param args  Optional. Configuration for the output and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.warns to NodeConsole.bulk.warn
-         */
-        warn: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
-    };
+    get bulk(): NodeConsole.BulkMethods;
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    protected _timestampOutput(via: ConsoleUtility.OutputMethod, msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>): void;
     /**
      * Output messages (long or short) prepended with a timestamp.
      *
@@ -159,41 +133,7 @@ export declare class NodeConsole {
      *
      * @since 2.0.0-beta.3.draft
      */
-    get timestamp(): {
-        /**
-         * Alias for {@link NodeConsole.timestamp.log} with `via: "debug"` argument.
-         *
-         * @see {@link MessageMaker.timestamped}  Used to format the message.
-         *
-         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-         * @param args  Optional. Configuration for the output and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft
-         */
-        debug: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
-        /**
-         * Outputs the given message to the console prefixed with a timestamp.
-         *
-         * @see {@link MessageMaker.timestamped}  Used to format the message.
-         *
-         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-         * @param args  Optional. Configuration for the output and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.timestampLog to NodeConsole.timestamp.log
-         */
-        log: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
-        /**
-         * Alias for {@link NodeConsole.timestamp.log} with `via: "warn"` argument.
-         *
-         * @see {@link MessageMaker.timestamped}  Used to format the message.
-         *
-         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-         * @param args  Optional. Configuration for the output and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft
-         */
-        warn: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
-    };
+    get timestamp(): NodeConsole.TimestampMethods;
     /**
      * Output an inspection of the given variable to the console, with a timestamp if desired.
      *
@@ -201,104 +141,9 @@ export declare class NodeConsole {
      *
      * @since 2.0.0-beta.3.draft
      */
-    get vi(): {
-        /**
-         * Output an inspection of the given variable to the console as debug info.
-         *
-         * @see {@link NodeConsole.debug}  Used to print the inspection.
-         *
-         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
-         *
-         * @param variable  The variable to be inspected.
-         * @param args      Optional. Configuration for the variable inspection and message, if any.
-         */
-        debug: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
-            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
-        }) => void;
-        /**
-         * Output an inspection of the given variable to the console.
-         *
-         * @see {@link NodeConsole.log}  Used to print the inspection.
-         *
-         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
-         *
-         * @param variable  The variable to be inspected.
-         * @param args      Optional. Configuration for the variable inspection and message, if any.
-         *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.varDump to NodeConsole.vi.log and updated params.
-         */
-        log: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
-            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
-        }) => void;
-        /**
-         * Output an inspection of the given variable to the console as a warning.
-         *
-         * @see {@link NodeConsole.warn}  Used to print the inspection.
-         *
-         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
-         *
-         * @param variable  The variable to be inspected.
-         * @param args      Optional. Configuration for the variable inspection and message, if any.
-         */
-        warn: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
-            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
-        }) => void;
-        /**
-         * For outputting var dumps prepended with a timestamp.
-         */
-        timestamp: {
-            /**
-             * Alias for {@link NodeConsole.bulk.log} with `via: "debug"` argument.
-             *
-             * @see {@link NodeConsole.debug}  Used to print the inspection.
-             *
-             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
-             *
-             * @param variable  The variable to be inspected.
-             * @param args      Optional. Configuration for the variable inspection and message, if any.
-             *
-             * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.debugs to NodeConsole.vi.debug and updated params.
-             */
-            debug: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
-                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
-                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
-            }) => void;
-            /**
-             * Output an inspection of the given variable to the console.
-             *
-             * @see {@link NodeConsole.log}  Used to print the inspection.
-             *
-             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
-             *
-             * @param variable  The variable to be inspected.
-             * @param args      Optional. Configuration for the variable inspection and message, if any.
-             *
-             * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.logs to NodeConsole.vi.log and updated params.
-             */
-            log: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
-                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
-                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
-            }) => void;
-            /**
-             * Alias for {@link NodeConsole.bulk.log} with `via: "warn"` argument.
-             *
-             * @see {@link NodeConsole.warn}  Used to print the inspection.
-             *
-             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
-             *
-             * @param variable  The variable to be inspected.
-             * @param args      Optional. Configuration for the variable inspection and message, if any.
-             *
-             * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.warns to NodeConsole.vi.warn and updated params.
-             */
-            warn: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
-                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
-                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
-            }) => void;
-        };
-    };
+    get vi(): NodeConsole.VarDumpMethods;
     /**
-     * Outputs the given message to the console.
+     * Base method for outputting the given message to the console.
      *
      * @category Outputters
      *
@@ -306,8 +151,14 @@ export declare class NodeConsole {
      * @param args  Optional. Configuration for the output and message, if any.
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @since 2.0.0-beta.3.draft
      */
-    log(msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    protected output(via: ConsoleUtility.OutputMethod, msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    /**
+     * Outputs the given message to the console.
+     */
+    log(...params: TupleShift<Parameters<typeof this.output>>): void;
     /**
      * Outputs the given message to the console.
      *
@@ -358,25 +209,26 @@ export declare class NodeConsole {
      * @category Outputters (Pre-formatted)
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
-    heading(heading: string, level: number, _args?: RecursivePartial<Omit<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs, "linesIn" | "linesOut">>): void;
+    heading(heading: string, level: number, _args?: RecursivePartial<Omit<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs, "linesIn" | "linesOut">>, via?: ConsoleUtility.OutputMethod): void;
     /**
      * Outputs a separator string to the console.
      *
      * @category Outputters (Pre-formatted)
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
-    separator(args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    separator(args?: RecursivePartial<NodeConsole.MsgArgs>, via?: ConsoleUtility.OutputMethod): void;
     /**
      * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
      *
      * @category Aliases
-     *
-     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-     * @param args  Configuration for the output and message, if any.
      */
-    debug(msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    debug(...params: TupleShift<Parameters<typeof this.output>>): void;
     /**
      * Alias for {@link NodeConsole.logs} with `via: "debug"` argument.
      *
@@ -386,11 +238,21 @@ export declare class NodeConsole {
      */
     debugs(...args: Parameters<NodeConsole['bulk']['debug']>): void;
     /**
+     * Alias for {@link NodeConsole.log} with `via: "error"` argument.
+     *
+     * @category Aliases
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    error(...params: TupleShift<Parameters<typeof this.output>>): void;
+    /**
      * Outputs a level-one heading string to the console.
      *
      * Alias for {@link MessageMaker.heading}.
      *
      * @category Outputters (Pre-formatted)
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h1(heading: string, args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
@@ -399,6 +261,8 @@ export declare class NodeConsole {
      * Alias for {@link MessageMaker.heading}.
      *
      * @category Outputters (Pre-formatted)
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h2(heading: string, args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
@@ -407,23 +271,38 @@ export declare class NodeConsole {
      * Alias for {@link MessageMaker.heading}.
      *
      * @category Outputters (Pre-formatted)
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h3(heading: string, args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    /**
+     * Alias for {@link NodeConsole.verbose}.
+     *
+     * @category Aliases
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    info(...params: Parameters<typeof this.verbose>): void;
     /**
      * Alias for {@link NodeConsole.separator}.
      *
      * @category Aliases
+     *
+     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     sep(...params: Parameters<NodeConsole['separator']>): void;
+    /**
+     * Alias for {@link NodeConsole.log} with `via: "info"` argument.
+     *
+     * @category Aliases
+     */
+    verbose(...params: TupleShift<Parameters<typeof this.output>>): void;
     /**
      * Alias for {@link NodeConsole.log} with `via: "warn"` argument.
      *
      * @category Aliases
-     *
-     * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
-     * @param args  Configuration for the output and message, if any.
      */
-    warn(msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    warn(...params: TupleShift<Parameters<typeof this.output>>): void;
     /**
      * Alias for {@link NodeConsole.logs} with `via: "warn"` argument.
      *
@@ -468,6 +347,66 @@ export declare namespace NodeConsole {
         varInspect: Partial<VariableInspector.Args>;
     };
     /**
+     * @since 2.0.0-beta.3.draft
+     */
+    interface BulkMethods {
+        /**
+         * Alias for {@link NodeConsole.bulk.log} with `via: "debug"` argument.
+         *
+         * @see {@link MessageMaker.bulk}  Used to format the message.
+         *
+         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.debugs to NodeConsole.bulk.debug
+         */
+        readonly debug: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
+        /**
+         * Alias for {@link NodeConsole.bulk.log} with `via: "error"` argument.
+         *
+         * @see {@link MessageMaker.bulk}  Used to format the message.
+         *
+         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly error: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
+        /**
+         * Outputs the given message to the console.
+         *
+         * @see {@link MessageMaker.bulk}  Used to format the message.
+         *
+         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.logs to NodeConsole.bulk.log
+         */
+        readonly log: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
+        /**
+         * Alias for {@link NodeConsole.bulk.log} with `via: "info"` argument.
+         *
+         * @see {@link MessageMaker.bulk}  Used to format the message.
+         *
+         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly verbose: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
+        /**
+         * Alias for {@link NodeConsole.bulk.log} with `via: "warn"` argument.
+         *
+         * @see {@link MessageMaker.bulk}  Used to format the message.
+         *
+         * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.warns to NodeConsole.bulk.warn
+         */
+        readonly warn: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
+    }
+    /**
      * Error thrown from the terminal in {@link NodeConsole.cmd}.
      *
      * @since 0.1.1
@@ -484,11 +423,228 @@ export declare namespace NodeConsole {
      * Optional configuration for {@link NodeConsole.log}.
      *
      * @since 0.1.1
+     * @since 2.0.0-beta.3.draft — Removed `via` property.
      */
-    type MsgArgs = Partial<MessageMaker.MsgArgs> & {
+    type MsgArgs = Partial<MessageMaker.MsgArgs>;
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    interface TimestampMethods {
         /**
-         * Console method to use for outputting to the console.
+         * Alias for {@link NodeConsole.timestamp.log} with `via: "debug"` argument.
+         *
+         * @see {@link MessageMaker.timestamped}  Used to format the message.
+         *
+         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
          */
-        via: "error" | "info" | "log" | "warn" | "debug";
-    };
+        readonly debug: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
+        /**
+         * Alias for {@link NodeConsole.timestamp.log} with `via: "error"` argument.
+         *
+         * @see {@link MessageMaker.timestamped}  Used to format the message.
+         *
+         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly error: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
+        /**
+         * Outputs the given message to the console prefixed with a timestamp.
+         *
+         * @see {@link MessageMaker.timestamped}  Used to format the message.
+         *
+         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.timestampLog to NodeConsole.timestamp.log
+         */
+        readonly log: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
+        /**
+         * Alias for {@link NodeConsole.timestamp.log} with `via: "info"` argument.
+         *
+         * @see {@link MessageMaker.timestamped}  Used to format the message.
+         *
+         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly verbose: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
+        /**
+         * Alias for {@link NodeConsole.timestamp.log} with `via: "warn"` argument.
+         *
+         * @see {@link MessageMaker.timestamped}  Used to format the message.
+         *
+         * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
+         * @param args  Optional. Configuration for the output and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly warn: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
+    }
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    interface VarDumpMethods {
+        /**
+         * Output an inspection of the given variable to the console as debug info.
+         *
+         * @see {@link NodeConsole.debug}  Used to print the inspection.
+         *
+         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+         *
+         * @param variable  The variable to be inspected.
+         * @param args      Optional. Configuration for the variable inspection and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly debug: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
+        }) => void;
+        /**
+         * Output an inspection of the given variable to the console as error info.
+         *
+         * @see {@link NodeConsole.error}  Used to print the inspection.
+         *
+         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+         *
+         * @param variable  The variable to be inspected.
+         * @param args      Optional. Configuration for the variable inspection and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft
+         */
+        readonly error: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
+        }) => void;
+        /**
+         * Output an inspection of the given variable to the console.
+         *
+         * @see {@link NodeConsole.log}  Used to print the inspection.
+         *
+         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+         *
+         * @param variable  The variable to be inspected.
+         * @param args      Optional. Configuration for the variable inspection and message, if any.
+         *
+         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.varDump to NodeConsole.vi.log and updated params.
+         */
+        readonly log: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
+        }) => void;
+        /**
+         * Output an inspection of the given variable to the console as additional info.
+         *
+         * @see {@link NodeConsole.verbose}  Used to print the inspection.
+         *
+         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+         *
+         * @param variable  The variable to be inspected.
+         * @param args      Optional. Configuration for the variable inspection and message, if any.
+         */
+        readonly verbose: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
+        }) => void;
+        /**
+         * Output an inspection of the given variable to the console as a warning.
+         *
+         * @see {@link NodeConsole.warn}  Used to print the inspection.
+         *
+         * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+         *
+         * @param variable  The variable to be inspected.
+         * @param args      Optional. Configuration for the variable inspection and message, if any.
+         */
+        readonly warn: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+            msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
+        }) => void;
+        /**
+         * For outputting var dumps prepended with a timestamp.
+         */
+        readonly timestamp: {
+            /**
+             * Alias for {@link NodeConsole.bulk.log} with `via: "debug"` argument.
+             *
+             * @see {@link NodeConsole.debug}  Used to print the inspection.
+             *
+             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+             *
+             * @param variable  The variable to be inspected.
+             * @param args      Optional. Configuration for the variable inspection and message, if any.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            readonly debug: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
+                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
+            }) => void;
+            /**
+             * Alias for {@link NodeConsole.bulk.log} with `via: "error"` argument.
+             *
+             * @see {@link NodeConsole.error}  Used to print the inspection.
+             *
+             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+             *
+             * @param variable  The variable to be inspected.
+             * @param args      Optional. Configuration for the variable inspection and message, if any.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            readonly error: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
+                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
+            }) => void;
+            /**
+             * Output an inspection of the given variable to the console.
+             *
+             * @see {@link NodeConsole.log}  Used to print the inspection.
+             *
+             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+             *
+             * @param variable  The variable to be inspected.
+             * @param args      Optional. Configuration for the variable inspection and message, if any.
+             *
+             * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.timestampVarDump to NodeConsole.vi.timestamp.log and updated params.
+             */
+            readonly log: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
+                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
+            }) => void;
+            /**
+             * Alias for {@link NodeConsole.bulk.log} with `via: "info"` argument.
+             *
+             * @see {@link NodeConsole.verbose}  Used to print the inspection.
+             *
+             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+             *
+             * @param variable  The variable to be inspected.
+             * @param args      Optional. Configuration for the variable inspection and message, if any.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            readonly verbose: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
+                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
+            }) => void;
+            /**
+             * Alias for {@link NodeConsole.bulk.log} with `via: "warn"` argument.
+             *
+             * @see {@link NodeConsole.warn}  Used to print the inspection.
+             *
+             * @see {@link VariableInspector.stringify}  Used to inspect the variable.
+             *
+             * @param variable  The variable to be inspected.
+             * @param args      Optional. Configuration for the variable inspection and message, if any.
+             *
+             * @since 2.0.0-beta.3.draft
+             */
+            readonly warn: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
+                msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
+                time?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs['time']>;
+            }) => void;
+        };
+    }
 }
