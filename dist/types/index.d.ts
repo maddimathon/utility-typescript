@@ -30,3 +30,4 @@ export type * from './objects/required.js';
 export type * from './objects/utilities.js';
 export type * from './string-literals/html.js';
 export type * as Test from './test.js';
+export type * from './utilities.js';

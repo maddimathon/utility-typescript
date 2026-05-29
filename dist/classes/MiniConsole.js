@@ -51,10 +51,3 @@ export class MiniConsole {
         this.output('warn', ...params);
     }
 }
-// /**
-//  * Utilities for the {@link MiniConsole} class.
-//  * 
-//  * @since 2.0.0-beta.3.draft
-//  */
-// export namespace MiniConsole {
-// }
