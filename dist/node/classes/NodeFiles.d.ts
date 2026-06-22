@@ -175,6 +175,16 @@ export declare class NodeFiles {
      */
     write(path: string, content: string | string[], args?: Partial<NodeFiles.WriteFileArgs>): string | false;
     /**
+     * Gets the basename of the given path.
+     *
+     * @category Path-makers
+     *
+     * @since 2.0.0-alpha
+     *
+     * @experimental
+     */
+    basename(path: string, suffix?: string | false): string;
+    /**
      * Changes just the file name of a path
      *
      * @category Path-makers
@@ -185,16 +195,6 @@ export declare class NodeFiles {
      * @return  Full path with updated basename.
      */
     changeBaseName(path: string, newName: string): string;
-    /**
-     * Gets the basename of the given path.
-     *
-     * @category Path-makers
-     *
-     * @since 2.0.0-alpha
-     *
-     * @experimental
-     */
-    basename(path: string, suffix?: string | false): string;
     /**
      * Checks whether a file, directory, or link exists at the given path.
      *

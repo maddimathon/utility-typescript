@@ -8,9 +8,7 @@
  * @license MIT
  */
 
-import type { LangLocaleCode } from '../../types/index.js';
-
-import { mergeArgs } from '../objects/mergeArgs.js';
+import type { RecursivePartial } from '../../types/index.js';
 
 
 /**
@@ -31,56 +29,115 @@ import { mergeArgs } from '../objects/mergeArgs.js';
  */
 export function timestamp(
     date: Date | null = null,
-    _args: timestamp.Args_Input = {},
+    _args: Partial<timestamp.Args> | RecursivePartial<timestamp.Args> = {},
 ): string {
 
-    const DEFAULT_ARGS: timestamp.Args = {
-        date: false,
-        time: false,
+    const _inputTimeFormat = typeof _args.time === 'object' ? _args.time : {};
 
-        debug: false,
+    const formats = {
 
-        format: mergeArgs( {
-            date: {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-            },
-            time: {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                // second: '2-digit',
-            },
-        } as timestamp.Args[ 'format' ], _args.format ?? {} ),
+        date: typeof _args.date === 'object'
+            ? {
+                ...timestamp.Args.Format.DEFAULTS.date,
+                ..._args.date,
+            }
+            : timestamp.Args.Format.DEFAULTS.date,
 
-        lang: 'en-CA',
+        time: {
+            ...timestamp.Args.Format.DEFAULTS.time,
+            ..._inputTimeFormat,
 
+            hour12: !_inputTimeFormat.hour12
+                ? false
+                : typeof _inputTimeFormat.hour12 === 'object'
+                    ? {
+                        ...timestamp.Args.Format.DEFAULTS.time.hour12,
+                        ..._inputTimeFormat.hour12,
+                    }
+                    : timestamp.Args.Format.DEFAULTS.time.hour12,
+
+            second: _inputTimeFormat.second ?? _inputTimeFormat.millisecond ?? false,
+        },
+    } as const;
+
+    const args = {
         separator: ' @ ',
-    };
 
-    const args = mergeArgs( DEFAULT_ARGS, _args as Partial<timestamp.Args> );
+        ..._args,
+
+        date: !!_args.date,
+        time: _args.time ? !!_args.time : !_args.date,
+    } as const satisfies timestamp.Args;
 
     if ( args.debug ) {
         console.log( 'timestamp() args =', args );
+        console.log( 'timestamp() formats =', formats );
     }
 
-    if ( date === null ) {
+    if ( !( date instanceof Date ) ) {
         date = new Date();
-    }
-
-    if ( !args.date && !args.time ) {
-        args.time = true;
     }
 
     const formatted: string[] = [];
 
     if ( args.date ) {
-        formatted.push( date.toLocaleString( args.lang, args.format.date ) );
+        const _dateParts: string[] = [];
+
+        if ( formats.date.year ) {
+            _dateParts.push( date.getFullYear().toFixed().padStart( 4, '0' ) );
+        }
+
+        if ( formats.date.month ) {
+            _dateParts.push( ( date.getMonth() + 1 ).toFixed().padStart( 2, '0' ) );
+        }
+
+        if ( formats.date.day ) {
+            _dateParts.push( date.getDate().toFixed().padStart( 2, '0' ) );
+        }
+
+        if ( _dateParts.length ) {
+            formatted.push( _dateParts.join( '-' ) );
+        }
     }
 
     if ( args.time ) {
-        formatted.push( date.toLocaleString( args.lang, args.format.time ) );
+        const _timeParts_colon: string[] = [];
+
+        if ( formats.time.hour ) {
+            let _hr = date.getHours();
+
+            if ( formats.time.hour12 ) {
+                _hr = _hr % 12 || 12;
+            }
+
+            _timeParts_colon.push( _hr.toFixed().padStart( 2, '0' ) );
+        }
+
+        if ( formats.time.minute ) {
+            _timeParts_colon.push( date.getMinutes().toFixed().padStart( 2, '0' ) );
+        }
+
+        if ( formats.time.second ) {
+            _timeParts_colon.push( date.getSeconds().toFixed().padStart( 2, '0' ) );
+        }
+
+        const _timeParts_dot: string[] = _timeParts_colon.length
+            ? [ _timeParts_colon.join( ':' ) ]
+            : [];
+
+        if ( formats.time.millisecond ) {
+            _timeParts_dot.push( date.getMilliseconds().toFixed().padEnd( 3, '0' ) );
+        }
+
+        if ( _timeParts_dot.length ) {
+            let suffix = '';
+
+            if ( formats.time.hour && formats.time.hour12 ) {
+                suffix = date.getHours() < 12 ? formats.time.hour12.am : formats.time.hour12.pm;
+            }
+
+            formatted.push( _timeParts_dot.join( '.' ) + suffix );
+        }
     }
 
     if ( args.debug ) {
@@ -103,8 +160,9 @@ export namespace timestamp {
      * Optional configuation for {@link timestamp} function.
      * 
      * @since 0.1.0
+     * @since ___PKG_VERSION___ — Removed lang property.  Removed format property to be date & time property options and changed params from the JS {@link Intl.DateTimeFormatOptions} to simplify and stick to ISO-ish timestamps.
      */
-    export type Args = {
+    export interface Args {
 
         /**
          * Whether to inlude the date in the timestamp.
@@ -113,7 +171,7 @@ export namespace timestamp {
          * 
          * @default false
          */
-        date: boolean;
+        date: boolean | Partial<Args.Format.Date>;
 
         /**
          * Outputs some var dumps to the console.
@@ -122,7 +180,7 @@ export namespace timestamp {
          * 
          * @default false
          */
-        debug: boolean;
+        debug?: undefined | boolean;
 
         /**
          * Whether to inlude the time in the timestamp.
@@ -131,37 +189,7 @@ export namespace timestamp {
          * 
          * @default false
          */
-        time: boolean;
-
-        /**
-         * Formatting options for the date and time portions of the timestamp.
-         * 
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#options | DateTimeFormatOptions}  Options for JS date formats.
-         */
-        format: {
-
-            /**
-             * @default 
-             * { year: 'numeric', month: '2-digit', day: '2-digit' }
-             */
-            date: Intl.DateTimeFormatOptions;
-
-            /**
-             * @default { hour12: false, hour: '2-digit', minute: '2-digit' }
-             */
-            time: Intl.DateTimeFormatOptions;
-        };
-
-        /**
-         * Language code used to localize the formatted date.
-         * 
-         * Passed to {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString | Date.toLocaleString()}.
-         * 
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales | MDN} for allowed values.
-         * 
-         * @default 'en-CA'
-         */
-        lang: LangLocaleCode;
+        time: boolean | Partial<Args.Format.Time>;
 
         /**
          * String that joins the date and time stamps, if applicable.
@@ -169,15 +197,87 @@ export namespace timestamp {
          * @default ' @ '
          */
         separator: string;
-    };
+    }
 
     /**
-     * A partial-ized version of {@link timestamp.Args}. Used for the
-     * {@link timestamp} function optional input args.
+     * Utility types for the {@link Args} type.
      * 
-     * @since 0.1.0
+     * @since ___PKG_VERSION___
      */
-    export type Args_Input = Partial<Omit<Args, "format">> & {
-        format?: Partial<Args[ 'format' ]>;
-    };
+    export namespace Args {
+
+        /**
+         * Utility types for defining output formats in the {@link Args} type.
+         * 
+         * @since ___PKG_VERSION___
+         */
+        export namespace Format {
+
+            /**
+             * Format argument for date output.
+             * 
+             * @since ___PKG_VERSION___
+             */
+            export interface Date {
+                year: boolean;
+                month: boolean;
+                day: boolean;
+            }
+
+            /**
+             * Format argument for time output.
+             * 
+             * @since ___PKG_VERSION___
+             */
+            export interface Time {
+                hour12: boolean | { am: string; pm: string; };
+                hour: boolean;
+                minute: boolean;
+                second: boolean;
+                millisecond: boolean;
+            }
+
+            /**
+             * Default format argument values.
+             * 
+             * @since ___PKG_VERSION___
+             */
+            export const DEFAULTS: {
+                readonly date: {
+                    readonly year: true,
+                    readonly month: true,
+                    readonly day: true,
+                },
+                readonly time: {
+                    readonly hour12: {
+                        am: ' am',
+                        pm: ' pm',
+                    },
+                    readonly hour: true,
+                    readonly minute: true,
+                    readonly second: false,
+                    readonly millisecond: false,
+                },
+            } = {
+                date: {
+                    year: true,
+                    month: true,
+                    day: true,
+                },
+                time: {
+                    hour12: {
+                        am: ' am',
+                        pm: ' pm',
+                    },
+                    hour: true,
+                    minute: true,
+                    second: false,
+                    millisecond: false,
+                },
+            } as const satisfies {
+                date: Date;
+                time: Time;
+            };
+        }
+    }
 }

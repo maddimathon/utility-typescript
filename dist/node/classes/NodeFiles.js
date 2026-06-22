@@ -348,21 +348,6 @@ export class NodeFiles {
     }
     /* Paths ===================================== */
     /**
-     * Changes just the file name of a path
-     *
-     * @category Path-makers
-     *
-     * @param path
-     * @param newName
-     *
-     * @return  Full path with updated basename.
-     */
-    changeBaseName(path, newName) {
-        const isRelative = !path.match(/^\//g);
-        const newPath = this.pathResolve(this.dirname(path), newName + NodePath.extname(path));
-        return isRelative ? this.pathRelative(newPath) : newPath;
-    }
-    /**
      * Gets the basename of the given path.
      *
      * @category Path-makers
@@ -379,6 +364,21 @@ export class NodeFiles {
             suffix = NodePath.extname(path) || undefined;
         }
         return NodePath.basename(path, suffix);
+    }
+    /**
+     * Changes just the file name of a path
+     *
+     * @category Path-makers
+     *
+     * @param path
+     * @param newName
+     *
+     * @return  Full path with updated basename.
+     */
+    changeBaseName(path, newName) {
+        const isRelative = !path.match(/^\//g);
+        const newPath = this.pathResolve(this.dirname(path), newName + NodePath.extname(path));
+        return isRelative ? this.pathRelative(newPath) : newPath;
     }
     /**
      * Checks whether a file, directory, or link exists at the given path.

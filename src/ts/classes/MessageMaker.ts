@@ -714,6 +714,34 @@ export class MessageMaker {
     }
 
     /**
+     * Normalizes any input into bulk input.
+     * 
+     * @since ___PKG_VERSION___
+     */
+    public normalizeBulkInput( msg: string | string[] | MessageMaker.BulkMsgs ): MessageMaker.BulkMsgs {
+
+        // returns
+        if ( typeof msg === 'string' ) {
+            return msg ? [ [ msg ] ] : [];
+        }
+
+        // = is an array
+        return msg.map( ( m ) => {
+
+            if ( typeof m === 'string' ) {
+                m = [ m ];
+            }
+
+            const m_arr: (
+                [ string | string[], RecursivePartial<Omit<MessageMaker.MsgArgs, "linesIn" | "linesOut">> | undefined ]
+                | [ string | string[] ]
+            ) = m;
+
+            return m_arr;
+        } );
+    }
+
+    /**
      * Formats given messages individually and then joins them on return.
      * 
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
@@ -792,6 +820,18 @@ export class MessageMaker {
     }
 
     /**
+     * Formats a timestamp according to the args.
+     * 
+     * @since ___PKG_VERSION___
+     */
+    public timestamp(
+        date: Date | null = null,
+        args: Partial<timestamp.Args> | RecursivePartial<timestamp.Args> = {},
+    ): string {
+        return timestamp( date, args );
+    }
+
+    /**
      * Formats a message prepended with a timestamp.
      * 
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
@@ -813,28 +853,7 @@ export class MessageMaker {
             ...msgArgs,
         } );
 
-        // we want to accept a variety of inputs, but we need to normalize it to
-        // be MessageMaker.BulkMsgs
-        if ( typeof msg === 'string' ) {
-            msg = msg ? [ [ msg ] ] : [];
-            args_full.joiner = args_full.joiner ?? '\n';
-        } else {
-            // = is an array
-            msg = msg.map( ( m ) => {
-
-                if ( typeof m === 'string' ) {
-                    args_full.joiner = args_full.joiner ?? '\n';
-                    m = [ m ];
-                }
-
-                const m_arr: (
-                    [ string | string[], RecursivePartial<Omit<MessageMaker.MsgArgs, "linesIn" | "linesOut">> | undefined ]
-                    | [ string | string[] ]
-                ) = m;
-
-                return m_arr;
-            } );
-        }
+        msg = this.normalizeBulkInput( msg );
 
         // the actual values to be used for the whole message, but ignore when
         // formatting the message parts
@@ -845,14 +864,9 @@ export class MessageMaker {
         } = args_full;
 
         /** This is the unpainted string used for the timestamp. */
-        const timePrefix: string = `[${ timestamp(
+        const timePrefix: string = `[${ this.timestamp(
             timeArgs.date ?? null,
-            {
-                date: false,
-                time: true,
-
-                ...timeArgs.stamp,
-            }
+            timeArgs.stamp,
         ) }]`;
 
         /** Base arguments to use for each individual message part. */
@@ -1181,7 +1195,7 @@ export namespace MessageMaker {
         time: Partial<
             Omit<MsgArgs, 'depth' | 'fullWidth' | 'hangingIndent' | 'indent' | 'maxWidth' | 'minWidth' | 'tab'> & {
                 date: Date;
-                stamp: timestamp.Args_Input;
+                stamp: Partial<timestamp.Args> | RecursivePartial<timestamp.Args>;
             }
         >;
     };

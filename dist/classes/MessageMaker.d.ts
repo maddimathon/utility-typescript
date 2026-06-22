@@ -156,6 +156,12 @@ export declare class MessageMaker {
      */
     msg(msg: string | string[], _args?: Partial<MessageMaker.MsgArgs>): string;
     /**
+     * Normalizes any input into bulk input.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    normalizeBulkInput(msg: string | string[] | MessageMaker.BulkMsgs): MessageMaker.BulkMsgs;
+    /**
      * Formats given messages individually and then joins them on return.
      *
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
@@ -168,6 +174,12 @@ export declare class MessageMaker {
      * Applies colour and font styles to an message for output.
      */
     painter(msg: string, args?: Partial<MessageMaker.PainterArgs>): string;
+    /**
+     * Formats a timestamp according to the args.
+     *
+     * @since 2.0.0-beta.3.draft
+     */
+    timestamp(date?: Date | null, args?: Partial<timestamp.Args> | RecursivePartial<timestamp.Args>): string;
     /**
      * Formats a message prepended with a timestamp.
      *
@@ -413,7 +425,7 @@ export declare namespace MessageMaker {
     interface TimestampedArgs extends Omit<BulkMsgArgs, 'depth'> {
         time: Partial<Omit<MsgArgs, 'depth' | 'fullWidth' | 'hangingIndent' | 'indent' | 'maxWidth' | 'minWidth' | 'tab'> & {
             date: Date;
-            stamp: timestamp.Args_Input;
+            stamp: Partial<timestamp.Args> | RecursivePartial<timestamp.Args>;
         }>;
     }
 }

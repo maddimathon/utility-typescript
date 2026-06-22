@@ -276,7 +276,7 @@ export class NodeFiles {
     /**
      * Checks if the given path is a directory.
      * 
-     * @category Path-makers
+     * @category Meta
      * 
      * @since 2.0.0-alpha
      * 
@@ -289,7 +289,7 @@ export class NodeFiles {
     /**
      * Checks if the given path is a file.
      * 
-     * @category Path-makers
+     * @category Meta
      * 
      * @since 2.0.0-alpha
      * 
@@ -302,7 +302,27 @@ export class NodeFiles {
     /**
      * Checks if the given path is a symbolic link.
      * 
-     * @category Path-makers
+     * @category Meta
+     * 
+     * @since ___PKG_VERSION___
+     * 
+     * @experimental
+     */
+    public isFileOrSymLink( path: string ): boolean {
+        const stats = this.getStats( path );
+
+        // returns
+        if ( !stats ) {
+            return false;
+        }
+
+        return stats.isFile() || stats.isSymbolicLink();
+    }
+
+    /**
+     * Checks if the given path is a symbolic link.
+     * 
+     * @category Meta
      * 
      * @since 2.0.0-alpha
      * 
@@ -388,7 +408,7 @@ export class NodeFiles {
         path = this.pathResolve( path );
 
         // returns
-        if ( !this.exists( path ) ) {
+        if ( !this.isFileOrSymLink( path ) ) {
             return '';
         }
 
@@ -454,6 +474,29 @@ export class NodeFiles {
     /* Paths ===================================== */
 
     /**
+     * Gets the basename of the given path.
+     * 
+     * @category Path-makers
+     * 
+     * @since 2.0.0-alpha
+     * 
+     * @experimental
+     */
+    public basename(
+        path: string,
+        suffix?: string | false,
+    ): string {
+
+        if ( suffix === false ) {
+            suffix = undefined;
+        } else if ( !suffix ) {
+            suffix = NodePath.extname( path ) || undefined;
+        }
+
+        return NodePath.basename( path, suffix );
+    }
+
+    /**
      * Changes just the file name of a path
      * 
      * @category Path-makers
@@ -476,29 +519,6 @@ export class NodeFiles {
         );
 
         return isRelative ? this.pathRelative( newPath ) : newPath;
-    }
-
-    /**
-     * Gets the basename of the given path.
-     * 
-     * @category Path-makers
-     * 
-     * @since 2.0.0-alpha
-     * 
-     * @experimental
-     */
-    public basename(
-        path: string,
-        suffix?: string | false,
-    ): string {
-
-        if ( suffix === false ) {
-            suffix = undefined;
-        } else if ( !suffix ) {
-            suffix = NodePath.extname( path ) || undefined;
-        }
-
-        return NodePath.basename( path, suffix );
     }
 
     /**
