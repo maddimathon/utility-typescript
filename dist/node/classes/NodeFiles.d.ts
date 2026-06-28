@@ -91,7 +91,7 @@ export declare class NodeFiles {
     /**
      * Checks if the given path is a directory.
      *
-     * @category Path-makers
+     * @category Meta
      *
      * @since 2.0.0-alpha
      *
@@ -101,7 +101,7 @@ export declare class NodeFiles {
     /**
      * Checks if the given path is a file.
      *
-     * @category Path-makers
+     * @category Meta
      *
      * @since 2.0.0-alpha
      *
@@ -111,7 +111,17 @@ export declare class NodeFiles {
     /**
      * Checks if the given path is a symbolic link.
      *
-     * @category Path-makers
+     * @category Meta
+     *
+     * @since 2.0.0-beta.3.draft
+     *
+     * @experimental
+     */
+    isFileOrSymLink(path: string): boolean;
+    /**
+     * Checks if the given path is a symbolic link.
+     *
+     * @category Meta
      *
      * @since 2.0.0-alpha
      *

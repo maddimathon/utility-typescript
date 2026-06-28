@@ -24,5 +24,24 @@
  * @return  Unique array.
  *
  * @since 0.1.0
+ * @since 2.0.0-beta.3.draft — Added optional args param.
  */
-export declare function arrayUnique<T_ArrayItem>(arr: T_ArrayItem[]): T_ArrayItem[];
+export declare function arrayUnique<T_ArrayItem>(arr: T_ArrayItem[], args?: Partial<arrayUnique.Args>): T_ArrayItem[];
+/**
+ * Utilities for the {@link arrayUnique} function.
+ *
+ * @since 2.0.0-beta.3.draft
+ */
+export declare namespace arrayUnique {
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    type Args = {
+        /**
+         * Whether to check for uniqueness by comparing JSON strings.
+         *
+         * @experimental
+         */
+        compareViaJson?: boolean;
+    };
+}

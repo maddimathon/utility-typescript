@@ -16,31 +16,54 @@ import { arrayUnique } from './arrayUnique.js';
 
 test( 'arrayUnique()', () => {
 
-    const arrNotUnique = [
-        'one',
-        'one',
-        'two',
-        'two',
-        'two',
-        'three',
-        'four',
-        'four',
-    ];
+    const defaultTest = {
 
-    const arrUnique = [
-        'one',
-        'two',
-        'three',
-        'four',
-    ];
+        notUnique: [
+            'one',
+            'two',
+            'three',
+            'four',
+            'two',
+            'two',
+            'one',
+            'four',
+        ],
 
-    const result = arrayUnique( arrNotUnique );
+        unique: [
+            'one',
+            'two',
+            'three',
+            'four',
+        ],
+    };
+
+    const regex = new RegExp( '\s+', 'g' );
+
+    const jsonTest = {
+
+        notUnique: [
+            { one: 1, two: '2', three: null },
+            regex,
+            { three: null, one: 1, two: '2' },
+            regex
+        ],
+
+        unique: [
+            { one: 1, two: '2', three: null },
+            regex,
+        ],
+    };
+
+    const result = arrayUnique( defaultTest.notUnique );
+    const result_json = arrayUnique( jsonTest.notUnique, { compareViaJson: true } );
 
     type tests = [
-        Test.Expect<Test.Exactly<typeof result, typeof arrUnique>>,
+        Test.Expect<Test.Exactly<typeof result, typeof defaultTest.unique>>,
+        Test.Expect<Test.Exactly<typeof result_json, typeof jsonTest.unique>>,
     ];
 
-    expect( result ).toEqual( arrUnique );
+    expect( result ).toEqual( defaultTest.unique );
+    expect( result_json ).toEqual( jsonTest.unique );
 
     // as tests[0] only so that type is used
     true as tests[ 0 ];

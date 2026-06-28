@@ -211,7 +211,7 @@ export class NodeFiles {
     /**
      * Checks if the given path is a directory.
      *
-     * @category Path-makers
+     * @category Meta
      *
      * @since 2.0.0-alpha
      *
@@ -223,7 +223,7 @@ export class NodeFiles {
     /**
      * Checks if the given path is a file.
      *
-     * @category Path-makers
+     * @category Meta
      *
      * @since 2.0.0-alpha
      *
@@ -235,7 +235,24 @@ export class NodeFiles {
     /**
      * Checks if the given path is a symbolic link.
      *
-     * @category Path-makers
+     * @category Meta
+     *
+     * @since 2.0.0-beta.3.draft
+     *
+     * @experimental
+     */
+    isFileOrSymLink(path) {
+        const stats = this.getStats(path);
+        // returns
+        if (!stats) {
+            return false;
+        }
+        return stats.isFile() || stats.isSymbolicLink();
+    }
+    /**
+     * Checks if the given path is a symbolic link.
+     *
+     * @category Meta
      *
      * @since 2.0.0-alpha
      *
@@ -304,7 +321,7 @@ export class NodeFiles {
     readFile(path, args = {}) {
         path = this.pathResolve(path);
         // returns
-        if (!this.exists(path)) {
+        if (!this.isFileOrSymLink(path)) {
             return '';
         }
         args = mergeArgs(this.args.readFile, args, false);

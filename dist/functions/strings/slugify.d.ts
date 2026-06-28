@@ -17,7 +17,38 @@
  * @return  Slug version of the input string.
  *
  * @since 0.1.0
+ * @since 2.0.0-beta.3.draft — Added optional args param.
  *
  * @source
  */
-export declare function slugify(input: string): string;
+export declare function slugify(input: string, args?: Partial<slugify.Args>): string;
+/**
+ * Utilities for the {@link slugify} function.
+ *
+ * @since 2.0.0-beta.3.draft
+ */
+export declare namespace slugify {
+    /**
+     * @since 2.0.0-beta.3.draft
+     */
+    interface Args {
+        /**
+         * Whether to allow repeated dashes in the output.
+         *
+         * @default false
+         */
+        allowRepeatDashes: boolean;
+        /**
+         * Whether to allow repeated underscores in the output.
+         *
+         * @default {@link slugify.Args.allowRepeatDashes}
+         */
+        allowRepeatUnderscores: boolean;
+        /**
+         * Whether to allow underscores in the output.
+         *
+         * @default false
+         */
+        allowUnderscores: boolean;
+    }
+}

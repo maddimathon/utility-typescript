@@ -18,10 +18,18 @@
  * @return  Slug version of the input string.
  * 
  * @since 0.1.0
+ * @since ___PKG_VERSION___ — Added optional args param.
  * 
  * @source
  */
-export function slugify( input: string ): string {
+export function slugify( input: string, args: Partial<slugify.Args> = {} ): string {
+
+    const {
+        allowRepeatDashes = false,
+        allowUnderscores = false,
+    } = args;
+
+    const allowRepeatUnderscores = args.allowRepeatUnderscores ?? allowRepeatDashes;
 
     let slug: string = input.toLowerCase();
 
@@ -41,13 +49,59 @@ export function slugify( input: string ): string {
     slug = slug.replace( /[^\s|a-z|\d|\n|\-|–|—|_|\:|\;|\/]+/gi, '' );
 
     // and now everything else is a dash!
-    slug = slug.replace( /[^\d|a-z]+/gi, '-' );
+    if ( allowUnderscores ) {
+        slug = slug.replace( /[^\d|a-z|_]+/gi, '-' );
+    } else {
+        slug = slug.replace( /[^\d|a-z]+/gi, '-' );
+    }
 
     // remove leading/trailing "whitespace"
-    slug = slug.replace( /(^[\n|\s|\-]+|[\n|\s|\-]+$)/gi, '' );
+    slug = slug.replace( /(^[\n|\s|\-|_]+|[\n|\s|\-|_]+$)/gi, '' );
 
     // remove multi-dashes
-    slug = slug.replace( /-+/gi, '-' );
+    if ( !allowRepeatDashes ) {
+        slug = slug.replace( /-+/gi, '-' );
+    }
+
+    // remove multi-underscores
+    if ( allowUnderscores && !allowRepeatUnderscores ) {
+        slug = slug.replace( /_+/gi, '_' );
+    }
 
     return slug;
+}
+
+/**
+ * Utilities for the {@link slugify} function.
+ * 
+ * @since ___PKG_VERSION___
+ */
+export namespace slugify {
+
+    /**
+     * @since ___PKG_VERSION___
+     */
+    export interface Args {
+
+        /**
+         * Whether to allow repeated dashes in the output.
+         * 
+         * @default false
+         */
+        allowRepeatDashes: boolean;
+
+        /**
+         * Whether to allow repeated underscores in the output.
+         * 
+         * @default {@link slugify.Args.allowRepeatDashes}
+         */
+        allowRepeatUnderscores: boolean;
+
+        /**
+         * Whether to allow underscores in the output.
+         * 
+         * @default false
+         */
+        allowUnderscores: boolean;
+    }
 }

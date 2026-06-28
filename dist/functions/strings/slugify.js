@@ -17,10 +17,13 @@
  * @return  Slug version of the input string.
  *
  * @since 0.1.0
+ * @since 2.0.0-beta.3.draft — Added optional args param.
  *
  * @source
  */
-export function slugify(input) {
+export function slugify(input, args = {}) {
+    const { allowRepeatDashes = false, allowUnderscores = false, } = args;
+    const allowRepeatUnderscores = args.allowRepeatUnderscores ?? allowRepeatDashes;
     let slug = input.toLowerCase();
     // replace accented letters
     slug = slug.replace(/(À|Á|Â|Ä|Ã|Æ|Å|Ā|à|á|â|ä|ã|æ|å|ā)/gi, 'a');
@@ -35,10 +38,21 @@ export function slugify(input) {
     // which will become dashes)
     slug = slug.replace(/[^\s|a-z|\d|\n|\-|–|—|_|\:|\;|\/]+/gi, '');
     // and now everything else is a dash!
-    slug = slug.replace(/[^\d|a-z]+/gi, '-');
+    if (allowUnderscores) {
+        slug = slug.replace(/[^\d|a-z|_]+/gi, '-');
+    }
+    else {
+        slug = slug.replace(/[^\d|a-z]+/gi, '-');
+    }
     // remove leading/trailing "whitespace"
-    slug = slug.replace(/(^[\n|\s|\-]+|[\n|\s|\-]+$)/gi, '');
+    slug = slug.replace(/(^[\n|\s|\-|_]+|[\n|\s|\-|_]+$)/gi, '');
     // remove multi-dashes
-    slug = slug.replace(/-+/gi, '-');
+    if (!allowRepeatDashes) {
+        slug = slug.replace(/-+/gi, '-');
+    }
+    // remove multi-underscores
+    if (allowUnderscores && !allowRepeatUnderscores) {
+        slug = slug.replace(/_+/gi, '_');
+    }
     return slug;
 }

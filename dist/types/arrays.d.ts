@@ -18,6 +18,12 @@
  */
 export type ArrayItem<T_Array extends readonly unknown[]> = T_Array extends readonly (infer I)[] ? I : never;
 /**
+ * A super-simple utility for types that may or may not be arrays.
+ *
+ * @since 2.0.0-beta.3.draft
+ */
+export type SelfOrArray<T> = T | T[];
+/**
  * Returns a tuple without its last item.
  *
  * @since 2.0.0-beta.3.draft
