@@ -24,7 +24,7 @@ import type { AnyClass } from './functions.js';
  *
  * @since 0.1.0
  */
-export type TypeDump<T> = T extends (number | null | string | undefined | AnyClass | Date) ? T : T extends (...args: infer _Params) => infer _Return ? (...args: TypeDump<_Params>) => TypeDump<_Return> : T extends any ? {
+export type TypeDump<T> = T extends (number | null | string | undefined | AnyClass | Date) ? T : T extends (...args: infer _Params) => infer _Return ? (...args: TypeDump<_Params>) => TypeDump<_Return> : T extends any[] ? TypeDump<T[number]>[] : T extends any ? {
     [_Key in keyof T]: T[_Key];
 } : never;
 /**
@@ -34,6 +34,6 @@ export type TypeDump<T> = T extends (number | null | string | undefined | AnyCla
  *
  * @since 0.1.0
  */
-export type TypeDumpRecursive<T> = T extends (number | null | string | undefined | AnyClass | Date) ? T : T extends (...args: infer _Params) => infer _Return ? (...args: TypeDump<_Params>) => TypeDumpRecursive<_Return> : T extends any ? {
+export type TypeDumpRecursive<T> = T extends (number | null | string | undefined | AnyClass | Date) ? T : T extends (...args: infer _Params) => infer _Return ? (...args: TypeDump<_Params>) => TypeDumpRecursive<_Return> : T extends any[] ? TypeDump<T[number]>[] : T extends any ? {
     [_Key in keyof T]: TypeDumpRecursive<T[_Key]>;
 } : never;

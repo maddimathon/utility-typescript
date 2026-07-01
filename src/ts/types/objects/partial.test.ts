@@ -11,8 +11,10 @@
 import type * as Test from '../test.js';
 
 import type {
+    PartialChildren,
     PartialExcept,
     RecursivePartial,
+    RecursivePartialChildren,
     RecursivePartialExcept,
 } from './partial.js';
 
@@ -125,4 +127,28 @@ export type T_RecursivePartial = [
 
     Test.ExpectNot<Test.Exactly<_FullObj, RecursivePartial<_FullObj>>>,
     Test.ExpectNot<Test.Exactly<Partial<_FullObj>, RecursivePartial<_FullObj>>>,
+];
+
+
+export type T_PartialChildren = [
+
+    Test.Expect<Test.Satisfies<{
+        a: string;
+        b: ( number | string )[];
+        c: Partial<{ one: number; }>;
+    }, PartialChildren<{
+        a: string;
+        b: ( number | string )[];
+        c: { one: number; };
+    }>>>,
+
+    Test.Expect<Test.Satisfies<{
+        a: string;
+        b: ( number | string )[];
+        c: RecursivePartial<{ one: { c: number; }; }>;
+    }, RecursivePartialChildren<{
+        a: string;
+        b: ( number | string )[];
+        c: { one: { c: number; }; };
+    }>>>,
 ];

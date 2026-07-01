@@ -31,6 +31,8 @@ export type TypeDump<T> =
     ? T
     : T extends ( ...args: infer _Params ) => infer _Return
     ? ( ...args: TypeDump<_Params> ) => TypeDump<_Return>
+    : T extends any[]
+    ? TypeDump<T[ number ]>[]
     : T extends any ? { [ _Key in keyof T ]: T[ _Key ] } : never;
 
 /**
@@ -45,4 +47,6 @@ export type TypeDumpRecursive<T> =
     ? T
     : T extends ( ...args: infer _Params ) => infer _Return
     ? ( ...args: TypeDump<_Params> ) => TypeDumpRecursive<_Return>
+    : T extends any[]
+    ? TypeDump<T[ number ]>[]
     : T extends any ? { [ _Key in keyof T ]: TypeDumpRecursive<T[ _Key ]> } : never;

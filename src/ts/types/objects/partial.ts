@@ -13,6 +13,18 @@ import type {
 } from '../functions.js';
 
 /**
+ * Uses the default {@link Partial} to make only property values partial.
+ * 
+ * @since ___PKG_VERSION___
+ * 
+ * @source
+ * @experimental
+ */
+export type PartialChildren<T> = {
+    [ P in keyof T ]: Partial<T[ P ]>;
+};
+
+/**
  * {@link Partial}-izes an object, except for the given T_KeysRequired, which are
  * themselves to be required.
  * 
@@ -91,3 +103,15 @@ export type RecursivePartial<
 > = {
         [ _Key in keyof T_Object ]?: _RecursivePartial_Value<T_Object[ _Key ]>;
     };
+
+/**
+ * Uses {@link RecursivePartial} to make only property values partial.
+ * 
+ * @since ___PKG_VERSION___
+ * 
+ * @source
+ * @experimental
+ */
+export type RecursivePartialChildren<T> = {
+    [ P in keyof T ]: _RecursivePartial_Value<T[ P ]>;
+};
