@@ -14,8 +14,7 @@
  * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_country_codes.asp | W3 Schools}.
  * 
  * @since 0.1.0
- * @since 2.0.0-alpha — Is now global rather than being a member of the 
- *                            StringLiterals namespace.
+ * @since 2.0.0-alpha — Is now global rather than being a member of the StringLiterals namespace.
  */
 export type CountryCode = "AF" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AQ" | "AG"
     | "AR" | "AM" | "AW" | "AU" | "AT" | "AZ" | "BS" | "BH" | "BD" | "BB" | "BY"
@@ -46,8 +45,7 @@ export type CountryCode = "AF" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AQ" | "AG"
  * Updated 2024-02-16 from {@link https://www.w3schools.com/tags/ref_language_codes.asp | W3 Schools}.
  * 
  * @since 0.1.0
- * @since 2.0.0-alpha — Is now global rather than being a member of the 
- *                            StringLiterals namespace.
+ * @since 2.0.0-alpha — Is now global rather than being a member of the StringLiterals namespace.
  */
 export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an"
     | "hy" | "as" | "av" | "ae" | "ay" | "az" | "bm" | "ba" | "eu" | "be" | "bn"
@@ -83,15 +81,13 @@ export type LangCode = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an"
  * @param Lang  Optionally restrict the languages to return.
  * 
  * @since 0.1.0
- * @since 2.0.0-alpha — Is now global rather than being a member of the 
- *                            StringLiterals namespace.
+ * @since 2.0.0-alpha — Is now global rather than being a member of the StringLiterals namespace.
  * 
- * @UPGRADE  Add better compatibility -- this is still a limited range and does 
- *           not include script subtag options.
+ * @UPGRADE  Add better compatibility -- this is still a limited range and does not include script subtag options.
  */
-export type LangLocaleCode<Lang extends LangCode = LangCode> =
-    | Lang
-    | ( LangCode extends Lang ? string : `${ Lang }-${ string }` ) & (
+export type LangLocaleCode<T_Lang extends LangCode = LangCode> =
+    | T_Lang
+    | Extract<
         | "ar-SA" | "bn-BD" | "bn-IN" | "cs-CZ" | "da-DK" | "de-AT" | "de-CH"
         | "de-DE" | "de-DE" | "el-GR" | "en-AU" | "en-AU" | "en-CA" | "en-GB"
         | "en-IE" | "en-IN" | "en-IN" | "en-NZ" | "en-US" | "en-ZA" | "es-AR"
@@ -100,5 +96,6 @@ export type LangLocaleCode<Lang extends LangCode = LangCode> =
         | "id-ID" | "it-CH" | "it-IT" | "ja-JP" | "ko-KR" | "nl-BE" | "nl-NL"
         | "no-NO" | "pl-PL" | "pt-BR" | "pt-PT" | "ro-RO" | "ru-RU" | "sk-SK"
         | "sv-SE" | "ta-IN" | "ta-LK" | "th-TH" | "tr-TR" | "zh-CN" | "zh-HK"
-        | "zh-TW"
-    );
+        | "zh-TW",
+        LangCode extends T_Lang ? string : `${ T_Lang }-${ string }`
+    >;

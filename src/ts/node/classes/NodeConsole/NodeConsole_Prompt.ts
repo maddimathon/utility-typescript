@@ -115,7 +115,7 @@ export class NodeConsole_Prompt {
             linesOut: 0,
 
             depth: 0,
-            hangingIndent: '',
+            // hangingIndent: '',
             indent: '',
         };
 
@@ -132,12 +132,14 @@ export class NodeConsole_Prompt {
                 ),
         };
 
-        const prefixIndent = this.msg.args.msg.tab.repeat( depth )
+        const _indent = this.msg.args.msg.tab.repeat( depth )
             + ' '.repeat( hangingIndent.length + indent.length );
 
         const prefixTimestamp = timestamp ? this.msg.timestamped( '', msgArgs ) : '';
 
-        const prefixTimestampIndent = timestamp ? ' '.repeat( this.msg.timestamped( '' ).length ) : '';
+        const _prefixTimestampIndent = timestamp ? ' '.repeat( this.msg.timestamped( '' ).length ) : '';
+
+        msgArgs.indent = _indent + _prefixTimestampIndent;
 
         const selectCursorIndent = prompter == 'select' ? '  ' : '';
 
@@ -148,49 +150,53 @@ export class NodeConsole_Prompt {
 
             prefix: {
 
-                done: prefixIndent + ( timestamp ? prefixTimestamp : this.msg.msg(
+                done: timestamp ? prefixTimestamp : this.msg.msg(
                     '✓',
                     {
                         clr: styleClrs.highlight,
-                        ...msgArgs ?? {},
+                        ...msgArgs,
                         bold: true,
-                    }
-                ) ),
+                    },
+                ),
 
-                idle: prefixIndent + ( timestamp ? prefixTimestamp : this.msg.msg(
+                idle: timestamp ? prefixTimestamp : this.msg.msg(
                     '?',
                     {
-                        ...msgArgs ?? {},
+                        ...msgArgs,
                         bold: true,
-                    }
-                ) ),
+                    },
+                ),
             },
 
             style: {
 
                 answer: ( text: string ) => text,
 
-                description: ( text: string ) => '\n' + selectCursorIndent + this.msg.msg( text, {
+                description: ( text: string ) => this.msg.msg( text, {
                     ...msgArgs ?? {},
 
                     bold: false,
                     clr: styleClrs.highlight,
+                    linesIn: 1,
                     italic: !msgArgs?.italic,
+                    indent: msgArgs.indent + selectCursorIndent,
                 } ),
 
-                disabled: ( text: string ) => selectCursorIndent + this.msg.msg( text, {
+                disabled: ( text: string ) => this.msg.msg( text, {
                     ...msgArgs ?? {},
 
                     bold: false,
                     clr: styleClrs.disabled,
+                    indent: msgArgs.indent + selectCursorIndent,
                 } ),
 
-                error: ( text: string ) => prefixIndent + prefixTimestampIndent + ' '.repeat( config.message.length + ( timestamp ? 1 : 3 ) ) + this.msg.msg( text, {
+                error: ( text: string ) => this.msg.msg( text, {
                     ...msgArgs ?? {},
 
                     bold: false,
                     clr: styleClrs.error,
                     italic: !msgArgs?.italic,
+                    indent: msgArgs.indent + ' '.repeat( config.message.length + ( timestamp ? 1 : 3 ) ),
                 } ),
 
                 help: ( text: string ) => this.msg.msg( text, {

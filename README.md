@@ -4,7 +4,7 @@ category: Docs
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-beta.4
+# Utility TypeScript @ 2.0.0-beta.5.draft
 <!--/README_HEADER-->
 
 <!--README_DESC-->

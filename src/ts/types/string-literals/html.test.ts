@@ -15,18 +15,20 @@ import type {
     LangLocaleCode,
 } from './html.js';
 
-type TestLangs = "de" | "en" | "fr";
+type P__Langs = "de" | "en" | "fr";
 
-type TestLangLocales = TestLangs | "de-AT" | "de-CH" | "de-DE" | "de-DE"
+type R__Locales = P__Langs | "de-AT" | "de-CH" | "de-DE" | "de-DE"
     | "en-AU" | "en-AU" | "en-CA" | "en-GB" | "en-IE" | "en-IN" | "en-IN"
     | "en-NZ" | "en-US" | "en-ZA" | "fr-BE" | "fr-CA" | "fr-CH" | "fr-FR";
 
-type TestLangLocale_WithParam = LangLocaleCode<"de" | "en" | "fr">;
-
 export type T_LangLocaleCode = [
+    // testing that the default type param is equivolent to LangCode
     Test.Expect<Test.Exactly<LangLocaleCode, LangLocaleCode<LangCode>>>,
-    Test.Expect<Test.Exactly<TestLangLocales, LangLocaleCode<TestLangs>>>,
-    Test.Expect<Test.Exactly<TestLangLocales, TestLangLocale_WithParam>>,
 
-    Test.ExpectNot<Test.Exactly<LangLocaleCode, LangLocaleCode<TestLangs>>>,
+    // testing restriction of the languages to return locales
+    Test.Expect<Test.Exactly<LangLocaleCode<P__Langs>, R__Locales>>,
+
+    // making sure that a type param actually alters the type
+    Test.ExpectNot<Test.Exactly<LangLocaleCode, LangLocaleCode<"en">>>,
+    Test.ExpectNot<Test.Exactly<LangLocaleCode, LangLocaleCode<P__Langs>>>,
 ];

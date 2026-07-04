@@ -14,7 +14,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.4
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 export type * from './arrays.ts';

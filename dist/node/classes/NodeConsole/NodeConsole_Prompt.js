@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.4
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -62,7 +62,7 @@ export class NodeConsole_Prompt {
             linesIn: 0,
             linesOut: 0,
             depth: 0,
-            hangingIndent: '',
+            // hangingIndent: '',
             indent: '',
         };
         const styleClrs = {
@@ -73,44 +73,49 @@ export class NodeConsole_Prompt {
                     ? msgArgs.clr
                     : this.args.styleClrs.highlight),
         };
-        const prefixIndent = this.msg.args.msg.tab.repeat(depth)
+        const _indent = this.msg.args.msg.tab.repeat(depth)
             + ' '.repeat(hangingIndent.length + indent.length);
         const prefixTimestamp = timestamp ? this.msg.timestamped('', msgArgs) : '';
-        const prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestamped('').length) : '';
+        const _prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestamped('').length) : '';
+        msgArgs.indent = _indent + _prefixTimestampIndent;
         const selectCursorIndent = prompter == 'select' ? '  ' : '';
         config.theme = {
             icon: {
                 cursor: '→',
             },
             prefix: {
-                done: prefixIndent + (timestamp ? prefixTimestamp : this.msg.msg('✓', {
+                done: timestamp ? prefixTimestamp : this.msg.msg('✓', {
                     clr: styleClrs.highlight,
-                    ...msgArgs ?? {},
+                    ...msgArgs,
                     bold: true,
-                })),
-                idle: prefixIndent + (timestamp ? prefixTimestamp : this.msg.msg('?', {
-                    ...msgArgs ?? {},
+                }),
+                idle: timestamp ? prefixTimestamp : this.msg.msg('?', {
+                    ...msgArgs,
                     bold: true,
-                })),
+                }),
             },
             style: {
                 answer: (text) => text,
-                description: (text) => '\n' + selectCursorIndent + this.msg.msg(text, {
+                description: (text) => this.msg.msg(text, {
                     ...msgArgs ?? {},
                     bold: false,
                     clr: styleClrs.highlight,
+                    linesIn: 1,
                     italic: !msgArgs?.italic,
+                    indent: msgArgs.indent + selectCursorIndent,
                 }),
-                disabled: (text) => selectCursorIndent + this.msg.msg(text, {
+                disabled: (text) => this.msg.msg(text, {
                     ...msgArgs ?? {},
                     bold: false,
                     clr: styleClrs.disabled,
+                    indent: msgArgs.indent + selectCursorIndent,
                 }),
-                error: (text) => prefixIndent + prefixTimestampIndent + ' '.repeat(config.message.length + (timestamp ? 1 : 3)) + this.msg.msg(text, {
+                error: (text) => this.msg.msg(text, {
                     ...msgArgs ?? {},
                     bold: false,
                     clr: styleClrs.error,
                     italic: !msgArgs?.italic,
+                    indent: msgArgs.indent + ' '.repeat(config.message.length + (timestamp ? 1 : 3)),
                 }),
                 help: (text) => this.msg.msg(text, {
                     ...msgArgs ?? {},
