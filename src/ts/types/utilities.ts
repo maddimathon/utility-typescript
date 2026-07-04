@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @packageDocumentation
  */
@@ -13,7 +13,7 @@ import type * as Test from './test.js';
 /**
  * Dynamically declare a value as a promise or not.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export type SyncOrAsync<T_Which extends 'async' | 'sync', T_Value> =
     Test.Exactly<T_Which, 'async'> extends true

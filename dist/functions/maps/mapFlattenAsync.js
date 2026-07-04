@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import { mapFlatten } from './mapFlatten.js';
@@ -15,7 +15,7 @@ import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
  *
  * @category Functions – Map
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export async function mapFlattenAsync(mapPromise, args = {}) {
     return Promise.resolve(mapPromise).then(async (map) => {

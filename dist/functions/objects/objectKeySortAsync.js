@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/design-system-utilities@2.0.0-beta.3.draft
+ * @maddimathon/design-system-utilities@2.0.0-beta.3
  * @license MIT
  */
 /**

@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
@@ -14,7 +14,7 @@ import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
  *
  * @category Functions – Map
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export function mapFlatten(map, args = {}) {
     // returns
@@ -50,7 +50,7 @@ export function mapFlatten(map, args = {}) {
  *
  * @category Functions – Map
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 (function (mapFlatten) {
     function parseArgs(args = {}) {

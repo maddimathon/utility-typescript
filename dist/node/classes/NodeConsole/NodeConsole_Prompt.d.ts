@@ -4,9 +4,10 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
+import * as inquirer from '@inquirer/prompts';
 import type { RecursivePartial } from '../../../types/index.js';
 import type { NodeConsole } from '../NodeConsole.js';
 import { MessageMaker } from '../../../classes/MessageMaker.js';
@@ -305,16 +306,17 @@ export declare namespace NodeConsole_Prompt {
     /**
      * Optional configuration for {@link NodeConsole.prompt.select}.
      */
-    export type SelectConfig<Value extends SelectValue = SelectValue> = Omit<Config<"select", Value>, "default"> & {
+    export type SelectConfig<Value extends SelectValue = SelectValue> = Omit<Config<"select", Value & string>, "default"> & {
         message: string;
-        default?: Value;
-        choices: ([string] & string[]) | {
-            value: Value;
+        default?: Value & string;
+        choices: (Value & string | inquirer.Separator | {
+            value: Value & string;
             name?: string;
             description?: string;
             short?: string;
             disabled?: boolean | string;
-        }[];
+            type?: never;
+        })[];
         pageSize?: number | undefined;
         loop?: boolean | undefined;
         theme?: RecursivePartial<DefaultTheme & {
@@ -324,8 +326,8 @@ export declare namespace NodeConsole_Prompt {
             style: {
                 disabled: (text: string) => string;
                 description: (text: string) => string;
+                keysHelpTip: (text: string) => string;
             };
-            helpMode: 'always' | 'never' | 'auto';
             indexMode: 'hidden' | 'number';
         }>;
     };

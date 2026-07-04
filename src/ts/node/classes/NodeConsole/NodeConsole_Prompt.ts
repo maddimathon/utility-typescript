@@ -142,9 +142,6 @@ export class NodeConsole_Prompt {
         const selectCursorIndent = prompter == 'select' ? '  ' : '';
 
         config.theme = {
-
-            helpMode: 'always',
-
             icon: {
                 cursor: '→',
             },
@@ -214,6 +211,14 @@ export class NodeConsole_Prompt {
                 } ),
 
                 key: ( text: string ) => 'KEY: (' + text + ')',
+
+                keysHelpTip: ( text: string ) => this.msg.msg( text, {
+                    ...msgArgs ?? {},
+
+                    bold: false,
+                    clr: styleClrs.help,
+                    italic: !msgArgs?.italic,
+                } ),
 
                 message: (
                     text: string,
@@ -368,9 +373,7 @@ export class NodeConsole_Prompt {
     public async select<
         T_Return extends NodeConsole_Prompt.SelectValue,
     >(
-        config: Omit<NodeConsole_Prompt.SelectConfig<T_Return>, "choices"> & {
-            choices: Extract<NodeConsole_Prompt.SelectConfig<T_Return>[ 'choices' ], object[]>;
-        },
+        config: NodeConsole_Prompt.SelectConfig<T_Return>,
     ): Promise<T_Return | undefined> {
 
         const defaultConfig: Partial<typeof config> = {
@@ -665,22 +668,20 @@ export namespace NodeConsole_Prompt {
      */
     export type SelectConfig<
         Value extends SelectValue = SelectValue,
-    > = Omit<Config<"select", Value>, "default"> & {
+    > = Omit<Config<"select", Value & string>, "default"> & {
         // these are in Config<"select"> already
         message: string;
 
-        default?: Value;
+        default?: Value & string;
 
-        choices:
-        | ( [ string ] & string[] )
-        | {
-            value: Value;
-
+        choices: ( Value & string | inquirer.Separator | {
+            value: Value & string;
             name?: string;
             description?: string;
             short?: string;
             disabled?: boolean | string;
-        }[];
+            type?: never;
+        } )[];
 
         pageSize?: number | undefined;
         loop?: boolean | undefined;
@@ -692,8 +693,8 @@ export namespace NodeConsole_Prompt {
             style: {
                 disabled: ( text: string ) => string;
                 description: ( text: string ) => string;
+                keysHelpTip: ( text: string ) => string;
             };
-            helpMode: 'always' | 'never' | 'auto';
             indexMode: 'hidden' | 'number';
         }>;
     };

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import NodeFS from 'node:fs';
@@ -237,7 +237,7 @@ export class NodeFiles {
      *
      * @category Meta
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      *
      * @experimental
      */

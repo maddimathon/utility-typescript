@@ -15,7 +15,7 @@ import type {
 /**
  * Uses the default {@link Partial} to make only property values partial.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @source
  * @experimental
@@ -46,7 +46,7 @@ export type PartialExcept<
  * @param T_Object        Type or interface to transform.
  * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * @experimental
  */
 export type PartialPick<
@@ -107,7 +107,7 @@ export type RecursivePartial<
 /**
  * Uses {@link RecursivePartial} to make only property values partial.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @source
  * @experimental

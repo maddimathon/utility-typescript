@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import { objectKeySort } from '../objects/objectKeySort.js';
@@ -25,7 +25,7 @@ import { objectKeySort } from '../objects/objectKeySort.js';
  * @return  Unique array.
  *
  * @since 0.1.0
- * @since 2.0.0-beta.3.draft — Added optional args param.
+ * @since 2.0.0-beta.3 — Added optional args param.
  */
 export function arrayUnique(arr, args = {}) {
     // returns

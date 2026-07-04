@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @packageDocumentation
  */
@@ -19,7 +19,7 @@ import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
  * 
  * @category Functions – Map
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export async function mapFlattenAsync<
     T_Keys extends number | string,

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { ConsoleUtility, LangLocaleCode } from '../types/index.js';
@@ -23,7 +23,7 @@ import { MiniConsole } from './MiniConsole.js';
  * @category Classes
  *
  * @since 0.1.1
- * @since 2.0.0-beta.3.draft — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
+ * @since 2.0.0-beta.3 — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
  *
  * @example
  * ```ts
@@ -102,13 +102,13 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
         stringQuoteCharacter: '"';
     };
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     readonly console: ConsoleUtility;
     /**
      * Default name for unnamed variables passed for inspection.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected readonly _defaultName: string;
     /**
@@ -118,7 +118,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @expandType T_InspectionType
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected readonly _inspectionValue: T_InspectionType | undefined;
     /**
@@ -148,7 +148,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      */
     protected readonly _properties: VariableInspector.Child[];
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get properties(): VariableInspector.Child[];
     /**
@@ -160,7 +160,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
         [key: string]: VariableInspector.InputType<T_InspectionType>;
     }, args?: Partial<VariableInspector.Args>, 
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     console?: ConsoleUtility);
     /**
@@ -168,7 +168,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @see {@link VariableInspector.constructor}
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected _parseInputParams(validVar: {
         [key: string]: VariableInspector.InputType<T_InspectionType>;
@@ -186,7 +186,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @see {@link VariableInspector.constructor}
      *
-     * @since 2.0.0-beta.3.draft — Renamed from validateInput to _validateInputVariable.
+     * @since 2.0.0-beta.3 — Renamed from validateInput to _validateInputVariable.
      * Changed from static to local.
      */
     protected _validateInputVariable(variable: {
@@ -199,7 +199,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @category Formatters
      *
-     * @since 2.0.0-beta.3.draft — Renamed from keyFormatter to _keyFormatter.
+     * @since 2.0.0-beta.3 — Renamed from keyFormatter to _keyFormatter.
      */
     protected _keyFormatter(key: number | string | symbol): string;
     /**
@@ -208,7 +208,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @category Inputs
      *
-     * @since 2.0.0-beta.3.draft — Renamed from getPropertyNames to _getPropertyNames.
+     * @since 2.0.0-beta.3 — Renamed from getPropertyNames to _getPropertyNames.
      */
     protected _getPropertyNames(): ((number | string | symbol) & keyof typeof this._inspectionValue)[];
     /**
@@ -217,31 +217,31 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @category Inputs
      *
-     * @since 2.0.0-beta.3.draft — Renamed from indexProperties to _indexProperties.
+     * @since 2.0.0-beta.3 — Renamed from indexProperties to _indexProperties.
      */
     protected _indexProperties(): VariableInspector.Child[];
     /**
      * Filters for the ouput of different inspection parts.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected get _filter(): {
         /**
          * Filters the value's type for output.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly type: (type: string, skipFormatting: boolean) => string;
         /**
          * Filters the value for output.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly value: (str: null | undefined | string, viaMethod: string | undefined, skipFormatting: boolean) => string;
         /**
          * Add 'via' info to value filter.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly valueVia: (viaMethod: string, skipFormatting: boolean) => string;
     };
@@ -258,7 +258,7 @@ export declare class VariableInspector<T_InspectionType extends VariableInspecto
      *
      * @return  Formatted value.
      *
-     * @since 2.0.0-beta.3.draft — Renamed from formatter to _formatter.
+     * @since 2.0.0-beta.3 — Renamed from formatter to _formatter.
      */
     protected _formatter(stage: VariableInspector.StageKeys, str: string): string;
     /**
@@ -343,7 +343,7 @@ export declare namespace VariableInspector {
      */
     type Formatter = (str: string) => string;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     type InputObject<T_InspectionType extends InspectionType> = (T_InspectionType & {
         toVariableInspection?: never | undefined;
@@ -351,11 +351,11 @@ export declare namespace VariableInspector {
         toVariableInspection: () => T_InspectionType;
     };
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     type InputType<T_InspectionType extends InspectionType> = Exclude<T_InspectionType, object> | InputObject<T_InspectionType>;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     type InspectionType = typeOf.TestType | unknown;
     /**
@@ -412,7 +412,7 @@ export declare namespace VariableInspector {
          *
          * @default true
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         formatKeys: boolean;
         /**
@@ -580,7 +580,7 @@ export declare namespace VariableInspector {
     /**
      * Used to sample/test/demo functions.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      * @internal
      */
     namespace Samples {
@@ -593,7 +593,7 @@ export declare namespace VariableInspector {
             set getSetProp(param: string);
         }
         /**
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          * @internal
          */
         export type Vars = {

@@ -345,7 +345,7 @@ export namespace AbstractBuildStage {
          * 
          * @default 0
          * 
-         * @since ___PKG_VERSION___ — Renamed from 'log-base-level' to logBaseLevel.
+         * @since 2.0.0-beta.3 — Renamed from 'log-base-level' to logBaseLevel.
          */
         logBaseLevel: number;
 

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 /**
@@ -24,17 +24,17 @@
  * @return  Unique array.
  *
  * @since 0.1.0
- * @since 2.0.0-beta.3.draft — Added optional args param.
+ * @since 2.0.0-beta.3 — Added optional args param.
  */
 export declare function arrayUnique<T_ArrayItem>(arr: T_ArrayItem[], args?: Partial<arrayUnique.Args>): T_ArrayItem[];
 /**
  * Utilities for the {@link arrayUnique} function.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare namespace arrayUnique {
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     type Args = {
         /**

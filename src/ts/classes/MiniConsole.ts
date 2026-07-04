@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @packageDocumentation
  */
@@ -16,7 +16,7 @@ import type { ConsoleUtility, TupleShift } from '../types/index.js';
  * 
  * @category Classes
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export class MiniConsole implements ConsoleUtility {
 

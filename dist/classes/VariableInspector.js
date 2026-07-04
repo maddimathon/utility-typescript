@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import { arrayUnique } from '../functions/arrays/arrayUnique.js';
@@ -24,7 +24,7 @@ import { MiniConsole } from './MiniConsole.js';
  * @category Classes
  *
  * @since 0.1.1
- * @since 2.0.0-beta.3.draft — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
+ * @since 2.0.0-beta.3 — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
  *
  * @example
  * ```ts
@@ -141,14 +141,14 @@ export class VariableInspector {
                 includeValue: true,
             },
             /**
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             console: new MiniConsole(),
             debug: false,
             equalString: ' =',
             fallbackToJSON: true,
             /**
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             formatKeys: true,
             formatter: null,
@@ -167,13 +167,13 @@ export class VariableInspector {
         };
     }
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     console;
     /**
      * Default name for unnamed variables passed for inspection.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     _defaultName = 'variable';
     /**
@@ -183,7 +183,7 @@ export class VariableInspector {
      *
      * @expandType T_InspectionType
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     _inspectionValue;
     /**
@@ -213,7 +213,7 @@ export class VariableInspector {
      */
     _properties;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get properties() {
         return this._properties;
@@ -227,7 +227,7 @@ export class VariableInspector {
      */
     constructor(variable, args = {}, 
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     console) {
         this.args = {
@@ -248,7 +248,7 @@ export class VariableInspector {
      *
      * @see {@link VariableInspector.constructor}
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     _parseInputParams(validVar) {
         const name = Object.keys(validVar)[0] ?? this._defaultName;
@@ -274,7 +274,7 @@ export class VariableInspector {
      *
      * @see {@link VariableInspector.constructor}
      *
-     * @since 2.0.0-beta.3.draft — Renamed from validateInput to _validateInputVariable.
+     * @since 2.0.0-beta.3 — Renamed from validateInput to _validateInputVariable.
      * Changed from static to local.
      */
     _validateInputVariable(variable) {
@@ -294,7 +294,7 @@ export class VariableInspector {
      *
      * @category Formatters
      *
-     * @since 2.0.0-beta.3.draft — Renamed from keyFormatter to _keyFormatter.
+     * @since 2.0.0-beta.3 — Renamed from keyFormatter to _keyFormatter.
      */
     _keyFormatter(key) {
         // returns
@@ -316,7 +316,7 @@ export class VariableInspector {
      *
      * @category Inputs
      *
-     * @since 2.0.0-beta.3.draft — Renamed from getPropertyNames to _getPropertyNames.
+     * @since 2.0.0-beta.3 — Renamed from getPropertyNames to _getPropertyNames.
      */
     _getPropertyNames() {
         // returns on array or unsupported types
@@ -347,7 +347,7 @@ export class VariableInspector {
      *
      * @category Inputs
      *
-     * @since 2.0.0-beta.3.draft — Renamed from indexProperties to _indexProperties.
+     * @since 2.0.0-beta.3 — Renamed from indexProperties to _indexProperties.
      */
     _indexProperties() {
         const properties = [];
@@ -415,7 +415,7 @@ export class VariableInspector {
     /**
      * Filters for the ouput of different inspection parts.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get _filter() {
         const valueVia = (viaMethod, skipFormatting) => {
@@ -426,7 +426,7 @@ export class VariableInspector {
             /**
              * Filters the value's type for output.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             type: (type, skipFormatting) => {
                 type = type.replace(/(^[\n\s]+|[\n\s]+$)/gi, '');
@@ -439,7 +439,7 @@ export class VariableInspector {
             /**
              * Filters the value for output.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             value: (str, viaMethod, skipFormatting) => {
                 const ret = [];
@@ -465,7 +465,7 @@ export class VariableInspector {
             /**
              * Add 'via' info to value filter.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             valueVia: valueVia,
         };
@@ -483,7 +483,7 @@ export class VariableInspector {
      *
      * @return  Formatted value.
      *
-     * @since 2.0.0-beta.3.draft — Renamed from formatter to _formatter.
+     * @since 2.0.0-beta.3 — Renamed from formatter to _formatter.
      */
     _formatter(stage, str) {
         // returns
@@ -774,7 +774,7 @@ export class VariableInspector {
     /**
      * Used to sample/test/demo functions.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      * @internal
      */
     let Samples;
@@ -791,7 +791,7 @@ export class VariableInspector {
         /**
          * Used for testing.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          * @internal
          */
         function getVars(verbose) {

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { RecursivePartial } from '../types/index.js';
@@ -158,7 +158,7 @@ export declare class MessageMaker {
     /**
      * Normalizes any input into bulk input.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     normalizeBulkInput(msg: string | string[] | MessageMaker.BulkMsgs): MessageMaker.BulkMsgs;
     /**
@@ -167,7 +167,7 @@ export declare class MessageMaker {
      * @param messages       Messages to display, each with their own personal override arguments.  Joined with `universalArgs.joiner` (default `'\n\n'`) before return.
      * @param universalArgs  Optional.  Overrides for default arguments in {@link MessageMaker.args} for all messages.
      *
-     * @since 2.0.0-beta.3.draft — Renamed from msgs to bulk.
+     * @since 2.0.0-beta.3 — Renamed from msgs to bulk.
      */
     bulk(messages: MessageMaker.BulkMsgs, universalArgs?: Partial<MessageMaker.BulkMsgArgs>): string;
     /**
@@ -177,7 +177,7 @@ export declare class MessageMaker {
     /**
      * Formats a timestamp according to the args.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     timestamp(date?: Date | null, args?: Partial<timestamp.Args> | RecursivePartial<timestamp.Args>): string;
     /**
@@ -186,7 +186,7 @@ export declare class MessageMaker {
      * @param msg       Message to display. If it's an array, the strings are joined with `'\n'`.
      * @param msgArgs   Optional. Overrides for default arguments in {@link MessageMaker.msgArgs}.
      *
-     * @since 2.0.0-beta.3.draft — Renamed from timestampMsg to timestamped. Removed `timeArgs` param and switched to a time prop in `msgArgs`.
+     * @since 2.0.0-beta.3 — Renamed from timestampMsg to timestamped. Removed `timeArgs` param and switched to a time prop in `msgArgs`.
      */
     timestamped(msg: string | string[] | MessageMaker.BulkMsgs, { time: timeArgs, ...msgArgs }?: RecursivePartial<MessageMaker.TimestampedArgs>): string;
 }
@@ -420,7 +420,7 @@ export declare namespace MessageMaker {
     /**
      * Optional args for {@link MessageMaker.timestamped}.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     interface TimestampedArgs extends Omit<BulkMsgArgs, 'depth'> {
         time: Partial<Omit<MsgArgs, 'depth' | 'fullWidth' | 'hangingIndent' | 'indent' | 'maxWidth' | 'minWidth' | 'tab'> & {

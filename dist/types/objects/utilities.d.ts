@@ -1,28 +1,28 @@
 /**
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 /**
  * The expected shape for utilities (like the built-in console) that either
  * output or log messages.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export interface ConsoleUtility<T_OptionalParams extends readonly [...any[]] = [...any[]]> extends ConsoleUtility.Mini<T_OptionalParams> {
 }
 /**
  * Utilities for the {@link ConsoleUtility} interface.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare namespace ConsoleUtility {
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      *
      * @expand
      */
@@ -36,7 +36,7 @@ export declare namespace ConsoleUtility {
     /**
      * The most minimal shape for a console utility wrapper.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     interface Mini<T_OptionalParams extends readonly [...any[]] = [...any[]]> {
         debug: LogMethod<T_OptionalParams>;

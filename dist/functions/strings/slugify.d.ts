@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 /**
@@ -17,7 +17,7 @@
  * @return  Slug version of the input string.
  *
  * @since 0.1.0
- * @since 2.0.0-beta.3.draft — Added optional args param.
+ * @since 2.0.0-beta.3 — Added optional args param.
  *
  * @source
  */
@@ -25,11 +25,11 @@ export declare function slugify(input: string, args?: Partial<slugify.Args>): st
 /**
  * Utilities for the {@link slugify} function.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare namespace slugify {
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     interface Args {
         /**

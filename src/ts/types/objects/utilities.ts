@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @packageDocumentation
  */
@@ -12,7 +12,7 @@
  * The expected shape for utilities (like the built-in console) that either
  * output or log messages.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export interface ConsoleUtility<
     T_OptionalParams extends readonly [ ...any[] ] = [ ...any[] ]
@@ -28,12 +28,12 @@ export interface ConsoleUtility<
 /**
  * Utilities for the {@link ConsoleUtility} interface.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export namespace ConsoleUtility {
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      * 
      * @expand
      */
@@ -51,7 +51,7 @@ export namespace ConsoleUtility {
     /**
      * The most minimal shape for a console utility wrapper.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export interface Mini<
         T_OptionalParams extends readonly [ ...any[] ] = [ ...any[] ]

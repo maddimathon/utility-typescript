@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import { execSync as nodeExecSync, } from 'child_process';
@@ -326,7 +326,7 @@ export class NodeConsole {
                     disabled: '(this option is disabled with a message)',
                 },
                 {
-                    value: 4,
+                    value: '4',
                     description: 'This option returns a number',
                     name: 'Detailed Option 4',
                 },
@@ -478,12 +478,12 @@ export class NodeConsole {
      * @category Terminal
      *
      * @param cmd           Command to run in the terminal.
-     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param cmdArgs       Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
      * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      */
-    cmd(cmd, args = {}, literalFalse, equals) {
-        nodeExecSync(`${cmd} ${this.cmdArgs(args, literalFalse, equals)}`, {
+    cmd(cmd, cmdArgs = {}, literalFalse, equals) {
+        return nodeExecSync(`${cmd} ${this.cmdArgs(cmdArgs, literalFalse, equals)}`, {
             encoding: 'utf-8',
         });
     }
@@ -533,7 +533,7 @@ export class NodeConsole {
     /* Outputters ===================================== */
     #bulk = null;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     _bulkOutput(via, msgs, args = {}) {
         return console[via](this.msg.bulk(Array.isArray(msgs) ? msgs : [msgs], args));
@@ -543,7 +543,7 @@ export class NodeConsole {
      *
      * @category Outputters
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get bulk() {
         // returns
@@ -567,7 +567,7 @@ export class NodeConsole {
     }
     #timestamp = null;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     _timestampOutput(via, msg, args = {}) {
         return console[via](this.msg.timestamped(msg, args));
@@ -577,7 +577,7 @@ export class NodeConsole {
      *
      * @category Outputters
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get timestamp() {
         // returns
@@ -605,7 +605,7 @@ export class NodeConsole {
      *
      * @category Outputters
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get vi() {
         // returns
@@ -653,7 +653,7 @@ export class NodeConsole {
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     output(via, msg, args = {}) {
         console[via](this.msg.msg(msg, args));
@@ -671,7 +671,7 @@ export class NodeConsole {
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.log} instead.
      */
     logs(...args) {
         this.bulk.log(...args);
@@ -681,7 +681,7 @@ export class NodeConsole {
      *
      * @category Outputters
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.timestamp.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.timestamp.log} instead.
      */
     timestampLog(...args) {
         this.timestamp.log(...args);
@@ -696,7 +696,7 @@ export class NodeConsole {
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.vi.timestamp.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.vi.timestamp.log} instead.
      */
     timestampVarDump(...args) {
         this.vi.timestamp.log(...args);
@@ -711,7 +711,7 @@ export class NodeConsole {
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.vi.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.vi.log} instead.
      */
     varDump(...args) {
         this.vi.log(...args);
@@ -724,7 +724,7 @@ export class NodeConsole {
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     heading(heading, level, _args = {}, via) {
         const args = {
@@ -780,7 +780,7 @@ export class NodeConsole {
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     separator(args = {}, via) {
         const quarterWidth = this.maxWidth / 4;
@@ -810,7 +810,7 @@ export class NodeConsole {
      *
      * @category Aliases
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.debug} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.debug} instead.
      */
     debugs(...args) {
         this.bulk.debug(...args);
@@ -820,7 +820,7 @@ export class NodeConsole {
      *
      * @category Aliases
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     error(...params) {
         this.output('error', ...params);
@@ -832,7 +832,7 @@ export class NodeConsole {
      *
      * @category Outputters (Pre-formatted)
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h1(heading, args = {}) {
         this.heading(heading, 1, args);
@@ -844,7 +844,7 @@ export class NodeConsole {
      *
      * @category Outputters (Pre-formatted)
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h2(heading, args = {}) {
         this.heading(heading, 2, args);
@@ -856,7 +856,7 @@ export class NodeConsole {
      *
      * @category Outputters (Pre-formatted)
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h3(heading, args = {}) {
         this.heading(heading, 3, args);
@@ -866,7 +866,7 @@ export class NodeConsole {
      *
      * @category Aliases
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     info(...params) {
         this.verbose(...params);
@@ -876,7 +876,7 @@ export class NodeConsole {
      *
      * @category Aliases
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     sep(...params) {
         this.separator(...params);
@@ -902,7 +902,7 @@ export class NodeConsole {
      *
      * @category Aliases
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.warn} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.warn} instead.
      */
     warns(...args) {
         this.bulk.warn(...args);

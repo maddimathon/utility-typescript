@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { RecursiveMap } from '../../types/objects/records.js';
@@ -14,7 +14,7 @@ import type { RecursiveMap } from '../../types/objects/records.js';
  *
  * @category Functions – Map
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare function mapFlatten<T_Keys extends number | string, T_Values extends any, T_Map extends RecursiveMap<T_Keys, T_Values> = RecursiveMap<T_Keys, T_Values>>(map: T_Map, args?: Partial<mapFlatten.Args>): Map<string, T_Values>;
 /**
@@ -22,13 +22,13 @@ export declare function mapFlatten<T_Keys extends number | string, T_Values exte
  *
  * @category Functions – Map
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare namespace mapFlatten {
     /**
      * Optional params for the {@link mapFlatten} function.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     type Args = {
         prefix?: undefined | string;

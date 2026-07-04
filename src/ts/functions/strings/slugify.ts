@@ -18,7 +18,7 @@
  * @return  Slug version of the input string.
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Added optional args param.
+ * @since 2.0.0-beta.3 — Added optional args param.
  * 
  * @source
  */
@@ -74,12 +74,12 @@ export function slugify( input: string, args: Partial<slugify.Args> = {} ): stri
 /**
  * Utilities for the {@link slugify} function.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export namespace slugify {
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export interface Args {
 

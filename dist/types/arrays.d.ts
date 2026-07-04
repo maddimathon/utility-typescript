@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 /**
@@ -20,13 +20,13 @@ export type ArrayItem<T_Array extends readonly unknown[]> = T_Array extends read
 /**
  * A super-simple utility for types that may or may not be arrays.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export type SelfOrArray<T> = T | T[];
 /**
  * Returns a tuple without its last item.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @source
  */
@@ -37,7 +37,7 @@ export type TuplePop<T_Tuple extends readonly unknown[]> = T_Tuple extends reado
 /**
  * Returns a tuple without its first item.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @source
  */

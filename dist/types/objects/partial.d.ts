@@ -4,14 +4,14 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { AnyClass } from '../functions.js';
 /**
  * Uses the default {@link Partial} to make only property values partial.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @source
  * @experimental
@@ -37,7 +37,7 @@ export type PartialExcept<T_Object, T_KeysRequired extends keyof T_Object = neve
  * @param T_Object        Type or interface to transform.
  * @param T_KeysRequired  Optional. Keys that must be included. Default `never`.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  * @experimental
  */
 export type PartialPick<T_Object, T_KeysPartial extends keyof T_Object = never> = Omit<T_Object, T_KeysPartial> & Partial<Pick<T_Object, T_KeysPartial>>;
@@ -76,7 +76,7 @@ export type RecursivePartial<T_Object extends Record<number | string | symbol, a
 /**
  * Uses {@link RecursivePartial} to make only property values partial.
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @source
  * @experimental

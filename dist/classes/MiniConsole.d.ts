@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { ConsoleUtility, TupleShift } from '../types/index.js';
@@ -14,7 +14,7 @@ import type { ConsoleUtility, TupleShift } from '../types/index.js';
  *
  * @category Classes
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare class MiniConsole implements ConsoleUtility {
     constructor();

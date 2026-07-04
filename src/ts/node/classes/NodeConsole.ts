@@ -398,7 +398,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
 
         if ( args.debug ) {
 
-            const choices: NodeConsole_Prompt.SelectConfig<string | 4>[ 'choices' ] = [
+            const choices = [
                 {
                     value: 'Simple Option 1',
                 },
@@ -423,12 +423,12 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
                     disabled: '(this option is disabled with a message)',
                 },
                 {
-                    value: 4,
+                    value: '4',
 
                     description: 'This option returns a number',
                     name: 'Detailed Option 4',
                 },
-            ];
+            ] as const satisfies NodeConsole_Prompt.SelectConfig[ 'choices' ];
 
             await runAndDump( async ( args ) => nc.prompt.select( {
                 ...args as NodeConsole_Prompt.SelectConfig<any>,
@@ -623,19 +623,19 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @category Terminal
      * 
      * @param cmd           Command to run in the terminal.
-     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param cmdArgs       Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
      * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      */
     public cmd(
         cmd: string,
-        args: Parameters<NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
+        cmdArgs: Parameters<NodeConsole[ 'cmdArgs' ]>[ 0 ] = {},
         literalFalse?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 1 ],
         equals?: Parameters<NodeConsole[ 'cmdArgs' ]>[ 2 ],
-    ): void {
+    ): string {
 
-        nodeExecSync(
-            `${ cmd } ${ this.cmdArgs( args, literalFalse, equals ) }`,
+        return nodeExecSync(
+            `${ cmd } ${ this.cmdArgs( cmdArgs, literalFalse, equals ) }`,
             {
                 encoding: 'utf-8',
             },
@@ -705,7 +705,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
     #bulk: null | NodeConsole.BulkMethods = null;
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected _bulkOutput(
         via: ConsoleUtility.OutputMethod,
@@ -725,7 +725,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public get bulk(): NodeConsole.BulkMethods {
         // returns
@@ -757,7 +757,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
     #timestamp: null | NodeConsole.TimestampMethods = null;
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected _timestampOutput(
         via: ConsoleUtility.OutputMethod,
@@ -772,7 +772,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public get timestamp(): NodeConsole.TimestampMethods {
         // returns
@@ -808,7 +808,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public get vi(): NodeConsole.VarDumpMethods {
         // returns
@@ -910,7 +910,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @see {@link MessageMaker.msg}  Used to format the message.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected output(
         via: ConsoleUtility.OutputMethod,
@@ -934,7 +934,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @see {@link MessageMaker.msg}  Used to format the message.
      * 
-     * @deprecated ___PKG_VERSION___ — Use {@link NodeConsole.bulk.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.log} instead.
      */
     public logs( ...args: Parameters<NodeConsole[ 'bulk' ][ 'log' ]> ): void {
         this.bulk.log( ...args );
@@ -945,7 +945,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters
      * 
-     * @deprecated ___PKG_VERSION___ — Use {@link NodeConsole.timestamp.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.timestamp.log} instead.
      */
     public timestampLog( ...args: Parameters<NodeConsole[ 'timestamp' ][ 'log' ]> ): void {
         this.timestamp.log( ...args );
@@ -961,7 +961,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
      * 
-     * @deprecated ___PKG_VERSION___ — Use {@link NodeConsole.vi.timestamp.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.vi.timestamp.log} instead.
      */
     public timestampVarDump( ...args: Parameters<NodeConsole[ 'vi' ][ 'timestamp' ][ 'log' ]> ): void {
         this.vi.timestamp.log( ...args );
@@ -977,7 +977,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
      * 
-     * @deprecated ___PKG_VERSION___ — Use {@link NodeConsole.vi.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.vi.log} instead.
      */
     public varDump( ...args: Parameters<NodeConsole[ 'vi' ][ 'log' ]> ): void {
         this.vi.log( ...args );
@@ -993,7 +993,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @see {@link MessageMaker.msg}  Used to format the message.
      * 
-     * @deprecated ___PKG_VERSION___ — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     public heading(
         heading: string,
@@ -1074,7 +1074,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @see {@link MessageMaker.msg}  Used to format the message.
      * 
-     * @deprecated ___PKG_VERSION___ — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     public separator(
         args: RecursivePartial<NodeConsole.MsgArgs> = {},
@@ -1119,7 +1119,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Aliases
      * 
-     * @deprecated ___PKG_VERSION___ — Use {@link NodeConsole.bulk.debug} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.debug} instead.
      */
     public debugs( ...args: Parameters<NodeConsole[ 'bulk' ][ 'debug' ]> ): void {
         this.bulk.debug( ...args );
@@ -1130,7 +1130,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Aliases
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public error( ...params: TupleShift<Parameters<typeof this.output>> ): void {
         this.output( 'error', ...params );
@@ -1143,7 +1143,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters (Pre-formatted)
      * 
-     * @deprecated ___PKG_VERSION___ — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     public h1(
         heading: string,
@@ -1159,7 +1159,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters (Pre-formatted)
      * 
-     * @deprecated ___PKG_VERSION___ — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     public h2(
         heading: string,
@@ -1175,7 +1175,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Outputters (Pre-formatted)
      * 
-     * @deprecated ___PKG_VERSION___ — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     public h3(
         heading: string,
@@ -1189,7 +1189,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Aliases
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public info( ...params: Parameters<typeof this.verbose> ): void {
         this.verbose( ...params );
@@ -1200,7 +1200,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Aliases
      * 
-     * @deprecated ___PKG_VERSION___ — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     public sep( ...params: Parameters<NodeConsole[ 'separator' ]> ): void {
         this.separator( ...params );
@@ -1229,7 +1229,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * 
      * @category Aliases
      * 
-     * @deprecated ___PKG_VERSION___ — Use {@link NodeConsole.bulk.warn} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.warn} instead.
      */
     public warns( ...args: Parameters<NodeConsole[ 'bulk' ][ 'warn' ]> ): void {
         this.bulk.warn( ...args );
@@ -1281,7 +1281,7 @@ export namespace NodeConsole {
     };
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export interface BulkMethods {
 
@@ -1293,7 +1293,7 @@ export namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___ — Renamed from NodeConsole.debugs to NodeConsole.bulk.debug
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.debugs to NodeConsole.bulk.debug
          */
         readonly debug: (
             msgs: MessageMaker.BulkMsgs,
@@ -1308,7 +1308,7 @@ export namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly error: (
             msgs: MessageMaker.BulkMsgs,
@@ -1323,7 +1323,7 @@ export namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___ — Renamed from NodeConsole.logs to NodeConsole.bulk.log
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.logs to NodeConsole.bulk.log
          */
         readonly log: (
             msgs: MessageMaker.BulkMsgs,
@@ -1338,7 +1338,7 @@ export namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly verbose: (
             msgs: MessageMaker.BulkMsgs,
@@ -1353,7 +1353,7 @@ export namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___ — Renamed from NodeConsole.warns to NodeConsole.bulk.warn
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.warns to NodeConsole.bulk.warn
          */
         readonly warn: (
             msgs: MessageMaker.BulkMsgs,
@@ -1379,12 +1379,12 @@ export namespace NodeConsole {
      * Optional configuration for {@link NodeConsole.log}.
      * 
      * @since 0.1.1
-     * @since ___PKG_VERSION___ — Removed `via` property.
+     * @since 2.0.0-beta.3 — Removed `via` property.
      */
     export type MsgArgs = Partial<MessageMaker.MsgArgs>;
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export interface TimestampMethods {
 
@@ -1396,7 +1396,7 @@ export namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly debug: (
             msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
@@ -1411,7 +1411,7 @@ export namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly error: (
             msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
@@ -1426,7 +1426,7 @@ export namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___ — Renamed from NodeConsole.timestampLog to NodeConsole.timestamp.log
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.timestampLog to NodeConsole.timestamp.log
          */
         readonly log: (
             msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
@@ -1441,7 +1441,7 @@ export namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly verbose: (
             msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
@@ -1456,7 +1456,7 @@ export namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly warn: (
             msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
@@ -1465,7 +1465,7 @@ export namespace NodeConsole {
     }
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export interface VarDumpMethods {
 
@@ -1479,7 +1479,7 @@ export namespace NodeConsole {
          * @param variable  The variable to be inspected.
          * @param args      Optional. Configuration for the variable inspection and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly debug: (
             variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1498,7 +1498,7 @@ export namespace NodeConsole {
          * @param variable  The variable to be inspected.
          * @param args      Optional. Configuration for the variable inspection and message, if any.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         readonly error: (
             variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1517,7 +1517,7 @@ export namespace NodeConsole {
          * @param variable  The variable to be inspected.
          * @param args      Optional. Configuration for the variable inspection and message, if any.
          * 
-         * @since ___PKG_VERSION___ — Renamed from NodeConsole.varDump to NodeConsole.vi.log and updated params.
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.varDump to NodeConsole.vi.log and updated params.
          */
         readonly log: (
             variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1575,7 +1575,7 @@ export namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             readonly debug: (
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1595,7 +1595,7 @@ export namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             readonly error: (
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1615,7 +1615,7 @@ export namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              * 
-             * @since ___PKG_VERSION___ — Renamed from NodeConsole.timestampVarDump to NodeConsole.vi.timestamp.log and updated params.
+             * @since 2.0.0-beta.3 — Renamed from NodeConsole.timestampVarDump to NodeConsole.vi.timestamp.log and updated params.
              */
             readonly log: (
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1635,7 +1635,7 @@ export namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             readonly verbose: (
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
@@ -1655,7 +1655,7 @@ export namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             readonly warn: (
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],

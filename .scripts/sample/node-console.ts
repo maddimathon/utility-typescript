@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import { NodeConsole } from '../../src/ts/classes/node/NodeConsole.js';
+import { NodeConsole } from '../../src/ts/node/classes/NodeConsole.js';
 
 await NodeConsole.sample( { debug: false } );
 // await NodeConsole.sampleInteractivity( undefined, { debug: true } );

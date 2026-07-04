@@ -27,7 +27,7 @@ import { objectKeySort } from '../objects/objectKeySort.js';
  * @return  Unique array.
  * 
  * @since 0.1.0
- * @since ___PKG_VERSION___ — Added optional args param.
+ * @since 2.0.0-beta.3 — Added optional args param.
  */
 export function arrayUnique<T_ArrayItem>(
     arr: T_ArrayItem[],
@@ -62,12 +62,12 @@ export function arrayUnique<T_ArrayItem>(
 /**
  * Utilities for the {@link arrayUnique} function.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export namespace arrayUnique {
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export type Args = {
         /**

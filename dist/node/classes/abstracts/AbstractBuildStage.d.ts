@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { RecursivePartial } from '../../../types/index.js';
@@ -176,7 +176,7 @@ export declare namespace AbstractBuildStage {
          *
          * @default 0
          *
-         * @since 2.0.0-beta.3.draft — Renamed from 'log-base-level' to logBaseLevel.
+         * @since 2.0.0-beta.3 — Renamed from 'log-base-level' to logBaseLevel.
          */
         logBaseLevel: number;
         /**

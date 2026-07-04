@@ -34,7 +34,7 @@ import { MiniConsole } from './MiniConsole.js';
  * @category Classes
  * 
  * @since 0.1.1
- * @since ___PKG_VERSION___ — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
+ * @since 2.0.0-beta.3 — Added support for objects with public `toVariableInspection()` method to change the value to be inspected. Added T_InspectionType type param.
  *
  * @example
  * ```ts
@@ -236,7 +236,7 @@ export class VariableInspector<
             },
 
             /**
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             console: new MiniConsole(),
 
@@ -247,7 +247,7 @@ export class VariableInspector<
             fallbackToJSON: true,
 
             /**
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             formatKeys: true,
 
@@ -273,14 +273,14 @@ export class VariableInspector<
     }
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public readonly console: ConsoleUtility;
 
     /**
      * Default name for unnamed variables passed for inspection.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected readonly _defaultName: string = 'variable';
 
@@ -291,7 +291,7 @@ export class VariableInspector<
      * 
      * @expandType T_InspectionType
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected readonly _inspectionValue: T_InspectionType | undefined;
 
@@ -326,7 +326,7 @@ export class VariableInspector<
     protected readonly _properties: VariableInspector.Child[];
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     public get properties(): VariableInspector.Child[] {
         return this._properties;
@@ -347,7 +347,7 @@ export class VariableInspector<
         args: Partial<VariableInspector.Args> = {},
 
         /**
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         console?: ConsoleUtility,
     ) {
@@ -374,7 +374,7 @@ export class VariableInspector<
      * 
      * @see {@link VariableInspector.constructor}
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected _parseInputParams(
         validVar: { [ key: string ]: VariableInspector.InputType<T_InspectionType>; },
@@ -415,7 +415,7 @@ export class VariableInspector<
      *
      * @see {@link VariableInspector.constructor}
      *
-     * @since ___PKG_VERSION___ — Renamed from validateInput to _validateInputVariable.
+     * @since 2.0.0-beta.3 — Renamed from validateInput to _validateInputVariable.
      * Changed from static to local.
      */
     protected _validateInputVariable(
@@ -446,7 +446,7 @@ export class VariableInspector<
      *
      * @category Formatters
      * 
-     * @since ___PKG_VERSION___ — Renamed from keyFormatter to _keyFormatter.
+     * @since 2.0.0-beta.3 — Renamed from keyFormatter to _keyFormatter.
      */
     protected _keyFormatter( key: number | string | symbol ): string {
         // returns
@@ -473,7 +473,7 @@ export class VariableInspector<
      *
      * @category Inputs
      *
-     * @since ___PKG_VERSION___ — Renamed from getPropertyNames to _getPropertyNames.
+     * @since 2.0.0-beta.3 — Renamed from getPropertyNames to _getPropertyNames.
      */
     protected _getPropertyNames(): ( ( number | string | symbol ) & keyof typeof this._inspectionValue )[] {
 
@@ -516,7 +516,7 @@ export class VariableInspector<
      *
      * @category Inputs
      *
-     * @since ___PKG_VERSION___ — Renamed from indexProperties to _indexProperties.
+     * @since 2.0.0-beta.3 — Renamed from indexProperties to _indexProperties.
      */
     protected _indexProperties(): VariableInspector.Child[] {
 
@@ -614,7 +614,7 @@ export class VariableInspector<
     /**
      * Filters for the ouput of different inspection parts.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     protected get _filter() {
 
@@ -629,7 +629,7 @@ export class VariableInspector<
             /**
              * Filters the value's type for output.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             type: ( type: string, skipFormatting: boolean ): string => {
                 type = type.replace( /(^[\n\s]+|[\n\s]+$)/gi, '' );
@@ -645,7 +645,7 @@ export class VariableInspector<
             /** 
              * Filters the value for output.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             value: ( str: null | undefined | string, viaMethod: string | undefined, skipFormatting: boolean ): string => {
 
@@ -676,7 +676,7 @@ export class VariableInspector<
             /**
              * Add 'via' info to value filter.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             valueVia: valueVia as ( viaMethod: string, skipFormatting: boolean ) => string,
         } as const;
@@ -695,7 +695,7 @@ export class VariableInspector<
      * 
      * @return  Formatted value.
      * 
-     * @since ___PKG_VERSION___ — Renamed from formatter to _formatter.
+     * @since 2.0.0-beta.3 — Renamed from formatter to _formatter.
      */
     protected _formatter( stage: VariableInspector.StageKeys, str: string ): string {
 
@@ -1082,7 +1082,7 @@ export namespace VariableInspector {
     export type Formatter = ( str: string ) => string;
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export type InputObject<T_InspectionType extends InspectionType> =
         | T_InspectionType & {
@@ -1093,14 +1093,14 @@ export namespace VariableInspector {
         };
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export type InputType<T_InspectionType extends InspectionType> =
         | Exclude<T_InspectionType, object>
         | InputObject<T_InspectionType>;
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export type InspectionType = typeOf.TestType | unknown;
 
@@ -1164,7 +1164,7 @@ export namespace VariableInspector {
          * 
          * @default true
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         formatKeys: boolean;
 
@@ -1359,7 +1359,7 @@ export namespace VariableInspector {
     /**
      * Used to sample/test/demo functions.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      * @internal
      */
     export namespace Samples {
@@ -1376,7 +1376,7 @@ export namespace VariableInspector {
         };
 
         /**
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          * @internal
          */
         export type Vars = {
@@ -1409,7 +1409,7 @@ export namespace VariableInspector {
         /**
          * Used for testing.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          * @internal
          */
         export function getVars( verbose: boolean ): VariableInspector.Samples.Vars {

@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @packageDocumentation
  */
@@ -15,7 +15,7 @@ import type { Test } from '../../types/index.js';
  * 
  * @category Functions – Object
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export function deleteUndefinedProps<T_Obj extends object>(
     obj: T_Obj,
@@ -36,14 +36,14 @@ export function deleteUndefinedProps<T_Obj extends object>(
  * 
  * @category Functions – Object
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export namespace deleteUndefinedProps {
 
     /**
      * Utility for {@link OmitUndefined} type.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      * @internal
      */
     export type KeysToKeep<T_Obj extends object> = (
@@ -57,7 +57,7 @@ export namespace deleteUndefinedProps {
     /**
      * Utility for {@link OmitUndefined} type.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      * @internal
      */
     export type KeysToPartialize<T_Obj extends object> = (
@@ -70,6 +70,9 @@ export namespace deleteUndefinedProps {
         } & { [ key: number | string | symbol ]: never; }
     )[ keyof T_Obj ];
 
+    /**
+     * @experimental
+     */
     export type OmitUndefined<T_Obj extends object> = {
         [ K in KeysToKeep<T_Obj> ]: T_Obj[ K ];
     } & {

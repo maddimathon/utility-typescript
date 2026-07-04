@@ -20,6 +20,70 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.3** — 2026-07-04
+
+Some reorganizing, slightly more atomization, some new functions and types.
+
+### Moved & Renamed
+- Reorganized {@link MessageMaker} methods (including some params):
+    - {@link MessageMaker.msgs} → {@link MessageMaker.bulk}
+    - {@link MessageMaker.timestampMsg} → {@link MessageMaker.timestamp}
+- Reorganized {@link NodeConsole} methods (including their params):
+    - {@link NodeConsole.debugs} → {@link NodeConsole.bulk.debug}
+    - {@link NodeConsole.logs} → {@link NodeConsole.bulk.log}
+    - {@link NodeConsole.warns} → {@link NodeConsole.bulk.warn}
+    - {@link NodeConsole.timestampLog} → {@link NodeConsole.timestamp.log}
+    - {@link NodeConsole.timestampVarDump} → {@link NodeConsole.vi.timestamp.log}
+    - {@link NodeConsole.varDump} → {@link NodeConsole.vi.log}
+
+### Misc. Breaking
+- Tightened up tsconfig defaults & updated typedoc
+- Updated typescript to 6.x.x
+- Updated @inquirer/prompts to 8.x.x version (major version change)
+
+### Added
+- New functions:
+    - {@link deleteUndefinedProps}
+    - {@link mapFlatten}
+    - {@link mapFlattenAsync}
+- New classes:
+    - {@link MiniConsole}
+- New types:
+    - {@link PartialChildren}
+    - {@link PartialPick}
+    - {@link RecursivePartialChildren}
+    - {@link SelfOrArray}
+    - {@link SyncOrAsync}
+    - {@link TuplePop}
+    - {@link TupleShift}
+- New interfaces:
+    - {@link ConsoleUtility}
+- New properties for log/etc variations in {@link NodeConsole}:
+    - {@link NodeConsole.bulk}
+    - {@link NodeConsole.timestamp} - with new {@link NodeConsole.timestamp.debug} and {@link NodeConsole.timestamp.warn}
+    - {@link NodeConsole.vi} - with new {@link NodeConsole.vi.debug} and {@link NodeConsole.vi.warn}
+    - {@link NodeConsole.vi.timestamp} - with new {@link NodeConsole.vi.timestamp.debug} and {@link NodeConsole.vi.timestamp.warn}
+
+### Changed
+- New params:
+    - {@link arrayUnique.Args.compareViaJson} option to {@link arrayUnique}
+    - {@link slugify.Args} props: allowRepeatDashes, allowRepeatUnderscores,
+      allowUnderscores to {@link slugify}
+- Improvements to {@link timestamp} function formatting & options
+
+### Deprecated
+- Marked deprecated (to be removed in upcoming versions):
+    - {@link NodeConsole.h1}
+    - {@link NodeConsole.h2}
+    - {@link NodeConsole.h3}
+    - {@link NodeConsole.heading}
+    - {@link NodeConsole.sep}
+    - {@link NodeConsole.separator}
+
+### Fixed
+- Updated dependencies
+
+
 ## **2.0.0-beta.2** — 2026-03-04
 
 ### Removed

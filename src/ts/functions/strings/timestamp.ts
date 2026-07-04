@@ -160,7 +160,7 @@ export namespace timestamp {
      * Optional configuation for {@link timestamp} function.
      * 
      * @since 0.1.0
-     * @since ___PKG_VERSION___ — Removed lang property.  Removed format property to be date & time property options and changed params from the JS {@link Intl.DateTimeFormatOptions} to simplify and stick to ISO-ish timestamps.
+     * @since 2.0.0-beta.3 — Removed lang property.  Removed format property to be date & time property options and changed params from the JS {@link Intl.DateTimeFormatOptions} to simplify and stick to ISO-ish timestamps.
      */
     export interface Args {
 
@@ -202,21 +202,21 @@ export namespace timestamp {
     /**
      * Utility types for the {@link Args} type.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export namespace Args {
 
         /**
          * Utility types for defining output formats in the {@link Args} type.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.3
          */
         export namespace Format {
 
             /**
              * Format argument for date output.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             export interface Date {
                 year: boolean;
@@ -227,7 +227,7 @@ export namespace timestamp {
             /**
              * Format argument for time output.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             export interface Time {
                 hour12: boolean | { am: string; pm: string; };
@@ -240,7 +240,7 @@ export namespace timestamp {
             /**
              * Default format argument values.
              * 
-             * @since ___PKG_VERSION___
+             * @since 2.0.0-beta.3
              */
             export const DEFAULTS: {
                 readonly date: {

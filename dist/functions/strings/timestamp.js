@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 /**
@@ -120,21 +120,21 @@ export function timestamp(date = null, _args = {}) {
     /**
      * Utility types for the {@link Args} type.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     let Args;
     (function (Args) {
         /**
          * Utility types for defining output formats in the {@link Args} type.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         let Format;
         (function (Format) {
             /**
              * Default format argument values.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             Format.DEFAULTS = {
                 date: {

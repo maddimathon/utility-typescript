@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { ConsoleUtility, RecursivePartial, TupleShift } from '../../types/index.js';
@@ -90,11 +90,11 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      * @category Terminal
      *
      * @param cmd           Command to run in the terminal.
-     * @param args          Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
+     * @param cmdArgs       Optional. Passed to {@link NodeConsole.cmdArgs}. Default `{}`.
      * @param literalFalse  Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      * @param equals        Optional. Passed to {@link NodeConsole.cmdArgs}. Default `undefined`.
      */
-    cmd(cmd: string, args?: Parameters<NodeConsole['cmdArgs']>[0], literalFalse?: Parameters<NodeConsole['cmdArgs']>[1], equals?: Parameters<NodeConsole['cmdArgs']>[2]): void;
+    cmd(cmd: string, cmdArgs?: Parameters<NodeConsole['cmdArgs']>[0], literalFalse?: Parameters<NodeConsole['cmdArgs']>[1], equals?: Parameters<NodeConsole['cmdArgs']>[2]): string;
     /**
      * Formats an arguments object into a command-line string of arguments.
      *
@@ -111,7 +111,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
         [key: string]: boolean | number | string | null;
     }, literalFalse?: boolean, equals?: boolean): string;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected _bulkOutput(via: ConsoleUtility.OutputMethod, msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>): void;
     /**
@@ -119,11 +119,11 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get bulk(): NodeConsole.BulkMethods;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected _timestampOutput(via: ConsoleUtility.OutputMethod, msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>): void;
     /**
@@ -131,7 +131,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get timestamp(): NodeConsole.TimestampMethods;
     /**
@@ -139,7 +139,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     get vi(): NodeConsole.VarDumpMethods;
     /**
@@ -152,7 +152,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     protected output(via: ConsoleUtility.OutputMethod, msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
@@ -166,7 +166,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.log} instead.
      */
     logs(...args: Parameters<NodeConsole['bulk']['log']>): void;
     /**
@@ -174,7 +174,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.timestamp.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.timestamp.log} instead.
      */
     timestampLog(...args: Parameters<NodeConsole['timestamp']['log']>): void;
     /**
@@ -187,7 +187,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.vi.timestamp.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.vi.timestamp.log} instead.
      */
     timestampVarDump(...args: Parameters<NodeConsole['vi']['timestamp']['log']>): void;
     /**
@@ -200,7 +200,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      * @see {@link VariableInspector}  Used to inspect the variable.
      * @see {@link VariableInspector.stringify}  Used to inspect the variable.
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.vi.log} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.vi.log} instead.
      */
     varDump(...args: Parameters<NodeConsole['vi']['log']>): void;
     /**
@@ -210,7 +210,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     heading(heading: string, level: number, _args?: RecursivePartial<Omit<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs, "linesIn" | "linesOut">>, via?: ConsoleUtility.OutputMethod): void;
     /**
@@ -220,7 +220,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @see {@link MessageMaker.msg}  Used to format the message.
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     separator(args?: RecursivePartial<NodeConsole.MsgArgs>, via?: ConsoleUtility.OutputMethod): void;
     /**
@@ -234,7 +234,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Aliases
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.debug} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.debug} instead.
      */
     debugs(...args: Parameters<NodeConsole['bulk']['debug']>): void;
     /**
@@ -242,7 +242,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Aliases
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     error(...params: TupleShift<Parameters<typeof this.output>>): void;
     /**
@@ -252,7 +252,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters (Pre-formatted)
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h1(heading: string, args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
@@ -262,7 +262,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters (Pre-formatted)
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h2(heading: string, args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
@@ -272,7 +272,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Outputters (Pre-formatted)
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     h3(heading: string, args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
@@ -280,7 +280,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Aliases
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     info(...params: Parameters<typeof this.verbose>): void;
     /**
@@ -288,7 +288,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Aliases
      *
-     * @deprecated 2.0.0-beta.3.draft — Create wrapper functions for more project-specfic formatting to replace this method.
+     * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
     sep(...params: Parameters<NodeConsole['separator']>): void;
     /**
@@ -308,7 +308,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @category Aliases
      *
-     * @deprecated 2.0.0-beta.3.draft — Use {@link NodeConsole.bulk.warn} instead.
+     * @deprecated 2.0.0-beta.3 — Use {@link NodeConsole.bulk.warn} instead.
      */
     warns(...args: Parameters<NodeConsole['bulk']['warn']>): void;
 }
@@ -347,7 +347,7 @@ export declare namespace NodeConsole {
         varInspect: Partial<VariableInspector.Args>;
     };
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     interface BulkMethods {
         /**
@@ -358,7 +358,7 @@ export declare namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.debugs to NodeConsole.bulk.debug
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.debugs to NodeConsole.bulk.debug
          */
         readonly debug: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
         /**
@@ -369,7 +369,7 @@ export declare namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly error: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
         /**
@@ -380,7 +380,7 @@ export declare namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.logs to NodeConsole.bulk.log
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.logs to NodeConsole.bulk.log
          */
         readonly log: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
         /**
@@ -391,7 +391,7 @@ export declare namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly verbose: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
         /**
@@ -402,7 +402,7 @@ export declare namespace NodeConsole {
          * @param msgs  The messages to be output. Processed by {@link MessageMaker.bulk}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.warns to NodeConsole.bulk.warn
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.warns to NodeConsole.bulk.warn
          */
         readonly warn: (msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>) => void;
     }
@@ -423,11 +423,11 @@ export declare namespace NodeConsole {
      * Optional configuration for {@link NodeConsole.log}.
      *
      * @since 0.1.1
-     * @since 2.0.0-beta.3.draft — Removed `via` property.
+     * @since 2.0.0-beta.3 — Removed `via` property.
      */
     type MsgArgs = Partial<MessageMaker.MsgArgs>;
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     interface TimestampMethods {
         /**
@@ -438,7 +438,7 @@ export declare namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly debug: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
         /**
@@ -449,7 +449,7 @@ export declare namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly error: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
         /**
@@ -460,7 +460,7 @@ export declare namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.timestampLog to NodeConsole.timestamp.log
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.timestampLog to NodeConsole.timestamp.log
          */
         readonly log: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
         /**
@@ -471,7 +471,7 @@ export declare namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly verbose: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
         /**
@@ -482,12 +482,12 @@ export declare namespace NodeConsole {
          * @param msg   The message to be output. Processed by {@link MessageMaker.msg}.
          * @param args  Optional. Configuration for the output and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly warn: (msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>) => void;
     }
     /**
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      */
     interface VarDumpMethods {
         /**
@@ -500,7 +500,7 @@ export declare namespace NodeConsole {
          * @param variable  The variable to be inspected.
          * @param args      Optional. Configuration for the variable inspection and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly debug: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
             msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
@@ -515,7 +515,7 @@ export declare namespace NodeConsole {
          * @param variable  The variable to be inspected.
          * @param args      Optional. Configuration for the variable inspection and message, if any.
          *
-         * @since 2.0.0-beta.3.draft
+         * @since 2.0.0-beta.3
          */
         readonly error: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
             msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
@@ -530,7 +530,7 @@ export declare namespace NodeConsole {
          * @param variable  The variable to be inspected.
          * @param args      Optional. Configuration for the variable inspection and message, if any.
          *
-         * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.varDump to NodeConsole.vi.log and updated params.
+         * @since 2.0.0-beta.3 — Renamed from NodeConsole.varDump to NodeConsole.vi.log and updated params.
          */
         readonly log: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
             msg?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>;
@@ -575,7 +575,7 @@ export declare namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             readonly debug: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
                 msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
@@ -591,7 +591,7 @@ export declare namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             readonly error: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
                 msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
@@ -607,7 +607,7 @@ export declare namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              *
-             * @since 2.0.0-beta.3.draft — Renamed from NodeConsole.timestampVarDump to NodeConsole.vi.timestamp.log and updated params.
+             * @since 2.0.0-beta.3 — Renamed from NodeConsole.timestampVarDump to NodeConsole.vi.timestamp.log and updated params.
              */
             readonly log: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
                 msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
@@ -623,7 +623,7 @@ export declare namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             readonly verbose: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
                 msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;
@@ -639,7 +639,7 @@ export declare namespace NodeConsole {
              * @param variable  The variable to be inspected.
              * @param args      Optional. Configuration for the variable inspection and message, if any.
              *
-             * @since 2.0.0-beta.3.draft
+             * @since 2.0.0-beta.3
              */
             readonly warn: (variable: ConstructorParameters<typeof VariableInspector>[0], args?: ConstructorParameters<typeof VariableInspector>[1] & {
                 msg?: RecursivePartial<NodeConsole.MsgArgs & Omit<MessageMaker.TimestampedArgs, 'time'>>;

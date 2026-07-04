@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -79,7 +79,6 @@ export class NodeConsole_Prompt {
         const prefixTimestampIndent = timestamp ? ' '.repeat(this.msg.timestamped('').length) : '';
         const selectCursorIndent = prompter == 'select' ? '  ' : '';
         config.theme = {
-            helpMode: 'always',
             icon: {
                 cursor: '→',
             },
@@ -126,6 +125,12 @@ export class NodeConsole_Prompt {
                     italic: !msgArgs?.italic,
                 }),
                 key: (text) => 'KEY: (' + text + ')',
+                keysHelpTip: (text) => this.msg.msg(text, {
+                    ...msgArgs ?? {},
+                    bold: false,
+                    clr: styleClrs.help,
+                    italic: !msgArgs?.italic,
+                }),
                 message: (text) => this.msg.msg(text, msgArgs),
             },
             validationFailureMode: 'keep',

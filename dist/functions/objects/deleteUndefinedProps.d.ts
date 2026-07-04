@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.3
  * @license MIT
  */
 import type { Test } from '../../types/index.js';
@@ -13,7 +13,7 @@ import type { Test } from '../../types/index.js';
  *
  * @category Functions – Object
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare function deleteUndefinedProps<T_Obj extends object>(obj: T_Obj): deleteUndefinedProps.OmitUndefined<T_Obj>;
 /**
@@ -21,13 +21,13 @@ export declare function deleteUndefinedProps<T_Obj extends object>(obj: T_Obj): 
  *
  * @category Functions – Object
  *
- * @since 2.0.0-beta.3.draft
+ * @since 2.0.0-beta.3
  */
 export declare namespace deleteUndefinedProps {
     /**
      * Utility for {@link OmitUndefined} type.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      * @internal
      */
     type KeysToKeep<T_Obj extends object> = ({
@@ -38,7 +38,7 @@ export declare namespace deleteUndefinedProps {
     /**
      * Utility for {@link OmitUndefined} type.
      *
-     * @since 2.0.0-beta.3.draft
+     * @since 2.0.0-beta.3
      * @internal
      */
     type KeysToPartialize<T_Obj extends object> = ({
@@ -46,6 +46,9 @@ export declare namespace deleteUndefinedProps {
     } & {
         [key: number | string | symbol]: never;
     })[keyof T_Obj];
+    /**
+     * @experimental
+     */
     type OmitUndefined<T_Obj extends object> = {
         [K in KeysToKeep<T_Obj>]: T_Obj[K];
     } & {

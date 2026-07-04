@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  * 
  * @packageDocumentation
  */
@@ -17,7 +17,7 @@ import { deleteUndefinedProps } from './../objects/deleteUndefinedProps.js';
  * 
  * @category Functions – Map
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export function mapFlatten<
     T_Keys extends number | string,
@@ -79,14 +79,14 @@ export function mapFlatten<
  * 
  * @category Functions – Map
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.3
  */
 export namespace mapFlatten {
 
     /**
      * Optional params for the {@link mapFlatten} function.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.3
      */
     export type Args = {
         prefix?: undefined | string;
