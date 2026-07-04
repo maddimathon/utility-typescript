@@ -4,7 +4,7 @@ category: Docs
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-beta.3
+# Utility TypeScript @ 2.0.0-beta.4
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -32,8 +32,8 @@ or
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@2.0.0-beta.3
-npm i -D github:maddimathon/utility-typescript#2.0.0-beta.3
+npm i -D @maddimathon/utility-typescript@2.0.0-beta.4
+npm i -D github:maddimathon/utility-typescript#2.0.0-beta.4
 ```
 <!--/README_INSTALL-->
 

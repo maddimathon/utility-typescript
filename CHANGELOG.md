@@ -20,6 +20,11 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.4** — 2026-07-04
+
+Now actually includes the exported tsconfig file!
+
+
 ## **2.0.0-beta.3** — 2026-07-04
 
 Some reorganizing, slightly more atomization, some new functions and types.

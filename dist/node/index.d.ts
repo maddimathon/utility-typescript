@@ -13,7 +13,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.3
+ * @maddimathon/utility-typescript@2.0.0-beta.4
  * @license MIT
  */
 export * from './classes/abstracts/AbstractBuildStage.js';
