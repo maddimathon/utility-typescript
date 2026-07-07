@@ -20,6 +20,11 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.5** — 2026-07-07
+
+Minor fixes to Node_Console.
+
+
 ## **2.0.0-beta.4** — 2026-07-04
 
 Now actually includes the exported tsconfig file!

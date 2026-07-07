@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.5
  * @license MIT
  */
 /**
@@ -24,7 +24,7 @@ export declare namespace ConsoleUtility {
     /**
      * Method shapes for default console output messages.
      *
-     * @since 2.0.0-beta.5.draft
+     * @since 2.0.0-beta.5
      * @expand
      */
     type LoggerMethod<T_OptionalParams extends [...any[]]> = (msg: any, ...optionalParams: T_OptionalParams) => void;

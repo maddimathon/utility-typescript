@@ -37,7 +37,7 @@
  * {@includeCode ./test.example.docs.ts#TypeTests}
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.5
  * @license MIT
  */
 /**

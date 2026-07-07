@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/design-system-utilities@2.0.0-beta.5.draft
+ * @maddimathon/design-system-utilities@2.0.0-beta.5
  * @license MIT
  */
 import type { RecursiveRecord } from '../../types/objects/records.js';

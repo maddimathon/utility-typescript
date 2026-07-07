@@ -35,7 +35,7 @@ export namespace ConsoleUtility {
     /**
      * Method shapes for default console output messages.
      * 
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.5
      * @expand
      */
     export type LoggerMethod<
