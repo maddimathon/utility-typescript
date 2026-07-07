@@ -98,7 +98,7 @@ export class NodeConsole_Prompt {
             depth = 0,
 
             indent = '',
-            hangingIndent = '',
+            // hangingIndent = '',
 
             linesIn = 0,
             linesOut = 0,
@@ -106,8 +106,9 @@ export class NodeConsole_Prompt {
             timestamp = false,
         } = config.msgArgs ?? {};
 
-        const msgArgs: NonNullable<NodeConsole_Prompt.Config[ 'msgArgs' ]> = {
+        const msgArgs = {
             bold: true,
+            hangingIndent: '',
 
             ...config.msgArgs ?? {},
 
@@ -115,9 +116,12 @@ export class NodeConsole_Prompt {
             linesOut: 0,
 
             depth: 0,
-            // hangingIndent: '',
-            indent: '',
-        };
+
+            indent: this.msg.args.msg.tab.repeat( depth )
+                + ' '.repeat(
+                    indent.length + ( timestamp ? this.msg.timestamped( '' ).length : 0 )
+                ),
+        } satisfies NonNullable<NodeConsole_Prompt.Config[ 'msgArgs' ]>;
 
         const styleClrs: Required<NonNullable<NonNullable<NodeConsole_Prompt.Config>[ 'styleClrs' ]>> = {
             ...this.args.styleClrs,
@@ -132,16 +136,17 @@ export class NodeConsole_Prompt {
                 ),
         };
 
-        const _indent = this.msg.args.msg.tab.repeat( depth )
-            + ' '.repeat( hangingIndent.length + indent.length );
-
         const prefixTimestamp = timestamp ? this.msg.timestamped( '', msgArgs ) : '';
 
-        const _prefixTimestampIndent = timestamp ? ' '.repeat( this.msg.timestamped( '' ).length ) : '';
+        const indents = {
+            message: ' '.repeat( config.message.length + ( timestamp ? 1 : 3 ) ),
 
-        msgArgs.indent = _indent + _prefixTimestampIndent;
+            prefix: (
+                status: "loading" | "idle" | "done" | ( string & {} ),
+            ) => ( status === 'done' || status === 'idle' ? '  ' : '' ),
 
-        const selectCursorIndent = prompter == 'select' ? '  ' : '';
+            selectCursor: prompter == 'select' ? '  ' : '',
+        } as const;
 
         config.theme = {
             icon: {
@@ -177,9 +182,10 @@ export class NodeConsole_Prompt {
 
                     bold: false,
                     clr: styleClrs.highlight,
-                    linesIn: 1,
+                    linesIn: 0,
+                    linesOut: 1,
                     italic: !msgArgs?.italic,
-                    indent: msgArgs.indent + selectCursorIndent,
+                    indent: msgArgs.indent + indents.selectCursor,
                 } ),
 
                 disabled: ( text: string ) => this.msg.msg( text, {
@@ -187,7 +193,7 @@ export class NodeConsole_Prompt {
 
                     bold: false,
                     clr: styleClrs.disabled,
-                    indent: msgArgs.indent + selectCursorIndent,
+                    hangingIndent: msgArgs.indent + msgArgs.hangingIndent + indents.selectCursor,
                 } ),
 
                 error: ( text: string ) => this.msg.msg( text, {
@@ -196,7 +202,7 @@ export class NodeConsole_Prompt {
                     bold: false,
                     clr: styleClrs.error,
                     italic: !msgArgs?.italic,
-                    indent: msgArgs.indent + ' '.repeat( config.message.length + ( timestamp ? 1 : 3 ) ),
+                    hangingIndent: msgArgs.indent + indents.message,
                 } ),
 
                 help: ( text: string ) => this.msg.msg( text, {
@@ -214,6 +220,8 @@ export class NodeConsole_Prompt {
 
                     bold: true,
                     italic: !msgArgs?.italic,
+                    indent: '',
+                    hangingIndent: '',
                 } ),
 
                 key: ( text: string ) => 'KEY: (' + text + ')',
@@ -224,11 +232,14 @@ export class NodeConsole_Prompt {
                     bold: false,
                     clr: styleClrs.help,
                     italic: !msgArgs?.italic,
+                    indent: msgArgs.indent + indents.selectCursor,
                 } ),
 
-                message: (
-                    text: string,
-                ) => this.msg.msg( text, msgArgs ),
+                message: ( text, status ) => this.msg.msg( text, {
+                    ...msgArgs ?? {},
+                    indent: '',
+                    hangingIndent: msgArgs.indent + indents.prefix( status ),
+                } ),
             },
 
             validationFailureMode: 'keep',

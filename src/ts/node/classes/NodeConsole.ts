@@ -12,8 +12,6 @@ import {
     execSync as nodeExecSync,
 } from 'child_process';
 
-import type { LoggerUtility } from '@maddimathon/universal-types';
-
 import type {
     ConsoleUtility,
     RecursivePartial,
@@ -710,7 +708,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @since 2.0.0-beta.3
      */
     protected _bulkOutput(
-        via: LoggerUtility.OutputMethod,
+        via: ConsoleUtility.OutputMethod,
         msgs: MessageMaker.BulkMsgs,
         args: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs> = {},
     ): void {
@@ -762,7 +760,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @since 2.0.0-beta.3
      */
     protected _timestampOutput(
-        via: LoggerUtility.OutputMethod,
+        via: ConsoleUtility.OutputMethod,
         msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
         args: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs> = {},
     ): void {
@@ -820,7 +818,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
 
         const output = (
             (
-                via: LoggerUtility.OutputMethod,
+                via: ConsoleUtility.OutputMethod,
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
                 {
                     msg: msgArgs,
@@ -849,7 +847,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
 
         const timestampOutput = (
             (
-                via: LoggerUtility.OutputMethod,
+                via: ConsoleUtility.OutputMethod,
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
                 {
                     msg: msgArgs = {},
@@ -915,7 +913,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @since 2.0.0-beta.3
      */
     protected output(
-        via: LoggerUtility.OutputMethod,
+        via: ConsoleUtility.OutputMethod,
         msg: string | string[],
         args: RecursivePartial<NodeConsole.MsgArgs> = {},
     ): void {
@@ -1004,7 +1002,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
             NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs,
             "linesIn" | "linesOut"
         >> = {},
-        via?: LoggerUtility.OutputMethod,
+        via?: ConsoleUtility.OutputMethod,
     ): void {
 
         const args: Partial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs> & {
@@ -1080,7 +1078,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      */
     public separator(
         args: RecursivePartial<NodeConsole.MsgArgs> = {},
-        via?: LoggerUtility.OutputMethod,
+        via?: ConsoleUtility.OutputMethod,
     ): void {
 
         const quarterWidth = this.maxWidth / 4;

@@ -18,6 +18,7 @@
 export class MiniConsole {
     constructor() {
         this.debug = this.debug.bind(this);
+        this.error = this.error.bind(this);
         this.info = this.info.bind(this);
         this.log = this.log.bind(this);
         this.verbose = this.verbose.bind(this);

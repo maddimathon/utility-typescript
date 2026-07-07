@@ -1,9 +1,36 @@
 {
-    "extends": "@maddimathon/tsconfig/base",
     "compilerOptions": {
+        "allowUnusedLabels": false,
+        "alwaysStrict": true,
         "composite": true,
+        "exactOptionalPropertyTypes": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedDeclarations": true,
+        "isolatedModules": true,
         "module": "Node20",
-        "types": ["node", "jest"]
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "preserveSymlinks": true,
+        "pretty": true,
+        "removeComments": false,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictBuiltinIteratorReturn": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "types": ["node", "jest"],
+        "useUnknownInCatchVariables": true,
+        "verbatimModuleSyntax": true
     },
     "$schema": "https://json.schemastore.org/tsconfig"
 }

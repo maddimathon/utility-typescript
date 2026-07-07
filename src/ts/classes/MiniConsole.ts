@@ -8,8 +8,6 @@
  * @license MIT
  */
 
-import type { LoggerUtility } from '@maddimathon/universal-types';
-
 import type { ConsoleUtility, TupleShift } from '../types/index.js';
 
 /**
@@ -24,6 +22,7 @@ export class MiniConsole implements ConsoleUtility {
 
     constructor () {
         this.debug = this.debug.bind( this );
+        this.error = this.error.bind( this );
         this.info = this.info.bind( this );
         this.log = this.log.bind( this );
         this.verbose = this.verbose.bind( this );
@@ -53,7 +52,7 @@ export class MiniConsole implements ConsoleUtility {
      * Generic base output method for other outputs.
      */
     protected output(
-        via: LoggerUtility.OutputMethod,
+        via: ConsoleUtility.OutputMethod,
         msg: any,
     ): void {
         console[ via === 'verbose' ? 'info' : via ]( msg );

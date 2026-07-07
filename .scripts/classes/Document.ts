@@ -5,8 +5,6 @@
  * @license MIT
  */
 
-import { TypeDocCompiler } from '@maddimathon/compiler-typedoc';
-
 import * as typeDoc from "typedoc";
 
 import { AbstractStage } from './abstracts/AbstractStage.js';
@@ -31,8 +29,6 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public readonly typeDocCompiler: TypeDocCompiler;
-
     public readonly subStages = docSubStages;
 
     public get ARGS_DEFAULT() {
@@ -48,8 +44,6 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
     constructor ( args: Document.Args ) {
         super( args, 'turquoise' );
-
-        this.typeDocCompiler = new TypeDocCompiler( this.nc );
     }
 
 
@@ -105,7 +99,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             'src/ts/index.ts',
             'src/ts/node/index.ts',
             'src/ts/types/index.ts',
-        ] as const;
+        ];
 
         const config = {
             alwaysCreateEntryPointModule: true,
@@ -155,6 +149,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             disableGit: false,
             disableSources: false,
 
+            entryPoints,
             entryPointStrategy: 'expand',
 
             excludeInternal: false,
@@ -327,7 +322,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 private: !this.args.releasing || !!this.args.dryrun,
                 protected: true,
             },
-        } satisfies TypeDocCompiler.CompileArgs;
+        } as const satisfies typeDoc.Configuration.TypeDocOptions;
 
         if ( config.out ) {
             this.verboseLog( 'deleting existing files...', 2 );
@@ -348,10 +343,18 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
         // }
 
         this.verboseLog( 'running typedoc...', 2 );
-        await this.typeDocCompiler.compile(
-            entryPoints,
-            config,
-        );
+        const app: typeDoc.Application = await typeDoc.Application.bootstrapWithPlugins( config );
+
+        // May be undefined if errors are encountered.
+        const project: typeDoc.Models.ProjectReflection | undefined = await app.convert();
+
+        // returns
+        if ( !project ) {
+            this.verboseLog( 'typedoc failed', 3 );
+            return;
+        }
+
+        await app.generateOutputs( project );
     }
 }
 

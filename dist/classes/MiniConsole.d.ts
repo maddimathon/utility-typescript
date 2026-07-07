@@ -7,7 +7,6 @@
  * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
-import type { LoggerUtility } from '@maddimathon/universal-types';
 import type { ConsoleUtility, TupleShift } from '../types/index.js';
 /**
  * The simplest implementation of the {@link ConsoleUtility} interface, intended
@@ -29,7 +28,7 @@ export declare class MiniConsole implements ConsoleUtility {
     /**
      * Generic base output method for other outputs.
      */
-    protected output(via: LoggerUtility.OutputMethod, msg: any): void;
+    protected output(via: ConsoleUtility.OutputMethod, msg: any): void;
     verbose(...params: TupleShift<Parameters<typeof this.output>>): void;
     warn(...params: TupleShift<Parameters<typeof this.output>>): void;
 }
