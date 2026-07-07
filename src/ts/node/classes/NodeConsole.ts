@@ -12,6 +12,8 @@ import {
     execSync as nodeExecSync,
 } from 'child_process';
 
+import type { LoggerUtility } from '@maddimathon/universal-types';
+
 import type {
     ConsoleUtility,
     RecursivePartial,
@@ -708,11 +710,11 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @since 2.0.0-beta.3
      */
     protected _bulkOutput(
-        via: ConsoleUtility.OutputMethod,
+        via: LoggerUtility.OutputMethod,
         msgs: MessageMaker.BulkMsgs,
         args: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs> = {},
     ): void {
-        return console[ via ](
+        return console[ via === 'verbose' ? 'info' : via ](
             this.msg.bulk(
                 Array.isArray( msgs ) ? msgs : [ msgs ],
                 args,
@@ -740,7 +742,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
         const log = ( ...params: Params ): void => output( 'log', ...params );
         const debug = ( ...params: Params ): void => output( 'debug', ...params );
         const error = ( ...params: Params ): void => output( 'error', ...params );
-        const verbose = ( ...params: Params ): void => output( 'info', ...params );
+        const verbose = ( ...params: Params ): void => output( 'verbose', ...params );
         const warn = ( ...params: Params ): void => output( 'warn', ...params );
 
         this.#bulk = {
@@ -760,11 +762,11 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @since 2.0.0-beta.3
      */
     protected _timestampOutput(
-        via: ConsoleUtility.OutputMethod,
+        via: LoggerUtility.OutputMethod,
         msg: Parameters<MessageMaker[ 'timestamped' ]>[ 0 ],
         args: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs> = {},
     ): void {
-        return console[ via ]( this.msg.timestamped( msg, args ) );
+        return console[ via === 'verbose' ? 'info' : via ]( this.msg.timestamped( msg, args ) );
     }
 
     /**
@@ -787,7 +789,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
         const log = ( ...params: Params ): void => output( 'log', ...params );
         const debug = ( ...params: Params ): void => output( 'debug', ...params );
         const error = ( ...params: Params ): void => output( 'error', ...params );
-        const verbose = ( ...params: Params ): void => output( 'info', ...params );
+        const verbose = ( ...params: Params ): void => output( 'verbose', ...params );
         const warn = ( ...params: Params ): void => output( 'warn', ...params );
 
         this.#timestamp = {
@@ -818,7 +820,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
 
         const output = (
             (
-                via: ConsoleUtility.OutputMethod,
+                via: LoggerUtility.OutputMethod,
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
                 {
                     msg: msgArgs,
@@ -842,12 +844,12 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
         const log = ( ...params: Params ): void => output( 'log', ...params );
         const debug = ( ...params: Params ): void => output( 'debug', ...params );
         const error = ( ...params: Params ): void => output( 'error', ...params );
-        const verbose = ( ...params: Params ): void => output( 'info', ...params );
+        const verbose = ( ...params: Params ): void => output( 'verbose', ...params );
         const warn = ( ...params: Params ): void => output( 'warn', ...params );
 
         const timestampOutput = (
             (
-                via: ConsoleUtility.OutputMethod,
+                via: LoggerUtility.OutputMethod,
                 variable: ConstructorParameters<typeof VariableInspector>[ 0 ],
                 {
                     msg: msgArgs = {},
@@ -876,7 +878,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
         const timestampLog = ( ...params: TimestampParams ): void => timestampOutput( 'log', ...params );
         const timestampDebug = ( ...params: TimestampParams ): void => timestampOutput( 'debug', ...params );
         const timestampError = ( ...params: TimestampParams ): void => timestampOutput( 'error', ...params );
-        const timestampVerbose = ( ...params: TimestampParams ): void => timestampOutput( 'info', ...params );
+        const timestampVerbose = ( ...params: TimestampParams ): void => timestampOutput( 'verbose', ...params );
         const timestampWarn = ( ...params: TimestampParams ): void => timestampOutput( 'warn', ...params );
 
         this.#vi = {
@@ -913,11 +915,11 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @since 2.0.0-beta.3
      */
     protected output(
-        via: ConsoleUtility.OutputMethod,
+        via: LoggerUtility.OutputMethod,
         msg: string | string[],
         args: RecursivePartial<NodeConsole.MsgArgs> = {},
     ): void {
-        console[ via ]( this.msg.msg( msg, args ) );
+        console[ via === 'verbose' ? 'info' : via ]( this.msg.msg( msg, args ) );
     }
 
     /**
@@ -1002,7 +1004,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
             NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs,
             "linesIn" | "linesOut"
         >> = {},
-        via?: ConsoleUtility.OutputMethod,
+        via?: LoggerUtility.OutputMethod,
     ): void {
 
         const args: Partial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs> & {
@@ -1078,7 +1080,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      */
     public separator(
         args: RecursivePartial<NodeConsole.MsgArgs> = {},
-        via?: ConsoleUtility.OutputMethod,
+        via?: LoggerUtility.OutputMethod,
     ): void {
 
         const quarterWidth = this.maxWidth / 4;
@@ -1212,7 +1214,7 @@ export class NodeConsole implements ConsoleUtility<[ undefined | RecursivePartia
      * @category Aliases
      */
     public verbose( ...params: TupleShift<Parameters<typeof this.output>> ): void {
-        this.output( 'info', ...params );
+        this.output( 'verbose', ...params );
     }
 
     /**

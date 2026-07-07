@@ -7,6 +7,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
+import type { LoggerUtility } from '@maddimathon/universal-types';
 import type { ConsoleUtility, RecursivePartial, TupleShift } from '../../types/index.js';
 import { MessageMaker } from '../../classes/MessageMaker.js';
 import { VariableInspector } from '../../classes/VariableInspector.js';
@@ -113,7 +114,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
     /**
      * @since 2.0.0-beta.3
      */
-    protected _bulkOutput(via: ConsoleUtility.OutputMethod, msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>): void;
+    protected _bulkOutput(via: LoggerUtility.OutputMethod, msgs: MessageMaker.BulkMsgs, args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs>): void;
     /**
      * Output longer messages with per-section formatting.
      *
@@ -125,7 +126,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
     /**
      * @since 2.0.0-beta.3
      */
-    protected _timestampOutput(via: ConsoleUtility.OutputMethod, msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>): void;
+    protected _timestampOutput(via: LoggerUtility.OutputMethod, msg: Parameters<MessageMaker['timestamped']>[0], args?: RecursivePartial<NodeConsole.MsgArgs & MessageMaker.TimestampedArgs>): void;
     /**
      * Output messages (long or short) prepended with a timestamp.
      *
@@ -154,7 +155,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @since 2.0.0-beta.3
      */
-    protected output(via: ConsoleUtility.OutputMethod, msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
+    protected output(via: LoggerUtility.OutputMethod, msg: string | string[], args?: RecursivePartial<NodeConsole.MsgArgs>): void;
     /**
      * Outputs the given message to the console.
      */
@@ -212,7 +213,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
-    heading(heading: string, level: number, _args?: RecursivePartial<Omit<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs, "linesIn" | "linesOut">>, via?: ConsoleUtility.OutputMethod): void;
+    heading(heading: string, level: number, _args?: RecursivePartial<Omit<NodeConsole.MsgArgs & MessageMaker.BulkMsgArgs, "linesIn" | "linesOut">>, via?: LoggerUtility.OutputMethod): void;
     /**
      * Outputs a separator string to the console.
      *
@@ -222,7 +223,7 @@ export declare class NodeConsole implements ConsoleUtility<[undefined | Recursiv
      *
      * @deprecated 2.0.0-beta.3 — Create wrapper functions for more project-specfic formatting to replace this method.
      */
-    separator(args?: RecursivePartial<NodeConsole.MsgArgs>, via?: ConsoleUtility.OutputMethod): void;
+    separator(args?: RecursivePartial<NodeConsole.MsgArgs>, via?: LoggerUtility.OutputMethod): void;
     /**
      * Alias for {@link NodeConsole.log} with `via: "debug"` argument.
      *

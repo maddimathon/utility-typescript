@@ -1,12 +1,13 @@
 /*
  * @package @maddimathon/utility-typescript
- * @author Maddi Mathon (www.maddimathon.com)
+ * @author Maddi Mathon (https://www.maddimathon.com/web)
  * 
  * @license MIT
  */
 
-import * as typeDoc from "typedoc";
+import { TypeDocCompiler } from '@maddimathon/compiler-typedoc';
 
+import * as typeDoc from "typedoc";
 
 import { AbstractStage } from './abstracts/AbstractStage.js';
 
@@ -30,10 +31,11 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
     /* LOCAL PROPERTIES
      * ====================================================================== */
 
-    public subStages = docSubStages;
+    public readonly typeDocCompiler: TypeDocCompiler;
+
+    public readonly subStages = docSubStages;
 
     public get ARGS_DEFAULT() {
-
         return {
             ...AbstractStage.ARGS_ABSTRACT,
         } as Document.Args;
@@ -46,6 +48,8 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
     constructor ( args: Document.Args ) {
         super( args, 'turquoise' );
+
+        this.typeDocCompiler = new TypeDocCompiler( this.nc );
     }
 
 
@@ -97,8 +101,13 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
         const repository = this.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' );
 
         // UPGRADE - generate entryPoints from pkg.main and pkg.exports
-        const config: Partial<typeDoc.TypeDocOptions> = {
+        const entryPoints = [
+            'src/ts/index.ts',
+            'src/ts/node/index.ts',
+            'src/ts/types/index.ts',
+        ] as const;
 
+        const config = {
             alwaysCreateEntryPointModule: true,
 
             basePath: 'src/ts',
@@ -138,19 +147,13 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             // compilerOptions,
 
-            customFooterHtml: `<p>&copy; <a href="https://www.maddimathon.com" target="_blank">Maddi Mathon</a>, 2025–${ new Date().getFullYear() }. <a href="${ homepage }/MIT_License.html">MIT license</a>.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
+            customFooterHtml: `<p>&copy; <a href="https://www.maddimathon.com/web" target="_blank">Maddi Mathon</a>, 2025–${ new Date().getFullYear() }. <a href="${ homepage }/MIT_License.html">MIT license</a>.</p><p>Site generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a>.</p>`,
             customFooterHtmlDisableWrapper: true,
 
             defaultCategory: 'Misc.',
 
             disableGit: false,
             disableSources: false,
-
-            entryPoints: [
-                'src/ts/index.ts',
-                'src/ts/node/index.ts',
-                'src/ts/types/index.ts',
-            ],
 
             entryPointStrategy: 'expand',
 
@@ -271,7 +274,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             navigationLinks: {
                 'GitHub': repository,
-                'by Maddi Mathon': 'https://www.maddimathon.com',
+                'by Maddi Mathon': 'https://www.maddimathon.com/web',
             },
 
             notRenderedTags: [
@@ -324,7 +327,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 private: !this.args.releasing || !!this.args.dryrun,
                 protected: true,
             },
-        };
+        } satisfies TypeDocCompiler.CompileArgs;
 
         if ( config.out ) {
             this.verboseLog( 'deleting existing files...', 2 );
@@ -337,26 +340,18 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             ] ) );
         }
 
-        if ( config.json ) {
-            if ( !config.out ) {
-                this.verboseLog( 'deleting existing files...', 2 );
-            }
-            this.fs.delete( [ config.json ] );
-        }
+        // if ( config.json ) {
+        //     if ( !config.out ) {
+        //         this.verboseLog( 'deleting existing files...', 2 );
+        //     }
+        //     this.fs.delete( [ config.json ] );
+        // }
 
         this.verboseLog( 'running typedoc...', 2 );
-        const app: typeDoc.Application = await typeDoc.Application.bootstrapWithPlugins( config );
-
-        // May be undefined if errors are encountered.
-        const project: typeDoc.Models.ProjectReflection | undefined = await app.convert();
-
-        // returns
-        if ( !project ) {
-            this.verboseLog( 'typedoc failed', 3 );
-            return;
-        }
-
-        await app.generateOutputs( project );
+        await this.typeDocCompiler.compile(
+            entryPoints,
+            config,
+        );
     }
 }
 

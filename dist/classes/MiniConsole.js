@@ -42,10 +42,10 @@ export class MiniConsole {
      * Generic base output method for other outputs.
      */
     output(via, msg) {
-        console[via](msg);
+        console[via === 'verbose' ? 'info' : via](msg);
     }
     verbose(...params) {
-        this.output('info', ...params);
+        this.output('verbose', ...params);
     }
     warn(...params) {
         this.output('warn', ...params);

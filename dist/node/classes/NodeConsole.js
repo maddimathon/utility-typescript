@@ -536,7 +536,7 @@ export class NodeConsole {
      * @since 2.0.0-beta.3
      */
     _bulkOutput(via, msgs, args = {}) {
-        return console[via](this.msg.bulk(Array.isArray(msgs) ? msgs : [msgs], args));
+        return console[via === 'verbose' ? 'info' : via](this.msg.bulk(Array.isArray(msgs) ? msgs : [msgs], args));
     }
     /**
      * Output longer messages with per-section formatting.
@@ -554,7 +554,7 @@ export class NodeConsole {
         const log = (...params) => output('log', ...params);
         const debug = (...params) => output('debug', ...params);
         const error = (...params) => output('error', ...params);
-        const verbose = (...params) => output('info', ...params);
+        const verbose = (...params) => output('verbose', ...params);
         const warn = (...params) => output('warn', ...params);
         this.#bulk = {
             debug: debug.bind(this),
@@ -570,7 +570,7 @@ export class NodeConsole {
      * @since 2.0.0-beta.3
      */
     _timestampOutput(via, msg, args = {}) {
-        return console[via](this.msg.timestamped(msg, args));
+        return console[via === 'verbose' ? 'info' : via](this.msg.timestamped(msg, args));
     }
     /**
      * Output messages (long or short) prepended with a timestamp.
@@ -588,7 +588,7 @@ export class NodeConsole {
         const log = (...params) => output('log', ...params);
         const debug = (...params) => output('debug', ...params);
         const error = (...params) => output('error', ...params);
-        const verbose = (...params) => output('info', ...params);
+        const verbose = (...params) => output('verbose', ...params);
         const warn = (...params) => output('warn', ...params);
         this.#timestamp = {
             debug: debug.bind(this),
@@ -616,7 +616,7 @@ export class NodeConsole {
         const log = (...params) => output('log', ...params);
         const debug = (...params) => output('debug', ...params);
         const error = (...params) => output('error', ...params);
-        const verbose = (...params) => output('info', ...params);
+        const verbose = (...params) => output('verbose', ...params);
         const warn = (...params) => output('warn', ...params);
         const timestampOutput = ((via, variable, { msg: msgArgs = {}, time: timeArgs = {}, ...inspectArgs } = {}) => this._timestampOutput(via, VariableInspector.stringify(variable, mergeArgs(this.args.varInspect, inspectArgs, true), this), {
             ...msgArgs,
@@ -625,7 +625,7 @@ export class NodeConsole {
         const timestampLog = (...params) => timestampOutput('log', ...params);
         const timestampDebug = (...params) => timestampOutput('debug', ...params);
         const timestampError = (...params) => timestampOutput('error', ...params);
-        const timestampVerbose = (...params) => timestampOutput('info', ...params);
+        const timestampVerbose = (...params) => timestampOutput('verbose', ...params);
         const timestampWarn = (...params) => timestampOutput('warn', ...params);
         this.#vi = {
             debug: debug.bind(this),
@@ -656,7 +656,7 @@ export class NodeConsole {
      * @since 2.0.0-beta.3
      */
     output(via, msg, args = {}) {
-        console[via](this.msg.msg(msg, args));
+        console[via === 'verbose' ? 'info' : via](this.msg.msg(msg, args));
     }
     /**
      * Outputs the given message to the console.
@@ -887,7 +887,7 @@ export class NodeConsole {
      * @category Aliases
      */
     verbose(...params) {
-        this.output('info', ...params);
+        this.output('verbose', ...params);
     }
     /**
      * Alias for {@link NodeConsole.log} with `via: "warn"` argument.

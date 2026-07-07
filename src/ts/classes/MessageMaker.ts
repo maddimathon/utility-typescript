@@ -1026,7 +1026,7 @@ export namespace MessageMaker {
      * @since 0.1.1
      */
     export type BulkMsgs = (
-        | [ string | string[], RecursivePartial<Omit<MessageMaker.MsgArgs, "linesIn" | "linesOut">> | undefined ]
+        | [ string | string[], RecursivePartial<Omit<MsgArgs, "linesIn" | "linesOut">> | undefined ]
         | [ string | string[] ]
     )[];
 

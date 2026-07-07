@@ -315,8 +315,7 @@ export class NodeFiles {
      *
      * @return  Contents of the file.
      *
-     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so,
-     *                            returns ''.
+     * @since 2.0.0-alpha.1 — Now checks that the file exists first. If so, returns ''.
      */
     readFile(path, args = {}) {
         path = this.pathResolve(path);

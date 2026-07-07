@@ -288,7 +288,7 @@ export declare namespace MessageMaker {
      *
      * @since 0.1.1
      */
-    type BulkMsgs = ([string | string[], RecursivePartial<Omit<MessageMaker.MsgArgs, "linesIn" | "linesOut">> | undefined] | [string | string[]])[];
+    type BulkMsgs = ([string | string[], RecursivePartial<Omit<MsgArgs, "linesIn" | "linesOut">> | undefined] | [string | string[]])[];
     /**
      * Colour slugs that can be used for formatting.
      *
