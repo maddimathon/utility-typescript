@@ -4,10 +4,9 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
-import { makeNumber } from './makeNumber.js';
 /**
  * Makes any input a number if it can be made into a valid number (e.g., by
  * parsing a string).
@@ -16,6 +15,4 @@ import { makeNumber } from './makeNumber.js';
  *
  * @since 2.0.0-beta.2
  */
-export async function makeNumberAsync(input) {
-    return makeNumber(input);
-}
+export declare function makeNumber(input: unknown): null | number;

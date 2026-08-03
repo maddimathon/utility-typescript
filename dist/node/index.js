@@ -13,9 +13,10 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 export * from './classes/abstracts/AbstractBuildStage.js';
 export * from './classes/NodeConsole.js';
 export * from './classes/NodeFiles.js';
+export * from './functions/TypeDocUtils.js';

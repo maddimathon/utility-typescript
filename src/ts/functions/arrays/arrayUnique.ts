@@ -62,6 +62,8 @@ export function arrayUnique<T_ArrayItem>(
 /**
  * Utilities for the {@link arrayUnique} function.
  * 
+ * @category Functions – Array
+ * 
  * @since 2.0.0-beta.3
  */
 export namespace arrayUnique {

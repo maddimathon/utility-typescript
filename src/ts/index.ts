@@ -28,12 +28,17 @@ export * from './functions/maps/mapFlattenAsync.js';
 export * from './functions/maps/mapToObject.js';
 export * from './functions/maps/mapToObjectAsync.js';
 
+export * from './functions/numbers/toValidNumber.js';
+export * from './functions/numbers/validNumber.js';
+
 export * from './functions/objects/deleteUndefinedProps.js';
 export * from './functions/objects/isObjectEmpty.js';
 export * from './functions/objects/mergeArgs.js';
 export * from './functions/objects/mergeArgsAsync.js';
+export * from './functions/objects/objectEntries.js';
 export * from './functions/objects/objectFlatten.js';
 export * from './functions/objects/objectFlattenAsync.js';
+export * from './functions/objects/objectFromEntries.js';
 export * from './functions/objects/objectKeySort.js';
 export * from './functions/objects/objectKeySortAsync.js';
 export * from './functions/objects/objectMap.js';
@@ -42,8 +47,8 @@ export * from './functions/objects/objectMapAsync.js';
 export * from './functions/regex/escRegExp.js';
 export * from './functions/regex/escRegExpReplace.js';
 
-export * from './functions/strings/makeNumber.js';
-export * from './functions/strings/makeNumberAsync.js';
+export * from './functions/numbers/makeNumber.js';
+export * from './functions/numbers/makeNumberAsync.js';
 export * from './functions/strings/slugify.js';
 export * from './functions/strings/softWrapText.js';
 export * from './functions/strings/timestamp.js';

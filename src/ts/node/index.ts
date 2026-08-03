@@ -21,3 +21,5 @@ export * from './classes/abstracts/AbstractBuildStage.js';
 
 export * from './classes/NodeConsole.js';
 export * from './classes/NodeFiles.js';
+
+export * from './functions/TypeDocUtils.js';

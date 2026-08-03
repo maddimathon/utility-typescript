@@ -14,7 +14,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 export type * from './arrays.ts';
@@ -29,5 +29,6 @@ export type * from './objects/records.js';
 export type * from './objects/required.js';
 export type * from './objects/utilities.js';
 export type * from './string-literals/html.js';
+export type * from './unions-intersections.js';
 export type * as Test from './test.js';
 export type * from './utilities.js';

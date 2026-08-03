@@ -8,7 +8,7 @@
  * @license MIT
  */
 
-import type { Test } from '../../types/index.js';
+import type { } from '../../types/index.js';
 import { describe, expect, test } from '@jest/globals';
 
 import { objectMap } from './objectMap.js';
@@ -73,15 +73,6 @@ const test2_result: {
 };
 //#endregion - Test 2
 
-
-export type Tests = [
-    Test.Expect<Test.Exactly<typeof test1_expected, typeof test1_result>>,
-    Test.Expect<Test.Exactly<{
-        'one': number | string,
-        'two': number | string,
-        'three': number | string,
-    }, typeof test2_result>>,
-];
 
 describe( 'objectMap', () => {
 

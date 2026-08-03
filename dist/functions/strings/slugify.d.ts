@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 /**
@@ -24,6 +24,8 @@
 export declare function slugify(input: string, args?: Partial<slugify.Args>): string;
 /**
  * Utilities for the {@link slugify} function.
+ *
+ * @category Functions – String
  *
  * @since 2.0.0-beta.3
  */

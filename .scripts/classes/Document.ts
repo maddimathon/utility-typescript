@@ -13,7 +13,8 @@ import {
     currentReplacements,
     pkgReplacements,
 } from '../vars/replacements.js';
-// import { Doc_Project } from './doc/Doc_Project.js';
+
+import { TypeDocUtils } from '../../src/ts/node/functions/TypeDocUtils.js';
 
 
 const docSubStages = [
@@ -35,6 +36,17 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
         return {
             ...AbstractStage.ARGS_ABSTRACT,
         } as Document.Args;
+    }
+
+    public get typeDocMappings() {
+
+        return {
+            global: TypeDocUtils.Mappings.global,
+            typescript: {
+                ...TypeDocUtils.Mappings.global,
+                ...TypeDocUtils.Mappings.typescript,
+            },
+        };
     }
 
 
@@ -158,40 +170,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             excludeProtected: false,
             excludeReferences: false,
 
-            externalSymbolLinkMappings: {
-
-                typescript: {
-
-                    Error: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error',
-                    'Error.cause': 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause',
-                    'Error.name': 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/name',
-
-                    Promise: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
-                    RegExp: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp',
-
-                    Awaited: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#awaitedtype',
-                    Capitalize: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
-                    ConstructorParameters: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#constructorparameterstype',
-                    Exclude: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#excludeuniontype-excludedmembers',
-                    Extract: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union',
-                    InstanceType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#instancetypetype',
-                    Lowercase: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
-                    NoInfer: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#noinfertype',
-                    NonNullable: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype',
-                    Omit: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys',
-                    OmitThisParameter: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#omitthisparametertype',
-                    Parameters: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#parameterstype',
-                    Partial: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype',
-                    Pick: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys',
-                    Record: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type',
-                    Required: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#requiredtype',
-                    ReturnType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#returntypetype',
-                    ThisParameterType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#thisparametertypetype',
-                    ThisType: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#thistypetype',
-                    Uncapitalize: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
-                    Uppercase: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#intrinsic-string-manipulation-types',
-                },
-            },
+            externalSymbolLinkMappings: this.typeDocMappings,
 
             githubPages: true,
 
@@ -223,6 +202,8 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
             jsDocCompatibility: {
                 exampleTag: false,
             },
+
+            // json: 'src/docs/typedoc.json',
 
             kindSortOrder: [
                 'Module',
@@ -267,6 +248,12 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
                 // excludeReferences: true,
             },
 
+            navigationLeaves: [
+                'types.FromEntries',
+                // 'types!FromEntries.Internal',
+                // 'types!FromEntries.TuplifyUnion',
+            ],
+
             navigationLinks: {
                 'GitHub': repository,
                 'by Maddi Mathon': 'https://www.maddimathon.com/web',
@@ -281,9 +268,10 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             out: 'docs',
             plugin: [
-                'typedoc-plugin-mdn-links',
                 'typedoc-plugin-inline-sources',
             ],
+
+            preserveLinkText: true,
 
             projectDocuments: [
                 'README.md',
@@ -296,6 +284,8 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
 
             searchInComments: true,
             searchInDocuments: true,
+
+            skipErrorChecking: true,
 
             sourceLinkExternal: true,
             sourceLinkTemplate: `${ repository }/blob/main/${ ( this.args.packaging && !this.args.dryrun ) ? encodeURI( this.pkg.version ) + '/' : '' }{path}#L{line}`,

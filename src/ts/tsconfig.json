@@ -15,11 +15,13 @@
         "./src/ts/**/*.example.ts"
     ],
     "compilerOptions": {
+        "allowUnreachableCode": true,
         "declaration": true,
         "declarationMap": false,
         "outDir": "../../dist/",
         "rootDir": "./",
-        "sourceMap": false
+        "sourceMap": false,
+        "types": ["node", "jest"]
     },
     "$schema": "https://json.schemastore.org/tsconfig"
 }

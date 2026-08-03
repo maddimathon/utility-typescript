@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 /**
@@ -29,6 +29,8 @@
 export declare function arrayUnique<T_ArrayItem>(arr: T_ArrayItem[], args?: Partial<arrayUnique.Args>): T_ArrayItem[];
 /**
  * Utilities for the {@link arrayUnique} function.
+ *
+ * @category Functions – Array
  *
  * @since 2.0.0-beta.3
  */

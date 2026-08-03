@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5
+ * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
 /**
@@ -15,4 +15,4 @@
  *
  * @since 2.0.0-beta.2
  */
-export declare function makeNumber(input: unknown): null | number;
+export declare function makeNumberAsync(input: unknown): Promise<null | number>;

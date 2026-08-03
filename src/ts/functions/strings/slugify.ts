@@ -74,6 +74,8 @@ export function slugify( input: string, args: Partial<slugify.Args> = {} ): stri
 /**
  * Utilities for the {@link slugify} function.
  * 
+ * @category Functions – String
+ * 
  * @since 2.0.0-beta.3
  */
 export namespace slugify {
