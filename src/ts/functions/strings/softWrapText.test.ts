@@ -29,7 +29,8 @@ describe( 'softWrapText', () => {
 
         const longText = wrappedText.replace( /\n/g, ' ' );
 
-        expect( softWrapText( longText, 80 ) ).toBe( wrappedText );
+        // default should be 80 chars wide
+        expect( softWrapText( longText, undefined ) ).toBe( wrappedText );
     } );
 
     test( 'with newlines', () => {

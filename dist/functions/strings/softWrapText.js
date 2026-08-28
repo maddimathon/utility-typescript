@@ -19,7 +19,10 @@
  *
  * @since 0.1.0
  */
-export function softWrapText(text, maxWidth = 80) {
+export function softWrapText(text, maxWidth) {
+    if (!maxWidth) {
+        maxWidth = 80;
+    }
     const splits = text.split(/\n/g).map((line) => {
         return line.replace(new RegExp(`(?![^\\n]{1,${maxWidth}}$)([^\\n]{1,${maxWidth}})\\s`, 'g'), '$1\n');
     });

@@ -28,6 +28,8 @@ export * from './functions/maps/mapFlattenAsync.js';
 export * from './functions/maps/mapToObject.js';
 export * from './functions/maps/mapToObjectAsync.js';
 
+export * from './functions/numbers/makeNumber.js';
+export * from './functions/numbers/makeNumberAsync.js';
 export * from './functions/numbers/toValidNumber.js';
 export * from './functions/numbers/validNumber.js';
 
@@ -43,12 +45,12 @@ export * from './functions/objects/objectKeySort.js';
 export * from './functions/objects/objectKeySortAsync.js';
 export * from './functions/objects/objectMap.js';
 export * from './functions/objects/objectMapAsync.js';
+export * from './functions/objects/objectOmit.js';
 
 export * from './functions/regex/escRegExp.js';
 export * from './functions/regex/escRegExpReplace.js';
 
-export * from './functions/numbers/makeNumber.js';
-export * from './functions/numbers/makeNumberAsync.js';
+export * from './functions/strings/changeIndent.js';
 export * from './functions/strings/slugify.js';
 export * from './functions/strings/softWrapText.js';
 export * from './functions/strings/timestamp.js';

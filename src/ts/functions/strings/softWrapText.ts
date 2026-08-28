@@ -22,8 +22,11 @@
  */
 export function softWrapText(
     text: string,
-    maxWidth: number = 80,
+    maxWidth?: number,
 ): string {
+    if ( !maxWidth ) {
+        maxWidth = 80;
+    }
 
     const splits: ( string | string[] )[] = text.split( /\n/g ).map( ( line ) => {
 

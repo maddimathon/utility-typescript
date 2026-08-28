@@ -22,6 +22,7 @@ import { AbstractStage } from './abstracts/AbstractStage.js';
 
 const compileSubStages = [
     'js',
+    // 'playground',
 ] as const;
 
 
@@ -159,6 +160,10 @@ export class Compile extends AbstractStage<Compile.Stages, Compile.Args> {
             ] ), 3, false );
         }
     }
+
+    // protected async playground() {
+    //     this.progressLog( 'starting playground...', 1 );
+    // }
 }
 
 export namespace Compile {

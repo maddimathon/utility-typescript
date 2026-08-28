@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/design-system-utilities@___CURRENT_VERSION___
+ * @maddimathon/utility-typescript@___CURRENT_VERSION___
  * @license MIT
  */
 
