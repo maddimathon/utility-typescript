@@ -19,6 +19,7 @@
  * @maddimathon/utility-typescript@2.0.0-beta.5.draft
  * @license MIT
  */
+export * from './functions/arrays/arrayCopy.js';
 export * from './functions/arrays/arrayUnique.js';
 export * from './functions/arrays/hasIterator.js';
 export * from './functions/maps/mapFlatten.js';

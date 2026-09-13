@@ -20,6 +20,7 @@
  * @license MIT
  */
 
+export * from './functions/arrays/arrayCopy.js';
 export * from './functions/arrays/arrayUnique.js';
 export * from './functions/arrays/hasIterator.js';
 
