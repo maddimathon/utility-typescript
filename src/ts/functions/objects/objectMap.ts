@@ -42,7 +42,7 @@ import type { ToEntriesArray, ToEntry } from '../../types/index.js';
  * @category Functions – Object
  * 
  * @since 2.0.0-beta.2
- * @since ___PKG_VERSION___ — Improved typing with {@link ToEntry} and callback overloading.
+ * @since 2.0.0-beta.6 — Improved typing with {@link ToEntry} and callback overloading.
  * 
  * @preventExpand ToEntry
  */

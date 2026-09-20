@@ -13,6 +13,7 @@ import * as inquirer from '@inquirer/prompts';
 import type { RecursivePartial } from '../../../types/index.js';
 import type { NodeConsole } from '../NodeConsole.js';
 
+import { deleteUndefinedProps } from '../../../functions/objects/deleteUndefinedProps.js';
 import { mergeArgs } from '../../../functions/objects/mergeArgs.js';
 
 import { MessageMaker } from '../../../classes/MessageMaker.js';
@@ -393,7 +394,7 @@ export class NodeConsole_Prompt {
         config: NodeConsole_Prompt.SelectConfig<T_Return>,
     ): Promise<T_Return | undefined> {
 
-        const defaultConfig: Partial<typeof config> = {
+        const defaultConfig = {
             choices: [],
             msgArgs: {},
             pageSize: 10,
@@ -404,8 +405,11 @@ export class NodeConsole_Prompt {
 
         return this.prompt<'select', T_Return>(
             'select',
-            inquirer.select,
-            mergeArgs( defaultConfig, config, true ),
+            ( _config, _context ) => inquirer.select<T_Return>( deleteUndefinedProps( _config ), _context ),
+            {
+                ...mergeArgs( defaultConfig, config, true ),
+                message: config.message,
+            },
         );
     }
 }
@@ -685,14 +689,14 @@ export namespace NodeConsole_Prompt {
      */
     export type SelectConfig<
         Value extends SelectValue = SelectValue,
-    > = Omit<Config<"select", Value & string>, "default"> & {
+    > = Omit<Config<"select", Value>, "default"> & {
         // these are in Config<"select"> already
         message: string;
 
-        default?: Value & string;
+        default?: Value;
 
-        choices: ( Value & string | inquirer.Separator | {
-            value: Value & string;
+        choices: ( Value | inquirer.Separator | {
+            value: Value;
             name?: string;
             description?: string;
             short?: string;

@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @packageDocumentation
  */
@@ -11,7 +11,7 @@
 /**
  * Utilities for working with TypeDoc.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  */
 export namespace TypeDocUtils {
 
@@ -20,17 +20,17 @@ export namespace TypeDocUtils {
     //  * Takes the result of a TypeDoc JSON run and converts it to symbol link
     //  * mappings to be used by dependees.
     //  *
-    //  * @since ___PKG_VERSION___
+    //  * @since 2.0.0-beta.6
     //  */
     // export function generateSymbolLinkMappings(): void { }
 
     /**
-     * @since ___PKG_VERSION___
+     * @since 2.0.0-beta.6
      */
     export namespace Mappings {
 
         /**
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.6
          */
         export const global = {
 
@@ -46,7 +46,7 @@ export namespace TypeDocUtils {
         };
 
         /**
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.6
          */
         export const sass = {
             CustomFunction: 'https://sass-lang.com/documentation/js-api/types/customfunction/',
@@ -69,7 +69,7 @@ export namespace TypeDocUtils {
         /**
          * Mappings for typescript types and global JS objects.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.6
          */
         export const typescript = {
 
@@ -99,7 +99,7 @@ export namespace TypeDocUtils {
         /**
          * Mappings dependees can use for this library.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.6
          */
         // TODO - finish
         export const utilityTypescript = {
@@ -137,7 +137,7 @@ export namespace TypeDocUtils {
         /**
          * Mappings dependees can use for this library's node module.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.6
          */
         // TODO - finish
         export const utilityTypescript_node = {
@@ -155,7 +155,7 @@ export namespace TypeDocUtils {
         /**
          * Mappings dependees can use for this library's types module.
          * 
-         * @since ___PKG_VERSION___
+         * @since 2.0.0-beta.6
          */
         // TODO - finish
         export const utilityTypescript_types = {

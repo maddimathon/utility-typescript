@@ -20,6 +20,31 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.6** — 2026-09-19
+
+Some new utilities.
+
+### Added
+- New types:
+    - MergeObjects
+    - MergeObjectsReplace
+    - MergeObjectsUnion
+    - ToEntriesArray
+    - ToEntriesArrayReadonly
+    - ToEntry
+    - ToEntryReadonly
+    - UnionToIntersection
+- New functions:
+    - changeIndent()
+    - objectEntries()
+    - objectFromEntries()
+    - objectOmit()
+    - toValidNumber()
+    - validNumber()
+- New namespace:
+    - TypeDocUtils
+
+
 ## **2.0.0-beta.5** — 2026-07-07
 
 Minor fixes to Node_Console.

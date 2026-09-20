@@ -4,10 +4,11 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
+import { deleteUndefinedProps } from '../../../functions/objects/deleteUndefinedProps.js';
 import { mergeArgs } from '../../../functions/objects/mergeArgs.js';
 import { MessageMaker } from '../../../classes/MessageMaker.js';
 import { NodeConsole_Error } from './NodeConsole_Error.js';
@@ -217,6 +218,9 @@ export class NodeConsole_Prompt {
             msgArgs: {},
             pageSize: 10,
         };
-        return this.prompt('select', inquirer.select, mergeArgs(defaultConfig, config, true));
+        return this.prompt('select', (_config, _context) => inquirer.select(deleteUndefinedProps(_config), _context), {
+            ...mergeArgs(defaultConfig, config, true),
+            message: config.message,
+        });
     }
 }

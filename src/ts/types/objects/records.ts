@@ -13,7 +13,7 @@ import type { MergeObjectsUnion, UnionToIntersection } from '../unions-intersect
 /**
  * Tries to get a more type-aware array of a known object's entry pairs.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @example
  * ```ts
@@ -40,7 +40,7 @@ export type ToEntry<
  * Tries to get a more type-aware array of a known object's entry pairs and
  * returns a read-only result.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @expand
  */
@@ -51,7 +51,7 @@ export type ToEntryReadonly<
 /**
  * Tries to get a more type-aware array of a known object's entry pairs.
  * 
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @example
  * ```ts
@@ -78,7 +78,7 @@ export type ToEntriesArray<
  * Tries to get a more type-aware array of a known object's entry pairs
  * and returns a read-only result.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @expand
  */

@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @packageDocumentation
  */
@@ -16,7 +16,7 @@ import type { ToEntriesArray, ToEntriesArrayReadonly, TypeDump } from '../../typ
  *
  * @category Functions – Object
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  */
 export function objectEntries<O extends object>( obj: O ): TypeDump<ToEntriesArrayReadonly<O>> {
     return Object.entries( obj ) as ToEntriesArray<O>;

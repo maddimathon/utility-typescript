@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @packageDocumentation
  */
@@ -17,7 +17,7 @@ import type { FromEntries, ToEntriesArray, ToEntriesArrayReadonly } from '../../
  *
  * @category Functions – Object
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  */
 export function objectFromEntries<T_Entries extends ToEntriesArray | ToEntriesArrayReadonly>( entries: T_Entries ): {
     [ K in keyof FromEntries<T_Entries> ]: FromEntries<T_Entries>[ K ]

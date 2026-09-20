@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @packageDocumentation
  */
@@ -24,7 +24,7 @@ export function validNumber<T_Fallback extends any>(
  * This is mostly a development utility for prettier code rather than for
  * effective performance.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @source
  */

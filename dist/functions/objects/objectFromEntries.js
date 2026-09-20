@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 /**
@@ -13,7 +13,7 @@
  *
  * @category Functions – Object
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  */
 export function objectFromEntries(entries) {
     return Object.fromEntries(entries);

@@ -1,10 +1,10 @@
 /**
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 /**
@@ -14,7 +14,7 @@
  *
  * Creates a COPY of the object via spread.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  */
 export function objectOmit(object, omitKeys) {
     const newObj = {

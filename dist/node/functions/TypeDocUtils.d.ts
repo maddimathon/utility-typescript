@@ -1,24 +1,24 @@
 /**
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 /**
  * Utilities for working with TypeDoc.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  */
 export declare namespace TypeDocUtils {
     /**
-     * @since 2.0.0-beta.5.draft
+     * @since 2.0.0-beta.6
      */
     namespace Mappings {
         /**
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         const global: {
             Error: string;
@@ -30,7 +30,7 @@ export declare namespace TypeDocUtils {
             RegExp: string;
         };
         /**
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         const sass: {
             CustomFunction: string;
@@ -52,7 +52,7 @@ export declare namespace TypeDocUtils {
         /**
          * Mappings for typescript types and global JS objects.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         const typescript: {
             Awaited: string;
@@ -80,7 +80,7 @@ export declare namespace TypeDocUtils {
         /**
          * Mappings dependees can use for this library.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         const utilityTypescript: {
             arrayUnique: string;
@@ -105,7 +105,7 @@ export declare namespace TypeDocUtils {
         /**
          * Mappings dependees can use for this library's node module.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         const utilityTypescript_node: {
             NodeConsole: string;
@@ -119,7 +119,7 @@ export declare namespace TypeDocUtils {
         /**
          * Mappings dependees can use for this library's types module.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         const utilityTypescript_types: {
             Classify: string;

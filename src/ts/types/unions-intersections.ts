@@ -1,5 +1,5 @@
 /**
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @packageDocumentation
  */
@@ -12,7 +12,7 @@
  * Tries to merge object types together.  Use cautiously as results may not
  * always be what you expect.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @expand
  */
@@ -24,7 +24,7 @@ export type MergeObjects<A, B> = {
  * Tries to merge an object union together.  Use cautiously as results may not
  * always be what you expect.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @expand
  */
@@ -36,7 +36,7 @@ export type MergeObjectsUnion<U extends {}> = {
  * Tries to merge object types together.  Use cautiously as results may not
  * always be what you expect.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @expand
  */
@@ -48,7 +48,7 @@ export type MergeObjectsReplace<A, B> = {
  * Converts a union type to an intersection type.  Use cautiously as results may
  * not always be what you expect.
  *
- * @since ___PKG_VERSION___
+ * @since 2.0.0-beta.6
  * 
  * @experimental
  * @expand

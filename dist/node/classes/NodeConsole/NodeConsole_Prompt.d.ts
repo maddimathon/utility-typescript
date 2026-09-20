@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 import * as inquirer from '@inquirer/prompts';
@@ -306,11 +306,11 @@ export declare namespace NodeConsole_Prompt {
     /**
      * Optional configuration for {@link NodeConsole.prompt.select}.
      */
-    export type SelectConfig<Value extends SelectValue = SelectValue> = Omit<Config<"select", Value & string>, "default"> & {
+    export type SelectConfig<Value extends SelectValue = SelectValue> = Omit<Config<"select", Value>, "default"> & {
         message: string;
-        default?: Value & string;
-        choices: (Value & string | inquirer.Separator | {
-            value: Value & string;
+        default?: Value;
+        choices: (Value | inquirer.Separator | {
+            value: Value;
             name?: string;
             description?: string;
             short?: string;

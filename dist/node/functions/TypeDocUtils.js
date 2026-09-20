@@ -1,16 +1,16 @@
 /**
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 /**
  * Utilities for working with TypeDoc.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  */
 export var TypeDocUtils;
 (function (TypeDocUtils) {
@@ -19,16 +19,16 @@ export var TypeDocUtils;
     //  * Takes the result of a TypeDoc JSON run and converts it to symbol link
     //  * mappings to be used by dependees.
     //  *
-    //  * @since 2.0.0-beta.5.draft
+    //  * @since 2.0.0-beta.6
     //  */
     // export function generateSymbolLinkMappings(): void { }
     /**
-     * @since 2.0.0-beta.5.draft
+     * @since 2.0.0-beta.6
      */
     let Mappings;
     (function (Mappings) {
         /**
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         Mappings.global = {
             Error: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error',
@@ -40,7 +40,7 @@ export var TypeDocUtils;
             RegExp: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp',
         };
         /**
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         Mappings.sass = {
             CustomFunction: 'https://sass-lang.com/documentation/js-api/types/customfunction/',
@@ -62,7 +62,7 @@ export var TypeDocUtils;
         /**
          * Mappings for typescript types and global JS objects.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         Mappings.typescript = {
             Awaited: 'https://www.typescriptlang.org/docs/handbook/utility-types.html#awaitedtype',
@@ -90,7 +90,7 @@ export var TypeDocUtils;
         /**
          * Mappings dependees can use for this library.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         // TODO - finish
         Mappings.utilityTypescript = {
@@ -116,7 +116,7 @@ export var TypeDocUtils;
         /**
          * Mappings dependees can use for this library's node module.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         // TODO - finish
         Mappings.utilityTypescript_node = {
@@ -131,7 +131,7 @@ export var TypeDocUtils;
         /**
          * Mappings dependees can use for this library's types module.
          *
-         * @since 2.0.0-beta.5.draft
+         * @since 2.0.0-beta.6
          */
         // TODO - finish
         Mappings.utilityTypescript_types = {

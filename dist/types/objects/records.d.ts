@@ -4,14 +4,14 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 import type { MergeObjectsUnion, UnionToIntersection } from '../unions-intersections.js';
 /**
  * Tries to get a more type-aware array of a known object's entry pairs.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @example
  * ```ts
@@ -39,7 +39,7 @@ export type ToEntry<O extends {} = {
  * Tries to get a more type-aware array of a known object's entry pairs and
  * returns a read-only result.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @expand
  */
@@ -51,7 +51,7 @@ export type ToEntryReadonly<O extends {} = {
 /**
  * Tries to get a more type-aware array of a known object's entry pairs.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @example
  * ```ts
@@ -79,7 +79,7 @@ export type ToEntriesArray<O extends {} = {
  * Tries to get a more type-aware array of a known object's entry pairs
  * and returns a read-only result.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @expand
  */

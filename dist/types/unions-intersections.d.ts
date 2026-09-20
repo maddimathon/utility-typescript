@@ -1,17 +1,17 @@
 /**
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 /**
  * Tries to merge object types together.  Use cautiously as results may not
  * always be what you expect.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @expand
  */
@@ -22,7 +22,7 @@ export type MergeObjects<A, B> = {
  * Tries to merge an object union together.  Use cautiously as results may not
  * always be what you expect.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @expand
  */
@@ -33,7 +33,7 @@ export type MergeObjectsUnion<U extends {}> = {
  * Tries to merge object types together.  Use cautiously as results may not
  * always be what you expect.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @expand
  */
@@ -44,7 +44,7 @@ export type MergeObjectsReplace<A, B> = {
  * Converts a union type to an intersection type.  Use cautiously as results may
  * not always be what you expect.
  *
- * @since 2.0.0-beta.5.draft
+ * @since 2.0.0-beta.6
  *
  * @experimental
  * @expand

@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.5.draft
+ * @maddimathon/utility-typescript@2.0.0-beta.6
  * @license MIT
  */
 // UPGRADE - maybe this will work one day
@@ -37,7 +37,7 @@
  * @category Functions – Object
  *
  * @since 2.0.0-beta.2
- * @since 2.0.0-beta.5.draft — Improved typing with {@link ToEntry} and callback overloading.
+ * @since 2.0.0-beta.6 — Improved typing with {@link ToEntry} and callback overloading.
  *
  * @preventExpand ToEntry
  */
