@@ -15,7 +15,7 @@
  * 
  * @since 2.0.0-beta.2
  */
-export function hasIterator<T_Obj extends any>( obj: T_Obj ): obj is Extract<T_Obj, Iterable<any>> {
+export function hasIterator<T_Obj extends any>( obj: T_Obj ): obj is Extract<T_Obj, Iterable<any, any, any>> {
     // returns
     if ( typeof obj !== 'object' || obj === null ) {
         return false;

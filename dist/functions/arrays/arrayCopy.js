@@ -4,12 +4,14 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.6
+ * @maddimathon/utility-typescript@2.0.0-beta.7
  * @license MIT
  */
 /**
- * @experimental
+ * Recursively copies an array and its array children via [ ...arr ].
+ *
+ * @since 2.0.0-beta.6
  */
 export function arrayCopy(arr) {
-    return [...arr].map(item => Array.isArray(item) ? arrayCopy(item) : item);
+    return [...arr].map((item) => Array.isArray(item) ? arrayCopy(item) : item);
 }

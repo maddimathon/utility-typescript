@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.6
+ * @maddimathon/utility-typescript@2.0.0-beta.7
  * @license MIT
  */
 /**
@@ -14,4 +14,4 @@
  *
  * @since 2.0.0-beta.2
  */
-export declare function hasIterator<T_Obj extends any>(obj: T_Obj): obj is Extract<T_Obj, Iterable<any>>;
+export declare function hasIterator<T_Obj extends any>(obj: T_Obj): obj is Extract<T_Obj, Iterable<any, any, any>>;

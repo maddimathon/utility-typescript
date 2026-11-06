@@ -16,7 +16,7 @@
  * ```
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.6
+ * @maddimathon/utility-typescript@2.0.0-beta.7
  * @license MIT
  */
 export * from './functions/arrays/arrayCopy.js';

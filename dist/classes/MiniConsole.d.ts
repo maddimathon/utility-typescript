@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.6
+ * @maddimathon/utility-typescript@2.0.0-beta.7
  * @license MIT
  */
 import type { ConsoleUtility, TupleShift } from '../types/index.js';

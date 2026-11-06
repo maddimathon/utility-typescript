@@ -4,10 +4,12 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.6
+ * @maddimathon/utility-typescript@2.0.0-beta.7
  * @license MIT
  */
 /**
- * @experimental
+ * Recursively copies an array and its array children via [ ...arr ].
+ *
+ * @since 2.0.0-beta.6
  */
-export declare function arrayCopy<T_Item extends any>(arr: T_Item[]): T_Item[];
+export declare function arrayCopy<T_Array extends any[]>(arr: T_Array): T_Array;

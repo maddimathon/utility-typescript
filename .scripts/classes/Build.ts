@@ -159,7 +159,8 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
                 .replace( changelogRegex, '$1\n' + escRegExpReplace( `Read it from [the source](${ this.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' ) }/blob/main/CHANGELOG.md) \nor \n[the docs site](${ this.pkg.homepage }/Changelog.html).` ) + '\n$2' )
         ), { force: true } );
 
-        if ( this.args.releasing ) {
+        if ( this.args.releasing && !this.args.dryrun ) {
+            const versionStr_fullOnly = this.pkg.version.match( /[\-\.](alpha|beta|pre)([\-\+\.]|$)/i ) ? '' : `@^${ this.pkg.version }`;
 
             const installRegex = /(<!--README_INSTALL-->).*?(<!--\/README_INSTALL-->)/gs;
 
@@ -167,7 +168,11 @@ export class Build extends AbstractStage<Build.Stages, Build.Args> {
                 this.fs.readFile( 'README.md' )
                     .replace( installRegex, '$1\n' + escRegExpReplace( [
                         '```bash',
-                        'npm i -D @maddimathon/utility-typescript@' + this.pkg.version,
+                        '# for full releases only, add',
+                        '# `@maddimathon:registry=https://registry.npmjs.org` to your `.npmrc` file',
+                        'npm i -D @maddimathon/utility-typescript' + versionStr_fullOnly,
+                        '',
+                        '# for pre-releases',
                         'npm i -D github:maddimathon/utility-typescript#' + this.pkg.version,
                         '```',
                     ].join( '\n' ) ) + '\n$2' )

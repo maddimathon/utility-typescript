@@ -4,7 +4,7 @@ category: Docs
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-beta.6
+# Utility TypeScript @ 2.0.0-beta.7
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -32,8 +32,12 @@ or
 
 <!--README_INSTALL-->
 ```bash
-npm i -D @maddimathon/utility-typescript@2.0.0-beta.6
-npm i -D github:maddimathon/utility-typescript#2.0.0-beta.6
+# for full releases only, add
+# `@maddimathon:registry=https://registry.npmjs.org` to your `.npmrc` file
+npm i -D @maddimathon/utility-typescript
+
+# for pre-releases
+npm i -D github:maddimathon/utility-typescript#2.0.0-beta.7
 ```
 <!--/README_INSTALL-->
 

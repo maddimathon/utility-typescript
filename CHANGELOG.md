@@ -20,6 +20,13 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0-beta.7** — 2026-11-06
+
+Updated dependencies and:
+- New function: iterableFlatten()
+- Now tested: arrayCopy()
+
+
 ## **2.0.0-beta.6** — 2026-09-19
 
 Some new utilities.
