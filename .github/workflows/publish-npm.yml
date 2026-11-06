@@ -22,7 +22,7 @@ jobs:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
           package-manager-cache: false
-          scope: '@maddimathon'
+      - run: npm install -g npm@^11.0.0 # npm 11 or later for staging
       - run: npm ci
       - run: npm stage publish --access public
         env:
