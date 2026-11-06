@@ -16,6 +16,7 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "noEmit": true,
-        "target": "ESNext"
+        "target": "ESNext",
+        "types": [ "node" ]
     }
 }

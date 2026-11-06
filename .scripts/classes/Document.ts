@@ -104,7 +104,7 @@ export class Document extends AbstractStage<Document.Stages, Document.Args> {
         const homepage = this.pkg.homepage.replace( /\/+$/gi, '' );
 
         /** URL to repository, without trailing slash or `.git`. */
-        const repository = this.pkg.repository.url.replace( /(\/+|\.git)$/gi, '' );
+        const repository = this.pkg.repository.url.replace( /(git\+|(\/+|\.git)$)/gi, '' );
 
         // UPGRADE - generate entryPoints from pkg.main and pkg.exports
         const entryPoints = [
