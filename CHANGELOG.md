@@ -22,8 +22,6 @@ and this project adheres to
 
 ## **2.0.0-beta.7** — 2026-11-06
 
-## **2.0.0-beta.7** — 2026-11-06
-
 Updated dependencies and:
 - New function: iterableFlatten()
 - Now tested: arrayCopy()

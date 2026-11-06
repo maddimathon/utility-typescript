@@ -16,9 +16,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22.x'
+          package-manager-cache: false
           registry-url: 'https://registry.npmjs.org'
           scope: '@maddimathon'
       - run: npm ci
       - run: npm stage publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
