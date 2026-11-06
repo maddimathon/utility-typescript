@@ -20,10 +20,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22.x'
-          package-manager-cache: false
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
       - run: npm install -g npm@^11.6.0 # npm 11.5.1 or later for trusted publishing
-      - run: node -v
-      - run: npm -v
       - run: npm ci
-      - run: npm stage publish --access public --tag latest
+      - run: npm stage publish --access public --scope '@maddimathon' --tag latest
