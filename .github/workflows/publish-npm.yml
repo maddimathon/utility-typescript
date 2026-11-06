@@ -22,5 +22,6 @@ jobs:
           node-version: '22.x'
           package-manager-cache: false
           registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@^11.5.1 # npm 11.5.1 or later for trusted publishing
       - run: npm ci
       - run: npm publish --access public
