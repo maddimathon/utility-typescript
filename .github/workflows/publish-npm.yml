@@ -22,6 +22,8 @@ jobs:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
           package-manager-cache: false
-      - run: npm install -g npm@^11.6.0 # npm 11.5.1 or later for trusted publishing
+          scope: '@maddimathon'
       - run: npm ci
-      - run: npm stage publish --access public --scope '@maddimathon' --tag latest
+      - run: npm stage publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
