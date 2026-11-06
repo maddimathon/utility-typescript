@@ -24,4 +24,4 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: '@maddimathon'
       - run: npm ci
-      - run: npm stage publish --access public
+      - run: npm publish --access public
