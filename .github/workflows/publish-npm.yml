@@ -20,10 +20,11 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22.x'
-          registry-url: 'https://registry.npmjs.org'
           package-manager-cache: false
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@maddimathon'
       - run: npm install -g npm@^11.0.0 # npm 11 or later for staging
       - run: npm ci
-      - run: npm stage publish --access public
+      - run: npm stage publish --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
