@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 /*!
- * @maddimathon/utility-typescript@2.0.0-beta.7
+ * @maddimathon/utility-typescript@2.0.0
  * @license MIT
  */
 import type { RecursiveMap } from '../../types/objects/records.js';

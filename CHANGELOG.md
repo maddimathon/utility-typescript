@@ -20,6 +20,11 @@ and this project adheres to
 <!--CHANGELOG_NEW-->
 
 
+## **2.0.0** — 2026-11-06
+
+Full release.
+
+
 ## **2.0.0-beta.7** — 2026-11-06
 
 Updated dependencies and:

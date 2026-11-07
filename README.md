@@ -4,7 +4,7 @@ category: Docs
 ---
 
 <!--README_HEADER-->
-# Utility TypeScript @ 2.0.0-beta.7
+# Utility TypeScript @ 2.0.0
 <!--/README_HEADER-->
 
 <!--README_DESC-->
@@ -22,7 +22,7 @@ my personal needs/preferences rather than (web) developers in general.
 ## Changelog
 
 <!--README_DOCS_CHANGELOG-->
-Read it from [the source](https://github.com/maddimathon/utility-typescript/blob/main/CHANGELOG.md) 
+Read it from [the source](git+https://github.com/maddimathon/utility-typescript/blob/main/CHANGELOG.md) 
 or 
 [the docs site](https://maddimathon.github.io/utility-typescript/Changelog.html).
 <!--/README_DOCS_CHANGELOG-->
@@ -34,10 +34,10 @@ or
 ```bash
 # for full releases only, add
 # `@maddimathon:registry=https://registry.npmjs.org` to your `.npmrc` file
-npm i -D @maddimathon/utility-typescript
+npm i -D @maddimathon/utility-typescript@^2.0.0
 
 # for pre-releases
-npm i -D github:maddimathon/utility-typescript#2.0.0-beta.7
+npm i -D github:maddimathon/utility-typescript#2.0.0
 ```
 <!--/README_INSTALL-->
 

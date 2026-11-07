@@ -3,7 +3,7 @@ name: Publish Package to NPM
 on:
   workflow_dispatch: # allows running from the Actions tab
   release:
-    types: [published]
+    types: [released]
 
 permissions:
   id-token: write  # Required for OIDC/trusted publishing
